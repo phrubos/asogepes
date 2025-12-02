@@ -67,25 +67,32 @@ function initSmoothScroll() {
 }
 
 /**
- * Scroll-ra megjelenő animációk
+ * Scroll-ra megjelenő animációk - Enhanced
  */
 function initScrollAnimations() {
     const observerOptions = {
         root: null,
-        rootMargin: '0px',
-        threshold: 0.1
+        rootMargin: '-50px',
+        threshold: 0.15
     };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
+                // Staggered animation delay
+                const delay = entry.target.dataset.delay || 0;
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
 
-                // Ha chart container, animáljuk a chartokat
-                if (entry.target.querySelector('.chart-bar') ||
-                    entry.target.querySelector('.row-bar')) {
-                    animateCharts(entry.target);
-                }
+                    // Ha chart container, animáljuk a chartokat
+                    if (entry.target.querySelector('.chart-bar') ||
+                        entry.target.querySelector('.row-bar')) {
+                        animateCharts(entry.target);
+                    }
+                }, delay);
+
+                // Csak egyszer animálunk
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
@@ -99,8 +106,14 @@ function initScrollAnimations() {
         '.finding, .comparison-visual, .conclusion'
     );
 
-    animatedElements.forEach(el => {
+    animatedElements.forEach((el, index) => {
         el.classList.add('animate-on-scroll');
+        // Staggered delays for sibling elements
+        if (el.classList.contains('consequence-card') ||
+            el.classList.contains('benefit') ||
+            el.classList.contains('finding')) {
+            el.dataset.delay = (index % 4) * 100;
+        }
         observer.observe(el);
     });
 }
@@ -182,20 +195,44 @@ window.addEventListener('scroll', () => {
 });
 
 /**
- * Parallax effekt a hero szekcióban
+ * Parallax effekt a hero szekcióban - Enhanced
  */
+let ticking = false;
+let lastScrollY = 0;
+
 window.addEventListener('scroll', () => {
+    lastScrollY = window.scrollY;
+
+    if (!ticking) {
+        window.requestAnimationFrame(() => {
+            updateParallax();
+            ticking = false;
+        });
+
+        ticking = true;
+    }
+});
+
+function updateParallax() {
     const hero = document.querySelector('.hero');
     if (!hero) return;
 
-    const scrolled = window.scrollY;
+    const scrolled = lastScrollY;
     const heroHeight = hero.offsetHeight;
 
     if (scrolled < heroHeight) {
-        const parallaxValue = scrolled * 0.4;
+        // Smoother parallax with easing
+        const parallaxValue = scrolled * 0.5;
+        const opacityValue = Math.max(0, 1 - (scrolled / heroHeight) * 0.3);
+
         hero.style.setProperty('--parallax', `${parallaxValue}px`);
+
+        const heroContent = hero.querySelector('.hero-content');
+        if (heroContent) {
+            heroContent.style.opacity = opacityValue;
+        }
     }
-});
+}
 
 /**
  * Számok animálása
@@ -236,7 +273,7 @@ if (heroStats) {
 }
 
 /**
- * Interaktív talajréteg vizualizáció
+ * Interaktív talajréteg vizualizáció - Enhanced
  */
 function initSoilInfographic() {
     const infographic = document.querySelector('.soil-infographic');
@@ -271,16 +308,59 @@ function initSoilInfographic() {
     toggleBtn.addEventListener('click', () => {
         isPloughed = !isPloughed;
 
+        // Add loading state animation
+        toggleBtn.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            toggleBtn.style.transform = 'scale(1)';
+        }, 150);
+
         infographic.classList.toggle('ploughed', isPloughed);
 
         const currentTexts = isPloughed ? texts.ploughed : texts.natural;
 
-        stateTitle.textContent = currentTexts.title;
-        btnText.textContent = currentTexts.button;
-        caption.textContent = currentTexts.caption;
+        // Smooth text transitions
+        stateTitle.style.opacity = '0';
+        caption.style.opacity = '0';
 
-        // Frissítsük a leírásokat is
-        if (aerobicDesc) aerobicDesc.textContent = currentTexts.aerobicDesc;
-        if (anaerobicDesc) anaerobicDesc.textContent = currentTexts.anaerobicDesc;
+        setTimeout(() => {
+            stateTitle.textContent = currentTexts.title;
+            btnText.textContent = currentTexts.button;
+            caption.textContent = currentTexts.caption;
+
+            stateTitle.style.opacity = '1';
+            caption.style.opacity = '1';
+
+            // Frissítsük a leírásokat is
+            if (aerobicDesc) aerobicDesc.textContent = currentTexts.aerobicDesc;
+            if (anaerobicDesc) anaerobicDesc.textContent = currentTexts.anaerobicDesc;
+        }, 200);
     });
 }
+
+/**
+ * Enhanced chart bar hover interactions
+ */
+function initChartInteractions() {
+    const chartBars = document.querySelectorAll('.chart-bar, .row-bar');
+
+    chartBars.forEach(bar => {
+        bar.addEventListener('mouseenter', function() {
+            this.style.transform = this.classList.contains('row-bar')
+                ? 'scaleX(1.02)'
+                : 'scaleY(1.02)';
+            this.style.filter = 'brightness(1.1)';
+        });
+
+        bar.addEventListener('mouseleave', function() {
+            this.style.transform = this.classList.contains('row-bar')
+                ? 'scaleX(1)'
+                : 'scaleY(1)';
+            this.style.filter = 'brightness(1)';
+        });
+    });
+}
+
+// Initialize chart interactions
+document.addEventListener('DOMContentLoaded', () => {
+    initChartInteractions();
+});
