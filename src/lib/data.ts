@@ -128,27 +128,62 @@ export const heroStats = [
   { number: '4', label: 'Hónap', sublabel: 'Március – Június' },
 ]
 
-// Irrigation challenges for Tab 1
-export const irrigationChallenges = [
+// Tab 1: A Tömörödés Problémája
+export const compactionChallenges = [
   {
-    title: 'Gyakori öntözés',
-    description: 'Intenzív öntözéses kertészeti kultúrákban 4-7 naponként szükséges öntözés',
+    title: 'Gyakori öntözés hatása',
+    description: 'Intenzív öntözéses kertészeti kultúrákban 4-7 naponként 30-50 mm víz kijuttatása történik, ami fokozatosan tömöríti a talajt.',
     icon: 'droplet',
-    data: '4-7 naponta',
+    data: '350-450 mm/szezon',
   },
   {
-    title: 'Nagy gépek súlya',
-    description: 'Nehéz öntözőgépek és traktorok taposása tömöríti a talajt',
+    title: 'Gépek taposása',
+    description: 'Nehéz öntözőberendezések, traktorok és betakarító gépek rendszeres áthaladása tömöríti a felső talajréteget.',
     icon: 'weight',
-    data: 'Folyamatos igénybevétel',
+    data: 'Folyamatos terhelés',
   },
   {
-    title: 'Talajszerkezet romlása',
-    description: 'A szerkezet fokozatosan romlik a termesztési ciklus során',
+    title: 'Szerkezetromlás üteme',
+    description: 'A szántott talajon már 30 nap alatt 20-50%-os szerkezetromlás mérhető intenzív öntözés mellett.',
     icon: 'layers',
-    data: '20-50% romlás',
+    data: '30 nap alatt kritikus',
   },
 ]
+
+// Tab 2: Miért nem elég a szántás?
+export const ploughingProblems = [
+  {
+    title: 'Eketalp képződés',
+    description: 'A szántás 25-30 cm mélységben tömör réteget (eketalpat) gyúr, ami akadályozza a gyökerek és a víz mélyebb behatolását.',
+    icon: 'layers',
+    dataBadge: '20+ bar nyomás',
+    source: 'Szakdolgozat 7. oldal',
+  },
+  {
+    title: 'Rétegek felcserélése',
+    description: 'A forgatás során az aerob (oxigéndús) és anaerob (oxigénszegény) rétegek felcserélődnek, ami károsítja a talajéletet.',
+    icon: 'activity',
+    dataBadge: 'Talajélet károsodás',
+    source: 'Szakdolgozat 7. oldal',
+  },
+  {
+    title: 'Széntartalom oxidálódása',
+    description: 'A forgatás hatására a mélyebb rétegek szerves anyaga a felszínre kerül és gyorsabban oxidálódik, csökkentve a humusztartalmat.',
+    icon: 'leaf',
+    dataBadge: 'Humusz veszteség',
+    source: 'Szakdolgozat 7. oldal',
+  },
+  {
+    title: 'Lassú felmelegedés',
+    description: 'A tömör talajszerkezet rosszabbul vezeti a hőt, így tavasszal lassabban melegszik fel — a 2025-ös hideg tavasz során ez 2-4°C különbséget jelentett.',
+    icon: 'thermometer',
+    dataBadge: '2-4°C különbség',
+    source: '14., 16. ábra',
+  },
+]
+
+// Legacy alias for backward compatibility
+export const irrigationChallenges = compactionChallenges
 
 // Problem statistics
 export const problemStatistics = {
@@ -211,4 +246,51 @@ export const machineTypes = [
   { badge: 'Nagy szériás', name: '38SX', depth: '15-35 cm munkamélység', featured: false },
   { badge: 'Lazítókéses', name: '38WX', depth: '35 cm + 55 cm lazítás', featured: false },
   { badge: 'Mélyásógép', name: '40SX', depth: '20-50 cm munkamélység', featured: true },
+]
+
+// Alkalmazási módok - ásógép önmagában vs. kombinációban
+export const applicationModes = [
+  {
+    id: 'solo',
+    title: 'Önálló ásógép',
+    description: 'Csak ásógéppel végzett művelés, más eszköz nélkül',
+    when: 'Jó szerkezetű, nem túl tömör talajokon',
+    depth: '30-45 cm',
+    result: 'Stabil lazaság (-2 cm változás)',
+    examples: ['Lakitelek I. parcella (Mélyásógép)', 'Lakitelek III. parcella (Ásógép 30cm)'],
+    rating: 4,
+    icon: 'spade',
+  },
+  {
+    id: 'with-loosening',
+    title: 'Lazítás + Ásógép',
+    description: 'Előzetes mélylazítás után ásógépes művelés',
+    when: 'Nagyon tömör, mély eketalpas talajokon',
+    depth: '55 cm lazítás + 30 cm ásógép',
+    result: 'Nagyobb kezdeti lazaság, de gyorsabb tömörödés (-7 cm)',
+    examples: ['Lakitelek II. parcella', 'Szentkirály 38WX kezelés'],
+    rating: 3,
+    icon: 'layers',
+  },
+  {
+    id: 'with-ploughing',
+    title: 'Szántás + Ásógép',
+    description: 'Őszi szántás után tavaszi ásógépes művelés',
+    when: 'Hagyományos gazdálkodásba illeszkedve',
+    depth: '28 cm szántás + 25 cm ásógép',
+    result: 'Legjobb stabilitás (-1 cm változás)',
+    examples: ['Lakitelek VII. parcella', 'Kecskemét-Borbás kezelés'],
+    rating: 5,
+    icon: 'combine',
+  },
+]
+
+// Összehasonlító táblázat a kísérletekből
+export const treatmentComparison = [
+  { treatment: 'Mélyásógép (40 cm)', initial: 33, final: 31, change: -2, stable: true },
+  { treatment: 'Ásógép (30 cm)', initial: 22, final: 20, change: -2, stable: true },
+  { treatment: 'Szántás + Ásógép', initial: 32, final: 31, change: -1, stable: true },
+  { treatment: 'Lazítás + Ásógép', initial: 35, final: 28, change: -7, stable: false },
+  { treatment: 'Lazítás + Szántás + Kombinátor', initial: 35, final: 28, change: -7, stable: false },
+  { treatment: 'Csak szántás + Kombinátor', initial: 28, final: 32, change: 4, stable: true },
 ]

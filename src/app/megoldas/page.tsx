@@ -1,7 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import SectionHeader from '@/components/ui/SectionHeader'
+import ApplicationModes from '@/components/solution/ApplicationModes'
 import { benefits, machineTypes } from '@/lib/data'
 import styles from '@/components/solution/Solution.module.css'
 
@@ -105,6 +108,26 @@ export default function MegoldasPage() {
               </motion.div>
             ))}
           </div>
+        </motion.div>
+
+        {/* Alkalmazási módok szekció */}
+        <ApplicationModes />
+
+        {/* CTA a kísérlethez */}
+        <motion.div
+          className={styles.ctaSection}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <p className={styles.ctaText}>
+            De melyik alkalmazási mód a legjobb? Ezt vizsgáltuk három helyszínen, hét különböző kezeléssel.
+          </p>
+          <Link href="/kiserlet" className={styles.ctaButton}>
+            <span>Tovább a kísérletekre</span>
+            <ArrowRight size={20} />
+          </Link>
         </motion.div>
       </div>
     </section>

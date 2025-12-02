@@ -420,7 +420,7 @@
 
 .parcelRow {
     display: grid;
-    grid-template-columns: 50px 1fr 80px 80px 100px;
+    grid-template-columns: 50px 1fr 80px 80px 100px 60px;
     gap: var(--space-md);
     padding: var(--space-md) var(--space-lg);
     border-bottom: 1px solid var(--color-cream);
@@ -470,6 +470,96 @@
 
 .parcelChangeGood {
     color: var(--color-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.parcelChangeBad {
+    color: #C62828;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.parcelStatus {
+    display: flex;
+    justify-content: center;
+}
+
+.statusGood {
+    color: var(--color-green);
+}
+
+.statusBad {
+    color: #C62828;
+}
+
+/* Lakitelek Intro */
+.lakitelekIntro {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+}
+
+.lakitelekDesc {
+    font-size: 1rem;
+    color: var(--color-earth-600);
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.lakitelekDesc strong {
+    color: var(--color-earth-800);
+}
+
+.lakitelekDesc em {
+    font-style: normal;
+    color: var(--color-green-dark);
+    font-weight: 600;
+}
+
+/* Lakitelek Conclusions */
+.lakitelekConclusions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    margin-top: var(--space-2xl);
+}
+
+.conclusionCard {
+    background: var(--color-cream);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-start;
+}
+
+.conclusionIcon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.conclusionContent h5 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-earth-800);
+    margin: 0 0 var(--space-xs);
+}
+
+.conclusionContent p {
+    font-size: 0.875rem;
+    color: var(--color-earth-600);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.conclusionContent strong {
+    color: var(--color-green-dark);
 }
 
 .parcelsNote {
@@ -582,13 +672,17 @@
     }
 
     .parcelRow {
-        grid-template-columns: 40px 1fr;
-        gap: var(--space-sm);
+        grid-template-columns: 40px 1fr 60px 60px 80px 40px;
+        gap: var(--space-xs);
+        font-size: 0.8125rem;
     }
 
     .parcelMay,
-    .parcelAug,
-    .parcelChange {
-        display: none;
+    .parcelAug {
+        font-size: 0.75rem;
+    }
+
+    .lakitelekConclusions {
+        grid-template-columns: 1fr;
     }
 }

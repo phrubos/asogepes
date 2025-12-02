@@ -1,7 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { CheckCircle, XCircle, TrendingUp, TrendingDown } from 'lucide-react'
 import BarChart from './BarChart'
+import Timeline from './Timeline'
 import styles from './Experiment.module.css'
 
 interface LocationData {
@@ -99,21 +101,26 @@ export default function LocationContent({ location, data }: LocationContentProps
       )}
 
       {!isLakitelek && data.chartData && (
-        <div className={styles.resultsPreview}>
-          <h4>Tömörödés alakulása</h4>
-          <BarChart data={data.chartData} />
-          <div className={styles.chartLegend}>
-            <span className={`${styles.legendItem} ${styles.legendSpade}`}>Ásógépezett</span>
-            <span className={`${styles.legendItem} ${styles.legendControl}`}>Kontroll</span>
-            <span className={styles.legendNote}>Laza talajréteg mélysége (cm) – magasabb = jobb</span>
-          </div>
-          {data.callout && (
-            <div className={styles.resultCallout}>
-              <span className={styles.calloutNumber}>{data.callout.number}</span>
-              <span className={styles.calloutText}>{data.callout.text}</span>
+        <>
+          {/* Idővonal vizualizáció */}
+          <Timeline data={data.chartData} title={`Szerkezetváltozás: ${data.name}`} />
+          
+          <div className={styles.resultsPreview}>
+            <h4>Tömörödés alakulása (részletes)</h4>
+            <BarChart data={data.chartData} />
+            <div className={styles.chartLegend}>
+              <span className={`${styles.legendItem} ${styles.legendSpade}`}>Ásógépezett</span>
+              <span className={`${styles.legendItem} ${styles.legendControl}`}>Kontroll</span>
+              <span className={styles.legendNote}>Laza talajréteg mélysége (cm) – magasabb = jobb</span>
             </div>
-          )}
-        </div>
+            {data.callout && (
+              <div className={styles.resultCallout}>
+                <span className={styles.calloutNumber}>{data.callout.number}</span>
+                <span className={styles.calloutText}>{data.callout.text}</span>
+              </div>
+            )}
+          </div>
+        </>
       )}
 
       {!isLakitelek && data.highlight && (
@@ -133,7 +140,15 @@ export default function LocationContent({ location, data }: LocationContentProps
 
       {isLakitelek && data.parcels && (
         <div className={styles.lakitelekParcels}>
-          <h4>7 művelési kombináció összehasonlítása</h4>
+          <div className={styles.lakitelekIntro}>
+            <h4>7 művelési kombináció összehasonlítása</h4>
+            <p className={styles.lakitelekDesc}>
+              Lakiteleken <strong>7 különböző művelési kombinációt</strong> vizsgáltunk egymás mellett, 
+              azonos körülmények között. Ez a legrészletesebb összehasonlítás, ami bemutatja: 
+              <em>melyik művelési mód őrzi meg legjobban a talaj szerkezetét?</em>
+            </p>
+          </div>
+          
           <div className={styles.parcelsTable}>
             <div className={`${styles.parcelRow} ${styles.parcelHeader}`}>
               <span className={styles.parcelNum}>#</span>
@@ -141,6 +156,7 @@ export default function LocationContent({ location, data }: LocationContentProps
               <span className={styles.parcelMay}>Május</span>
               <span className={styles.parcelAug}>Augusztus</span>
               <span className={styles.parcelChange}>Változás</span>
+              <span className={styles.parcelStatus}>Értékelés</span>
             </div>
             {data.parcels.map((parcel, index) => (
               <div
@@ -151,13 +167,45 @@ export default function LocationContent({ location, data }: LocationContentProps
                 <span className={styles.parcelTreatment}>{parcel.treatment}</span>
                 <span className={styles.parcelMay}>{parcel.may} cm</span>
                 <span className={styles.parcelAug}>{parcel.aug} cm</span>
-                <span className={`${styles.parcelChange} ${parcel.good ? styles.parcelChangeGood : ''}`}>
+                <span className={`${styles.parcelChange} ${parcel.good ? styles.parcelChangeGood : styles.parcelChangeBad}`}>
+                  {parcel.good ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
                   {parcel.change > 0 ? '+' : ''}{parcel.change} cm
+                </span>
+                <span className={styles.parcelStatus}>
+                  {parcel.good ? (
+                    <CheckCircle size={18} className={styles.statusGood} />
+                  ) : (
+                    <XCircle size={18} className={styles.statusBad} />
+                  )}
                 </span>
               </div>
             ))}
           </div>
-          <p className={styles.parcelsNote}>A kiemeltek a legstabilabb eredményt mutató parcellák — mindkettőben szerepel ásógép</p>
+          
+          {/* Lakitelek következtetések */}
+          <div className={styles.lakitelekConclusions}>
+            <div className={styles.conclusionCard}>
+              <div className={styles.conclusionIcon}>🏆</div>
+              <div className={styles.conclusionContent}>
+                <h5>Legstabilabb eredmény</h5>
+                <p><strong>VII. Szántás + Ásógép:</strong> Csak -1 cm változás 4 hónap és 450 mm öntözés után!</p>
+              </div>
+            </div>
+            <div className={styles.conclusionCard}>
+              <div className={styles.conclusionIcon}>⭐</div>
+              <div className={styles.conclusionContent}>
+                <h5>Önálló ásógép</h5>
+                <p><strong>I. és III. parcella:</strong> Mélyásógép és ásógép is kiváló (-2 cm)</p>
+              </div>
+            </div>
+            <div className={styles.conclusionCard}>
+              <div className={styles.conclusionIcon}>⚠️</div>
+              <div className={styles.conclusionContent}>
+                <h5>Túllázítás veszélye</h5>
+                <p><strong>II., IV., VI.:</strong> Túl sok művelet = gyorsabb visszatömörödés (-7 cm)</p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

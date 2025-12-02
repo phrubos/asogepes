@@ -7,8 +7,8 @@ import { AlertTriangle, Ban, ThermometerSun, Activity, Droplet, Weight, Layers, 
 import SectionHeader from '@/components/ui/SectionHeader'
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
 import ConsequenceCard from '@/components/problem/ConsequenceCard'
-import ConsequenceImage from '@/components/problem/ConsequenceImage'
-import { consequences, irrigationChallenges, problemStatistics } from '@/lib/data'
+import SoilComparison from '@/components/problem/SoilComparison'
+import { compactionChallenges, ploughingProblems, problemStatistics } from '@/lib/data'
 import styles from '@/components/problem/Problem.module.css'
 
 const variants = {
@@ -41,13 +41,13 @@ const variants = {
 }
 
 export default function ProblemaPage() {
-  const [activeTab, setActiveTab] = useState<'problem' | 'consequences'>('problem')
+  const [activeTab, setActiveTab] = useState<'compaction' | 'ploughing'>('compaction')
   const [[page, direction], setPage] = useState([0, 0])
 
-  const handleTabChange = (newTab: 'problem' | 'consequences') => {
+  const handleTabChange = (newTab: 'compaction' | 'ploughing') => {
     if (newTab === activeTab) return
     
-    const newDirection = newTab === 'consequences' ? 1 : -1
+    const newDirection = newTab === 'ploughing' ? 1 : -1
     setPage([page + newDirection, newDirection])
     setActiveTab(newTab)
   }
@@ -65,24 +65,24 @@ export default function ProblemaPage() {
 
         <div className={styles.tabsContainer}>
           <button
-            className={`${styles.tab} ${activeTab === 'problem' ? styles.tabActive : ''}`}
-            onClick={() => handleTabChange('problem')}
+            className={`${styles.tab} ${activeTab === 'compaction' ? styles.tabActive : ''}`}
+            onClick={() => handleTabChange('compaction')}
           >
-            Öntözéses Termesztés Kihívása
+            A Tömörödés Problémája
           </button>
           <button
-            className={`${styles.tab} ${activeTab === 'consequences' ? styles.tabActive : ''}`}
-            onClick={() => handleTabChange('consequences')}
+            className={`${styles.tab} ${activeTab === 'ploughing' ? styles.tabActive : ''}`}
+            onClick={() => handleTabChange('ploughing')}
           >
-            Hagyományos Művelés Problémái
+            Miért Nem Elég a Szántás?
           </button>
         </div>
 
         <div className={styles.bookContainer}>
           <AnimatePresence mode="wait" custom={direction} initial={false}>
-            {activeTab === 'problem' ? (
+            {activeTab === 'compaction' ? (
               <motion.div
-                key="problem"
+                key="compaction"
                 custom={direction}
                 variants={variants}
                 initial="enter"
@@ -102,11 +102,11 @@ export default function ProblemaPage() {
                   </div>
 
                   <p className={styles.contextIntro}>
-                    Intenzív öntözéses kertészeti kultúrákban (paradicsom, hagyma) a talaj <strong>gyorsan tömörödik</strong> a nagy mennyiségű víz hatására. A kérdés: hogyan őrizzük meg a talaj kedvező szerkezetét a teljes termesztési ciklus alatt?
+                    Intenzív öntözéses kertészeti kultúrákban (paradicsom, hagyma) a talaj <strong>gyorsan tömörödik</strong> a nagy mennyiségű víz és a gépek taposása hatására. A kérdés: <strong>hogyan őrizzük meg a talaj kedvező szerkezetét egy teljes termesztési ciklus alatt?</strong>
                   </p>
 
                   <div className={styles.challengeGrid}>
-                    {irrigationChallenges.map((challenge, index) => {
+                    {compactionChallenges.map((challenge, index) => {
                       const iconMap: Record<string, JSX.Element> = {
                         droplet: <Droplet size={24} />,
                         weight: <Weight size={24} />,
@@ -133,7 +133,7 @@ export default function ProblemaPage() {
                   </div>
 
                   <blockquote className={styles.centralQuestion}>
-                    „A kérdés: Melyik művelési módszer tudja <strong>LEGJOBBAN</strong> megőrizni a talaj laza szerkezetét egy teljes termesztési ciklus alatt?"
+                    „A kutatás célja: Melyik művelési módszer tudja <strong>LEGJOBBAN</strong> megőrizni a talaj laza szerkezetét egy teljes termesztési ciklus alatt?”
                   </blockquote>
 
                   <div className={styles.problemVisual}>
@@ -143,7 +143,7 @@ export default function ProblemaPage() {
               </motion.div>
             ) : (
               <motion.div
-                key="consequences"
+                key="ploughing"
                 custom={direction}
                 variants={variants}
                 initial="enter"
@@ -152,29 +152,33 @@ export default function ProblemaPage() {
                 className={styles.pageWrapper}
               >
                 <div className={styles.consequencesContent}>
-                  <div className={styles.consequencesHeader}>
-                    <ConsequenceImage />
-                  </div>
+                  <p className={styles.contextIntro}>
+                    A hagyományos <strong>szántás</strong> ugyan fellazítja a talajt, de komoly mellékhatásokkal jár. 
+                    A forgatás során eketalpat képez, felcseréli a talajrétegeket, és károsítja a talajéletet.
+                  </p>
 
                   <div className={styles.consequencesGrid}>
-                    {consequences.map((consequence, index) => (
+                    {ploughingProblems.map((problem, index) => (
                       <ConsequenceCard
                         key={index}
-                        title={consequence.title}
-                        description={consequence.description}
-                        icon={consequence.icon}
-                        dataBadge={consequence.dataBadge}
-                        source={consequence.source}
+                        title={problem.title}
+                        description={problem.description}
+                        icon={problem.icon}
+                        dataBadge={problem.dataBadge}
+                        source={problem.source}
                         index={index}
                       />
                     ))}
                   </div>
 
+                  {/* Talajszelvény összehasonlítás - ábra placeholder */}
+                  <SoilComparison />
+
                   <div className={styles.problemConclusion}>
                     <div className={styles.conclusionAlert}>
                       <AlertTriangle size={24} color="#F57C00" />
                       <p>
-                        <strong>Ezért kellett megvizsgálni:</strong> Különböző művelési módszerek (szántás, kultivátor, ásógép, lazítás) hogyan hatnak a talaj szerkezetének változására egy teljes termesztési ciklus alatt.
+                        <strong>Ezért kellett megvizsgálni:</strong> Az ásógép — mint forgatás nélküli lazítóeszköz — képes-e megoldani ezeket a problémákat?
                       </p>
                     </div>
 

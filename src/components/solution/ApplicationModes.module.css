@@ -1,0 +1,251 @@
+.container {
+  margin: var(--space-3xl) 0;
+  padding: var(--space-2xl);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-cream);
+  text-align: center;
+  margin: 0 0 var(--space-xs);
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--color-cream-dark);
+  text-align: center;
+  margin: 0 0 var(--space-2xl);
+  opacity: 0.8;
+}
+
+.modesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+}
+
+.modeCard {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  position: relative;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.modeCard:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px);
+}
+
+.modeCard.recommended {
+  border-color: var(--color-gold);
+  background: rgba(255, 193, 7, 0.1);
+}
+
+.recommendedBadge {
+  position: absolute;
+  top: -12px;
+  right: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-xs) var(--space-md);
+  background: var(--color-gold);
+  color: var(--color-earth-900);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modeHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.modeIcon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  color: var(--color-green-light);
+}
+
+.modeTitle {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-cream);
+  margin: 0;
+}
+
+.modeDesc {
+  font-size: 0.9375rem;
+  color: var(--color-cream-dark);
+  line-height: 1.6;
+  margin: 0 0 var(--space-lg);
+  opacity: 0.9;
+}
+
+.modeDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+}
+
+.detailItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.detailLabel {
+  font-size: 0.8125rem;
+  color: var(--color-cream-dark);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.detailValue {
+  font-size: 0.875rem;
+  color: var(--color-cream);
+  text-align: right;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.detailValue.good {
+  color: var(--color-green-light);
+}
+
+.detailValue.moderate {
+  color: var(--color-gold);
+}
+
+.examples {
+  margin-bottom: var(--space-md);
+}
+
+.examplesLabel {
+  font-size: 0.75rem;
+  color: var(--color-cream-dark);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.examplesList {
+  margin: 0;
+  padding-left: var(--space-lg);
+  font-size: 0.8125rem;
+  color: var(--color-cream-dark);
+  line-height: 1.6;
+}
+
+.examplesList li {
+  margin-bottom: 2px;
+}
+
+.rating {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.starFilled {
+  color: var(--color-gold);
+}
+
+.starEmpty {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.conclusion {
+  margin-top: var(--space-2xl);
+  padding: var(--space-xl);
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+}
+
+.conclusionIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.conclusion p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-cream);
+}
+
+.conclusion strong {
+  color: var(--color-green-light);
+}
+
+.conclusion em {
+  font-style: normal;
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .modesGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .modeCard.recommended {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--space-xl);
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .modeHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .detailItem {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .detailValue {
+    text-align: left;
+  }
+}

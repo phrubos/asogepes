@@ -3,6 +3,7 @@ import { Inter, Fraunces } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/layout/Navigation'
 import Footer from '@/components/layout/Footer'
+import PageNavigation from '@/components/ui/PageNavigation'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -28,6 +29,7 @@ export default function RootLayout({
     <html lang="hu" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
         <Navigation />
+        <PageNavigation />
         {children}
         <Footer />
       </body>
