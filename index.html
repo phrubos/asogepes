@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ásógépes Talajművelés | Tudományos Kutatás 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <span class="logo-icon">◈</span>
+                Ásógép Kutatás
+            </a>
+            <div class="nav-links">
+                <a href="#problema">A Probléma</a>
+                <a href="#megoldas">Megoldás</a>
+                <a href="#kiserlet">Kísérletek</a>
+                <a href="#eredmenyek">Eredmények</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-bg">
+            <div class="hero-grain"></div>
+            <div class="hero-gradient"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>Neumann János Egyetem × Agroskill Kft.</span>
+                <span class="badge-year">2025</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="title-line">A talaj nem</span>
+                <span class="title-line title-accent">végtelen erőforrás</span>
+            </h1>
+            <p class="hero-subtitle">
+                Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról öntözött kertészeti kultúrákban
+            </p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Kísérleti terület</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">7</span>
+                    <span class="stat-label">Művelési kombináció</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label">Hónap mérés</span>
+                </div>
+            </div>
+            <a href="#problema" class="hero-scroll">
+                <span>Görgess lejjebb</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- Problem Section -->
+    <section id="problema" class="section section-problem">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <h2 class="section-title">A Probléma</h2>
+            </div>
+
+            <div class="problem-grid">
+                <div class="problem-main">
+                    <blockquote class="problem-quote">
+                        „A talajdegradáció országos probléma, amelynek fő kiváltó okait a helytelen talajművelési eljárások adják."
+                    </blockquote>
+                    <p class="problem-text">
+                        A hagyományos szántás évszázadok óta a mezőgazdaság alapja. De tudjuk-e, milyen hatással van a talajunkra? A folyamatos forgatás <strong>megöli a talaj biológiai életét</strong>, oxidálja a széntartalmat, és tömör réteget — úgynevezett <strong>eketalpat</strong> — képez.
+                    </p>
+                </div>
+
+                <div class="problem-visual">
+                    <div class="soil-diagram">
+                        <div class="soil-layer soil-layer-1">
+                            <span class="layer-label">Aerob réteg</span>
+                            <span class="layer-desc">Élő, oxigéndús</span>
+                        </div>
+                        <div class="soil-arrow">
+                            <svg viewBox="0 0 24 48">
+                                <path d="M12 0 L12 40 M4 32 L12 40 L20 32" stroke="currentColor" stroke-width="2" fill="none"/>
+                            </svg>
+                            <span>Szántás</span>
+                            <svg viewBox="0 0 24 48">
+                                <path d="M12 48 L12 8 M4 16 L12 8 L20 16" stroke="currentColor" stroke-width="2" fill="none"/>
+                            </svg>
+                        </div>
+                        <div class="soil-layer soil-layer-2">
+                            <span class="layer-label">Anaerob réteg</span>
+                            <span class="layer-desc">Tömör, oxigénszegény</span>
+                        </div>
+                    </div>
+                    <p class="diagram-caption">A szántás megfordítja a rétegeket — a talajélet elpusztul</p>
+                </div>
+            </div>
+
+            <div class="problem-consequences">
+                <h3 class="consequences-title">Következmények</h3>
+                <div class="consequences-grid">
+                    <div class="consequence-card">
+                        <div class="consequence-icon">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/>
+                                <path d="M24 14v10l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h4>Lassú felmelegedés</h4>
+                        <p>A tömör talaj nehezebben melegszik fel tavasszal, késleltetve a vetést</p>
+                    </div>
+                    <div class="consequence-card">
+                        <div class="consequence-icon">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <path d="M24 4v40M14 14l10 10 10-10M14 24l10 10 10-10M14 34l10 10 10-10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h4>Rossz vízgazdálkodás</h4>
+                        <p>Az eketalp nem engedi át a vizet — pangóvíz vagy kiszáradás</p>
+                    </div>
+                    <div class="consequence-card">
+                        <div class="consequence-icon">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <path d="M8 40 Q24 10 40 40" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <circle cx="24" cy="36" r="4" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <h4>Gyökérfejlődés gátlása</h4>
+                        <p>20 bar felett a gyökerek nem tudnak áthatolni a tömör rétegen</p>
+                    </div>
+                    <div class="consequence-card">
+                        <div class="consequence-icon">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <path d="M4 44 L44 4" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 8 Q24 20 36 12 Q28 28 40 36" stroke="currentColor" stroke-width="2" fill="none"/>
+                            </svg>
+                        </div>
+                        <h4>Szervesanyag-vesztés</h4>
+                        <p>A forgatás oxidálja a talaj széntartalmát — fogy a humusz</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section id="megoldas" class="section section-solution">
+        <div class="container">
+            <div class="section-header section-header-light">
+                <span class="section-number">02</span>
+                <h2 class="section-title">A Megoldás</h2>
+            </div>
+
+            <div class="solution-intro">
+                <h3 class="solution-headline">
+                    Lazítás <em>forgatás nélkül</em>
+                </h3>
+                <p class="solution-desc">
+                    Az Imants ásógép holland fejlesztésű, dupla rotoros talajművelő eszköz. Nem fordítja meg a talajrétegeket — lazít, kever, de <strong>megőrzi a talaj természetes szerkezetét</strong>.
+                </p>
+            </div>
+
+            <div class="machine-showcase">
+                <div class="machine-image">
+                    <div class="machine-placeholder">
+                        <span class="placeholder-text">IMANTS 40SX</span>
+                        <span class="placeholder-sub">Mélyásógép</span>
+                    </div>
+                </div>
+                <div class="machine-specs">
+                    <div class="spec-group">
+                        <h4>Működési elv</h4>
+                        <div class="spec-diagram">
+                            <div class="rotor rotor-front">
+                                <span class="rotor-label">Első rotor</span>
+                                <span class="rotor-depth">30-50 cm</span>
+                                <span class="rotor-task">Alapművelés</span>
+                            </div>
+                            <div class="rotor rotor-back">
+                                <span class="rotor-label">Hátsó rotor</span>
+                                <span class="rotor-depth">6-8 cm</span>
+                                <span class="rotor-task">Egyengetés</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit">
+                    <div class="benefit-icon">✓</div>
+                    <div class="benefit-content">
+                        <h4>Nincs eketalp</h4>
+                        <p>Nem gyúr tömör réteget a művelt zóna alá</p>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">✓</div>
+                    <div class="benefit-content">
+                        <h4>Megmarad a talajélet</h4>
+                        <p>A mikroorganizmusok a helyükön maradnak</p>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">✓</div>
+                    <div class="benefit-content">
+                        <h4>Gyorsabb felmelegedés</h4>
+                        <p>Nagyobb pórustérfogat = jobb hővezetés</p>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <div class="benefit-icon">✓</div>
+                    <div class="benefit-content">
+                        <h4>Egyenletes felszín</h4>
+                        <p>Nincs barázda, azonnal vethető</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="machine-types">
+                <h3 class="types-title">Vizsgált géptípusok</h3>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <div class="type-badge">Nagy szériás</div>
+                        <h4 class="type-name">38SX</h4>
+                        <p class="type-depth">15-35 cm munkamélység</p>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-badge">Lazítókéses</div>
+                        <h4 class="type-name">38WX</h4>
+                        <p class="type-depth">35 cm + 55 cm lazítás</p>
+                    </div>
+                    <div class="type-card type-card-featured">
+                        <div class="type-badge">Mélyásógép</div>
+                        <h4 class="type-name">40SX</h4>
+                        <p class="type-depth">20-50 cm munkamélység</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiment Section -->
+    <section id="kiserlet" class="section section-experiment">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h2 class="section-title">A Kísérlet</h2>
+            </div>
+
+            <div class="experiment-intro">
+                <p>Három különböző helyszínen, eltérő talajokon és kultúrákban vizsgáltuk az ásógép hatását. Minden területen <strong>ásógépezett</strong> és <strong>hagyományos művelésű</strong> parcellát hasonlítottunk össze.</p>
+            </div>
+
+            <div class="location-tabs">
+                <button class="location-tab active" data-location="szentkiraly">
+                    <span class="tab-number">1</span>
+                    <span class="tab-name">Szentkirály</span>
+                    <span class="tab-crop">Vöröshagyma</span>
+                </button>
+                <button class="location-tab" data-location="kecskemet">
+                    <span class="tab-number">2</span>
+                    <span class="tab-name">Kecskemét-Borbás</span>
+                    <span class="tab-crop">Ipari paradicsom</span>
+                </button>
+                <button class="location-tab" data-location="lakitelek">
+                    <span class="tab-number">3</span>
+                    <span class="tab-name">Lakitelek</span>
+                    <span class="tab-crop">Ipari paradicsom</span>
+                </button>
+            </div>
+
+            <!-- Szentkirály -->
+            <div class="location-content active" id="szentkiraly">
+                <div class="location-header">
+                    <div class="location-map">
+                        <div class="map-placeholder">
+                            <span>Drónfelvétel helye</span>
+                        </div>
+                    </div>
+                    <div class="location-info">
+                        <h3>Szentkirály</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Talaj</span>
+                                <span class="info-value">Réti csernozjom</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Kötöttség (KA)</span>
+                                <span class="info-value">28,5</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Kultúra</span>
+                                <span class="info-value">Vöröshagyma</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Öntözés</span>
+                                <span class="info-value">350 mm</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Mérési időszak</span>
+                                <span class="info-value">Március – Június</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Mérések száma</span>
+                                <span class="info-value">4 alkalom</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="treatment-comparison">
+                    <div class="treatment treatment-spade">
+                        <div class="treatment-header">
+                            <span class="treatment-badge">Ásógépezett</span>
+                        </div>
+                        <ul class="treatment-list">
+                            <li>Őszi nehézkultivátor</li>
+                            <li>Tavaszi nehézkultivátor</li>
+                            <li><strong>38WX ásógép (30 cm + 55 cm lazítókés)</strong></li>
+                        </ul>
+                    </div>
+                    <div class="treatment-vs">VS</div>
+                    <div class="treatment treatment-control">
+                        <div class="treatment-header">
+                            <span class="treatment-badge">Kontroll</span>
+                        </div>
+                        <ul class="treatment-list">
+                            <li>Őszi nehézkultivátor</li>
+                            <li>Tavaszi nehézkultivátor</li>
+                            <li>Kombinátor</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="results-preview">
+                    <h4>Tömörödés alakulása</h4>
+                    <div class="chart-container">
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Március</div>
+                            <div class="chart-bars">
+                                <div class="chart-bar chart-bar-spade" style="--height: 87.5%">
+                                    <span class="bar-value">35 cm</span>
+                                </div>
+                                <div class="chart-bar chart-bar-control" style="--height: 20%">
+                                    <span class="bar-value">8 cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Április</div>
+                            <div class="chart-bars">
+                                <div class="chart-bar chart-bar-spade" style="--height: 75%">
+                                    <span class="bar-value">30 cm</span>
+                                </div>
+                                <div class="chart-bar chart-bar-control" style="--height: 62.5%">
+                                    <span class="bar-value">25 cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Május</div>
+                            <div class="chart-bars">
+                                <div class="chart-bar chart-bar-spade" style="--height: 55%">
+                                    <span class="bar-value">22 cm</span>
+                                </div>
+                                <div class="chart-bar chart-bar-control" style="--height: 57.5%">
+                                    <span class="bar-value">23 cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Június</div>
+                            <div class="chart-bars">
+                                <div class="chart-bar chart-bar-spade" style="--height: 42.5%">
+                                    <span class="bar-value">17 cm</span>
+                                </div>
+                                <div class="chart-bar chart-bar-control" style="--height: 12.5%">
+                                    <span class="bar-value">5 cm</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <span class="legend-item legend-spade">Ásógépezett</span>
+                        <span class="legend-item legend-control">Kontroll</span>
+                        <span class="legend-note">Laza talajréteg mélysége (cm) – magasabb = jobb</span>
+                    </div>
+                </div>
+
+                <div class="location-highlight">
+                    <div class="highlight-image">
+                        <div class="image-placeholder">
+                            <span>Összehasonlító fotó</span>
+                            <span class="placeholder-sub">Gyomborítottság különbsége</span>
+                        </div>
+                    </div>
+                    <div class="highlight-text">
+                        <h4>Látható különbség</h4>
+                        <p>A júniusi helyszíni bejáráson szemmel látható volt: az ásógépezett parcellán <strong>jelentősen kevesebb gyom</strong> fejlődött, mint a hagyományos művelésű területen.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kecskemét -->
+            <div class="location-content" id="kecskemet">
+                <div class="location-header">
+                    <div class="location-map">
+                        <div class="map-placeholder">
+                            <span>Drónfelvétel helye</span>
+                        </div>
+                    </div>
+                    <div class="location-info">
+                        <h3>Kecskemét-Borbás</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Talaj</span>
+                                <span class="info-value">Réti csernozjom</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Kötöttség (KA)</span>
+                                <span class="info-value">28</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Kultúra</span>
+                                <span class="info-value">Ipari paradicsom</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Öntözés</span>
+                                <span class="info-value">400 mm</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Mérési időszak</span>
+                                <span class="info-value">Május – Június</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Mérések száma</span>
+                                <span class="info-value">2 alkalom</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="treatment-comparison">
+                    <div class="treatment treatment-spade">
+                        <div class="treatment-header">
+                            <span class="treatment-badge">Ásógépezett</span>
+                        </div>
+                        <ul class="treatment-list">
+                            <li>Őszi szántás (28 cm)</li>
+                            <li>Simítózás</li>
+                            <li>Ásóborona</li>
+                            <li><strong>40SX mélyásógép (45 cm)</strong></li>
+                        </ul>
+                    </div>
+                    <div class="treatment-vs">VS</div>
+                    <div class="treatment treatment-control">
+                        <div class="treatment-header">
+                            <span class="treatment-badge">Kontroll</span>
+                        </div>
+                        <ul class="treatment-list">
+                            <li>Őszi szántás (28 cm)</li>
+                            <li>Simítózás</li>
+                            <li>Ásóborona</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="results-preview">
+                    <h4>Tömörödés alakulása</h4>
+                    <div class="chart-container">
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Május</div>
+                            <div class="chart-bars">
+                                <div class="chart-bar chart-bar-spade" style="--height: 100%">
+                                    <span class="bar-value">40 cm</span>
+                                </div>
+                                <div class="chart-bar chart-bar-control" style="--height: 87.5%">
+                                    <span class="bar-value">35 cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Június</div>
+                            <div class="chart-bars">
+                                <div class="chart-bar chart-bar-spade" style="--height: 92.5%">
+                                    <span class="bar-value">37 cm</span>
+                                </div>
+                                <div class="chart-bar chart-bar-control" style="--height: 67.5%">
+                                    <span class="bar-value">27 cm</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <span class="legend-item legend-spade">Ásógépezett</span>
+                        <span class="legend-item legend-control">Kontroll</span>
+                        <span class="legend-note">Laza talajréteg mélysége (cm) – magasabb = jobb</span>
+                    </div>
+                    <div class="result-callout">
+                        <span class="callout-number">10 cm</span>
+                        <span class="callout-text">különbség júniusban az ásógépezett parcella javára</span>
+                    </div>
+                </div>
+
+                <div class="location-highlight">
+                    <div class="highlight-image">
+                        <div class="image-placeholder">
+                            <span>Összehasonlító fotó</span>
+                            <span class="placeholder-sub">Paradicsom állomány júniusban</span>
+                        </div>
+                    </div>
+                    <div class="highlight-text">
+                        <h4>Szembetűnő növekedési különbség</h4>
+                        <p>A júniusi fotón jól látható: az ásógépezett sorok paradicsomjai <strong>nagyobbak és fejlettebbek</strong>, mint a hagyományos művelésű terület növényei.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lakitelek -->
+            <div class="location-content" id="lakitelek">
+                <div class="location-header">
+                    <div class="location-map">
+                        <div class="map-placeholder">
+                            <span>Drónfelvétel helye</span>
+                        </div>
+                    </div>
+                    <div class="location-info">
+                        <h3>Lakitelek</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Talaj</span>
+                                <span class="info-value">Humuszos homok</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Kötöttség (KA)</span>
+                                <span class="info-value">27</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Kultúra</span>
+                                <span class="info-value">Ipari paradicsom</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Öntözés</span>
+                                <span class="info-value">450 mm</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Mérési időszak</span>
+                                <span class="info-value">Május – Augusztus</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Parcellák</span>
+                                <span class="info-value">7 különböző</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lakitelek-parcels">
+                    <h4>7 művelési kombináció összehasonlítása</h4>
+                    <div class="parcels-table">
+                        <div class="parcel-row parcel-header">
+                            <span class="parcel-num">#</span>
+                            <span class="parcel-treatment">Művelés</span>
+                            <span class="parcel-may">Május</span>
+                            <span class="parcel-aug">Augusztus</span>
+                            <span class="parcel-change">Változás</span>
+                        </div>
+                        <div class="parcel-row parcel-highlight">
+                            <span class="parcel-num">I.</span>
+                            <span class="parcel-treatment">Mélyásógép (40 cm)</span>
+                            <span class="parcel-may">33 cm</span>
+                            <span class="parcel-aug">31 cm</span>
+                            <span class="parcel-change good">-2 cm</span>
+                        </div>
+                        <div class="parcel-row">
+                            <span class="parcel-num">II.</span>
+                            <span class="parcel-treatment">Lazítás + Ásógép (30 cm)</span>
+                            <span class="parcel-may">35 cm</span>
+                            <span class="parcel-aug">28 cm</span>
+                            <span class="parcel-change">-7 cm</span>
+                        </div>
+                        <div class="parcel-row">
+                            <span class="parcel-num">III.</span>
+                            <span class="parcel-treatment">Ásógép (30 cm)</span>
+                            <span class="parcel-may">22 cm</span>
+                            <span class="parcel-aug">20 cm</span>
+                            <span class="parcel-change good">-2 cm</span>
+                        </div>
+                        <div class="parcel-row">
+                            <span class="parcel-num">IV.</span>
+                            <span class="parcel-treatment">Lazítás + Szántás + Kombinátor</span>
+                            <span class="parcel-may">35 cm</span>
+                            <span class="parcel-aug">28 cm</span>
+                            <span class="parcel-change">-7 cm</span>
+                        </div>
+                        <div class="parcel-row">
+                            <span class="parcel-num">V.</span>
+                            <span class="parcel-treatment">Szántás + Kombinátor</span>
+                            <span class="parcel-may">28 cm</span>
+                            <span class="parcel-aug">32 cm</span>
+                            <span class="parcel-change good">+4 cm</span>
+                        </div>
+                        <div class="parcel-row">
+                            <span class="parcel-num">VI.</span>
+                            <span class="parcel-treatment">Lazítás + Szántás + Ásógép</span>
+                            <span class="parcel-may">36 cm</span>
+                            <span class="parcel-aug">29 cm</span>
+                            <span class="parcel-change">-7 cm</span>
+                        </div>
+                        <div class="parcel-row parcel-highlight">
+                            <span class="parcel-num">VII.</span>
+                            <span class="parcel-treatment">Szántás + Ásógép (25 cm)</span>
+                            <span class="parcel-may">32 cm</span>
+                            <span class="parcel-aug">31 cm</span>
+                            <span class="parcel-change good">-1 cm</span>
+                        </div>
+                    </div>
+                    <p class="parcels-note">A kiemeltek a legstabilabb eredményt mutató parcellák — mindkettőben szerepel ásógép</p>
+                </div>
+
+                <div class="lakitelek-chart">
+                    <h4>Tömörödés alakulása (450 mm öntözés után)</h4>
+                    <div class="multi-chart">
+                        <div class="multi-chart-row">
+                            <span class="row-label">I. Mélyásógép</span>
+                            <div class="row-bars">
+                                <div class="row-bar bar-may" style="width: 82.5%"><span>33</span></div>
+                                <div class="row-bar bar-aug" style="width: 77.5%"><span>31</span></div>
+                            </div>
+                        </div>
+                        <div class="multi-chart-row">
+                            <span class="row-label">II. Lazítás+Ásógép</span>
+                            <div class="row-bars">
+                                <div class="row-bar bar-may" style="width: 87.5%"><span>35</span></div>
+                                <div class="row-bar bar-aug" style="width: 70%"><span>28</span></div>
+                            </div>
+                        </div>
+                        <div class="multi-chart-row">
+                            <span class="row-label">III. Ásógép</span>
+                            <div class="row-bars">
+                                <div class="row-bar bar-may" style="width: 55%"><span>22</span></div>
+                                <div class="row-bar bar-aug" style="width: 50%"><span>20</span></div>
+                            </div>
+                        </div>
+                        <div class="multi-chart-row">
+                            <span class="row-label">IV. Hagyományos+Lazítás</span>
+                            <div class="row-bars">
+                                <div class="row-bar bar-may" style="width: 87.5%"><span>35</span></div>
+                                <div class="row-bar bar-aug" style="width: 70%"><span>28</span></div>
+                            </div>
+                        </div>
+                        <div class="multi-chart-row">
+                            <span class="row-label">V. Hagyományos</span>
+                            <div class="row-bars">
+                                <div class="row-bar bar-may" style="width: 70%"><span>28</span></div>
+                                <div class="row-bar bar-aug" style="width: 80%"><span>32</span></div>
+                            </div>
+                        </div>
+                        <div class="multi-chart-row">
+                            <span class="row-label">VI. Mindent kombináció</span>
+                            <div class="row-bars">
+                                <div class="row-bar bar-may" style="width: 90%"><span>36</span></div>
+                                <div class="row-bar bar-aug" style="width: 72.5%"><span>29</span></div>
+                            </div>
+                        </div>
+                        <div class="multi-chart-row">
+                            <span class="row-label">VII. Szántás+Ásógép</span>
+                            <div class="row-bars">
+                                <div class="row-bar bar-may" style="width: 80%"><span>32</span></div>
+                                <div class="row-bar bar-aug" style="width: 77.5%"><span>31</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <span class="legend-item legend-may">Május</span>
+                        <span class="legend-item legend-aug">Augusztus</span>
+                        <span class="legend-note">Laza talajréteg mélysége (cm)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="eredmenyek" class="section section-results">
+        <div class="container">
+            <div class="section-header section-header-light">
+                <span class="section-number">04</span>
+                <h2 class="section-title">Eredmények</h2>
+            </div>
+
+            <div class="key-findings">
+                <div class="finding">
+                    <div class="finding-number">01</div>
+                    <div class="finding-content">
+                        <h3>Tartósabb lazaság</h3>
+                        <p>Az ásógépezett parcellák <strong>5-10 cm-rel mélyebben</strong> maradtak lazák a teljes tenyészidőszak alatt, még 400-450 mm öntözővíz kijuttatása után is.</p>
+                    </div>
+                </div>
+                <div class="finding">
+                    <div class="finding-number">02</div>
+                    <div class="finding-content">
+                        <h3>Gyorsabb felmelegedés</h3>
+                        <p>A tavaszi mérések során az ásógépezett talaj <strong>2-4°C-kal melegebb</strong> volt — a 2025-ös hideg tavasz miatt ez különösen fontos volt.</p>
+                    </div>
+                </div>
+                <div class="finding">
+                    <div class="finding-number">03</div>
+                    <div class="finding-content">
+                        <h3>Jobb vízgazdálkodás</h3>
+                        <p>Az ásógépezett parcellákban a víz <strong>egyenletesebben oszlott el</strong> a talajszelvényben, mélyebb rétegekbe is lejutott.</p>
+                    </div>
+                </div>
+                <div class="finding">
+                    <div class="finding-number">04</div>
+                    <div class="finding-content">
+                        <h3>Látható növényfejlődés</h3>
+                        <p>A paradicsom és hagyma állományok <strong>szemmel láthatóan fejlettebbek</strong> voltak az ásógépezett területeken.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-visual">
+                <div class="comparison-images">
+                    <div class="comparison-side">
+                        <div class="comparison-placeholder">
+                            <span>Hagyományos művelés</span>
+                        </div>
+                        <span class="comparison-label">Kontroll parcella</span>
+                    </div>
+                    <div class="comparison-divider">
+                        <span>VS</span>
+                    </div>
+                    <div class="comparison-side">
+                        <div class="comparison-placeholder comparison-placeholder-highlight">
+                            <span>Ásógépes művelés</span>
+                        </div>
+                        <span class="comparison-label">Ásógépezett parcella</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="conclusion">
+                <blockquote class="conclusion-quote">
+                    „A mélyásógép és a szántás+ásógép kombináció adta a legstabilabb, legegyenletesebb eredményt a teljes tenyészidőszak alatt."
+                </blockquote>
+                <p class="conclusion-text">
+                    A kutatás igazolta: az ásógépes talajművelés hatékonyan csökkenti a tömörödést, javítja a vízgazdálkodást, és elősegíti a növények fejlődését. Különösen ajánlott <strong>igényes kertészeti kultúrákhoz</strong> és <strong>öntözéses gazdálkodáshoz</strong>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logos">
+                    <div class="footer-logo">
+                        <span class="logo-placeholder">Neumann János Egyetem</span>
+                        <span class="logo-sub">Kertészeti és Vidékfejlesztési Kar</span>
+                    </div>
+                    <div class="footer-logo">
+                        <span class="logo-placeholder">Agroskill Kft.</span>
+                        <span class="logo-sub">Szentkirály</span>
+                    </div>
+                </div>
+                <div class="footer-credits">
+                    <p><strong>Kutatás:</strong> Dobecz Andor (Kertészmérnök BSc)</p>
+                    <p><strong>Konzulens:</strong> Dr. Hüvely Attila (Egyetemi docens)</p>
+                    <p class="footer-year">2025</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
