@@ -124,9 +124,8 @@ export const findings = [
 
 // Hero statistics
 export const heroStats = [
-  { number: '3', label: 'Kísérleti terület' },
-  { number: '7', label: 'Művelési kombináció' },
-  { number: '4', label: 'Hónap mérés' },
+  { number: '3', label: 'Helyszín', sublabel: 'Szentkirály · Kecskemét · Lakitelek' },
+  { number: '4', label: 'Hónap', sublabel: 'Március – Június' },
 ]
 
 // Consequences data

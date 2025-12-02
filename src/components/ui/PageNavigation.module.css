@@ -1,0 +1,161 @@
+/* Navigation Zones - The interactive edge areas */
+.navZone {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background 0.4s ease;
+}
+
+/* Left Zone styling */
+.leftZone {
+    left: 0;
+}
+
+/* Right Zone styling */
+.rightZone {
+    right: 0;
+}
+
+/* The Semi-Circle Background Effect */
+.navZone::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 240px;
+    height: 400px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    filter: blur(30px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Positioning the circle halves */
+.leftZone::before {
+    left: -120px; /* Half width outside */
+    transform: translateY(-50%) scale(0.8) translateX(-20px);
+}
+
+.rightZone::before {
+    right: -120px; /* Half width outside */
+    transform: translateY(-50%) scale(0.8) translateX(20px);
+}
+
+/* Hover Effects */
+.leftZone:hover::before {
+    opacity: 1;
+    transform: translateY(-50%) scale(1) translateX(0);
+}
+
+.rightZone:hover::before {
+    opacity: 1;
+    transform: translateY(-50%) scale(1) translateX(0);
+}
+
+/* Light Mode Overrides - Stronger dark background for contrast */
+.lightMode .navZone::before {
+    background: rgba(0,0,0,0.85);
+}
+
+/* Remove old gradient overrides */
+.lightMode.leftZone:hover, .lightMode.rightZone:hover {
+    background: none;
+}
+
+/* The Arrow Button Container (Invisible structural wrapper) */
+.navButton {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--color-white);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Specific arrow positioning/animation start states */
+.leftZone .navButton {
+    transform: translateX(-20px);
+}
+
+.rightZone .navButton {
+    transform: translateX(20px);
+}
+
+/* Reveal on Hover */
+.navZone:hover .navButton {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Arrow Icon Styling */
+.navButton svg {
+    width: 40px;
+    height: 40px;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.3));
+}
+
+/* Tooltip */
+.tooltip {
+    position: absolute;
+    white-space: nowrap;
+    top: 50%;
+    margin-top: 40px; /* Position below arrow */
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    transition: all 0.3s ease;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.navZone:hover .tooltip {
+    opacity: 1;
+    margin-top: 50px;
+}
+
+/* Mobile Handling */
+@media (max-width: 768px) {
+    .navZone {
+        width: 60px;
+        background: transparent !important; /* No dark overlay on mobile */
+    }
+    
+    .navButton {
+        opacity: 0.4; /* Faintly visible on mobile so users know they can tap */
+        transform: translateX(0);
+    }
+    
+    /* Small indicator circles for mobile instead of full arrows */
+    .navButton {
+        width: 40px;
+        height: 40px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 50%;
+        backdrop-filter: blur(4px);
+    }
+
+    .navButton svg {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .tooltip {
+        display: none;
+    }
+}

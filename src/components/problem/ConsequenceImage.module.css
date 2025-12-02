@@ -1,0 +1,99 @@
+.imageCard {
+    margin: var(--space-3xl) 0;
+    cursor: pointer;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: var(--color-white);
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: box-shadow var(--transition-base);
+}
+
+.imageCard:hover {
+    box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.imageWrapper {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.image {
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.imageCard:hover .image {
+    transform: scale(1.03);
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0) 50%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.imageCard:hover .overlay {
+    opacity: 1;
+}
+
+.zoomIcon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--color-soil);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.zoomText {
+    color: var(--color-white);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.caption {
+    padding: var(--space-md) var(--space-lg);
+    text-align: center;
+    font-size: 0.9375rem;
+    color: var(--color-earth-600);
+    background: var(--color-cream);
+    border-top: 1px solid var(--color-earth-200);
+}
+
+@media (max-width: 768px) {
+    .imageCard {
+        margin: var(--space-2xl) 0;
+        border-radius: var(--radius-lg);
+    }
+    
+    .zoomIcon {
+        width: 52px;
+        height: 52px;
+    }
+    
+    .caption {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.875rem;
+    }
+}

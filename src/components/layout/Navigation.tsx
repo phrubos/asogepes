@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { motion } from 'framer-motion'
 import styles from './Navigation.module.css'
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
+  const [hoveredPath, setHoveredPath] = useState<string | null>(null)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -38,8 +40,25 @@ export default function Navigation() {
               key={item.href}
               href={item.href}
               className={pathname === item.href ? styles.active : ''}
+              onMouseEnter={() => setHoveredPath(item.href)}
+              onMouseLeave={() => setHoveredPath(null)}
+              style={{ position: 'relative' }}
             >
               {item.label}
+              {item.href === pathname && (
+                <motion.div
+                  className={styles.activeLine}
+                  layoutId="underline"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              {item.href === hoveredPath && item.href !== pathname && (
+                <motion.div
+                  className={styles.hoverLine}
+                  layoutId="underline"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
             </Link>
           ))}
         </div>

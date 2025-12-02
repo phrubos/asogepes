@@ -206,22 +206,23 @@ src/
 ## Fázis 6: Befejezés
 
 ### 6.1 Reszponzív tesztelés
-- [ ] Desktop nézet (1200px+)
-- [ ] Tablet nézet (1024px)
-- [ ] Mobil nézet (768px)
-- [ ] Kis mobil (480px)
+- [x] Desktop nézet (1200px+)
+- [x] Tablet nézet (1024px)
+- [x] Mobil nézet (768px)
+- [x] Kis mobil (480px)
 
 ### 6.2 Optimalizáció
-- [ ] Metadata minden oldalon
+- [x] Metadata minden oldalon
 - [ ] next/image használata (ha vannak képek)
-- [ ] Build teszt: `npm run build`
+- [x] Build teszt: `npm run build`
 
 ### 6.3 Takarítás
 - [ ] Régi fájlok archiválása vagy törlése
   - [ ] index.html
   - [ ] styles.css
   - [ ] script.js
-- [ ] README.md frissítése
+- [x] README.md frissítése
+- [x] .gitignore frissítése Next.js-hez
 
 ---
 

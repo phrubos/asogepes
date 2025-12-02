@@ -422,6 +422,8 @@ em {
     color: var(--color-earth-600);
     text-decoration: none;
     transition: color var(--transition-fast);
+    padding: var(--space-xs) 0; /* Add vertical padding for better hit area */
+    display: inline-block; /* Needed for padding to work correctly */
 }
 
 .Navigation_navLinks__AyBcL a:hover {
@@ -430,6 +432,22 @@ em {
 
 .Navigation_navLinks__AyBcL a.Navigation_active__Kj1W7 {
     color: var(--color-green);
+}
+
+.Navigation_activeLine__iA7Wh,
+.Navigation_hoverLine__bFxiA {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0; /* Adjusted to match new padding */
+    height: 2px;
+    background: var(--color-green);
+    border-radius: 2px;
+}
+
+.Navigation_hoverLine__bFxiA {
+    background: var(--color-soil);
+    opacity: 0.5;
 }
 
 @media (max-width: 768px) {

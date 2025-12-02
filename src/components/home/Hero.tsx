@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import Link from 'next/link'
+import Image from 'next/image'
 import styles from './Hero.module.css'
 import { heroStats } from '@/lib/data'
 
@@ -9,8 +9,15 @@ export default function Hero() {
   return (
     <header className={styles.hero}>
       <div className={styles.heroBg}>
-        <div className={styles.heroGrain}></div>
-        <div className={styles.heroGradient}></div>
+        <Image
+          src="/images/hero-bg-final.png"
+          alt="Ásógép munkában - kontrasztos mezőgazdasági tájkép"
+          fill
+          priority
+          className={styles.heroImage}
+          sizes="100vw"
+        />
+        <div className={styles.heroOverlay}></div>
       </div>
       <div className={styles.heroContent}>
         <motion.div
@@ -58,24 +65,17 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           {heroStats.map((stat, index) => (
-            <div key={index} className={styles.stat}>
+            <motion.div 
+              key={index} 
+              className={styles.stat}
+            >
               <span className={styles.statNumber}>{stat.number}</span>
               <span className={styles.statLabel}>{stat.label}</span>
-            </div>
+              {stat.sublabel && (
+                <span className={styles.statSublabel}>{stat.sublabel}</span>
+              )}
+            </motion.div>
           ))}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-        >
-          <Link href="/problema" className={styles.heroScroll}>
-            <span>Görgess lejjebb</span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </Link>
         </motion.div>
       </div>
     </header>

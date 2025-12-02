@@ -2,10 +2,10 @@
     min-height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     position: relative;
     overflow: hidden;
-    padding: var(--space-5xl) var(--space-lg);
+    padding: var(--space-5xl) var(--space-2xl);
 }
 
 .heroBg {
@@ -14,89 +14,113 @@
     z-index: 0;
 }
 
-.heroGrain {
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.03;
+.heroImage {
+    object-fit: cover;
+    object-position: center 40%;
 }
 
-.heroGradient {
+/* Cinematic gradient: Dark on left, transparent on right */
+.heroOverlay {
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(ellipse 80% 60% at 20% 80%, rgba(74, 103, 65, 0.15), transparent),
-        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(212, 168, 75, 0.1), transparent),
-        linear-gradient(180deg, var(--color-cream) 0%, var(--color-cream-dark) 100%);
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.85) 0%,
+        rgba(0, 0, 0, 0.7) 35%,
+        rgba(0, 0, 0, 0.4) 60%,
+        rgba(0, 0, 0, 0) 100%
+    );
 }
 
 .heroContent {
     position: relative;
     z-index: 1;
-    text-align: center;
-    max-width: 900px;
+    text-align: left;
+    max-width: 800px;
+    padding: 0;
+    /* Removed background/border/shadow for cleaner look */
 }
 
 .heroBadge {
     display: inline-flex;
     align-items: center;
     gap: var(--space-md);
-    padding: var(--space-sm) var(--space-lg);
-    background: var(--color-white);
-    border: 1px solid rgba(61, 41, 20, 0.15);
-    border-radius: 100px;
-    font-size: 0.8125rem;
-    color: var(--color-earth-600);
-    margin-bottom: var(--space-2xl);
+    padding: var(--space-xs) 0; /* Minimal padding */
+    background: transparent; /* Removed background */
+    border: none; /* Removed border */
+    font-size: 0.9375rem;
+    font-family: var(--font-display);
+    color: var(--color-gold); /* Gold text */
+    margin-bottom: var(--space-xl);
     animation: fadeInUp 0.8s ease both;
+    letter-spacing: 0.05em;
 }
 
 .badgeYear {
-    background: var(--color-green);
-    color: var(--color-white);
-    padding: var(--space-xs) var(--space-sm);
-    border-radius: 100px;
-    font-weight: 600;
+    display: none; /* Hide year badge for cleaner look, or keep if preferred */
 }
 
 .heroTitle {
     margin-bottom: var(--space-xl);
+    line-height: 1.1;
 }
 
 .titleLine {
     display: block;
     animation: fadeInUp 0.8s ease both;
+    color: var(--color-white);
+    font-size: 4.5rem; /* Larger font size */
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
 .titleLine:nth-child(1) {
     animation-delay: 0.1s;
-    color: var(--color-earth-700);
 }
 
 .titleAccent {
     animation-delay: 0.2s;
-    color: var(--color-soil);
-    font-style: italic;
+    color: var(--color-gold); /* Pure gold color */
+    font-style: normal; /* Remove italic for more modern look */
 }
 
 .heroSubtitle {
-    font-size: 1.125rem;
-    color: var(--color-earth-600);
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.85);
     max-width: 600px;
-    margin: 0 auto var(--space-3xl);
+    margin: 0 0 var(--space-4xl);
     animation: fadeInUp 0.8s ease 0.3s both;
+    line-height: 1.6;
+    font-weight: 300;
+    border-left: 3px solid var(--color-gold);
+    padding-left: var(--space-lg);
 }
 
+/* Minimalist Stats */
 .heroStats {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: var(--space-3xl);
-    margin-bottom: var(--space-4xl);
     animation: fadeInUp 0.8s ease 0.4s both;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: var(--space-2xl);
 }
 
 .stat {
-    text-align: center;
+    text-align: left;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    backdrop-filter: none;
+    min-width: auto;
+}
+
+.stat:hover {
+    background: transparent;
+    border-color: transparent;
+    /* Removed translateY transform for smoother feel */
+    opacity: 0.8;
 }
 
 .statNumber {
@@ -104,40 +128,71 @@
     font-family: var(--font-display);
     font-size: 3rem;
     font-weight: 700;
-    color: var(--color-green);
+    color: var(--color-white);
     line-height: 1;
+    margin-bottom: var(--space-xs);
 }
 
 .statLabel {
     display: block;
-    font-size: 0.8125rem;
-    color: var(--color-earth-500);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.statSublabel {
+    display: block;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
     margin-top: var(--space-xs);
+    font-weight: 400;
 }
 
-.heroScroll {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-sm);
-    color: var(--color-earth-500);
-    text-decoration: none;
-    font-size: 0.8125rem;
-    animation: fadeInUp 0.8s ease 0.5s both;
-    transition: color var(--transition-base);
-}
-
-.heroScroll:hover {
-    color: var(--color-soil);
-}
-
-.heroScroll svg {
-    animation: bounce 2s infinite;
+@media (max-width: 1024px) {
+    .heroContent {
+        max-width: 600px;
+    }
+    
+    .titleLine {
+        font-size: 3.5rem;
+    }
 }
 
 @media (max-width: 768px) {
+    .hero {
+        align-items: flex-end;
+        padding: var(--space-4xl) var(--space-lg);
+    }
+
+    .heroOverlay {
+        background: linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.6) 40%,
+            rgba(0, 0, 0, 0.9) 100%
+        );
+    }
+
+    .heroContent {
+        width: 100%;
+        max-width: none;
+    }
+
+    .titleLine {
+        font-size: 2.5rem;
+    }
+    
     .heroStats {
-        flex-direction: column;
-        gap: var(--space-lg);
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: var(--space-xl);
+        border-top: none;
+        padding-top: 0;
+    }
+
+    .stat {
+        padding: 0;
     }
 }

@@ -51,6 +51,8 @@
     color: var(--color-earth-600);
     text-decoration: none;
     transition: color var(--transition-fast);
+    padding: var(--space-xs) 0; /* Add vertical padding for better hit area */
+    display: inline-block; /* Needed for padding to work correctly */
 }
 
 .navLinks a:hover {
@@ -59,6 +61,22 @@
 
 .navLinks a.active {
     color: var(--color-green);
+}
+
+.activeLine,
+.hoverLine {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0; /* Adjusted to match new padding */
+    height: 2px;
+    background: var(--color-green);
+    border-radius: 2px;
+}
+
+.hoverLine {
+    background: var(--color-soil);
+    opacity: 0.5;
 }
 
 @media (max-width: 768px) {

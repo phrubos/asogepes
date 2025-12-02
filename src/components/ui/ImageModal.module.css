@@ -1,0 +1,69 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl);
+    cursor: pointer;
+}
+
+.closeButton {
+    position: absolute;
+    top: var(--space-lg);
+    right: var(--space-lg);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--transition-base), transform var(--transition-base);
+    z-index: 1001;
+}
+
+.closeButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.closeButton:active {
+    transform: scale(0.95);
+}
+
+.imageContainer {
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+    max-width: 1400px;
+    cursor: default;
+}
+
+.image {
+    object-fit: contain;
+    border-radius: var(--radius-lg);
+}
+
+@media (max-width: 768px) {
+    .overlay {
+        padding: var(--space-md);
+    }
+    
+    .closeButton {
+        top: var(--space-md);
+        right: var(--space-md);
+        width: 40px;
+        height: 40px;
+    }
+    
+    .imageContainer {
+        width: 95vw;
+        height: 80vh;
+    }
+}
