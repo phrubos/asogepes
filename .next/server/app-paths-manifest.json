@@ -1,7 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/problema/page": "app/problema/page.js",
-  "/kiserlet/page": "app/kiserlet/page.js",
-  "/eredmenyek/page": "app/eredmenyek/page.js",
-  "/megoldas/page": "app/megoldas/page.js"
-}
