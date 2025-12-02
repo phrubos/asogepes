@@ -2,12 +2,13 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AlertTriangle, Ban, ThermometerSun, Activity } from 'lucide-react'
+import Link from 'next/link'
+import { AlertTriangle, Ban, ThermometerSun, Activity, Droplet, Weight, Layers, ArrowRight, Compress, Thermometer } from 'lucide-react'
 import SectionHeader from '@/components/ui/SectionHeader'
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
 import ConsequenceCard from '@/components/problem/ConsequenceCard'
 import ConsequenceImage from '@/components/problem/ConsequenceImage'
-import { consequences } from '@/lib/data'
+import { consequences, irrigationChallenges, problemStatistics } from '@/lib/data'
 import styles from '@/components/problem/Problem.module.css'
 
 const variants = {
@@ -67,13 +68,13 @@ export default function ProblemaPage() {
             className={`${styles.tab} ${activeTab === 'problem' ? styles.tabActive : ''}`}
             onClick={() => handleTabChange('problem')}
           >
-            A Láthatatlan Fal
+            Öntözéses Termesztés Kihívása
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'consequences' ? styles.tabActive : ''}`}
             onClick={() => handleTabChange('consequences')}
           >
-            Következmények
+            Hagyományos Művelés Problémái
           </button>
         </div>
 
@@ -90,46 +91,53 @@ export default function ProblemaPage() {
                 className={styles.pageWrapper}
               >
                 <div className={styles.problemContent}>
-                  <div className={styles.problemGrid}>
-                    <div className={styles.problemMain}>
-                      <blockquote className={styles.problemQuote}>
-                        „Miért fullad meg a növényed, miközben mindent megadsz neki?"
-                      </blockquote>
-                      <p className={styles.problemText}>
-                        A felszín alatt 25-30 cm mélyen egy <strong>áttörhetetlen, tömör réteg</strong> húzódik, amit a nehéz gépek tapostak keményre az évek során. Ez az <strong>Eketalp</strong>.
-                      </p>
-
-                      <div className={styles.painGrid}>
-                        <div className={styles.painCard}>
-                          <div className={styles.painTitle}>
-                            <Ban size={18} color="#D32F2F" /> Gyökér-börtön
-                          </div>
-                          <p className={styles.painText}>
-                            A gyökerek nem tudnak áttörni a 20 bar nyomású rétegen. Sekélyen maradnak, így a növény instabil és sérülékeny.
-                          </p>
-                        </div>
-                        <div className={styles.painCard}>
-                          <div className={styles.painTitle}>
-                            <AlertTriangle size={18} color="#F57C00" /> Víz-csapda
-                          </div>
-                          <p className={styles.painText}>
-                            A téli csapadék nem szivárog le a mélybe (pangóvíz), nyáron pedig a talajvíz nem jut fel a gyökerekhez (aszálykár).
-                          </p>
-                        </div>
-                        <div className={styles.painCard}>
-                          <div className={styles.painTitle}>
-                            <Activity size={18} color="#5D4037" /> Fulladás
-                          </div>
-                          <p className={styles.painText}>
-                            Levegőtlen környezetben elpusztul a hasznos talajélet, és rothadási folyamatok indulnak be a gyökérzónában.
-                          </p>
-                        </div>
-                      </div>
+                  <div className={styles.statHighlight}>
+                    <div className={styles.statNumber}>
+                      {problemStatistics.irrigation.min}-{problemStatistics.irrigation.max}
+                      <span className={styles.statUnit}>{problemStatistics.irrigation.unit}</span>
                     </div>
-
-                    <div className={styles.problemVisual}>
-                      <InteractiveSoil />
+                    <div className={styles.statLabel}>
+                      {problemStatistics.irrigation.label}
                     </div>
+                  </div>
+
+                  <p className={styles.contextIntro}>
+                    Intenzív öntözéses kertészeti kultúrákban (paradicsom, hagyma) a talaj <strong>gyorsan tömörödik</strong> a nagy mennyiségű víz hatására. A kérdés: hogyan őrizzük meg a talaj kedvező szerkezetét a teljes termesztési ciklus alatt?
+                  </p>
+
+                  <div className={styles.challengeGrid}>
+                    {irrigationChallenges.map((challenge, index) => {
+                      const iconMap: Record<string, JSX.Element> = {
+                        droplet: <Droplet size={24} />,
+                        weight: <Weight size={24} />,
+                        layers: <Layers size={24} />,
+                      }
+
+                      return (
+                        <motion.div
+                          key={index}
+                          className={styles.challengeCard}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                        >
+                          <div className={styles.challengeIcon}>
+                            {iconMap[challenge.icon] || <Droplet size={24} />}
+                          </div>
+                          <h4 className={styles.challengeTitle}>{challenge.title}</h4>
+                          <p className={styles.challengeDescription}>{challenge.description}</p>
+                          <div className={styles.challengeData}>{challenge.data}</div>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+
+                  <blockquote className={styles.centralQuestion}>
+                    „A kérdés: Melyik művelési módszer tudja <strong>LEGJOBBAN</strong> megőrizni a talaj laza szerkezetét egy teljes termesztési ciklus alatt?"
+                  </blockquote>
+
+                  <div className={styles.problemVisual}>
+                    <InteractiveSoil />
                   </div>
                 </div>
               </motion.div>
@@ -147,7 +155,7 @@ export default function ProblemaPage() {
                   <div className={styles.consequencesHeader}>
                     <ConsequenceImage />
                   </div>
-                  
+
                   <div className={styles.consequencesGrid}>
                     {consequences.map((consequence, index) => (
                       <ConsequenceCard
@@ -155,9 +163,25 @@ export default function ProblemaPage() {
                         title={consequence.title}
                         description={consequence.description}
                         icon={consequence.icon}
+                        dataBadge={consequence.dataBadge}
+                        source={consequence.source}
                         index={index}
                       />
                     ))}
+                  </div>
+
+                  <div className={styles.problemConclusion}>
+                    <div className={styles.conclusionAlert}>
+                      <AlertTriangle size={24} color="#F57C00" />
+                      <p>
+                        <strong>Ezért kellett megvizsgálni:</strong> Különböző művelési módszerek (szántás, kultivátor, ásógép, lazítás) hogyan hatnak a talaj szerkezetének változására egy teljes termesztési ciklus alatt.
+                      </p>
+                    </div>
+
+                    <Link href="/megoldas" className={styles.conclusionCta}>
+                      <span>Tovább a megoldásra</span>
+                      <ArrowRight size={20} />
+                    </Link>
                   </div>
                 </div>
               </motion.div>

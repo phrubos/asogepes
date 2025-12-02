@@ -2,6 +2,208 @@
     background: var(--color-white);
 }
 
+/* Statistics Highlight */
+.statHighlight {
+    text-align: center;
+    padding: var(--space-2xl);
+    background: linear-gradient(135deg, var(--color-green-light), var(--color-green));
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--space-2xl);
+}
+
+.statNumber {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--color-white);
+    line-height: 1;
+    margin-bottom: var(--space-sm);
+}
+
+.statUnit {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-left: var(--space-xs);
+}
+
+.statLabel {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Context Introduction */
+.contextIntro {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-earth-700);
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto var(--space-2xl);
+}
+
+.contextIntro strong {
+    color: var(--color-earth-900);
+    font-weight: 700;
+}
+
+/* Challenge Grid */
+.challengeGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+}
+
+.challengeCard {
+    background: var(--color-cream);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.challengeCard:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-green);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.challengeIcon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-md);
+    background: var(--color-green-light);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-green-dark);
+}
+
+.challengeTitle {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-earth-900);
+    margin-bottom: var(--space-sm);
+}
+
+.challengeDescription {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-earth-600);
+    margin-bottom: var(--space-md);
+}
+
+.challengeData {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-green);
+    color: var(--color-white);
+    border-radius: 100px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* Central Question */
+.centralQuestion {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    line-height: 1.5;
+    text-align: center;
+    color: var(--color-earth-800);
+    margin: var(--space-3xl) auto;
+    padding: var(--space-2xl);
+    background: var(--color-cream-light);
+    border-left: 6px solid var(--color-gold);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    max-width: 900px;
+}
+
+.centralQuestion strong {
+    color: var(--color-green-dark);
+    font-weight: 800;
+}
+
+/* Data Badge and Source */
+.dataBadge {
+    display: inline-block;
+    margin-top: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
+    background: linear-gradient(135deg, #FF6F00, #F57C00);
+    color: var(--color-white);
+    border-radius: 100px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.source {
+    margin-top: var(--space-sm);
+    font-size: 0.75rem;
+    color: var(--color-earth-400);
+    font-style: italic;
+}
+
+/* Problem Conclusion */
+.problemConclusion {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-2xl);
+    border-top: 2px solid var(--color-earth-200);
+}
+
+.conclusionAlert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+    background: rgba(245, 124, 0, 0.05);
+    border: 2px solid #F57C00;
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.conclusionAlert svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.conclusionAlert p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-earth-700);
+}
+
+.conclusionAlert strong {
+    color: var(--color-earth-900);
+}
+
+.conclusionCta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-xl);
+    background: var(--color-green);
+    color: var(--color-white);
+    border-radius: 100px;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.conclusionCta:hover {
+    background: var(--color-green-dark);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* Pain Cards */
 .painGrid {
     display: grid;
@@ -366,10 +568,61 @@
     .consequencesGrid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .challengeGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .statNumber {
+        font-size: 2.5rem;
+    }
+
+    .statUnit {
+        font-size: 1.5rem;
+    }
+
+    .centralQuestion {
+        font-size: 1.25rem;
+        padding: var(--space-xl);
+    }
 }
 
 @media (max-width: 768px) {
     .consequencesGrid {
         grid-template-columns: 1fr;
+    }
+
+    .challengeGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .statHighlight {
+        padding: var(--space-xl);
+    }
+
+    .statNumber {
+        font-size: 2rem;
+    }
+
+    .statUnit {
+        font-size: 1.25rem;
+    }
+
+    .statLabel {
+        font-size: 1rem;
+    }
+
+    .contextIntro {
+        font-size: 1rem;
+    }
+
+    .centralQuestion {
+        font-size: 1.125rem;
+        padding: var(--space-lg);
+    }
+
+    .conclusionAlert {
+        flex-direction: column;
+        gap: var(--space-md);
     }
 }
