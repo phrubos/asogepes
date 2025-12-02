@@ -128,27 +128,73 @@ export const heroStats = [
   { number: '4', label: 'Hónap', sublabel: 'Március – Június' },
 ]
 
+// Irrigation challenges for Tab 1
+export const irrigationChallenges = [
+  {
+    title: 'Gyakori öntözés',
+    description: 'Intenzív öntözéses kertészeti kultúrákban 4-7 naponként szükséges öntözés',
+    icon: 'droplet',
+    data: '4-7 naponta',
+  },
+  {
+    title: 'Nagy gépek súlya',
+    description: 'Nehéz öntözőgépek és traktorok taposása tömöríti a talajt',
+    icon: 'weight',
+    data: 'Folyamatos igénybevétel',
+  },
+  {
+    title: 'Talajszerkezet romlása',
+    description: 'A szerkezet fokozatosan romlik a termesztési ciklus során',
+    icon: 'layers',
+    data: '20-50% romlás',
+  },
+]
+
+// Problem statistics
+export const problemStatistics = {
+  irrigation: {
+    min: 350,
+    max: 450,
+    unit: 'mm',
+    label: 'Öntözővíz / szezon',
+  },
+  frequency: {
+    min: 4,
+    max: 7,
+    unit: 'nap',
+    label: 'Öntözési gyakoriság',
+  },
+}
+
 // Consequences data
 export const consequences = [
   {
-    title: 'Lassú felmelegedés',
-    description: 'A tömör talaj nehezebben melegszik fel tavasszal, késleltetve a vetést',
-    icon: 'clock',
+    title: 'Gyors tömörödés',
+    description: 'Szántott talajon 30 nap alatt 20-50%-os szerkezetromlás intenzív öntözés mellett',
+    icon: 'compress',
+    dataBadge: 'Szentkirály: 35cm → 5cm',
+    source: '13. ábra, 32. oldal',
   },
   {
-    title: 'Rossz vízgazdálkodás',
-    description: 'Az eketalp nem engedi át a vizet — pangóvíz vagy kiszáradás',
-    icon: 'water',
+    title: 'Biológiai élet károsodása',
+    description: 'A forgatás során az aerob és anaerob rétegek felcserélése károsítja a talajéletet',
+    icon: 'activity',
+    dataBadge: 'Széntartalom oxidálódása',
+    source: '7. oldal',
   },
   {
-    title: 'Gyökérfejlődés gátlása',
-    description: '20 bar felett a gyökerek nem tudnak áthatolni a tömör rétegen',
-    icon: 'root',
+    title: 'Lassú tavaszi felmelegedés',
+    description: 'Tömör talajszerkezet → késleltetett növényfejlődés. 2025 hideg tavaszán kritikus volt.',
+    icon: 'thermometer',
+    dataBadge: '2-4°C különbség',
+    source: '14., 16. ábra',
   },
   {
-    title: 'Szervesanyag-vesztés',
-    description: 'A forgatás oxidálja a talaj széntartalmát — fogy a humusz',
-    icon: 'organic',
+    title: 'Nem egyenletes vízgazdálkodás',
+    description: 'A tömör rétegek akadályozzák a víz egyenletes eloszlását a talajban',
+    icon: 'droplet',
+    dataBadge: 'Pangóvíz ÉS kiszáradás',
+    source: '11., 17. ábra',
   },
 ]
 
