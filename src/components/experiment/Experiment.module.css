@@ -1,0 +1,594 @@
+.sectionExperiment {
+    background: var(--color-cream);
+}
+
+.experimentIntro {
+    max-width: 700px;
+    margin: 0 auto var(--space-3xl);
+    text-align: center;
+}
+
+.experimentIntro p {
+    font-size: 1.0625rem;
+    color: var(--color-earth-600);
+    margin: 0 auto;
+}
+
+.locationTabs {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-3xl);
+    justify-content: center;
+}
+
+.locationTab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-lg) var(--space-2xl);
+    background: var(--color-white);
+    border: 2px solid var(--color-cream-dark);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.locationTab:hover {
+    border-color: var(--color-gold);
+}
+
+.locationTab.active {
+    background: var(--color-soil);
+    border-color: var(--color-soil);
+}
+
+.tabNumber {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-earth-500);
+    transition: color var(--transition-base);
+}
+
+.locationTab.active .tabNumber {
+    color: var(--color-gold);
+}
+
+.tabName {
+    font-weight: 600;
+    color: var(--color-soil);
+    transition: color var(--transition-base);
+}
+
+.locationTab.active .tabName {
+    color: var(--color-white);
+}
+
+.tabCrop {
+    font-size: 0.8125rem;
+    color: var(--color-earth-500);
+    transition: color var(--transition-base);
+}
+
+.locationTab.active .tabCrop {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.locationContent {
+    animation: fadeIn 0.5s ease;
+}
+
+.locationHeader {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3xl);
+    margin-bottom: var(--space-3xl);
+}
+
+.locationMap {
+    aspect-ratio: 16/10;
+    background: var(--color-earth-700);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.mapPlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        linear-gradient(135deg, rgba(74, 103, 65, 0.2), transparent),
+        var(--color-earth-700);
+    border: 2px dashed var(--color-earth-500);
+    color: var(--color-earth-500);
+    font-size: 0.875rem;
+}
+
+.locationInfo h3 {
+    font-size: 2rem;
+    color: var(--color-soil);
+    margin-bottom: var(--space-xl);
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.infoItem {
+    padding: var(--space-md);
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+}
+
+.infoLabel {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-earth-500);
+    margin-bottom: var(--space-xs);
+}
+
+.infoValue {
+    font-weight: 600;
+    color: var(--color-soil);
+}
+
+/* Treatment Comparison */
+.treatmentComparison {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-3xl);
+}
+
+.treatment {
+    flex: 1;
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+}
+
+.treatmentSpade {
+    background: linear-gradient(135deg, var(--color-green-dark), var(--color-green));
+    color: var(--color-white);
+}
+
+.treatmentControl {
+    background: var(--color-white);
+    border: 2px solid var(--color-cream-dark);
+}
+
+.treatmentHeader {
+    margin-bottom: var(--space-lg);
+}
+
+.treatmentBadge {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-md);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.treatmentControl .treatmentBadge {
+    background: var(--color-cream);
+    color: var(--color-earth-600);
+}
+
+.treatmentList {
+    list-style: none;
+}
+
+.treatmentList li {
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9375rem;
+}
+
+.treatmentControl .treatmentList li {
+    border-color: var(--color-cream-dark);
+    color: var(--color-earth-600);
+}
+
+.treatmentList li:last-child {
+    border-bottom: none;
+}
+
+.treatmentList strong {
+    color: var(--color-gold-light);
+}
+
+.treatmentControl .treatmentList strong {
+    color: var(--color-soil);
+}
+
+.treatmentVs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--color-gold);
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.875rem;
+    border-radius: 50%;
+    align-self: center;
+    flex-shrink: 0;
+}
+
+/* Results Preview / Chart */
+.resultsPreview {
+    background: var(--color-white);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-3xl);
+}
+
+.resultsPreview h4 {
+    text-align: center;
+    color: var(--color-soil);
+    margin-bottom: var(--space-2xl);
+}
+
+.chartContainer {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 280px;
+    padding: var(--space-lg) 0;
+}
+
+.chartBarGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.chartLabel {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-earth-600);
+    order: 2;
+}
+
+.chartBars {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: flex-end;
+    height: 200px;
+}
+
+.chartBar {
+    width: 48px;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: var(--space-sm);
+    transform-origin: bottom;
+}
+
+.chartBarSpade {
+    background: linear-gradient(180deg, var(--color-green), var(--color-green-dark));
+}
+
+.chartBarControl {
+    background: linear-gradient(180deg, var(--color-earth-500), var(--color-earth-700));
+}
+
+.barValue {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-white);
+}
+
+.chartLegend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-xl);
+    margin-top: var(--space-xl);
+    flex-wrap: wrap;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.legendItem::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.legendSpade::before {
+    background: var(--color-green);
+}
+
+.legendControl::before {
+    background: var(--color-earth-500);
+}
+
+.legendMay::before {
+    background: var(--color-gold);
+}
+
+.legendAug::before {
+    background: var(--color-green);
+}
+
+.legendNote {
+    font-size: 0.75rem;
+    color: var(--color-earth-500);
+    font-style: italic;
+}
+
+.resultCallout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+    padding: var(--space-lg);
+    background: var(--color-cream);
+    border-radius: var(--radius-md);
+}
+
+.calloutNumber {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-green);
+}
+
+.calloutText {
+    font-size: 0.9375rem;
+    color: var(--color-earth-600);
+}
+
+/* Location Highlight */
+.locationHighlight {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3xl);
+    align-items: center;
+}
+
+.highlightImage {
+    aspect-ratio: 4/3;
+    background: var(--color-earth-700);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.imagePlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    background:
+        linear-gradient(135deg, rgba(74, 103, 65, 0.2), transparent),
+        var(--color-earth-700);
+    border: 2px dashed var(--color-earth-500);
+    color: var(--color-earth-500);
+    font-weight: 500;
+}
+
+.highlightText h4 {
+    color: var(--color-soil);
+    margin-bottom: var(--space-md);
+}
+
+.highlightText p {
+    font-size: 1.0625rem;
+    color: var(--color-earth-600);
+    line-height: 1.7;
+}
+
+/* Lakitelek specific */
+.lakitelekParcels {
+    margin-bottom: var(--space-3xl);
+}
+
+.lakitelekParcels h4 {
+    text-align: center;
+    color: var(--color-soil);
+    margin-bottom: var(--space-xl);
+}
+
+.parcelsTable {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.parcelRow {
+    display: grid;
+    grid-template-columns: 50px 1fr 80px 80px 100px;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--color-cream);
+    align-items: center;
+}
+
+.parcelRow:last-child {
+    border-bottom: none;
+}
+
+.parcelHeader {
+    background: var(--color-cream);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-earth-500);
+}
+
+.parcelHighlight {
+    background: rgba(74, 103, 65, 0.1);
+}
+
+.parcelNum {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--color-earth-700);
+}
+
+.parcelTreatment {
+    font-size: 0.9375rem;
+    color: var(--color-earth-700);
+}
+
+.parcelMay,
+.parcelAug {
+    font-weight: 600;
+    color: var(--color-earth-600);
+    text-align: center;
+}
+
+.parcelChange {
+    text-align: center;
+    font-weight: 600;
+    color: var(--color-accent);
+}
+
+.parcelChangeGood {
+    color: var(--color-green);
+}
+
+.parcelsNote {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-earth-500);
+    margin-top: var(--space-lg);
+    font-style: italic;
+}
+
+/* Lakitelek Chart */
+.lakitelekChart {
+    background: var(--color-white);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
+}
+
+.lakitelekChart h4 {
+    text-align: center;
+    color: var(--color-soil);
+    margin-bottom: var(--space-2xl);
+}
+
+.multiChart {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.multiChartRow {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: var(--space-lg);
+    align-items: center;
+}
+
+.rowLabel {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-earth-600);
+    text-align: right;
+}
+
+.rowBars {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.rowBar {
+    height: 24px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: var(--space-sm);
+    transform-origin: left;
+}
+
+.rowBar span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-white);
+}
+
+.barMay {
+    background: var(--color-gold);
+}
+
+.barAug {
+    background: var(--color-green);
+}
+
+@media (max-width: 1024px) {
+    .locationHeader {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .locationTabs {
+        flex-direction: column;
+    }
+
+    .treatmentComparison {
+        flex-direction: column;
+    }
+
+    .treatmentVs {
+        align-self: center;
+    }
+
+    .chartContainer {
+        flex-wrap: wrap;
+        height: auto;
+        gap: var(--space-xl);
+    }
+
+    .locationHighlight {
+        grid-template-columns: 1fr;
+    }
+
+    .multiChartRow {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+    }
+
+    .rowLabel {
+        text-align: left;
+    }
+
+    .parcelRow {
+        grid-template-columns: 40px 1fr;
+        gap: var(--space-sm);
+    }
+
+    .parcelMay,
+    .parcelAug,
+    .parcelChange {
+        display: none;
+    }
+}

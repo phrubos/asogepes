@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     initNavHighlight();
     initChartAnimations();
+    initSoilInfographic();
 });
 
 /**
@@ -232,4 +233,54 @@ const statsObserver = new IntersectionObserver((entries) => {
 const heroStats = document.querySelector('.hero-stats');
 if (heroStats) {
     statsObserver.observe(heroStats);
+}
+
+/**
+ * Interaktív talajréteg vizualizáció
+ */
+function initSoilInfographic() {
+    const infographic = document.querySelector('.soil-infographic');
+    const toggleBtn = document.getElementById('soilToggleBtn');
+    const stateTitle = document.querySelector('.soil-state-title');
+    const caption = document.getElementById('soilCaption');
+    const btnText = toggleBtn?.querySelector('.btn-text');
+    const aerobicDesc = document.querySelector('.soil-aerobic .layer-desc');
+    const anaerobicDesc = document.querySelector('.soil-anaerobic .layer-desc');
+
+    if (!infographic || !toggleBtn) return;
+
+    let isPloughed = false;
+
+    const texts = {
+        natural: {
+            title: 'Természetes állapot',
+            button: 'Szántás',
+            caption: 'Természetes állapot: egészséges talajélet, átjárható rétegek.',
+            aerobicDesc: 'Élő, oxigéndús, morzsalékos.',
+            anaerobicDesc: 'Tömör, oxigénszegény.'
+        },
+        ploughed: {
+            title: 'Szántás után',
+            button: 'Visszaállítás',
+            caption: 'A szántás megfordítja a rétegeket: a biológiai élet elpusztul, vízzáró réteg keletkezik.',
+            aerobicDesc: 'Eltemetve, oxigénhiányos.',
+            anaerobicDesc: 'Felszínre kerülve kiszárad.'
+        }
+    };
+
+    toggleBtn.addEventListener('click', () => {
+        isPloughed = !isPloughed;
+
+        infographic.classList.toggle('ploughed', isPloughed);
+
+        const currentTexts = isPloughed ? texts.ploughed : texts.natural;
+
+        stateTitle.textContent = currentTexts.title;
+        btnText.textContent = currentTexts.button;
+        caption.textContent = currentTexts.caption;
+
+        // Frissítsük a leírásokat is
+        if (aerobicDesc) aerobicDesc.textContent = currentTexts.aerobicDesc;
+        if (anaerobicDesc) anaerobicDesc.textContent = currentTexts.anaerobicDesc;
+    });
 }

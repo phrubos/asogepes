@@ -1,0 +1,632 @@
+/*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./src/components/ui/SectionHeader.module.css ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************/
+.SectionHeader_sectionHeader__Rqu9i {
+    margin-bottom: var(--space-3xl);
+}
+
+.SectionHeader_sectionNumber__iHwFO {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-sm);
+}
+
+.SectionHeader_sectionTitle__r5qAW {
+    color: var(--color-soil);
+}
+
+.SectionHeader_light__UhN8D .SectionHeader_sectionNumber__iHwFO {
+    color: var(--color-gold-light);
+}
+
+.SectionHeader_light__UhN8D .SectionHeader_sectionTitle__r5qAW {
+    color: var(--color-cream);
+}
+
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./src/components/experiment/Experiment.module.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************/
+.Experiment_sectionExperiment__XeDXI {
+    background: var(--color-cream);
+}
+
+.Experiment_experimentIntro__FCvAC {
+    max-width: 700px;
+    margin: 0 auto var(--space-3xl);
+    text-align: center;
+}
+
+.Experiment_experimentIntro__FCvAC p {
+    font-size: 1.0625rem;
+    color: var(--color-earth-600);
+    margin: 0 auto;
+}
+
+.Experiment_locationTabs__VYV__ {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-3xl);
+    justify-content: center;
+}
+
+.Experiment_locationTab__gW0m5 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-lg) var(--space-2xl);
+    background: var(--color-white);
+    border: 2px solid var(--color-cream-dark);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.Experiment_locationTab__gW0m5:hover {
+    border-color: var(--color-gold);
+}
+
+.Experiment_locationTab__gW0m5.Experiment_active__06oBC {
+    background: var(--color-soil);
+    border-color: var(--color-soil);
+}
+
+.Experiment_tabNumber__e23p9 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-earth-500);
+    transition: color var(--transition-base);
+}
+
+.Experiment_locationTab__gW0m5.Experiment_active__06oBC .Experiment_tabNumber__e23p9 {
+    color: var(--color-gold);
+}
+
+.Experiment_tabName__wQk_4 {
+    font-weight: 600;
+    color: var(--color-soil);
+    transition: color var(--transition-base);
+}
+
+.Experiment_locationTab__gW0m5.Experiment_active__06oBC .Experiment_tabName__wQk_4 {
+    color: var(--color-white);
+}
+
+.Experiment_tabCrop__RAkuk {
+    font-size: 0.8125rem;
+    color: var(--color-earth-500);
+    transition: color var(--transition-base);
+}
+
+.Experiment_locationTab__gW0m5.Experiment_active__06oBC .Experiment_tabCrop__RAkuk {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.Experiment_locationContent__W6v_P {
+    animation: Experiment_fadeIn__btmvA 0.5s ease;
+}
+
+.Experiment_locationHeader__T7jsm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: var(--space-3xl);
+    gap: var(--space-3xl);
+    margin-bottom: var(--space-3xl);
+}
+
+.Experiment_locationMap__2T16X {
+    aspect-ratio: 16/10;
+    background: var(--color-earth-700);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.Experiment_mapPlaceholder__whgrL {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        linear-gradient(135deg, rgba(74, 103, 65, 0.2), transparent),
+        var(--color-earth-700);
+    border: 2px dashed var(--color-earth-500);
+    color: var(--color-earth-500);
+    font-size: 0.875rem;
+}
+
+.Experiment_locationInfo__05oF7 h3 {
+    font-size: 2rem;
+    color: var(--color-soil);
+    margin-bottom: var(--space-xl);
+}
+
+.Experiment_infoGrid__PoJyw {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: var(--space-md);
+    gap: var(--space-md);
+}
+
+.Experiment_infoItem__pyC00 {
+    padding: var(--space-md);
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+}
+
+.Experiment_infoLabel__UcvrK {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-earth-500);
+    margin-bottom: var(--space-xs);
+}
+
+.Experiment_infoValue__pkoNj {
+    font-weight: 600;
+    color: var(--color-soil);
+}
+
+/* Treatment Comparison */
+.Experiment_treatmentComparison__ruTri {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-3xl);
+}
+
+.Experiment_treatment__bG9s4 {
+    flex: 1 1;
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+}
+
+.Experiment_treatmentSpade__li_9G {
+    background: linear-gradient(135deg, var(--color-green-dark), var(--color-green));
+    color: var(--color-white);
+}
+
+.Experiment_treatmentControl__oQubm {
+    background: var(--color-white);
+    border: 2px solid var(--color-cream-dark);
+}
+
+.Experiment_treatmentHeader__YaY3N {
+    margin-bottom: var(--space-lg);
+}
+
+.Experiment_treatmentBadge___D4Iv {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-md);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.Experiment_treatmentControl__oQubm .Experiment_treatmentBadge___D4Iv {
+    background: var(--color-cream);
+    color: var(--color-earth-600);
+}
+
+.Experiment_treatmentList__hP3Vy {
+    list-style: none;
+}
+
+.Experiment_treatmentList__hP3Vy li {
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9375rem;
+}
+
+.Experiment_treatmentControl__oQubm .Experiment_treatmentList__hP3Vy li {
+    border-color: var(--color-cream-dark);
+    color: var(--color-earth-600);
+}
+
+.Experiment_treatmentList__hP3Vy li:last-child {
+    border-bottom: none;
+}
+
+.Experiment_treatmentList__hP3Vy strong {
+    color: var(--color-gold-light);
+}
+
+.Experiment_treatmentControl__oQubm .Experiment_treatmentList__hP3Vy strong {
+    color: var(--color-soil);
+}
+
+.Experiment_treatmentVs__0fbTw {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--color-gold);
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.875rem;
+    border-radius: 50%;
+    align-self: center;
+    flex-shrink: 0;
+}
+
+/* Results Preview / Chart */
+.Experiment_resultsPreview__7NHco {
+    background: var(--color-white);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-3xl);
+}
+
+.Experiment_resultsPreview__7NHco h4 {
+    text-align: center;
+    color: var(--color-soil);
+    margin-bottom: var(--space-2xl);
+}
+
+.Experiment_chartContainer__UogLd {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 280px;
+    padding: var(--space-lg) 0;
+}
+
+.Experiment_chartBarGroup__I3wd_ {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.Experiment_chartLabel__0TwUK {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-earth-600);
+    order: 2;
+}
+
+.Experiment_chartBars__z76GQ {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: flex-end;
+    height: 200px;
+}
+
+.Experiment_chartBar__UMBt9 {
+    width: 48px;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: var(--space-sm);
+    transform-origin: bottom;
+}
+
+.Experiment_chartBarSpade__G0ycS {
+    background: linear-gradient(180deg, var(--color-green), var(--color-green-dark));
+}
+
+.Experiment_chartBarControl__GX_E_ {
+    background: linear-gradient(180deg, var(--color-earth-500), var(--color-earth-700));
+}
+
+.Experiment_barValue__V8tz_ {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-white);
+}
+
+.Experiment_chartLegend__z_Hul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-xl);
+    margin-top: var(--space-xl);
+    flex-wrap: wrap;
+}
+
+.Experiment_legendItem__O8PPG {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.Experiment_legendItem__O8PPG::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.Experiment_legendSpade__jx0JV::before {
+    background: var(--color-green);
+}
+
+.Experiment_legendControl__IVh54::before {
+    background: var(--color-earth-500);
+}
+
+.Experiment_legendMay__RXvW_::before {
+    background: var(--color-gold);
+}
+
+.Experiment_legendAug__9oGo7::before {
+    background: var(--color-green);
+}
+
+.Experiment_legendNote__8nw12 {
+    font-size: 0.75rem;
+    color: var(--color-earth-500);
+    font-style: italic;
+}
+
+.Experiment_resultCallout__vx4Hq {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+    padding: var(--space-lg);
+    background: var(--color-cream);
+    border-radius: var(--radius-md);
+}
+
+.Experiment_calloutNumber__7V9Ck {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-green);
+}
+
+.Experiment_calloutText__0d7MC {
+    font-size: 0.9375rem;
+    color: var(--color-earth-600);
+}
+
+/* Location Highlight */
+.Experiment_locationHighlight__jyHA5 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: var(--space-3xl);
+    gap: var(--space-3xl);
+    align-items: center;
+}
+
+.Experiment_highlightImage__CpnJc {
+    aspect-ratio: 4/3;
+    background: var(--color-earth-700);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.Experiment_imagePlaceholder__UIcYU {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    background:
+        linear-gradient(135deg, rgba(74, 103, 65, 0.2), transparent),
+        var(--color-earth-700);
+    border: 2px dashed var(--color-earth-500);
+    color: var(--color-earth-500);
+    font-weight: 500;
+}
+
+.Experiment_highlightText__wWG9R h4 {
+    color: var(--color-soil);
+    margin-bottom: var(--space-md);
+}
+
+.Experiment_highlightText__wWG9R p {
+    font-size: 1.0625rem;
+    color: var(--color-earth-600);
+    line-height: 1.7;
+}
+
+/* Lakitelek specific */
+.Experiment_lakitelekParcels__c3St_ {
+    margin-bottom: var(--space-3xl);
+}
+
+.Experiment_lakitelekParcels__c3St_ h4 {
+    text-align: center;
+    color: var(--color-soil);
+    margin-bottom: var(--space-xl);
+}
+
+.Experiment_parcelsTable__fegxB {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.Experiment_parcelRow__hOqOD {
+    display: grid;
+    grid-template-columns: 50px 1fr 80px 80px 100px;
+    grid-gap: var(--space-md);
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--color-cream);
+    align-items: center;
+}
+
+.Experiment_parcelRow__hOqOD:last-child {
+    border-bottom: none;
+}
+
+.Experiment_parcelHeader__ebAl8 {
+    background: var(--color-cream);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-earth-500);
+}
+
+.Experiment_parcelHighlight__nsBCO {
+    background: rgba(74, 103, 65, 0.1);
+}
+
+.Experiment_parcelNum__mqAG1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--color-earth-700);
+}
+
+.Experiment_parcelTreatment___07ct {
+    font-size: 0.9375rem;
+    color: var(--color-earth-700);
+}
+
+.Experiment_parcelMay__ppU_K,
+.Experiment_parcelAug__m5g25 {
+    font-weight: 600;
+    color: var(--color-earth-600);
+    text-align: center;
+}
+
+.Experiment_parcelChange__SKE7A {
+    text-align: center;
+    font-weight: 600;
+    color: var(--color-accent);
+}
+
+.Experiment_parcelChangeGood__Nh3q1 {
+    color: var(--color-green);
+}
+
+.Experiment_parcelsNote__q5fCk {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-earth-500);
+    margin-top: var(--space-lg);
+    font-style: italic;
+}
+
+/* Lakitelek Chart */
+.Experiment_lakitelekChart__5LsBw {
+    background: var(--color-white);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-lg);
+}
+
+.Experiment_lakitelekChart__5LsBw h4 {
+    text-align: center;
+    color: var(--color-soil);
+    margin-bottom: var(--space-2xl);
+}
+
+.Experiment_multiChart__C91Ry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.Experiment_multiChartRow__NZQ1q {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-gap: var(--space-lg);
+    gap: var(--space-lg);
+    align-items: center;
+}
+
+.Experiment_rowLabel__wnbyl {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-earth-600);
+    text-align: right;
+}
+
+.Experiment_rowBars____7No {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.Experiment_rowBar__sgvNn {
+    height: 24px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: var(--space-sm);
+    transform-origin: left;
+}
+
+.Experiment_rowBar__sgvNn span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-white);
+}
+
+.Experiment_barMay__GuA9E {
+    background: var(--color-gold);
+}
+
+.Experiment_barAug__OVN1K {
+    background: var(--color-green);
+}
+
+@media (max-width: 1024px) {
+    .Experiment_locationHeader__T7jsm {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .Experiment_locationTabs__VYV__ {
+        flex-direction: column;
+    }
+
+    .Experiment_treatmentComparison__ruTri {
+        flex-direction: column;
+    }
+
+    .Experiment_treatmentVs__0fbTw {
+        align-self: center;
+    }
+
+    .Experiment_chartContainer__UogLd {
+        flex-wrap: wrap;
+        height: auto;
+        gap: var(--space-xl);
+    }
+
+    .Experiment_locationHighlight__jyHA5 {
+        grid-template-columns: 1fr;
+    }
+
+    .Experiment_multiChartRow__NZQ1q {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+    }
+
+    .Experiment_rowLabel__wnbyl {
+        text-align: left;
+    }
+
+    .Experiment_parcelRow__hOqOD {
+        grid-template-columns: 40px 1fr;
+        gap: var(--space-sm);
+    }
+
+    .Experiment_parcelMay__ppU_K,
+    .Experiment_parcelAug__m5g25,
+    .Experiment_parcelChange__SKE7A {
+        display: none;
+    }
+}
+

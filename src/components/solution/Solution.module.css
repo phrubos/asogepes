@@ -1,0 +1,240 @@
+.sectionSolution {
+    background: var(--color-earth-800);
+    color: var(--color-cream);
+}
+
+.solutionIntro {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto var(--space-4xl);
+}
+
+.solutionHeadline {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    color: var(--color-white);
+    margin-bottom: var(--space-lg);
+}
+
+.solutionHeadline em {
+    color: var(--color-gold);
+}
+
+.solutionDesc {
+    font-size: 1.0625rem;
+    color: rgba(245, 240, 232, 0.8);
+    line-height: 1.7;
+}
+
+.solutionDesc strong {
+    color: var(--color-cream);
+}
+
+.machineShowcase {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-3xl);
+    margin-bottom: var(--space-4xl);
+    align-items: center;
+}
+
+.machineImage {
+    aspect-ratio: 4/3;
+    background: var(--color-earth-700);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.machinePlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+        linear-gradient(135deg, rgba(212, 168, 75, 0.1), transparent),
+        var(--color-earth-700);
+    border: 2px dashed var(--color-earth-500);
+}
+
+.placeholderText {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-gold);
+}
+
+.placeholderSub {
+    font-size: 0.875rem;
+    color: var(--color-earth-500);
+    margin-top: var(--space-xs);
+}
+
+.specGroup h4 {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-gold);
+    margin-bottom: var(--space-lg);
+}
+
+.specDiagram {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.rotor {
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: var(--space-xs) var(--space-lg);
+}
+
+.rotorFront {
+    background: var(--color-green);
+}
+
+.rotorBack {
+    background: var(--color-earth-600);
+}
+
+.rotorLabel {
+    font-weight: 600;
+    color: var(--color-white);
+}
+
+.rotorDepth {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-gold-light);
+    grid-row: span 2;
+    align-self: center;
+}
+
+.rotorTask {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.benefitsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+    margin-bottom: var(--space-4xl);
+}
+
+.benefit {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.benefitIcon {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-green);
+    color: var(--color-white);
+    border-radius: 50%;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.benefitContent h4 {
+    font-size: 1rem;
+    color: var(--color-white);
+    margin-bottom: var(--space-xs);
+}
+
+.benefitContent p {
+    font-size: 0.8125rem;
+    color: rgba(245, 240, 232, 0.6);
+}
+
+.machineTypes {
+    text-align: center;
+}
+
+.typesTitle {
+    font-size: 1.25rem;
+    color: var(--color-cream);
+    margin-bottom: var(--space-2xl);
+}
+
+.typesGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+}
+
+.typeCard {
+    padding: var(--space-xl);
+    background: var(--color-earth-700);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-earth-600);
+    transition: transform var(--transition-base), border-color var(--transition-base);
+}
+
+.typeCard:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-gold);
+}
+
+.typeCardFeatured {
+    background: linear-gradient(135deg, var(--color-green-dark), var(--color-earth-700));
+    border-color: var(--color-green);
+}
+
+.typeBadge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-gold);
+    margin-bottom: var(--space-md);
+}
+
+.typeName {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-white);
+    margin-bottom: var(--space-sm);
+}
+
+.typeDepth {
+    font-size: 0.875rem;
+    color: rgba(245, 240, 232, 0.6);
+}
+
+@media (max-width: 1024px) {
+    .machineShowcase {
+        grid-template-columns: 1fr;
+    }
+
+    .benefitsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .benefitsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .typesGrid {
+        grid-template-columns: 1fr;
+    }
+}

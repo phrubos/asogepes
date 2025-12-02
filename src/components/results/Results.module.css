@@ -1,0 +1,155 @@
+.sectionResults {
+    background: var(--color-soil);
+    color: var(--color-cream);
+}
+
+.keyFindings {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-xl);
+    margin-bottom: var(--space-4xl);
+}
+
+.finding {
+    display: flex;
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background var(--transition-base), border-color var(--transition-base);
+}
+
+.finding:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.findingNumber {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-gold);
+    line-height: 1;
+}
+
+.findingContent h3 {
+    font-size: 1.25rem;
+    color: var(--color-white);
+    margin-bottom: var(--space-sm);
+}
+
+.findingContent p {
+    font-size: 0.9375rem;
+    color: rgba(245, 240, 232, 0.7);
+    line-height: 1.6;
+}
+
+.findingContent strong {
+    color: var(--color-gold-light);
+}
+
+/* Comparison Visual */
+.comparisonVisual {
+    margin-bottom: var(--space-4xl);
+}
+
+.comparisonImages {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.comparisonSide {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.comparisonPlaceholder {
+    aspect-ratio: 4/3;
+    background: var(--color-earth-700);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-earth-500);
+    font-weight: 500;
+    border: 2px dashed var(--color-earth-600);
+}
+
+.comparisonPlaceholderHighlight {
+    background: linear-gradient(135deg, var(--color-green-dark), var(--color-earth-700));
+    border-color: var(--color-green);
+}
+
+.comparisonLabel {
+    text-align: center;
+    font-size: 0.875rem;
+    color: rgba(245, 240, 232, 0.6);
+}
+
+.comparisonDivider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: var(--color-gold);
+    color: var(--color-soil);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Conclusion */
+.conclusion {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.conclusionQuote {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-style: italic;
+    color: var(--color-gold-light);
+    margin-bottom: var(--space-xl);
+    position: relative;
+}
+
+.conclusionQuote::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    font-size: 4rem;
+    color: var(--color-gold);
+    opacity: 0.3;
+    font-family: Georgia, serif;
+}
+
+.conclusionText {
+    font-size: 1.0625rem;
+    color: rgba(245, 240, 232, 0.8);
+    line-height: 1.7;
+}
+
+.conclusionText strong {
+    color: var(--color-cream);
+}
+
+@media (max-width: 1024px) {
+    .keyFindings {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .comparisonImages {
+        flex-direction: column;
+    }
+}

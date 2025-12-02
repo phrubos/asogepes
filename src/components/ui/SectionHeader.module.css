@@ -1,0 +1,25 @@
+.sectionHeader {
+    margin-bottom: var(--space-3xl);
+}
+
+.sectionNumber {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-sm);
+}
+
+.sectionTitle {
+    color: var(--color-soil);
+}
+
+.light .sectionNumber {
+    color: var(--color-gold-light);
+}
+
+.light .sectionTitle {
+    color: var(--color-cream);
+}

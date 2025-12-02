@@ -1,0 +1,147 @@
+/*!*******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./src/components/home/Hero.module.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************/
+.Hero_hero__MpeZv {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: var(--space-5xl) var(--space-lg);
+}
+
+.Hero_heroBg__1f9nS {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.Hero_heroGrain__P3v84 {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+}
+
+.Hero_heroGradient__wZKtQ {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 20% 80%, rgba(74, 103, 65, 0.15), transparent),
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(212, 168, 75, 0.1), transparent),
+        linear-gradient(180deg, var(--color-cream) 0%, var(--color-cream-dark) 100%);
+}
+
+.Hero_heroContent__ffO1s {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 900px;
+}
+
+.Hero_heroBadge__9Vr1i {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-white);
+    border: 1px solid rgba(61, 41, 20, 0.15);
+    border-radius: 100px;
+    font-size: 0.8125rem;
+    color: var(--color-earth-600);
+    margin-bottom: var(--space-2xl);
+    animation: Hero_fadeInUp__g69Of 0.8s ease both;
+}
+
+.Hero_badgeYear__iAknm {
+    background: var(--color-green);
+    color: var(--color-white);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: 100px;
+    font-weight: 600;
+}
+
+.Hero_heroTitle__UA_wQ {
+    margin-bottom: var(--space-xl);
+}
+
+.Hero_titleLine__MmLlN {
+    display: block;
+    animation: Hero_fadeInUp__g69Of 0.8s ease both;
+}
+
+.Hero_titleLine__MmLlN:nth-child(1) {
+    animation-delay: 0.1s;
+    color: var(--color-earth-700);
+}
+
+.Hero_titleAccent__0M_A4 {
+    animation-delay: 0.2s;
+    color: var(--color-soil);
+    font-style: italic;
+}
+
+.Hero_heroSubtitle__NXzaD {
+    font-size: 1.125rem;
+    color: var(--color-earth-600);
+    max-width: 600px;
+    margin: 0 auto var(--space-3xl);
+    animation: Hero_fadeInUp__g69Of 0.8s ease 0.3s both;
+}
+
+.Hero_heroStats__eOb0r {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-3xl);
+    margin-bottom: var(--space-4xl);
+    animation: Hero_fadeInUp__g69Of 0.8s ease 0.4s both;
+}
+
+.Hero_stat__TBiGv {
+    text-align: center;
+}
+
+.Hero_statNumber__eqenf {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-green);
+    line-height: 1;
+}
+
+.Hero_statLabel__PxlKZ {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--color-earth-500);
+    margin-top: var(--space-xs);
+}
+
+.Hero_heroScroll__RNfFc {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-earth-500);
+    text-decoration: none;
+    font-size: 0.8125rem;
+    animation: Hero_fadeInUp__g69Of 0.8s ease 0.5s both;
+    transition: color var(--transition-base);
+}
+
+.Hero_heroScroll__RNfFc:hover {
+    color: var(--color-soil);
+}
+
+.Hero_heroScroll__RNfFc svg {
+    animation: Hero_bounce__xwJFZ 2s infinite;
+}
+
+@media (max-width: 768px) {
+    .Hero_heroStats__eOb0r {
+        flex-direction: column;
+        gap: var(--space-lg);
+    }
+}
+

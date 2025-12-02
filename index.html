@@ -86,26 +86,77 @@
                 </div>
 
                 <div class="problem-visual">
-                    <div class="soil-diagram">
-                        <div class="soil-layer soil-layer-1">
-                            <span class="layer-label">Aerob réteg</span>
-                            <span class="layer-desc">Élő, oxigéndús</span>
+                    <div class="soil-infographic">
+                        <!-- Header / Control -->
+                        <div class="soil-header">
+                            <h4 class="soil-state-title">Természetes állapot</h4>
+                            <button class="soil-toggle-btn" id="soilToggleBtn">
+                                <svg class="icon-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/>
+                                </svg>
+                                <span class="btn-text">Szántás</span>
+                            </button>
                         </div>
-                        <div class="soil-arrow">
-                            <svg viewBox="0 0 24 48">
-                                <path d="M12 0 L12 40 M4 32 L12 40 L20 32" stroke="currentColor" stroke-width="2" fill="none"/>
+
+                        <!-- Visualization Container -->
+                        <div class="soil-visualization">
+                            <!-- Aerobic Layer -->
+                            <div class="soil-layer-interactive soil-aerobic" id="soilAerobic">
+                                <div class="layer-content">
+                                    <div class="layer-info">
+                                        <span class="layer-label">Aerob réteg</span>
+                                        <svg class="layer-icon layer-icon-life" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 2L12 22M12 2C15 5 19 5 19 12C19 19 15 22 12 22C9 22 5 19 5 12C5 5 9 5 12 2Z"/>
+                                        </svg>
+                                        <svg class="layer-icon layer-icon-death" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/><path d="M8 9h.01M16 9h.01M9 15c1 1 2 1.5 3 1.5s2-.5 3-1.5"/>
+                                        </svg>
+                                    </div>
+                                    <p class="layer-desc">Élő, oxigéndús, morzsalékos.</p>
+                                </div>
+                                <div class="layer-indicators">
+                                    <span class="indicator indicator-o2">O<sub>2</sub></span>
+                                    <span class="indicator indicator-bio">Bio</span>
+                                </div>
+                            </div>
+
+                            <!-- Plough Pan (Eketalp) -->
+                            <div class="plough-pan" id="ploughPan">
+                                <span class="pan-label">Eketalp (Tömör)</span>
+                            </div>
+
+                            <!-- Anaerobic Layer -->
+                            <div class="soil-layer-interactive soil-anaerobic" id="soilAnaerobic">
+                                <div class="layer-content">
+                                    <div class="layer-info">
+                                        <span class="layer-label">Anaerob réteg</span>
+                                        <svg class="layer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+                                        </svg>
+                                    </div>
+                                    <p class="layer-desc">Tömör, oxigénszegény.</p>
+                                </div>
+                                <div class="layer-indicators layer-indicators-ploughed">
+                                    <svg class="indicator-wind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17.7 7.7a2.5 2.5 0 111.8 4.3H2M9.6 4.6A2 2 0 1111 8H2M12.6 19.4A2 2 0 1014 16H2"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Roots SVG Overlay -->
+                            <svg class="roots-overlay" viewBox="0 0 100 200">
+                                <path class="root root-main" d="M20,0 Q25,50 20,100 T30,200" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+                                <path class="root root-side" d="M50,0 Q45,60 60,120" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
                             </svg>
-                            <span>Szántás</span>
-                            <svg viewBox="0 0 24 48">
-                                <path d="M12 48 L12 8 M4 16 L12 8 L20 16" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <svg class="roots-overlay roots-stunted">
+                                <path class="root-stunted-main" d="M20,10 Q25,40 20,60" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+                                <line class="root-blocked" x1="10" y1="130" x2="50" y2="130" stroke="#EF4444" stroke-width="2" stroke-dasharray="4 2"/>
                             </svg>
                         </div>
-                        <div class="soil-layer soil-layer-2">
-                            <span class="layer-label">Anaerob réteg</span>
-                            <span class="layer-desc">Tömör, oxigénszegény</span>
-                        </div>
+
+                        <!-- Caption -->
+                        <p class="diagram-caption" id="soilCaption">Természetes állapot: egészséges talajélet, átjárható rétegek.</p>
                     </div>
-                    <p class="diagram-caption">A szántás megfordítja a rétegeket — a talajélet elpusztul</p>
                 </div>
             </div>
 
