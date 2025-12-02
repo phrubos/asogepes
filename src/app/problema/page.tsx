@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { AlertTriangle, Ban, ThermometerSun, Activity, Droplet, Weight, Layers, ArrowRight, Compress, Thermometer } from 'lucide-react'
+import { AlertTriangle, Ban, ThermometerSun, Activity, Droplet, Weight, Layers, ArrowRight, Minimize2, Thermometer } from 'lucide-react'
 import SectionHeader from '@/components/ui/SectionHeader'
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
 import ConsequenceCard from '@/components/problem/ConsequenceCard'
