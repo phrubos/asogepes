@@ -1,9 +1,10 @@
 /* Navigation Zones - The interactive edge areas */
 .navZone {
     position: fixed;
-    top: 0;
-    bottom: 0;
-    width: 100px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 120px; /* Match the semicircle radius */
+    height: 400px; /* Match the semicircle height */
     z-index: 100;
     display: flex;
     align-items: center;
@@ -16,11 +17,13 @@
 /* Left Zone styling */
 .leftZone {
     left: 0;
+    border-radius: 0 100% 100% 0 / 0 50% 50% 0;
 }
 
 /* Right Zone styling */
 .rightZone {
     right: 0;
+    border-radius: 100% 0 0 100% / 50% 0 0 50%;
 }
 
 /* The Semi-Circle Background Effect */

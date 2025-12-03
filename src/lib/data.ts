@@ -294,3 +294,148 @@ export const treatmentComparison = [
   { treatment: 'Lazítás + Szántás + Kombinátor', initial: 35, final: 28, change: -7, stable: false },
   { treatment: 'Csak szántás + Kombinátor', initial: 28, final: 32, change: 4, stable: true },
 ]
+
+// Model details for the Solution page - organized by machine model
+export const modelDetails = {
+  '38sx': {
+    id: '38sx',
+    name: '38SX',
+    type: 'Nagy szériás',
+    typeEn: 'Standard Spader',
+    image: '/images/38SX.png',
+    specs: {
+      depth: '15-35 cm',
+      power: '80-150 LE',
+      features: ['Kompakt felépítés', 'Költséghatékony', 'Könnyű karbantartás']
+    },
+    fieldApplication: {
+      location: 'Lakitelek',
+      parcels: 'III., VII. parcella',
+      crop: 'Ipari paradicsom',
+      soil: 'Humuszos homok',
+      ka: '27',
+      irrigation: '450 mm',
+      period: 'Május – Augusztus',
+      treatments: [
+        {
+          parcel: 'III.',
+          description: 'Ásógép (30 cm) önállóan',
+          initial: 22,
+          final: 20,
+          change: -2,
+          stable: true,
+          best: false
+        },
+        {
+          parcel: 'VII.',
+          description: 'Szántás + Ásógép (25 cm)',
+          initial: 32,
+          final: 31,
+          change: -1,
+          stable: true,
+          best: true
+        }
+      ],
+      highlight: {
+        title: 'Legjobb stabilitás',
+        text: 'A szántás + ásógép kombináció (VII. parcella) adta a legjobb stabilitást (-1 cm változás), míg az önálló ásógép is kiváló eredményt hozott.'
+      }
+    }
+  },
+  '38wx': {
+    id: '38wx',
+    name: '38WX',
+    type: 'Lazítókéses',
+    typeEn: 'Spader with Subsoiler',
+    image: '/images/38WX.png',
+    specs: {
+      depth: '35 cm + 55 cm lazítás',
+      power: '100-180 LE',
+      features: ['Dupla működési mélység', 'Mélylazító kések', 'Tömör talajokra optimalizált']
+    },
+    fieldApplication: {
+      location: 'Szentkirály',
+      crop: 'Vöröshagyma',
+      soil: 'Réti csernozjom',
+      ka: '28,5',
+      irrigation: '350 mm',
+      period: 'Március – Június',
+      measurements: '4 alkalom',
+      spadeTreatments: [
+        'Őszi nehézkultivátor',
+        'Tavaszi nehézkultivátor',
+        '38WX ásógép (30 cm + 55 cm lazítókés)'
+      ],
+      controlTreatments: [
+        'Őszi nehézkultivátor',
+        'Tavaszi nehézkultivátor',
+        'Kombinátor'
+      ],
+      chartData: [
+        { month: 'Március', spade: 35, control: 8 },
+        { month: 'Április', spade: 30, control: 25 },
+        { month: 'Május', spade: 22, control: 23 },
+        { month: 'Június', spade: 17, control: 5 }
+      ],
+      highlight: {
+        title: 'Látható különbség',
+        text: 'A júniusi helyszíni bejáráson szemmel látható volt: az ásógépezett parcellán jelentősen kevesebb gyom fejlődött, mint a hagyományos művelésű területen.'
+      }
+    }
+  },
+  '40sx': {
+    id: '40sx',
+    name: '40SX',
+    type: 'Mélyásógép',
+    typeEn: 'Heavy Duty Spader',
+    image: '/images/40SX.png',
+    specs: {
+      depth: '20-50 cm',
+      power: '100-250 LE',
+      features: ['Dupla rotor rendszer', 'Automata kenés', 'Beépített kővédelem']
+    },
+    fieldApplication: {
+      locations: [
+        {
+          name: 'Kecskemét-Borbás',
+          crop: 'Ipari paradicsom',
+          soil: 'Réti csernozjom',
+          ka: '28',
+          irrigation: '400 mm',
+          period: 'Május – Június',
+          spadeTreatments: [
+            'Őszi szántás (28 cm)',
+            'Simítózás',
+            'Ásóborona',
+            '40SX mélyásógép (45 cm)'
+          ],
+          chartData: [
+            { month: 'Május', spade: 40, control: 35 },
+            { month: 'Június', spade: 37, control: 27 }
+          ],
+          callout: {
+            number: '10 cm',
+            text: 'különbség júniusban az ásógépezett parcella javára'
+          }
+        },
+        {
+          name: 'Lakitelek I. parcella',
+          crop: 'Ipari paradicsom',
+          soil: 'Humuszos homok',
+          ka: '27',
+          irrigation: '450 mm',
+          period: 'Május – Augusztus',
+          treatment: 'Mélyásógép (40 cm) önállóan',
+          initial: 33,
+          final: 31,
+          change: -2,
+          stable: true
+        }
+      ],
+      highlight: {
+        title: 'Szembetűnő növekedési különbség',
+        text: 'A júniusi fotón jól látható: az ásógépezett sorok paradicsomjai nagyobbak és fejlettebbek, mint a hagyományos művelésű terület növényei.'
+      }
+    }
+  }
+}

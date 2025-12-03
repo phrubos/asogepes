@@ -1,0 +1,357 @@
+/* FieldDataModal.module.css */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 23, 20, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
+.modalContainer {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  pointer-events: none;
+}
+
+.modal {
+  background: var(--color-earth-900);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 800px;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xl) var(--space-2xl);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.headerIcon {
+  color: var(--color-gold);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--color-white);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.closeBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-white);
+  transform: rotate(90deg);
+}
+
+/* Body */
+.body {
+  padding: var(--space-2xl);
+  overflow-y: auto;
+  max-height: calc(85vh - 100px);
+}
+
+.body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+/* Meta Grid */
+.metaGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md) var(--space-xl);
+  padding: var(--space-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-xl);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.metaItem svg {
+  color: var(--color-gold);
+  flex-shrink: 0;
+}
+
+/* Treatments */
+.treatmentsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+}
+
+@media (max-width: 600px) {
+  .treatmentsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.treatmentCol {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+}
+
+.treatmentCol.spade {
+  border-color: rgba(207, 166, 87, 0.3);
+  background: rgba(207, 166, 87, 0.05);
+}
+
+.treatmentTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-white);
+  margin: 0 0 var(--space-md) 0;
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.treatmentCol.spade .treatmentTitle {
+  color: var(--color-gold);
+}
+
+.treatmentList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.treatmentList li {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.75);
+  padding: var(--space-xs) 0;
+  padding-left: var(--space-md);
+  position: relative;
+}
+
+.treatmentList li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--color-gold);
+}
+
+/* Chart */
+.chartSection {
+  margin-bottom: var(--space-xl);
+}
+
+.chartTitle {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 var(--space-lg) 0;
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.chartItem {
+  text-align: center;
+}
+
+.chartMonth {
+  display: block;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  margin-bottom: var(--space-md);
+}
+
+.chartBars {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  height: 100px;
+  align-items: flex-end;
+}
+
+.barGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bar {
+  width: 32px;
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 6px;
+  min-height: 20px;
+  transition: all 0.3s ease;
+}
+
+.bar:hover {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
+}
+
+.barValue {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.spadeBar {
+  background: linear-gradient(to top, var(--color-gold), #e4c078);
+}
+
+.controlBar {
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
+}
+
+.barLabel {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
+}
+
+.chartLegend {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xl);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.spadeDot {
+  background: var(--color-gold);
+}
+
+.controlDot {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Highlight */
+.highlight {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: rgba(207, 166, 87, 0.1);
+  border-left: 3px solid var(--color-gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.highlight svg {
+  color: var(--color-gold);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.highlight p {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modalContainer {
+    padding: var(--space-md);
+  }
+
+  .modal {
+    max-height: 90vh;
+  }
+
+  .header {
+    padding: var(--space-lg);
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .body {
+    padding: var(--space-lg);
+  }
+
+  .chartBars {
+    height: 80px;
+  }
+
+  .bar {
+    width: 28px;
+  }
+}
