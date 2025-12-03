@@ -4,7 +4,7 @@
   padding: var(--space-5xl) 0;
   min-height: 100vh;
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; - removed to allow sticky positioning */
 }
 
 /* Optional subtle grid background for blueprint feel */
@@ -96,18 +96,25 @@
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s ease, box-shadow 0.1s ease;
 }
 
-/* Staggered Layout */
+/* Staggered Layout for 3 buttons */
 @media (min-width: 1025px) {
-  .navButton:first-child {
+  .navButton:nth-child(1) {
     align-self: flex-end;
-    margin-right: 40px;
-    margin-bottom: -60px;
+    margin-right: 80px;
+    margin-bottom: -40px;
     z-index: 1;
   }
 
-  .navButton:last-child {
+  .navButton:nth-child(2) {
     align-self: flex-end;
+    margin-right: 40px;
+    margin-bottom: -40px;
     z-index: 2;
+  }
+
+  .navButton:nth-child(3) {
+    align-self: flex-end;
+    z-index: 3;
   }
 }
 
@@ -140,19 +147,36 @@
   inset: 0;
   background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.1) 100%);
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
   padding: var(--space-lg);
 }
 
+.navButtonLabel {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+
 .navButtonTitle {
+  display: block;
   color: var(--color-white);
   font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.75rem;
+  font-weight: 800;
   text-align: left;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   transform: translateY(0);
   transition: transform 0.3s ease;
+}
+
+.navButton:hover .navButtonLabel {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .navButton:hover .navButtonTitle {
@@ -228,12 +252,79 @@
   font-style: normal;
 }
 
+/* Content Area */
+.contentArea {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sticky Model Tabs */
+.modelTabs {
+  position: sticky;
+  top: 64px; /* Below the main navigation (nav height ~64px) */
+  z-index: 90;
+  background: var(--color-earth-800);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: var(--space-md) 0;
+  margin-bottom: var(--space-2xl);
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.modelTabs::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50vw;
+  right: -50vw;
+  bottom: 0;
+  background: var(--color-earth-800);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: -1;
+}
+
+.modelTab {
+  padding: var(--space-sm) var(--space-xl);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modelTab:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.modelTab.active {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-earth-900);
+}
+
 .contentWrapper {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5xl);
+}
+
+.modelSectionActive {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Blueprint Container */
