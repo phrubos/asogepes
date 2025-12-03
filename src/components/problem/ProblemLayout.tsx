@@ -77,11 +77,13 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
               onClick={() => scrollToSection('compaction')}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
+              aria-label="Ugrás a Tömörödés szekcióra"
             >
               <img 
                 src="/images/tömörités_cover.png" 
-                alt="Tömörödés" 
+                alt="" 
                 className={styles.navButtonImage}
+                aria-hidden="true"
               />
               <div className={styles.navButtonOverlay}>
                 <span className={styles.navButtonTitle}>A Tömörödés</span>
@@ -93,11 +95,13 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
               onClick={() => scrollToSection('ploughing')}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
+              aria-label="Ugrás a Szántás Korlátai szekcióra"
             >
               <img 
                 src="/images/szantas_korlatai_cover.png" 
-                alt="Szántás korlátai" 
+                alt="" 
                 className={styles.navButtonImage}
+                aria-hidden="true"
               />
               <div className={styles.navButtonOverlay}>
                 <span className={styles.navButtonTitle}>A Szántás Korlátai</span>

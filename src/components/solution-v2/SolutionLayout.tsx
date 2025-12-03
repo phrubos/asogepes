@@ -74,11 +74,13 @@ export default function SolutionLayout({ children }: SolutionLayoutProps) {
               onClick={() => scrollToSection('tech-benefits')}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
+              aria-label="Ugrás a Technológiai Előnyök szekcióra"
             >
               <img 
                 src="/images/technologia_cover.png" 
-                alt="Technológiai előnyök" 
+                alt="" 
                 className={styles.navButtonImage}
+                aria-hidden="true"
               />
               <div className={styles.navButtonOverlay}>
                 <span className={styles.navButtonTitle}>Technológiai Előnyök</span>
@@ -90,11 +92,13 @@ export default function SolutionLayout({ children }: SolutionLayoutProps) {
               onClick={() => scrollToSection('model-range')}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
+              aria-label="Ugrás a Modellválaszték szekcióra"
             >
               <img 
                 src="/images/modell_valasztek_cover.png" 
-                alt="Modellválaszték" 
+                alt="" 
                 className={styles.navButtonImage}
+                aria-hidden="true"
               />
               <div className={styles.navButtonOverlay}>
                 <span className={styles.navButtonTitle}>Modellválaszték</span>

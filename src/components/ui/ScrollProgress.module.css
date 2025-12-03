@@ -1,0 +1,28 @@
+/* ===========================================
+   SCROLL PROGRESS BAR
+   Fixed position progress indicator
+   =========================================== */
+
+.progressBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  transform-origin: 0%;
+  z-index: 9999;
+}
+
+.green {
+  background: linear-gradient(90deg, 
+    var(--color-green-light) 0%, 
+    var(--color-green) 100%
+  );
+}
+
+.gold {
+  background: linear-gradient(90deg, 
+    var(--color-gold-light) 0%, 
+    var(--color-gold) 100%
+  );
+}

@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import styles from './SolutionNew.module.css'
+import styles from './ModelComparison.module.css'
 
 const models = [
   {
@@ -27,81 +27,58 @@ const models = [
 
 export default function ModelComparison() {
   return (
-    <div style={{ marginTop: 'var(--space-3xl)' }}>
-       <div className={styles.blueprintHeader} style={{ marginBottom: 'var(--space-xl)' }}>
-        <div className={styles.blueprintTitle}>
-          Modellválaszték
-        </div>
-        <span className={styles.blueprintBadge}>FLEET OVERVIEW</span>
+    <section className={styles.section}>
+      <div className={styles.header}>
+        <h3 className={styles.title}>Modellválaszték</h3>
+        <span className={styles.badge}>FLEET OVERVIEW</span>
       </div>
 
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-        gap: 'var(--space-2xl)'
-      }}>
+      <div className={styles.grid}>
         {models.map((model, idx) => (
-          <motion.div 
+          <motion.article 
             key={model.id}
-            className={styles.blueprintContainer}
+            className={styles.card}
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
             transition={{ delay: idx * 0.2 }}
-            style={{ padding: '0', overflow: 'hidden' }}
           >
-            <div style={{ 
-              height: '240px', 
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 'var(--space-lg)'
-            }}>
-              <div className={styles.modelImageWrapper}>
+            <div className={styles.imageContainer}>
+              <div className={styles.imageWrapper}>
                 <Image
                   src={model.image}
                   alt={model.name}
                   width={400}
                   height={300}
-                  className={styles.modelImage}
-                  style={{ 
-                    objectFit: 'contain', 
-                  }}
+                  className={styles.image}
                 />
               </div>
             </div>
             
-            <div style={{ padding: 'var(--space-xl)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-lg)' }}>
-                <div>
-                  <h3 style={{ color: 'var(--color-white)', fontFamily: 'var(--font-display)', fontSize: '1.5rem', marginBottom: '4px' }}>{model.name}</h3>
-                  <span style={{ color: 'var(--color-gold)', fontSize: '0.875rem', fontFamily: 'monospace' }}>{model.type}</span>
+            <div className={styles.content}>
+              <div className={styles.infoHeader}>
+                <div className={styles.infoMain}>
+                  <h4 className={styles.modelName}>{model.name}</h4>
+                  <span className={styles.modelType}>{model.type}</span>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', textTransform: 'uppercase' }}>Munkamélység</div>
-                  <div style={{ color: 'var(--color-white)', fontWeight: '700' }}>{model.depth}</div>
+                <div className={styles.depthInfo}>
+                  <span className={styles.depthLabel}>Munkamélység</span>
+                  <span className={styles.depthValue}>{model.depth}</span>
                 </div>
               </div>
 
-              <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 'var(--space-lg)' }}>
-                <div style={{ marginBottom: 'var(--space-md)' }}>
-                   <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', textTransform: 'uppercase' }}>Teljesítmény igény</span>
-                   <div style={{ color: 'var(--color-white)', fontWeight: '600' }}>{model.power}</div>
+              <div className={styles.specs}>
+                <div className={styles.specItem}>
+                  <span className={styles.specLabel}>Teljesítmény igény</span>
+                  <span className={styles.specValue}>{model.power}</span>
                 </div>
                 
-                <div>
-                  <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>Főbb jellemzők</span>
-                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <div className={styles.features}>
+                  <span className={styles.featuresLabel}>Főbb jellemzők</span>
+                  <ul className={styles.featuresList}>
                     {model.features.map(feat => (
-                      <li key={feat} style={{ 
-                        color: 'rgba(255,255,255,0.8)', 
-                        fontSize: '0.875rem', 
-                        marginBottom: '4px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                      }}>
-                        <span style={{ width: '4px', height: '4px', background: 'var(--color-gold)', borderRadius: '50%' }} />
+                      <li key={feat} className={styles.featureItem}>
+                        <span className={styles.featureDot} />
                         {feat}
                       </li>
                     ))}
@@ -109,9 +86,9 @@ export default function ModelComparison() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </motion.article>
         ))}
       </div>
-    </div>
+    </section>
   )
 }

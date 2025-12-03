@@ -21,7 +21,6 @@ export default function SoilComparison() {
             <span className={styles.labelBad}>Szántott talaj</span>
           </div>
           <div className={styles.soilProfile}>
-            {/* Placeholder ábra helye */}
             <div className={styles.placeholder}>
               <div className={styles.layer} style={{ height: '25%', background: 'linear-gradient(180deg, #8B7355 0%, #6B5344 100%)' }}>
                 <span className={styles.layerLabel}>Művelt réteg</span>
@@ -38,12 +37,6 @@ export default function SoilComparison() {
                   <span>↓ Gyökerek nem jutnak át</span>
                 </div>
               </div>
-            </div>
-            
-            {/* Ide jön majd a valódi ábra */}
-            <div className={styles.imageSlot}>
-              <span className={styles.imageSlotText}>📊 Ábra helye</span>
-              <span className={styles.imageSlotNote}>Szakdolgozat 13. ábra alapján</span>
             </div>
           </div>
           
@@ -70,21 +63,14 @@ export default function SoilComparison() {
             <span className={styles.labelGood}>Ásógépezett talaj</span>
           </div>
           <div className={styles.soilProfile}>
-            {/* Placeholder ábra helye */}
             <div className={styles.placeholder}>
-              <div className={styles.layer} style={{ height: '85%', background: 'linear-gradient(180deg, #8B7355 0%, #6D5C4D 50%, #5D4F42 100%)' }}>
+              <div className={styles.layer} style={{ height: '100%', background: 'linear-gradient(180deg, #8B7355 0%, #6D5C4D 50%, #5D4F42 100%)' }}>
                 <span className={styles.layerLabel}>Egyenletesen lazított</span>
                 <span className={styles.layerDepth}>0-45 cm</span>
                 <div className={styles.healthyRoots}>
                   <span>✓ Gyökerek szabadon fejlődnek</span>
                 </div>
               </div>
-            </div>
-            
-            {/* Ide jön majd a valódi ábra */}
-            <div className={styles.imageSlot}>
-              <span className={styles.imageSlotText}>📊 Ábra helye</span>
-              <span className={styles.imageSlotNote}>Szakdolgozat alapján</span>
             </div>
           </div>
           
