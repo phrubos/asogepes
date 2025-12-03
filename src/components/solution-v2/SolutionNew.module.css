@@ -24,22 +24,140 @@
 }
 
 .header {
-  text-align: left;
-  margin-bottom: 10vh; /* Adjusted for consistency */
+  margin-bottom: 10vh;
   position: relative;
   z-index: 1;
-  min-height: 85vh; /* Increased to push content below fold fully */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  min-height: 85vh;
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Narrower navigation column */
+  gap: var(--space-4xl);
+  align-items: center;
 }
 
-@media (max-height: 900px) {
+@media (max-width: 1024px) {
   .header {
+    grid-template-columns: 1fr;
+    text-align: center;
     min-height: auto;
-    margin-bottom: var(--space-4xl);
     padding-top: var(--space-4xl);
+    margin-bottom: var(--space-4xl);
   }
+}
+
+.headerContent {
+  width: 100%;
+  max-width: 800px;
+}
+
+@media (max-width: 1024px) {
+  .headerContent {
+    margin: 0 auto;
+  }
+}
+
+.navButtons {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  position: relative;
+  perspective: 1000px;
+  align-items: flex-end;
+}
+
+@media (max-width: 1024px) {
+  .navButtons {
+    align-items: center;
+    padding: 0;
+    gap: var(--space-lg);
+  }
+}
+
+.navButton {
+  position: relative;
+  width: 100%;
+  max-width: 300px; /* Narrower */
+  height: 200px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 4px solid rgba(255,255,255,0.1); /* Frame */
+  padding: 0;
+  background: var(--color-earth-900); /* Solid background instead of transparent */
+  
+  /* Dynamic Shadow Variables */
+  --shadow-x: 0px;
+  --shadow-y: 25px;
+  --shadow-blur: 50px;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+
+  box-shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) -12px var(--shadow-color);
+  
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s ease, box-shadow 0.1s ease;
+}
+
+/* Staggered Layout */
+@media (min-width: 1025px) {
+  .navButton:first-child {
+    align-self: flex-end;
+    margin-right: 40px;
+    margin-bottom: -60px;
+    z-index: 1;
+  }
+
+  .navButton:last-child {
+    align-self: flex-end;
+    z-index: 2;
+  }
+}
+
+.navButton:hover {
+  transform: translateY(-8px) scale(1.05);
+  border-color: var(--color-gold);
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  --shadow-blur: 60px;
+  box-shadow: 
+    var(--shadow-x) var(--shadow-y) var(--shadow-blur) -12px var(--shadow-color),
+    0 0 0 1px var(--color-gold);
+  z-index: 10;
+}
+
+.navButtonImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+}
+
+.navButton:hover .navButtonImage {
+  transform: scale(1.1);
+}
+
+.navButtonOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.1) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-lg);
+}
+
+.navButtonTitle {
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: left;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.navButton:hover .navButtonTitle {
+  transform: translateX(4px);
+  color: var(--color-gold);
 }
 
 .benefitsGrid {
@@ -108,27 +226,6 @@
 .subTitle em {
   color: var(--color-gold);
   font-style: normal;
-}
-
-.scrollDownButton {
-  margin-top: var(--space-3xl);
-  background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  color: var(--color-white);
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.scrollDownButton:hover {
-  border-color: var(--color-gold);
-  color: var(--color-gold);
-  background: rgba(212, 168, 75, 0.1);
 }
 
 .contentWrapper {
