@@ -115,6 +115,22 @@ em {
     padding: var(--space-5xl) 0;
 }
 
+@media (max-width: 1600px) {
+    :root {
+        --space-5xl: 5rem; /* Reduce from 8rem */
+        --space-4xl: 4rem; /* Reduce from 6rem */
+    }
+    
+    h1 { font-size: clamp(2rem, 5vw, 3.5rem); } /* Reduce max size */
+    h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); }
+}
+
+@media (max-height: 900px) {
+    .section {
+        padding: var(--space-3xl) 0; /* Even smaller padding for short screens */
+    }
+}
+
 /* ===========================================
    KEYFRAME ANIMATIONS
    =========================================== */

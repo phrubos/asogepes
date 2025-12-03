@@ -1,5 +1,6 @@
 .sectionProblem {
   padding: var(--space-5xl) 0;
+  padding-bottom: calc(var(--space-5xl) + 80px); /* Extra space for fixed toggle */
   min-height: 100vh;
   background: var(--color-cream);
   overflow: hidden;
@@ -16,13 +17,21 @@
   position: relative;
 }
 
+@media (max-height: 900px) {
+  .header {
+    min-height: auto;
+    margin-bottom: var(--space-4xl);
+    padding-top: var(--space-4xl);
+  }
+}
+
 .headerContent {
   width: 100%;
 }
 
 .mainTitle {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-size: clamp(2rem, 5vw, 4.5rem);
   line-height: 1.1;
   font-weight: 800;
   color: var(--color-earth-900);
@@ -325,6 +334,12 @@
   
   .mainStat {
     font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 1600px) {
+  .mainStat {
+    font-size: 4rem; /* Reduce from 5rem on laptops */
   }
 }
 

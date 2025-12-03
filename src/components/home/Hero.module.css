@@ -1,11 +1,20 @@
 .hero {
     min-height: 100vh;
+    min-height: 100svh; /* Use small viewport height for better mobile support */
     display: flex;
     align-items: center;
     justify-content: flex-start;
     position: relative;
     overflow: hidden;
     padding: var(--space-5xl) var(--space-2xl);
+}
+
+@media (max-height: 900px) {
+    .hero {
+        min-height: auto;
+        padding-top: 140px; /* Account for nav */
+        padding-bottom: var(--space-3xl);
+    }
 }
 
 .heroBg {
@@ -69,7 +78,7 @@
     display: block;
     animation: fadeInUp 0.8s ease both;
     color: var(--color-white);
-    font-size: 4.5rem; /* Larger font size */
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: 800;
     letter-spacing: -0.02em;
 }
