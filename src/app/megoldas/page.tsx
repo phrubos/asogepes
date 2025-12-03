@@ -12,11 +12,15 @@ export const metadata = {
 export default function MegoldasPage() {
   return (
     <SolutionLayout>
-      <div className={styles.blueprintGrid}>
-        <MachineBlueprint />
-        <BenefitsGrid />
+      <div id="tech-benefits" style={{ scrollMarginTop: '120px' }}>
+        <div className={styles.blueprintGrid}>
+          <MachineBlueprint />
+          <BenefitsGrid />
+        </div>
       </div>
-      <ModelComparison />
+      <div id="model-range" style={{ scrollMarginTop: '120px' }}>
+        <ModelComparison />
+      </div>
     </SolutionLayout>
   )
 }

@@ -3,21 +3,44 @@
 import { motion } from 'framer-motion'
 import SectionHeader from '@/components/ui/SectionHeader'
 import styles from './SolutionNew.module.css'
-import { ArrowRight, ArrowDown } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 interface SolutionLayoutProps {
   children: React.ReactNode
 }
 
 export default function SolutionLayout({ children }: SolutionLayoutProps) {
-  const scrollToContent = () => {
-    const element = document.getElementById('imants-40sx');
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
     if (element) {
       const yOffset = -120; // Adjust for sticky header
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   }
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    // Subtle movement for the dark theme
+    const shadowX = (centerX - x) / 12;
+    const shadowY = (centerY - y) / 12;
+
+    button.style.setProperty('--shadow-x', `${shadowX}px`);
+    button.style.setProperty('--shadow-y', `${shadowY + 25}px`); // +25 base offset
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const button = e.currentTarget;
+    button.style.removeProperty('--shadow-x');
+    button.style.removeProperty('--shadow-y');
+  };
 
   return (
     <section className={styles.sectionSolution}>
@@ -27,6 +50,7 @@ export default function SolutionLayout({ children }: SolutionLayoutProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className={styles.headerContent}
           >
             <SectionHeader number="02" title="A Megoldás" light />
             <h1 className={styles.mainTitle}>
@@ -37,20 +61,45 @@ export default function SolutionLayout({ children }: SolutionLayoutProps) {
               Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>, 
               miközben megszünteti a tömörödést. Ismerje meg a gép működését.
             </p>
-            
-            <motion.button 
-              onClick={scrollToContent}
-              className={styles.scrollDownButton}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, y: [0, 10, 0] }}
-              transition={{ 
-                opacity: { delay: 1, duration: 0.5 },
-                y: { repeat: Infinity, duration: 2, ease: "easeInOut", delay: 1 }
-              }}
-              aria-label="Görgetés lefelé"
+          </motion.div>
+          
+          <motion.div 
+            className={styles.navButtons}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <button 
+              className={styles.navButton}
+              onClick={() => scrollToSection('tech-benefits')}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
             >
-              <ArrowDown size={32} />
-            </motion.button>
+              <img 
+                src="/images/technologia_cover.png" 
+                alt="Technológiai előnyök" 
+                className={styles.navButtonImage}
+              />
+              <div className={styles.navButtonOverlay}>
+                <span className={styles.navButtonTitle}>Technológiai Előnyök</span>
+              </div>
+            </button>
+
+            <button 
+              className={styles.navButton}
+              onClick={() => scrollToSection('model-range')}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
+              <img 
+                src="/images/modell_valasztek_cover.png" 
+                alt="Modellválaszték" 
+                className={styles.navButtonImage}
+              />
+              <div className={styles.navButtonOverlay}>
+                <span className={styles.navButtonTitle}>Modellválaszték</span>
+              </div>
+            </button>
           </motion.div>
         </header>
 

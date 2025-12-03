@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import SectionHeader from '@/components/ui/SectionHeader'
 import styles from './ProblemNew.module.css'
 import { ArrowRight } from 'lucide-react'
@@ -12,20 +11,39 @@ interface ProblemLayoutProps {
 }
 
 export default function ProblemLayout({ compactionContent, ploughingContent }: ProblemLayoutProps) {
-  const [activeView, setActiveView] = useState<'compaction' | 'ploughing'>('compaction')
-  const contentRef = useRef<HTMLDivElement>(null)
-
-  const handleTabChange = (view: 'compaction' | 'ploughing') => {
-    setActiveView(view)
-    
-    // Immediate scroll to content
-    const element = contentRef.current;
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
     if (element) {
-      const yOffset = -120; // Increased offset to account for sticky header
+      const yOffset = -120; 
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   }
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = e.clientX - rect.left; // Mouse X relative to button
+    const y = e.clientY - rect.top;  // Mouse Y relative to button
+    
+    // Calculate shadow offset (inverted mouse movement)
+    // When mouse is top-left, shadow goes bottom-right
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const shadowX = (centerX - x) / 10; // Max offset +/- 15px approx
+    const shadowY = (centerY - y) / 10;
+
+    button.style.setProperty('--shadow-x', `${shadowX}px`);
+    button.style.setProperty('--shadow-y', `${shadowY + 20}px`); // Keep base offset
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const button = e.currentTarget;
+    // Reset to defaults defined in CSS
+    button.style.removeProperty('--shadow-x');
+    button.style.removeProperty('--shadow-y');
+  };
 
   return (
     <section className={styles.sectionProblem}>
@@ -47,45 +65,57 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
               Két fő ellenséggel küzdünk.
             </p>
           </motion.div>
+
+          <motion.div 
+            className={styles.navButtons}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <button 
+              className={styles.navButton}
+              onClick={() => scrollToSection('compaction')}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
+              <img 
+                src="/images/tömörités_cover.png" 
+                alt="Tömörödés" 
+                className={styles.navButtonImage}
+              />
+              <div className={styles.navButtonOverlay}>
+                <span className={styles.navButtonTitle}>A Tömörödés</span>
+              </div>
+            </button>
+
+            <button 
+              className={styles.navButton}
+              onClick={() => scrollToSection('ploughing')}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
+              <img 
+                src="/images/szantas_korlatai_cover.png" 
+                alt="Szántás korlátai" 
+                className={styles.navButtonImage}
+              />
+              <div className={styles.navButtonOverlay}>
+                <span className={styles.navButtonTitle}>A Szántás Korlátai</span>
+              </div>
+            </button>
+          </motion.div>
         </header>
 
-        <div className={styles.toggleWrapper}>
-          <div className={styles.toggleContainer}>
-            <button
-              onClick={() => handleTabChange('compaction')}
-              className={`${styles.toggleButton} ${activeView === 'compaction' ? styles.active : ''}`}
-            >
-              A Tömörödés
-            </button>
-            <button
-              onClick={() => handleTabChange('ploughing')}
-              className={`${styles.toggleButton} ${activeView === 'ploughing' ? styles.active : ''}`}
-            >
-              A Szántás Korlátai
-            </button>
-            <motion.div
-              className={styles.activeBackground}
-              animate={{
-                x: activeView === 'compaction' ? '0%' : '100%',
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            />
+        <div className={styles.contentWrapper}>
+          <div id="compaction" style={{ scrollMarginTop: '120px' }}>
+            {compactionContent}
           </div>
-        </div>
+          
+          <div style={{ height: '80px' }} /> {/* Spacer */}
 
-        <div ref={contentRef} style={{ scrollMarginTop: '120px' }}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeView}
-              initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className={styles.contentWrapper}
-            >
-              {activeView === 'compaction' ? compactionContent : ploughingContent}
-            </motion.div>
-          </AnimatePresence>
+          <div id="ploughing" style={{ scrollMarginTop: '120px' }}>
+            {ploughingContent}
+          </div>
         </div>
 
         <motion.div 
