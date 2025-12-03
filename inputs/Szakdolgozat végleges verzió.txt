@@ -1,0 +1,748 @@
+Neumann János Egyetem
+Kertészeti és Vidékfejlesztési Kar
+Kertészeti Tanszék
+
+
+Szántóföldi ásógép talajszerkezetre gyakorolt hatásának vizsgálata öntözött kertészeti kultúrában
+
+
+
+
+Készítette:Konzulens:Dobecz AndorDr. Hüvely AttilaKertészmérnök BSc  szakos,
+Nappali tagozatos hallgatóEgyetemi docensKecskemét
+2025
+
+
+Tartalomjegyzék
+
+1.	BEVEZETÉS	4
+2.	IRODALMI ÁTTEKINTÉS	5
+2.1. A TALAJMÛVELÉS TÖRTÉNETE MAGYARORSZÁGON	5
+2.2. A TALAJMÛVELÉS CÉLJA	5
+2.2.1 Talajmûvelési szempontok	5
+2.3. FORGATÁSOS TALAJMÛVELÉS	6
+2.3.1. A forgatásos mûvelés története	6
+2.3.2. Az eke története	7
+2.3.3. A talaj forgatásának 3 eleme	7
+2.3.4. Az ekék csoportosítása	7
+2.4. A FORGATÁS NÉLKÜLI TALAJMÛVELÉS	8
+2.4.1. A forgatás nélküli talajmûvelés története	8
+2.4.2. A talajlazítás	8
+2.4.2.1  A talajlazítás típusait	9
+2.4.3. Kultivátor a lazításos mûvelésben	9
+2.4.3.1. Elõnyök, és hátrányok	9
+2.4.4. Tárcsa a lazításos mûvelésben	9
+2.4.4.1. Elõnyök, és hátrányok	10
+2.4.5. Ásógép a lazításos mûvelésben	10
+2.4.5.1.Elõnyök, és hátrányok	10
+3. ANYAG ÉS MÓDSZER	10
+3.1 ANYAG	11
+3.1.1 A vizsgált területek talajtani adottságai	11
+A KÍSÉRLETI TERÜLETEK TALAJMINTÁINAK LABORATÓRIUMI EREDMÉNYEI	11
+3.1.1.1 A réti csernozjom	11
+3.1.1.2 A humuszos homoktalaj	12
+3.1.2. Talajmûvelési eljárások, Kecsekemét-Borbási terület	12
+3.1.2.1. Hagyományos mûvelés	12
+3.1.2.2. Ásógépes mûvelés	12
+3.1.3. A 40SX ásógép mûszaki adati	12
+3.1.4. Talajmûvelési eljárások, Szentkirályi terület	13
+3.1.4.1. Hagyományos mûvelés	13
+3.1.4.2. Kontroll parcella	13
+3.1.5 A 38WX ásógép mûszaki adatai	14
+3.1.6. Talajmûvelési eljárások, Lakiteleki terület	14
+3.1.6.1. Mûvelési módszerek	14
+3.1.7 A 38SX ásógép mûszaki adatai	15
+3.1.8. Termesztett kultúrák	16
+3.1.8.1. Ipari paradicsom	16
+3.1.8.2. Vöröshagyma	16
+3.1.9. Öntözés	17
+3.1.9.1. Kecskemét-Borbási terület	17
+3.1.9.2. Szentkirályi terület	17
+3.1.9.3. Lakiteleki terület	17
+3.1.10. 2025 klimatikus adottságai	17
+3.1.11. Sorközmûvelés paradicsomban	18
+3.1.12. Penetrométer	18
+3.1.13. COMBI 5000-multifunkcionális mérõmûszer	18
+3.2 MÓDSZER	19
+3.2.1. A kísérleti területek	19
+3.2.2. Kecskemét-Borbási terület	19
+3.2.2.1. Kísérleti parcella mérete, és kijelölése	19
+3.2.3. Szentkirályi terület	20
+3.2.3.1. A kísérleti parcella kijelölése	20
+3.2.4. Lakiteleki terület	22
+3.2.4.1 A kísérleti parcellák kijelölése	22
+3.2.5 Mérések lépései	23
+3.2.5.1. Penetrométeres mérés	23
+3.2.5.2. COMBI 5000-es mûszeres mérés	24
+3.2.6. A megfigyelés körülményei	25
+3.2.7 Az adatok feljegyzése, és feldolgozása	25
+4. EREDMÉNYEK	26
+4.1 LAKITELEKI TERÜLETEN MÉRT EREDMÉNYEK	26
+4.2. SZENTKIRÁLYI TERÜLETEN MÉRT EREDMÉNYEK	29
+4.3. KECSKEMÉT-BORBÁSI TERÜLETEN MÉRT EREDMÉNYEK	30
+4.4. TALAJMÉRÉSEKEN KÍVÜLI EREDMÉNYEK	33
+5. KÖVETKEZTETÉSEK, JAVASLATOK	35
+5.1. KÖVETKEZTETÉSEK	35
+5.1.1 Lakiteleki terület	35
+5.1.2 Szentkirályi terület	36
+5.1.3 Kecskemét-Borbási terület	36
+
+
+
+1. Bevezetés
+A Kecskeméti Neumann János Egyetem Kertészeti és Vidékfejlesztési Kar, Agrártudományi Tanszék tudományai között az ásógépes, vagyis lazításos talajmûvelési technológiák kutatásában veszek részt, ennek keretében Bács-Kiskun megyében, Kecskeméthez közeli szántóföldeken, dupla rotoros technikán alapuló, Imants márkájú ásógép hatását teszteltük.
+Napjainkban aktuális, és népszerû téma, a csökkentett mûvelés menetû, vagy más néven szántás nélküli, talajforgatás nélküli technikák alkalmazása. A forgatás nélküli technika jó elõnyei közé sorolandó az aktív talajbiológia, valamint a szervesanyag, és szénmennyiség kapacitásának megõrzése. 
+A forgatás nélküli talajmûvelés nem újkeletû dolog, viszont a gazdatársadalom szemét az utóbbi idõkben felnyitotta ez az irányvonal. A talajdegradáció sajnos országos probléma, amelynek fõ kiváltó okait a helytelen talajmûvelési eljárások adják. A folyamatos és túlzott forgatás nem jó hatással van a talajszerkezetre, valamint annak biológiai életét is károsítja. A szántásos mûvelést ezek után sem kell temetni csak annak alkalmazását kell mérlegelni adott talajokhoz viszonyítva, hiszen több szerzõ szerint is a szántást idõszakosan (3-4 év) szükséges elvégezni.
+A 90-es évek végéig a lazításos talajmûvelés egyet jelentett a tárcsázással, amelyet álltalában rugókapás kombinátorral alkalmaztak. A 2000-es évek elejétõl jelentek meg hazánkban az ásógépek, amelyek 1 vagy 2 rotoros, a talajmarás elvén voltak alkalmazhatók. Ma hazánkban ásókapás, és dupla rotoros rendszerû ásógépeket alkalmazunk. Általánosságban hatékonyabb, gyorsabb, és szebb munkát végeznek a dupla rotorral ellátott gépek. 
+A kísérletben a szentkirályi telephelyû Agroskill Kft. által forgalmazott Imants márkájú ásógépeket vizsgáltuk. 
+Dolgozatom célja az ásógép vetés, illetve ültetést követõ alkalmazása során milyen hatást gyakorol a talaj szerkezetére, felmelegedésére, oldott tápelem tartalmára.
+A munka során duplarotoros ásógép alkalmazása történt. A megfigyelt kultúra a hagyma és ipari paradicsom volt. A vetés, illetve ültetést követõen egy intenzív, gyakori öntözéssel megvalósított termesztés folyt minden kultúrában. A termesztés alatt megközelítõleg azonos idõszakonként mértük a talaj tömörödöttségét. A hordozható Combi 5000 típusú hordozható mérõmûszerrel pedig a talaj hõmérsékletét, valamint a tápelem, és vízellátottságát. 
+
+
+1. Irodalmi áttekintés
+
+2.1. A talajmûvelés története Magyarországon
+Hazákban a mezõgazdasági termesztés sok évszázadra visszamenõen megtalálható volt. A hazai klimatikus, illetve talaj adottságok mind megfelelõek arra, hogy növényt lehessen rajta termeszteni. Az elsõ írásos emlék óta, ami a 11. században keletkezett, sok változás történt mire kialakult a mai talajmûvelési szemléletünk. A 19. század végéig a primitív eszközök, és a tudás hiánya volt a legmeghatározóbb talajmûvelés tekintetében. Sokáig abban látták a talajok minõségének javítását, hogy azt mennél többször forgassák, amit ma már tudunk, hogy nem jó irányzat. Az külföldrõl behozott talajmûvelési módszerek nagy hatással voltak a mezõgazdasági tudományok oktatására, és ezek az irányvonalak a talajmûvelés megújításában is részt vettek. A rendszerváltáskor a modern mezõgazdasági látásmód robbanásszerûen nyílt ki. A forgatás nélküli talajmûvelés ebben az idõszakban kezdett el hazánkban a gazdák területein is megjelenni, és annak alkalmazása minden évben növekszik (BIRKÁS et al., 2017).
+
+2.2. A talajmûvelés célja
+ A talajmûvelés célja, hogy hosszú távon megõrizzük annak szerkezetét és felszínét, a benne található biológiai életet, valamint a víz és levegõ forgalmat kedvezõen befolyásoljuk. 
+
+2.2.1 Talajmûvelési szempontok 
+A fentiekben felsorolt tényezõk figyelembevételével tudjuk biztosítani a talaj stabil fizikai, és kémiai kondícióját. A talaj lazultságával és szerkezetével két fõ részt különítünk el. Az egyik ilyen tényezõ a magágy talajára vonatkozó igény, a másik pedig a gyökérzóna talajára vonatkozó igény. A magágy ülepedettsége, lazultsága, és aprózottsága hatással van a vetés körülményeire, a kijuttatott mag kelésére, valamint annak késõbbi fejlõdésére. A gyökérzóna állapot pedig a növény kondíciójában, ellenállóságában, és termésképzésében vesz részt. A talaj megfelelõ lazultsága eredményezi nekünk a megfelelõ kémiai és biológiai tényezõk végbemenetelét, amelyek során nem képzõdnek olyan anyagok, amelyek károsak lehetnek mind a csírázó magokra, mind pedig a már kifejlett növényre. A talaj gyakori forgatása, levegõztetése hozzájárul a szervesanyag mennyiség fogyásához, és a talajszerkezet romlásához. A talajszerkezet romlásával pedig megjelenik az erózió, és a defláció. A rossz szerkezet következtében a talaj tömörödöttsége nõ, vízgazdálkodása romlik. A területünkön jól megválogatott talajmûvelési módszerek segíthetnek a szél, és víz pusztító hatásának enyhítésében (SCHMIDT, 2011). 
+
+2.3. Forgatásos talajmûvelés
+A forgatásos talajmûvelési eljárások közül az egyik legelterjetteb a szántás, viszont látható, hogy népszerûsége már közel sem akkora mint 30 évvel ezelõtt. Az eke a szántás eszköze, amelynek típusai, és méretei igen széles skálát ölelnek fel. A legmegfelelõbb kiválasztásánál több tényezõt is figyelembe kell venni
+-elvégzendõ munka
+-talaj típusa
+-tervezett kultúra
+-talaj nedvességi állapota
+-rendelkezésre álló vonóerõ
+Ezen tényezõk mind fontosak, ha jó minõségû munkát szeretnénk végezni (BERECZKI, 2008).
+
+2.3.1. A forgatásos mûvelés története 
+Ha forgatásos mûvelésrõl beszélünk akkor klasszikusan az eke jut az eszünkbe. Az ekét, mint földmûvelõ eszközt már több száz éve alkalmazza az emberiség. Azonban a régi idõk ekéi igencsak máshogy néztek ki a manapság jól ismert ágy, vagy váltvaforgató ekékhez képest. 
+A napjainkban alkalmazott széles vonalú, forgatásos szántás helyett leginkább a keskeny vonalú, viszonylag sekélyen dolgozó, túró-szántás volt a legelterjetteb. Ennél a szántási módszernél a barázdák közét nem bolygatták, és 4-5 hüvelyknél mélyebre nem dolgoztak. Alkalmazásuk során kötöttebb, nehezen mozgatható talajok esetében csoroszlyát is helyeztek az eszközre. Az eszközök még teljes egészében fából készültek, majd a fejlõdéssel más eljárásokkal tették ezt tartóssabbá (REMETE FARKAS, 2019). 
+
+
+2.3.2. Az eke története
+ Hagyományos, konvencionális technológián alapuló eszköz, ahol 15-45 cm vastagságban átforgatjuk a talajt. A talajréteg felsõ, levegõzött (aerob) talajrétegét alulra, a levegõben szegény (anaerob), tömörebb rétegét pedig a felszínre hozzuk. A rétegek felcserélõdése során keverednek is valamilyen szinten ezek a rétegek, így ezáltal a talajban élõ kedvezõ biológiai tényezõk elpusztulnak, a széntartalma pedig oxidálódik (KÖKÉNY, 2023).
+
+2.3.3. A talaj forgatásának 3 eleme
+ Ezen szempontok miatt egyesek még mindig ezt az eljárást preferálják.
+-A károsodott felsõ talajréteg, amely már kolloidokban szegényes, kicserélendõ az alatta fekvõ kedvezõbb szerkezetû réteggel.
+-A területen maradt növényi maradványok, a kijuttatott szerves- illetve mûtrágyák földbe forgatása.
+-A nem kívánatos növények (gyomok) földbe forgatása (BIRKÁS, 2017).
+
+2.3.4. Az ekék csoportosítása
+ különbözõ tényezõk alapján tudjuk beosztani. Az elkülönítés elsõ számú kérdése, hogy milyen mélyen szeretnénk szántani. Igy különítünk el:
+-sekély szántást (7-17cm)
+-középmély szántás (18-24cm)
+-mélyszántás (25-35cm)
+-mélyítõ szántás (36-50cm)
+-rigolírozás (50cm felett)
+Egy szerszámmal viszont többféle mélységben is tudunk dolgozni (SZENDRÕ, 1993).
+
+
+2.4. A forgatás nélküli talajmûvelés
+Célja, hogy a hagyományos szántásos mûvelést mellõzzük, ezt helyettesítsük más, akár sekélyebben mûvelõ eszközökre, ahol a cél nem az, hogy két talajréteget megfordítsak, hanem hogy a már meglévõ szerkezetemet lazítsam, esetleg keverjem kicsit (DÓKA et al., 2024).
+
+2.4.1. A forgatás nélküli talajmûvelés története
+ Jó eredményei ellenére nehézkesen kerültek be a növénytermesztésbe. A világon elõszõr az Egyesült Államokban néztek szembe azzal a ténnyel, hogy a hagyományos talajmûvelési módok milyen súlyos hatással vannak a környezetre. A 30-as években alakult ki egy komoly porvihar az Egyesült Államok és Kanda prérijein, amely egy ökológiai katasztrófába torkollott, amit csak úgy hívnak, hogy Dust Bowl (ERSEK, 2023). 
+
+2.4.2. A talajlazítás 
+Célja, hogy az összeállt, tömör állapotot megszüntetjük, az erre alkalmas céleszközzel. A lazításos mûvelésnél nõ a talaj térfogattömege, a hézagtérfogata, és a gravitációs pórusok aránya. A nagyobb hézagtérfogat következménye, hogy javul a talaj levegõzöttsége, vízbefogadó képessége, és mivel, hogy mélyebben beázik, ezáltal nagyobb víztömeg megtartására képes. A lazítás kifejezést általában azokra a mûvelési munkákra értjük, amikor valamilyen talpréteg feltörést, átmunkálását végezzük (BIRKÁS, 2017).
+
+2.4.2.1 A talajlazítás típusait
+Elkülöníthetjük a mûvelési mélység, és annak céljai szerint
+-Sekély lazításra elsõsorban a kultivátorok, tárcsák, ásó-és fogas boronák, és a kombinátorok. A sekély lazítás alakmázi lehetõségei a tarlóhántás, magágykészítés
+-Középmély lazítással még a talaj rendszeresen mûvelt rétegét mozgatjuk, annak fizikai állapotára tudunk hatni. Ezen lazítási forma már van olyan mélységben, aminek a hatása a vegetációs idõszak végéig tart, ezért alapmûvelésként is alkalmazzuk
+-A mélylazítással már olyan réteget mozgatunk meg, ami már nem a rendszeresen mûvelt rétegbe tartozik. A mélylazítást alapozó mûvelésként alkalmazzák (NYIRI, 1993). 
+
+2.4.3. Kultivátor a lazításos mûvelésben
+Ezek az eszközök képesek kissé keverni, jól porhanyítanak, viszont nem cseréli meg a talajrétegeket, ezzel is segítve a biológiai élet fennmaradását a talajban. Használatuk során kisebb a talaj degradáció és a talaj kiszáradása is kisebb mértékû a szántáshoz képest. A szántást helyettesítõ kultivátor típus az a nehéz kultivátor, ami méreteinek köszönhetõen már tud egy olyan mûvelési mélységet biztosítani, ami megfelel egy alapmûvelésnek. Munkamélységüket tekintve a 15-30 cm mélységben dolgoznak. A kultivátorok munkája után a jó magágy elõkészítéséhez még egyengetõ mûveletre van szükség. Az egyengetõ eszközök álltalában valamilyen rögtörõ hatású elmunkáló hengerek, amik lehetnek tárcsás, fogas, és hengerborona, valamint a késes-tüskés hajtott aprítók (SZENDRÕ, 1993). 
+
+2.4.3.1. Elõnyök, és hátrányok
+Jó hatással van a talajszerkezetre, mérsékelt a rögösség, és a vízvesztés, és idõt lehet nyerni. Hátrányok közé lehet sorolni, hogy tömör marad az altalaj, a forgatás hiánya, romolhat a minõség a zúzatlan tarlómaradvány esetén (BIRKÁS, 2001). 
+
+2.4.4. Tárcsa a lazításos mûvelésben
+ A tárcsázás során a mûvelt földet keverjük, lazítjuk és aprítjuk. A tárcsázás minõségét befolyásoló tényezõk közé tartozik a tárcsalevelek sûrûsége, a tárcsalapok fekvése a vontatási irányhoz képest, a tárcsasorok egymástól való távolsága. A tárcsák mélységét tekintve három csoportba különítjük õket. A könnyû tárcsa kevesebb, mint 15 cm, a nehéztárcsa nagyjából 20cm, a szupernehéz tárcsa pedig 15-30 cm mélyen mûvel (FERWANT, 2025).
+
+2.4.4.1. Elõnyök, és hátrányok
+Pozitív tulajdonság a jó porhanyítás és keverés, száraz talajon is lehet alkalmazni, jól aprítja a tarlómaradványokat, gyors menetsebesség, energiatakarékos, egyszerû konstrukció. Hátrányai közé sorolhatjuk, hogy nedves talajon nem lehet használni, mivel gyúró és kenõ hatása mellett tárcsatalpat is képezhet, száraz talajon porosít, nagy mennyiségû tarló esetén csökken a hatékonysága, évelõ gyomokat nem jól gyéríti, kedvezõtlen környezeti hatás (BIRKÁS, 2002).
+
+2.4.5. Ásógép a lazításos mûvelésben
+Ásógépek közül is több típus van, de mi a dupla rotoros elven mûködõ, Imants márkájú, holland fejlesztésû talajmûvelõ eszköz munkájára voltunk kíváncsiak. Az említett márka több méretben gyárt eszközöket, aminek köszönhetõen sok termesztési formában lehet õket alkalmazni.
+A megfigyelt ásógép elsõsorban homok, homokos vályog és vályogtalajok mûvelésére alkalmas. Az ásógép dupla rotorral rendelkezik, ahol is az elsõ rotor végzi az alapmûvelést, ami álltalában 30-35 cm mélyen valósul meg. A dupla rotor hátsó tagja egy hajtott boronahenger, amely a talaj egyengetésért felel 6-8 cm mélységben (ALFA-GEP, 2025). 
+
+2.4.5.1.Elõnyök, és hátrányok
+Az ásógépek alkalmazása több szempontból ígéretes lehet. Jó tulajdonságuk, hogy egy mûvelési rendszeren belül bármilyen talajmunkára választható, jól keveri a talajba a különbözõ szervesanyagokat, nem képez barázdát, egyenletes felszínt alkot, energiatakarékos mûvelési mód, más mûvelõeszközzel is jól kombinálható. Azonban vannak tényezõk, amelyek figyelembe vétele mellett nem mehetünk el akkor, ha az ásógép alkalmazásánál döntünk. Ilyen tényezõ, hogy elég bonyolult szerkezeti felépítésû, nagy beruházást igényel a beszerzése, kopóelemei gyorsan kopnak. A gyomirtó képessége alacsony, és elporosodott talajon nem ajánlatos az alkalmazásuk (BIRKÁS, 2017). 
+
+
+3. Anyag és módszer
+3.1 Anyag
+3.1.1 A vizsgált területek talajtani adottságai
+ a három terület közül kettõ réti csernozjom és egy terület pedig humuszos homoktalaj volt. A területekrõl elmondható, hogy mindegyik régóta mûvelt terület. 
+1. táblázat. A kísérleti területek talajmintáinak laboratóriumi eredményei
+Arany féle kötöttségi szám (KA)Összes só
+(vízben oldható)Szénsavas mészHumuszKecskemét-Borbás (2024. december)28< 0,021,731,56Szentkirály (2024. szeptember)28,50,040,7252,30Lakitelek (2025. május)27< 0,020,3410,644Forrás: Saját munka
+
+3.1.1.1 A réti csernozjom
+A talajok Kecskemét, és Szentkirály határán helyezkedtek el. Keletkezésüket tekintve csapadékos, és mélyebb fekvésû területeken képzõdnek, humusz felhalmozódás mellet gyenge vízhatás is észlelhetõ. A vízbõség függvényében anaerob körülmények alakulhatnak ki benne, ezáltal sötétebb színû humuszanagyok képzõdnek. A talaj A-szintjében a feketés-barnás humuszréteg 3-4,5% között mozog. Szerkezetét tekintve morzsás, és részben poliéderes elemeket is tartalmaz. PH-ját tekintve semleges, azonban a B szinttõl lefelé lúgos kémhatása gyengén emelkedik. Jó víz-, és tápanyagszolgáltató képessége van. Az eketalp réteg elkerülésére ügyelni kell (CSERNI, 2000). 
+3.1.1.2 A humuszos homoktalaj
+Lakitelek vonzáskörzetébe tartozott. Ide sorolhatjuk azokat a homoktalajokat, amelyben a humuszos szint morfológiailag kimutatható, de nincsenek egyéb talajképzõ folyamatok.  Termékenységét nézve jobb, mint egy futóhomok, valamint vízmegtartó képessége is nagyobb. A jobb vízmegtartásnak köszönhetõen lassabban szárad ki, így a szél pusztító hatásának is kevésbé van kitéve. Azonban tápanyagszolgáltató képessége így is alacsony (STEFANOVICS et al., 1999).
+
+3.1.2. Talajmûvelési eljárások, Kecsekemét-Borbási terület
+
+3.1.2.1. Hagyományos mûvelés
+Késõ õszi középmély szántás történt 2024-ben. A talaj 28 cm mélyen lett megforgatva, ami egyúttal a 60 t/ha mennyiségben kijuttatott vegyes, szervestrágyát is a talajba forgatta. A mûveletet követte egy simítózás, amely elegyengette a felszínt, és a nagyobb rögöket is porhanyította. A következõ mûvelés az 2025 április végén történt, ahol is egy ásóboronával egy jó, nem túl mélyen mûvelt ültetõ ágyat kaptunk. 
+3.1.2.2. Ásógépes mûvelés
+ A területen az ásóboronás mûvelés után történt az ásógépezés. A területen egy 13 méter széles sávot ásógépeztek, ami két gépnyi szélességnek felel meg. Az ásógép ezen a területen 45 cm mélyen dolgozott. 
+3.1.3. A 40SX ásógép mûszaki adati
+A területen dolgozó ásógép, egy Imants 40SX név alatt futó modell, ami már mélyásógépnek számít. Az eszköz mûködtetéséhez legalább 90 Le teljesítményû traktor szükséges. A területen lévõ szármaradvány, szerves trágya, vagy zöldtrágya növény talajba való forgatása is hatékonyan megvalósítható vele. A gép munkamélységét tekintve 20-50 cm mélyen tud dolgozni, a beállítás, és a rendelkezésre álló erõgép függvényében. A gép hátulján egy hajtott elmunkálóhenger található, amelynek munkamélységét hidraulikusan állíthatjuk. Talajok tekintetében homokos, homokos vályog, és vályog talajokon lehet alkalmazni, illetve elmunkáló henger nélkül középkötött talajon is. Az alapmûvelést a gép elején található ásórotor végzi, amelyen egy sorban 4-4 db ásókapa helyezkedik el. A kapák futása nem egyvonalú, hanem kettesével váltják egymást a jobbos és balos kapák, aminek köszönhetõen kevesebb kapaszámmal is hatékonyan lehet munkálni a talajt. A kevesebb kapasor másik jó tulajdonsága, hogy nehezebben tud a kapák közé a talaj beragadni. Az eszközön cserélhetõk a kapafejek kopás esetén, valamint automata racsnis nyomatékhatároló is található rajta, ami védi a gép és a traktor erõátviteli elemeit.
+
+1.ábra.  Imants 40SX mélyásógép
+Forrás: Agroskill Kft.
+
+3.1.4. Talajmûvelési eljárások, Szentkirályi terület
+
+3.1.4.1. Hagyományos mûvelés
+A terület 2024. szeptembere végén, szántóföldi kultivátorral lett megmûvelve, amely 25 cm mélyen dolgozott, amit kombinátorral egyengetett el. A munkával nemcsak az elõvetemény tarlóját, hanem 15 t/ha szerves marhatrágyát is a talajba dolgozott. Február végén a terület megkapta még egyszer ugyanazt a kultivátoros mûvelést. Március elején pedig, közvetlen vetés elõtt az egész terület meglett ásógépezve. A terület tulajdonosa már alkalmazta az ásógépet más területein is, így már nem csak kísérleti, hanem jól bevált mûvelõeszközként lett alkalmazva. 
+3.1.4.2. Kontroll parcella
+Mivel a kísérleti terület egésze ásógépezve lett, így itt a megfigyelt parcella egy 30 m hosszú, egy mûvelõeszköznyi szélességû sáv volt. A februári kultivátorozást ezen a parcellán egy kombinátorral készítették elõ a vetõmag elvetéséhez. 
+3.1.5 A 38WX ásógép mûszaki adatai
+A vizsgált gépek között szerepelt még a 38WX modell, ami a Szentkirályi területen dolgozott. Az eszköz mûködtetéséhez legalább 90 Le teljesítményû traktor szükséges. A típuson a 6 darab altalajlazító kés is található. A kések 55 cm mélységben tudnak lazítani, ami állítható, viszont a mögötte lévõ ásórotor mélységétöl maximum 20 cm-el dolgozhat mélyebben. Az ásórotor munkamélysége maximum 15-35 cm. A típus alkalmas homokos, homokos vályog, és vályogtalajok mûvelésére is, elmunkáló henger nélkül középkötött agyagos területen is alkalmazható. Az ásókapák itt 7 sorban helyezkednek el úgy, hogy a két szélén, az adott oldalhoz megfelelõen 2 jobbos, és 2 balos kapa helyezkedik el, a köztük lévõ 5 sorban pedig 4-4 db kapa található. A kapák futása nem egyvonalú, hanem 2 jobbos, és 2 balos irányú kapa található. Az elmunkáló henger kialakítása, egy sima felületû henger, amelyen hajlított ujjak találhatók. Az ujjak kellõen rugalmasak annak ellenére is, hogy edzett acélból készültek. A henger kialakításának köszönhetõen kellõen bekeveri a az esetlegesen fentmaradt szármaradványokat, a nagyobb rögöket porhanyítja és elegyengeti, így kapunk egy felül puha, egyenletes magágyat, ami mélyebb rétegben a kellõ mértékben visszavan tömörítve. 
+
+2. ábra. Imants 38WX ásógép
+Forrás: Agroskill Kft.
+
+3.1.6. Talajmûvelési eljárások, Lakiteleki terület
+
+3.1.6.1. Mûvelési módszerek
+A kísérleti terület 7 parcellára lett osztva. A 4,5,6,7-es parcellák 2024. novemberében kaptak középmély szántást, 25 cm mélyen. A 4-es, és 6-os parcellák a szántás elõtt kaptak talajlazítást is 50 cm mélyen. A területek 2024-ben nem kaptak szervestrágyázást, viszont 2023-ban 50 t/ha mennyiségben kaptak marhatrágyát. A többi parcella április végén kapott mûvelést, ahol az ásógépek kerültek elõtérbe. Az 1-es parcella egy mélyásógépes mûvelést kapott, ugyanazzal a géppel, amivel Kecskeméten készítettünk egy kísérleti parcellát. A rendelkezésre álló traktor nem rendelkezett olyan vonóerõvel, ami kielégítette volna a mélyásógép igényét, így itt 40 cm mélyen lett a talaj megmûvelve. A 2-es, és 3-mas parcella 30 cm mélyen ásógépeztékl. A 2-es parcella 50 cm mélylazítást is kapott az ásógépezés elõtt közvetlen. A már õsszel megszántott 6-os, és 7-es parcellák kaptak ugyanekkor még egy 25 cm mélységû ásógépes mûvelést. A 4-es, és 5-ös parcellák kaptak egy 8 cm mélységû kombinátoros mûvelést ugyan ebben a tavaszi mûvelési idõszakban. 
+2. táblázat. Lakiteleki terület parcelláinak felosztása, a mûvelések kombinációi
+I.
+
+
+Mélyásógép
+40 cmII.
+
+
+Lazítás
+50 cm 
+Ásógép
+30 cmIII.
+
+
+
+
+Ásógép
+30 cmIV.
+
+
+Lazítás
+50 cm 
+
+Szántás
+30 cm
+Kombinátor
+8 cm
+
+V.
+
+
+Szántás
+30 cm
+
+Kombinátor
+8cmVI.
+
+
+Lazítás
+50 cm    Szántás 
+30 cm
+Ásógép
+25 cm
+
+ VII.
+
+
+Szántás
+30 cm
+
+Ásógép
+25 cmtábla hossz
+
+400
+m
+
+
+
+
+
+15 m12 m12 m12m12 m12 m12 mszélességForrás: Saját munka
+3.1.7 A 38SX ásógép mûszaki adatai
+Az 1-es parcellában alkalmazott 40SX típusú ásógép adatit a fentebbi fejezetekben már ismertettem. Azonban a többi ásógépes mûvelést a Lakiteleki területen egy harmadik kivitelû ásógéppel végeztük, ami a 38SX típusnevet viseli. A gép méreteit nézve már a nagy szériás ásógépek családjába sorolandó. Az eszköz mûködtetéséhez legalább 90 Le teljesítményû traktor szükséges. A modell alkalmas elmunkáló henger együttes alkalmazásával homokos, homokos vályog, és vályogtalajok mûvelésére, elmunkáló henger nélkül középkötött agyagos talajon is lehet használni. Az ásórotor munkamélysége 15-35 cm mélyen húzódik. Az ásókapák elhelyezkedése ugyanaz, mint a 40SX modellnél. Az elmunkáló henger kialakítása pedig megegyezik a 38WX típussal. Az ásórotor meghajtását duplex lánccal valósítjuk meg. A kapafejek itt is cserélhetõk, valamint az automata racsnis nyomatékhatároló itt is szerepel a felszereltségben.
+
+3. ábra. Imants 38SX ásógép
+ Forrás: Agroskill Kft.
+
+3.1.8. Termesztett kultúrák
+
+3.1.8.1. Ipari paradicsom
+Hazánk ökológiai adottságai kiválóan megfelelnek az ipari paradicsomnak. Termesztési célja a feldolgozó ipar kielégítése a belõle készült termékek elõállításához. A paradicsomnak (Lycopersicon esculentum L.) hõigénye magas, 20-25 °C közötti tartomány az ideális, kritikus tényezõ ezen szempont alapján a késõ tavaszi fagyok jelenléte, valamint, az átlagosnál melegebb forró júliusi napok. Hazánkban csak öntözés mellett termeszthetõ. Talajigényét tekintve mind a réti csernozjom, mind a humuszos homoktalajon termeszthetõ gazdaságosan. A növény tápanyagigénye magas, hiánya esetén a termés mennyisége és minõsége is romlik. Kálium és kalcium igénye magas (KUTOS-HERCZEG, 2023). 
+3.1.8.2. Vöröshagyma
+A vöröshagyma (Allium cepa) ökológiai igényei miatt széles körben termesztik a világ sok pontján. Legoptimálisabb talajok számára a középkötött, és öntéstalajok. Vízigénye közepesnek mondható, régebben öntözés nélkül is jól termeszthetõ volt. Hõigénye viszonylag magas, 13-28 °C. Tápanyag igénye közepes, annak hiányára nem szélsõségesen reagál, a nitrogén és a kálium, amikbõl a legtöbbet igényel a növény (TERBE, 2022).
+
+3.1.9. Öntözés
+
+3.1.9.1. Kecskemét-Borbási terület
+A területen lévõ ipari paradicsomot önjáró lineárral öntözték. A rendszer öntözõfejei jól porlasztották a kijuttatott vizet, ami kedvezõbb hatással van a talajra, és a kultúrára. Az ültetéstõl kijuttatott víz mennyisége 400 mm volt. Az öntözések közti napok száma 5-6 nap volt.
+3.1.9.2. Szentkirályi terület
+A területen termesztett vöröshagymát öntözõdobbal öntözték. A dobra egy dupla vízágyús rendszer volt kötve, amely szélesebb területet tud egyszerre lefedni, ezáltal az öntözõágyú, és dob mozgatása is kevesebbszer történik egy szimpla ágyús rendszerhez képest. A terület öntözését nehezítette, hogy a terület mind a két vége befele lejtett, és ezáltal sajnos minden öntözésnél volt a tábla közepén pangó víz. A vetéstõl számítva 350 mm vizet juttattak ki. Az öntözések 6-7 naponta történtek.
+3.1.9.3. Lakiteleki terület
+A területen lévõ ipari paradicsom öntözését öntözõdobra kötött öntözõkonzollal valósították meg. A területen 2 konzol és dob dolgozott. A konzolok jóval keskenyebb sávokat öntöztek az ágyús, és a lineáros öntözéshez képest. Pozitívumuk viszont, hogy nagyon alacsonyan öntöznek, mindössze másfél méter magasan kisebb kiöntözött víz lehullásának ideje, ezáltal kisebb a párolgás. Szórófejei jól porlasztották a vizet, ezzel is kímélve a kultúrát és a talajt. Az ültetéstõl számítva 450 mm vizet juttattak ki. Átlagosan 4-5 naponta volt a terület öntözve
+
+3.1.10. 2025 klimatikus adottságai
+A 2025- év tavasza a sokéves viszonyokhoz képest is hidegnek számított a kecskeméti régióban. A tavaszi középhõmérséklet átlagosan 8.5 °C volt márciusban, 12.3 °C volt áprilisban, és 13.6 °C volt májusban.
+Az év nyári középhõmérséklete az utóbbi évekhez képest alacsonyabb volt az átlagnál. Az átlag középhõmérséklet júniusban 
+
+3.1.11. Sorközmûvelés paradicsomban
+A sorközmûvelés gumiujjas sorközmûvelõ kultivátorral valósult meg. A fõ feladata volt a gyengén fejlet, frissen kicsírázott gyomok gyérítése.
+3.1.12. Penetrométer
+A penetrométer segítségével tudtuk a talaj tömörödöttségét vizsgálni. Az eszköz felépítését tekintve áll egy fém rúdból, amelyet a vizsgált területbe szúrunk. A rúd vége kivan hegyezve, és 52.5 cm mélyen tudunk vele lehatolni. Az eszközön található 2 markolat között helyezkedik el egy henger, amelyben a fémrúd tud mozogni. A henger tetején egy nyomás merõ található, ami azt mutatja, hogy a talaj mekkora nyomással tartja vissza a rudat. A nyomás mérõ bar egységben jelzi vissza nekünk, hogy mekkora a talaj ellenállása a leszúrt eszközre. A rúd 7.5 cm-es beosztásokban van jelölve teljes hosszúságban. A mérõeszköz egyenletes talajba való nyomása közben folyamatosan látjuk, hogy milyen szintû a talaj ellenállása. A nyomásmérõ számlapján az ellenállás bar-ban kifejezett mértékegysége mellett a gyártó azt is feltüntette, hogy adott ellenállási szinteken milyen mértékû a gyökérzet növekedési lehetõsége. A mûszer a 20 bar ellenállás tartományt jelezte azon értéknek, ami felett már olyan szintû a talaj tömörödöttség, hogy a termesztett kultúra gyökérzete már nem tud azon tovább hatolni.
+3.1.13. COMBI 5000-multifunkcionális mérõmûszer
+A COMBI 5000 mérõmûszer, a növénytermesztést befolyásoló tényezõk széleskörû mérésének mûszere. A mûszert mind folyékony, mind szilárd közegben is lehet alkalmazni. A mûszeren 6 különbözõ mérõ szonda található. 
+Az elsõ közülük a pH szonda, amely 0-14 értékben tudja nekünk a pH-t mutatni. Mérni lehet vele közvetlen talajból, szubsztrátumokból, és folyadékból.
+A második szonda az EC szonda. Az mS-ben mért érték mutatja meg nekünk, hogy milyen szintû a vezetõképesség egy folyadékban, például tápoldatban. Mérési tartománya 0-200 mS.
+A harmadik mérõmûszerünk a MULTI szonda. Itt három adatot is látunk, amelyek az aktivitás, a talajhõmérséklet, és a nedvesség. Az aktivitásnál az oldott sótartalmat nézzük, amelyet g/l egységben kapunk meg, és 0-2.99 értékig tud mérni. A második adat a talajhõmérséklet, amelyet -10 és +50 °C tartományban tudunk mérni. A harmadik adat a talajnedvesség, ahol a talajban lévõ víznek, a térfogatszázalékban megadott értékét látjuk. A mûszer 0.5-60%VWC skálán tud mérni.
+
+3.2 Módszer 
+
+3.2.1. A kísérleti területek 
+Az ásógépes mûvelés vizsgálatait 2025-ben három különbözõ üzemi kísérleti táblán valósítottuk meg. A mûvelés során az Agroskill Kft. Imants típusú ásógépeit használtuk fel. A Kft. és a Neumann János Egyetem együttmûködött a vizsgálatok megvalósításában. A kísérletbe bevont üzemi táblák Kecskemét, Szentkirály és Lakitelek külterületén helyezkedtek el, réti csernozjom és humuszos homoktalaj talajtípussal jellemezhetõ parcellákon.  
+A kutatás ötlete 2024 decemberében született meg, és 2025 januárjában pedig felvettem az Agroskill Kft. tulajdonosával, Kis Pállal. Nagyon kedvesen, és segítõkészen fogadta az ötletet, miszerint az általa forgalmazott Imants ásógépekrõl készítsünk a Neumann János egyetemmel közösen, egy tudományos felmérést. A konzultáció elõtt megkerestem Dr. Hüvely Attila egyetemi docenst, hogy lenne-e a kutatásban a konzulensem, valamint a Kis Pállal való beszélgetés során elmondjam, hogy szerinte milyen háttér kell, és milyen eszköztár a kutatás lebonyolításához. A Kis Pállal való konzultáció eredménye az volt, hogy segít nekünk találni Kecskemét vonzáskörzetében termelõket, akinknek a területein az ásógépek talajra gyakorolt hatásait tudjuk elemezni. A Szentkirályi terület tulajdonosának saját ásógépe volt, a Kecskeméti, és a Lakiteleki területekhez viszont õ biztosította a gépeket. A területeken gazdasági termelés folyt az egész kísérlet alatt.
+
+3.2.2. Kecskemét-Borbási terület
+3.2.2.1. Kísérleti parcella mérete, és kijelölése
+A területen elvégezték a 3.1.2.1. pontban részletezett talajmûveléseket, majd megtörtént az ásógépezés. A parcella 470 m hosszú, és 26 m széles volt (4. ábra). A parcella felsõ, északi sávja (13 m) a kezelt terület, az alsó, déli sávja (13 m) a kontroll parcella. A parcella sarokpontjai karókkal lettek kijelölve, valamint a parcellán belül öt mérési pont lett kijelölve, amit GPS-es helymeghatározással rögzítettünk. Az öt mérési pont a hosszúságot, és szélességet tekintve egyenletesen lett elosztva a parcellán belül. A pontok nem egy vonalon mentek a tábla hosszán, hanem egyenlõ mértékben elvoltak tolva a parcella valamely oldala felé. 
+
+
+3. táblázat. A Kecskeméti kísérleti parcellák méréseinek idõpontjai
+Május 16.Június 17.-penetrométeres mérés
+-COMBI 5000 mérés-penetrométeres mérés
+-COMBI 5000 mérésForrás: Saját munka
+
+4. ábra. A Kecskemét-Borbási terület
+Forrás: google my maps – saját szerkesztés
+3.2.3. Szentkirályi terület
+A területet egy összesen kb. 6 ha-os, Szentkirály határában fekvõ, szántóföldi gabonafélék és intenzív öntözött, kertészeti kultúrákkal hasznosított terület, réti csernozjom talaj típussal.
+3.2.3.1. A kísérleti parcella kijelölése
+K+Ág: Õsz: õszi nehézkultivátor, tavaszi nehézkultivátor (Horsch Terrano FX); K: kombinátor; Ág: ásógépezés 
+A területen lévõ kísérleti parcella egy ásógépezett területrész, amit márciusban, közvetlenül a vöröshagyma vetése elõtt ásógépeztek. A kísérleti parcella mellett kijelöltünk egy kontroll területet, ahol a vetés elõtti idõszakban kultivátorozás és kombinátorozás történt. A kontroll sáv szélessége a kombinátor szélességének felel meg azaz 4 m, a parcella hossza pedig 50 m. A parcella sarkait karóval jelöltük ki. A kontroll táblán belül minden alkalommal más ponton történt az adatgyûjtés. A tábla ásógépezett területén öt, egymástól eltérõ helyen jelöltünk ki mérési pontokat, ezek GPS koordinátáit rögzítettük.
+
+4. táblázat. A Szentkirályi kísérleti parcellák méréseinek idõpontjai
+Március 7Április 11Május 16Június 17-penetrométeres mérés
+-COMBI 5000 mérés-penetrométeres mérés
+-COMBI 5000 mérés-penetrométeres mérés
+-COMBI 5000 mérés-penetrométeres mérés
+-COMBI 5000 mérés
+Forrás: Saját munka
+
+
+
+
+
+
+
+
+
+
+
+
+5. ábra. Szentkirályi terület
+Forrás: google my maps – saját szerkesztés
+3.2.4. Lakiteleki terület
+A területen lévõ kísérleti parcellákon történõ 2024-es mûvelésekrõl, a terület-termeltetési vezetõje tájékoztatta a konzulensemet, amely információkat átadott nekem. 
+3.2.4.1 A kísérleti parcellák kijelölése
+A területen kizárólag kísérleti parcellákról csináltunk méréseket. A területen hét parcella helyezkedett el egymás mellet, amelyeknek a hossza 400 m volt, az elsõnek a szélessége 15 m, a többinek pedig 12 m volt. A parcellák sarokpontjai karókkal, és GPS pontokkal is kilettek jelölve. Minden parcellában öt mérési pont volt, amelyek mint a Kecskeméti területen, hosszanti irányban egyenlõ távolságra lettek elosztva. Ügyeltünk arra is, hogy ne egy vonalban fussanak a mérési pontok, hanem minden pont az õt követõhöz képest a parcella egyik oldala felé volt eltolva. Ezeket a pontokat is GPS-el rögzítettük. 
+5. táblázat. A Lakiteleki kísérleti parcellák méréseinek idõpontjai
+Május 7Június 4Augusztus 7-penetrométeres mérés
+-COMBI 5000 mérés
+-talajminta vétel-penetrométeres mérés
+-COMBI 5000 mérés-penetrométeres mérés
+-COMBI 5000 mérésForrás: Saját munka
+
+
+
+
+
+
+
+
+
+
+6. ábra. Lakiteleki terület
+Forrás: google my maps – saját szerkesztés
+3.2.5 Mérések lépései
+
+3.2.5.1. Penetrométeres mérés 
+A penetrométeres mérésnél a talaj tömörödöttségét vizsgáltuk. A penetrométert, a vizsgálat idejéig, az Agroskill Kft. biztosította. Az eszköz alkalmazásánál ügyelni kellet, hogy amikor a talajba szúrtuk a penetrométer rúdját, az teljesen függõleges legyen, ne dõljön semmilyen szögbe. Miután jó szögben volt az eszköz ügyelni kellett arra, hogy egyenletes legyen a nyomóerõ, és a haladás sebessége. Az eszköz földbe való nyomását akkor hagytuk abba, mikor már a 20 bar nyomás éréket mutatta, majd mikor ez megtörtént, az ujjunkat odahelyeztük a rúd azon pontjához, ahol a földfelszínnel volt egy síkban. Az ujjunkat az említett helyen tartva a rudat kihúzzuk a földbõl, és megmérjük, hogy milyen mélyen hatoltunk le a talajban. A rúd 7,5 cm skálákra osztásának köszönhetõen könnyen fejben is kilehetett számolni a mélységet. A kapott hossz feljegyzésre került, és minden helyen ugyan ez a folyamat ment, ahol mérést végeztünk. 
+
+
+7. ábra. Penterométer mérés közben
+Forrás: saját fotó
+
+3.2.5.2. COMBI 5000-es mûszeres mérés
+A COMBI 5000-es mûszerrel a talajok hõmérsékletét, oldott sótartalmát, és a víztelítettségét vizsgáltuk. Az eszközt a Neumann János Egyetem biztosította. A mûszerhez több méréshez való szonda tartozott, de ezeket az adatokat egy szonda is tudta mutatni. Amikor paradicsom kultúrában végeztünk ezzel a mûszerrel mérést, akkor 10, és 20 cm mélységben mértünk. Ennek oka, hogy a szonda hossza 20 cm volt, valamint kíváncsiak voltunk mekkorák az eltérések a mért adatok tekintetében, a két szint között. A vöröshagyma kultúrában pedig 1, és 5 cm mélységben végeztünk méréseket. Ennek oka, hogy a hagyma gyökérzete jóval sekélyebben van, mint a paradicsomnak. Itt is fontos volt, hogy jó szögben szúrjuk a szondát a talajba, hogy az a megfelelõ mélység adatait mutassa nekünk. A szondán a különbözõ mélységeket, szigetelõ szalaggal jelöltük be. A szalag nem befolyásolta a mûszer mérési pontosságát, mivel a szonda hegye végez csak mérést, a szára nem. 
+
+8. ábra. Combi 5000 mérõmûszer
+Forrás: Saját fotó
+3.2.6. A megfigyelés körülményei
+A parcellákhoz való kijutást én is, és a konzulensem is autóval oldottuk meg. A méréseknél fontos volt, hogy milyen idõjárási körülmények vannak a mérés napján. Esõs idõben nem lehetett mérni, hiszen az ferdített volna a mérési eredményeken. Mivel a talajok felmelegedésére is kíváncsiak voltunk, ezért meleg, napos idõben zajlott adatfelvétel. Próbáltunk ügyelni, hogy ne öntözés közben legyen mérés a területeken, ami nem mindig sikerült. Ahol frissen volt öntözve a mért terület, azt természetesen rögzítettük. 
+
+3.2.7 Az adatok feljegyzése, és feldolgozása
+A mért adatokat egy füzetbe vezettük helyszín, parcella, és dátum azonosan. A helyszínen való adatok feljegyzésében Szabó Mercédesz hallgató társam is segített. A feljegyzett adatokat excel táblázatban is rögzítettük, amelynek segítségével diagrammokat is tudtam készíteni a mért eredményekbõl. Azokban a parcellákban ahol 1-nél több mérés is történt alkalmanként, ott átlagot számítottam az adatokból. A szentkirályi kontroll parcella kivételével mindenhol több adatot vettünk parcellánként, tehát az elkészült diagrammokban a megjelenített parcellákban átlagolt eredmények szerepelnek. Miután a diagrammok elkészültek egy olyan képet kaptunk a területeinkrõl, amely jól átlátható, közben pedig sok adat összesítésével született meg. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4. Eredmények
+
+4.1 Lakiteleki területen mért eredmények
+
+
+9. ábra. Lakiteleki terület talajának tömörödöttsége
+Forrás: Saját munka
+
+I=mélyásógép, II=ásóg. lazítás, III=ásógép, IV= szántás, komb., lazítás, V= szántás, komb., VI= szántás, ásógép, lazítás, VII= szántás, ásógép  
+
+Az ábrán látható, hogy a különbözõ kezelés kombinációk sokféle talajszerkezetet alakítottak ki. Az elsõ terepi mérés május 7-én történt, itt a kiinduló talajszerkezet optimálisnak tekinthetõ, ha a penetrométerrel mérhetõ szelvény mélysége eléri a 30 cm-t. Ezt a csak ásógépezett kezelésen kívül mindegyik kombináció elérte. A legmélyebb optimálisan laza szerkezetet az ásógépes és lazításos, ill. a szántott, ásógépezett, lazított kombináció érte el.
+Az ábrán jól látszik az is, hogy a tenyészidõ elõrehaladtával, az augusztusig mintegy 350 mm öntözõvíz kijuttatásának hatására a talajtömörödés mindegyik kezelés kombinációban megjelent. Érdemes kiemelni, hogy a kiinduló állapothoz képest a mélyásógépezett (I.) és a szántott, ásógépezett kezelés (VII.) tartotta meg leginkább a kedvezõ talajszerkezetet. Az egész felvételi idõszak során a csak ásógépezett parcella (III.) mutatott konstans sekély értékeket és az ásógépezett, lazított (II.), ill. a szántott, kombinátorozott parcella (VI.) mutatta a legnagyobb arányú letömörödést kb. 4 hónap alatt.
+Az ábrán látható, hogy az elsõ mérési idõpontban az 50 cm lazítás jó hatással volt a talaj laza struktúrájának megtartásában (II., IV., VI. parcella). Ha a IV.-es V.-ös kezeléseket vizsgáljuk, akkor az látszik, hogy ha a szántás és kombinátorozás mellett kombinátorozást is végzünk, az mérsékli a talaj tömörödését.
+A tenyészidõszak végére a mélyásógépezett (I.), valamint a szántott, és ásógépezett (VI., VII.) talajok tudták a legjobban megõrizni azt az optimális mélységet (30 cm), ami az ipari paradicsom számára kedvezõ. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+A következõ ábra a Lakiteleken mért talajhõmérsékletet mutatja be:
+
+10. ábra. Lakiteleki terület talajának hõmérséklete
+Forrás: Saját munka
+Az eredmények azt mutatják, hogy a talaj felsõ 20 cm-es rétegének hõmérséklete a levegõ hõmérsékletéhez, és az évszakhoz megfelelõ napsugárzás erõsségéhez igazodik. A júniusi és az augusztusi idõszakban, a felsõ 10 cm-es réteg lényegesen magasabb hõmérsékletû, mint a 10 és 20 cm közötti réteg. Ez az intenzívebb besugárzás eredménye. A paradicsom palánta fejlõdése szempontjából a májusi idõszakban mért értékeknek van a legnagyobb jelentõsége, hiszen a talajfelszín gyors felmelegedése elõsegíti a fiatal növények gyors fejlõdését.
+A májusi adatokat elemezve látható, hogy a lazított, szántott, és ásógépezett, VI.-os parcella, ill. a szántott, és kombinátorozott V.-ös parcella talaján mértük a legmagasabb hõmérsékleteket. Ez párhuzamban áll a májusi penetrométeres mérések kedvezõ tömörödöttségi értékével. Ide tartozó apró ellentmondás, hogy a lazított, és ásógépezett II.-es parcella, melynek talaja májusban szintén optimálisan laza szerkezetet mutatott, a legalacsonyabb talajhõmérsékletet produkálta.  
+Az ábrán jól látszik az is, hogy a kedvezõen laza talajszerkezetet jól megtartó I.-es parcella augusztusi, és a VII.-es parcella júniusi hõmérséklete a legmagasabb a kezelt parcellák közül. ,
+
+
+
+11. ábra. Lakiteleki terület talajának víztelítettsége
+Forrás: Saját munka
+
+I=mélyásógép, II=ásóg. lazítás, III=ásógép, IV= szántás, komb., lazítás, V= szántás, komb., VI= szántás, ásógép, lazítás, VII= szántás, ásógép  
+
+Az ábrán látható talajvíztelítettségi eredmények lényeges élettéreseket mutatnak. A májusi mérési idõpontban az V., VI., VII. parcellák több mérési pontja frissen volt öntözve. Ez lényegesen befolyásolta a mért VWC% eredményeket. Ez utóbbi 3 parcellán azt tapasztaltuk, hogy a friss öntözés hatására, a felsõ 10 cm-es talajréteg víztelítettsége magasabb, mint az alsó 10 cm-é, vagy a két érték szinte teljesen megegyezik.
+ A talaj tömörödöttségének, és víztelítettségének összefüggése a májusi mérési idõpontban az elsõ 4 parcellán elemezhetõ. Itt azt látjuk, hogy mind a 4 kombináció esetében az alsó réteg víztelítettsége magasabb. A legkissebb víztelítettséget a mélyáósgépezett parcellán mértük. A legmagasabb víztelítettség a legnagyobb mélységig lazább szerkezetet mutató második parcellán jelent meg.  Az I.-es parcella alacsonyabb értéke a mélyen átforgatott talaj következménye, mivel a vizet könnyen áteresztõ homoktalaj még gyorsabban áteresztette a kijuttatott öntözõvizet. A májusi méréseknél a 30 cm mélységben ásógépezett II.-es és III.-as parcellák jól tartották a talajnedvességet, kiváltképp a II.-es. Szembetûnõ, hogy a IV.-es parcella, ami 8 cm mélységben volt kombinátorozva tavasszal, mégis kevesebb víz volt benne a felsõ 10 cm-ben, mint az ásógépezett parcellákban. , 
+A júniusi mérés során egyik parcella sem volt frissen öntözve. A hét parcellából ötnek magasabb volt a víztelítettsége a felsõ 10 cm-ben, mint az alsó szinten. A IV., VII. parcelláknál viszont a mélyebb rétegben volt nagyobb a víztelítettség. Az I.-es parcellán a májusi méréshez képest átfordult a szintek víztelítettsége egymáshoz képest. Júniusban már a mélyebb réteg víztelítettsége kisebb.
+Érdekes eredmény, hogy a szántott parcellákon (IV., V., VI., VII.) júniusban, jelentõs különbség alakul ki a két vizsgált réteg víztelítettségében ott, ahol lazítás is történt (IV., VI.). A kombinátorozott IV.-es parcellán az alsó, az ásógépezett VI.-os parcellán a felsõ rétegben magasabb a víztelítettség.
+Az augusztusi mérés során az V., VI., VII., parcellák több mérési pontját is frissen öntözték. Ez magyarázza a magas mért értékeket. A II., IV. mérési pontnál pedig megint látszik, hogy a mélylazítás hatása a víztelítettségre nem egyformán hat a különbözõ mûvelési módoknál. 
+A 4 nem öntözött parcella közül a hagyományos mûvelési módú (lazított, szántott, kombinátorozott) parcellának volt a legmagasabb a víztelítettsége (IV.). 
+
+
+
+
+
+
+
+
+
+
+A következõ diagram a lakiteleki oldott sótartalom mérési eredményeit mutatja be:
+
+12. ábra. Lakiteleki terület talajának oldott sótartalma
+Forrás: Saját munka
+A talaj oldott sótartalma összefüggésben van talaj pórusainak víztelítettségével. A víz mennyisége arányosan összefügg a talaj oldott sótartalmával, tehát, ha magasabb a talaj víztartalma, akkor magasabb a kimutatható oldott sótartalom. 
+A parcellák tápanyagutánpótlása egységes volt, és a májusi talajvizsgálat szerint, homogén volt a 7 kísérleti parcella tápanyagtartalma. Ehhez képest azt láthatjuk, hogy az V., VI., VII. parcellák talajában, augusztusban kiugróan magas értékek jelentkeznek. Ez a frissen végzett öntözés eredménye.
+A májusi, júniusi eredmények a frissen nem öntözött parcellákon nagyobbak, mint az augusztusiak. Ez a kiültetés utáni tápanyag kijuttatás ütetmét mutatja. A júniusi mérés során nem volt egyik parcella sem frissen öntözve, és így egységesebb képet kaphatunk, hogy a talajban lévõ oldott sók milyen szinteken, milyen mértékben vannak jelen. 
+
+
+4.2. Szentkirályi területen mért eredmények
+
+13. ábra. Szentkirályi terület talajának tömörödöttsége
+Forrás: Saját munka
+A márciusi mérés alapján jól látható, hogy a talajtömörödöttség értéke, a kedvezõ szerkezetû talaj mélysége lényegesen nagyobb az ásógépezett területen, mint a kontroll parcellán. Jól látszik, hogy a tenyészidõ elõrehaladtával, a kiadott öntözõvíz növekedésével tömörödni kezd a parcellák talaja.  
+A kontroll parcella áprilisi, és májusi kiugró eredményei a szántóföldi kultivátor késnyomainak a befolyásoló tényezõi, ezek az értékek ellentmondást generálnak a parcellán belül. A kultivátor nyomaiba jó eredményeket mértünk, viszont a kések közti szakaszokban a tömörödés már nem ezeket az eredményeket mutatta. Jól látszik, hogy az öntözés milyen mértékben tömörítette a talajt. Kötöttebb talajokon, fõleg ebben az esetben, ahol a domborzat miatt kialakulhat a területen öntözõvíz összefolyás, még fontosabb, hogy a talaj vízmegtartó-, és áteresztõ képessége megfelelõ maradjon.  A területen végzett utolsó mérésekor (júniusban) már jelentõs mértékû tömörödés alakult ki mind két parcellán, de látható az is, hogy az ásógépezett parcella értéke sokkal kedvezõbb. 
+
+
+14. ábra. Szentkirályi terület talajhõmérséklete
+Forrás: Saját munka
+Az eredményeken látszik, hogy a talaj hõmérséklete szorosan összefügg a levegõ aktuális hõmérsékletével, és az évszak szerinti besugárzás erõsségével. Az egy centiméteres talajfelszín, és az öt centiméteres mélység talajhõmérsékletében csak az elsõ két mérési idõpontban, márciusban, és áprilisban jelentkezett lényeges különbség.
+A vöröshagyma tesztnövény fejlõdése szempontjából az elsõ két mérési idõpontnak van komoly jelentõsége, mivel a növénynek ekkor kell minél nagyobb hõösszeget gyûjtenie.  Az ábra jól mutatja, hogy az ásógépezett terület átlagos talajhõmérséklete mindkét korai mérési idõpontban, és mindkét mélységben magasabb, mint a kontroll parcelláé. Ez komoly elõnyt jelent az ásógépezett terület javára.  
+A késõbbiekben viszont jól látszik, hogy a talaj hõmérséklete nem tért el lényegesen a két parcella, és a két mélység között.
+
+
+
+
+
+
+
+
+4.3. Kecskemét-Borbási területen mért eredmények
+
+
+15. ábra. Kecskemét-Borbási terület tömörödöttsége
+Forrás: Saját munka
+Az ábrán jól látható, hogy az ásógépezett terület talajszerkezete, tömörödöttsége kedvezõbb értéket mutat az ásógépezett területen, mint a kontroll parcellán, minkét felvételezési idõpontban. Jól látható az is, hogy a két mérési idõpont között eltelt harminc nap alatt a kiadott körülbelül 150-200 mm öntözõvíz hatására jelentõs mértékben tömörödött a talaj mind a kettõ parcellán. A második felvételi idõszakban átlagosan 5 cm-el volt mélyebb az ásógépezett parcella optimális szerkezetû talaj, mint a kontroll parcelláé. az alsó határértéke májusban is, és júniusban is. 
+
+
+
+16. ábra. Kecskemét-Borbási terület talajhõmérséklete
+Forrás: Saját munka
+Az eredményekbõl látszik, hogy a parcellák talajának hõmérséklete követi a mérések idõpontjában tapasztalt léghõmérsékleti adatokat. Az is látszik, hogy a különbözõ mélységekben nem volt nagy hõmérsékleti eltérés. Az ásógépezett terület talaja volt csak pár fokkal magasabb hõmérsékletû. Ez a pár fok nem tûnik soknak, viszont az ipari paradicsom szempontjából, egy kimondottan hideg május során, a kiültetett palánták fejlõdési ütemében ez a néhány fok eltérés is jelentõs.
+
+
+
+
+17. ábra. Kecskemét-Borbási terület víztelítettsége
+Forrás: Saját munka
+Az ábrán látható, hogy a parcellák víztelítettsége mindkét mérési idõpontban magas. A talajok magas víztelítettsége a magas vályogtartalomnak köszönhetõ. Jól látható a májusi méréseken, hogy az ásógépezett parcella talajvíztelítettsége eltér a 10, és 20 cm-es rétegekben. Az ásógépezett parcellában a mélyebb rétegben volt magasabb a víztelítettség, a jobb vízáteresztõ képesség miatt. A kontroll parcellán ez az eltérés nem látható, ami abból adódik, hogy az ásógépezett terület talajának szerkezete jóval lazább, mint a kontrollénak. 
+A júniusi méréseknél látható, hogy a mért szinteken a kontroll terület víztelítettsége magasabb az ásógépezetthez képest. A talaj tömörödésének hatására mind a kettõ parcellában nõt a vízmegtartó képesség, ami az eddig kijuttatott 150-200 mm öntözõvíz tömörítõ hatásának is köszönhetõ. A parcellák víztelítettségén látszik, hogy a kontroll terület értékei mindkét idõpontban magasabbak. 
+Jól látszik, hogy a kötöttebb talaj vízáteresztõ képessége nõtt, ami olyan szempontból jó, hogy túlöntözés esetén is kisebb a kockázata a pangóvíz kialakulásának. A jobb vízáteresztõ képesség a megnövekedett pórustérfogatnak köszönhetõ, ami az ásógépezésnek a velejárója. Mélyebb rétegekben viszont megmarad a jó vízmegtartó képesség. A májusban mért legkisebb víztelítettség is jónak mondható, 27 % ( kontrol parcella).
+
+
+
+18. ábra. Kecskemét-Borbási terület oldott sótartalma
+Forrás: Saját munka
+Az ábrán látható, hogy a májusi mérések során az ásógépezett parcellában kicsi az oldott sótartalom szint különbsége a két szint között, viszont a kontrol parcellában ez az arány jobban eltér. Érdekessége az ábrának, hogy a parcellák víztelítettsége pedig pont fordítva volt a különbözõ szinteken a májusi mérés során. Elmondható itt is, hogy a parcellák egyenlõ arányban kaptak tápanyag utánpótlást. 
+A júniusi mérések során látható, hogy a kontrol parcellában magasabb az oldott sótartalom, ami a magasabb talajvíztelítettségnek köszönhetõ. Az ásógépezett parcellában nagyobb mértékben térnek el a mért értékek a 10, és 20 cm-es mélységben az értékek. Mindkét parcellára elmondható, hogy a talajban lefele haladva nõ az oldott sótartalom mennyisége. 
+Jól látszik mind a kettõ mérési idõpontban, hogy arányos a területek víztelítettsége a kimutatott oldott sótartalmakkal. Az oldott sótartalmak mennyisége az adott szintekben nemcsak a víz telítettséggel van összefüggésben, hanem a lazább talajszerkezetben jobban tud a mélyebb szintekbe mosódni az oldott só.
+
+
+
+
+4.4. A talajméréseken túli eredmények
+
+
+19. ábra. Kecskemét-Borbási terület paradicsom állománya júniusban
+Forrás: Saját fotó
+A képen látható paradicsom soroknál a kép jobb oldalán az ásógépezett parcella látható, a baloldalon pedig, a hagyományos mûvelésû terület. A mûvelésbeli eltérések szemmel látok a növényzet növekedése szempontjából. Nagyobb, elõrehaladottabb a növekedése azoknak a soroknak, ahol ásógéppel volt mûvelve a talaj.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+20. ábra. Szentkirályi terület hagyma állománya júniusban
+Forrás: Saját fotó
+
+A kép jobboldalán a szentkirályi terület kísérleti parcellája látható (szántóföldi kultivátor, kombinátor), a bal oldalán pedig az általános mûvelési forma (ásógépezés). A képen ami szembetûnõ, az a gyomok mennyisége. A kontroll parcellán, jól elkülönülve látjuk, mennyivel kevésbé tudja a gyomokat szabájozni ez a mûvelési forma, a másikhoz képest.
+
+
+
+
+
+
+
+
+5. Következtetések, javaslatok
+
+5.1. Következtetések 
+
+5.1.1. Lakiteleki terület
+A Lakiteleki területen mért adatok alapján, hét parcellán, hét különbözõ mûvelési módszer talajra gyakorolt hatását tudtuk elemezni a kutatásunk során. A talaj tömörödöttségét tekintve elmondható, hogy a talaj mély mûvelése (ásógépezés) meghozta a tõle várt eredményeket. A talaj sokáig laza maradt, és a tömörödés is egyenletes volt, nem voltak kiugró értékek. Látható volt, hogy az ásógépezés 30 cm-es mélységben a mûvelést követõ elsõ idõszakban sokkal mélyebben volt laza szerkezetû, ha lazítva is van elõtte a terület. Jól látszódott a II.-es és III.-as parcellán hogy az elõbb említett lazítás mennyit segített, viszont a tenyészidõszak végére már egyforma volt a tömörödöttségük, tehát a lazítás hatása nem tart ki a termesztési idõszak végéig. A IV.-es V.-ös parcellákban, ahol szántás és kombinátorozás történt, látható volt, hogy a szántás elõtti mélylazítás segített (IV.) a talaj laza szerkezetét megtartani az augusztusi mérésekig is. A VI.-os, és VII.-es parcelláknál pedig csak a májusi méréseknél láthattunk kiugró különbséget, mégpedig a VI.-os parcellában, ugyanis ez a parcella is kapott egy mélylazítást az õszi szántás elõtt, de ez a kiugró eredmény júniusban már nem látszott. Jól látható hogy a ahol ásógépezés történt, ott a lazítás eredménye nem tart a tenyészidõszak végéig. A legegyenletesebb parcella tömörödés szempontjából viszont a VII.-es volt, amely nem változott érdemben az elsõ és az utolsó mérés között. 
+A talajok hõmérsékletét tekintve az összefüggés látszódott a talaj lazaságával, tehát ahol lazábbak voltak a parcellák, ott magasabb volt a hõmérséklet is. A legmagasabb értékek az I.-es, és a hetes parcellák mutatták. A májusi, és a júniusi méréseknél a VII.-es, az augusztusi mérésnél pedig az I.-es parcella volt a legkiemelkedõbb.
+A víztelítettség mérésnél az látszott, hogy a tömörebb talajokban nagyon koncentrációban van víz, ami annak az eredménye, hogy a tömörebb rétegekben, lassabban tud a víz lefolyni a mélyebb szintekbe, valamint, ez miatt lassabb is tud a talaj párologtatni, a kisebb pórustérfogat végett. A II.-es és III.-as parcellán ez jól látszik.
+Az oldott sótartalom tekintetében pedig jól látszódott, hogy a májusban elkezdett mérések során hogyan emelkedett, majd csökkent ez az érték az utolsó mérésig. A júniusi mérések eredményeképp látszik, hogy az ültetéstõl fokozatosan növõ tápanyagutánpótlás hogy emeli a talaj oldott sótartalmát. A szeptemberi talajmintavételek eredményei után pedig kiderült, hogy nem voltak érdemi eltérések a talajminták tápanyagmennyiségeiben a parcellák között.
+
+5.1.2. Szentkirályi terület
+A terület tömörödöttségét tekintve, az ásógépezett terület kiugróan jobb eredményeket mutatott az elsõ mérésnél, az április, ás a májusi mérésnél viszont nem volt nagy különbség. Az eredményt nagyban befolyásolta a kontroll területen alkalmazott szántóföldi kultivátor kapáinak a nyomai, amelyek ebben az idõszakban jól tartották a jó talajszerkezetet, de mivel a kapanyomok között nem ennyire kiugróan jók az eredmények, ezért tömörödöttség szempontjából egy heterogén parcelláról beszélhetünk. A júniusi mérésben viszont már újra kijöttek a nagy kontrasztok, mivel az ásógépezett területen majdnem kétszeres mélységig hatolt a penetrométer rúdja a talajba, a kontroll parcellához képest. 
+A talaj hõmérséklete a márciusi mérésnél volt eltérõ, mivel itt az ásógépezett területé volt magasabb. Ennek oka az egységesebb, homogénebb talajszerkezet, valamint, a nagyobb pórustérfogat. A késõbbi méréseknél viszont már a hõmérsékletben nem voltak nagy eltérések, ezen a téren egységesek voltak a megfigyelt parcellák.
+
+5.1.3. Kecskemét-Borbási terület
+A terület tömörödöttségét tekintve a májusi, és a júniusi mérés során is jól elkülönültek az eredmények. A hagyományos mûvelés az õszi szántás volt, amelyet elsimítóztak, majd tavasszal a palántaültetés elõtt kapott egy ásóboronás ültetõágy elõkészítést. A felsorolt mûvelések után készült egy parcella, amely az eddigi mûveléseken felül kapott egy 45 cm-es mélyásógépezést. Májusban, és júniusban is lazább volt az ásógépezett parcella szerkezete.
+A hõmérséklet tekintetében nem volt májusban eltérés, viszont júniusban pár fokkal melegebb volt az ásógépezett parcella, ami a nagyobb pórustérfogatnak köszönhetõ. 
+A víztelítettség tekintetében észlelhetõ volt májusban, a két mérési mélységben nem egyeztek a parcellák. Az ásógépezett parcellában látható volt, hogy a mélyebb szintben több a víz volt, ami a könnyebb vízáteresztést mutatja, a hagyományos mûvelésnél pedig nem volt eltérés a két szint között. Júniusban azonban már mind két parcellában megvolt a szintek közti eltérés, a hagyományos parcellában magasabb volt a talaj pórusait kitöltõ víz mennyisége, ami a tömörebb talaj következménye, mivel nehezebben tud az a mélyebb rétegekbe folyni.
+Az oldott sótartalom pedig visszaigazolja a parcellákban lévõ víztelítettséget, valamint észrevehetõ, leginkább júniusban, hogy a lazább talajszerkezet következtében könnyebben mosódott mélyebb szintekbe az oldott só.
+
+5.2. Javaslatok
+A megfigyelt területeken mért adatok alapján rálátást kaptunk, hogy bizonyos talajmûvelési eljárások milyen hatással vannak a talajainkra. A megfigyelt eljárásokat mind érdemes elhelyezni olyan termesztési rendszerbe, ahova a leginkább valóak. Az Imants ásógépek alkalmazásánál érdemes figyelembe venni, hogy milyen kultúrát, milyen talajon, milyen idõszakban, és milyen termesztési rendszerben szeretnénk alkalmazni.
+Növénykultúrák tekintetében mindenképpen hasznos az ásógép alkalmazása, ha az adott kultúra kifejezetten kedveli a tartósan laza szerkezetû, talajokat. Az ásógépek közül is a 40SX mélyásógép tudja a legmélyebben, és a legtartósabban kielégíteni az ilyen igényeket. A tömörödés nagyon lassú, és egyenletes. 
+Talajok tekintetében mi laza, és középkötött talajokat figyeltünk meg, ahol jó eredményeket tudott elérni az ásógép. Az ásógép mivel a mûvelt talajréteget megkeveri, így a szántáshoz lehet viszonyítani a munkáját. A szántásos mûveléshez képest, ami nagy elõnye, hogy nem tud eketalpat gyúrni. Középkötött talajokon, ha erre nem figyelnek oda, akkor az elég rossz irányba viheti a talajunk szerkezetét. Mûveléskor nem képez hantot, nem hagy barázdát, és egyenletesebben forgatja be a növényi maradványokat, és a kijuttatott szervestrágyát. 
+A tartós laza szerkezetnek köszönhetõen könnyebben tud a talaj felmelegedni. A talaj gyorsabb felmelegedése általánosságban jó a hazai növénytermesztésben, ha az adott kultúránkat mihamarabb kiakarjuk ültetni, vagy vetni a területünkre. 2025 tavasza kifejezetten igazolta ezt. A hûvös tavaszi idõjárás miatt nagyon kitolódtak a tavaszi vetések, palánta kiültetések, 2025 tavasza kifejezetten igazolta ezt.  A Kecskeméti területen jól látható volt az ásógép ezen elõnye. 
+A termesztési rendszert tekintve, jól eredményeket mutatott az öntözött termesztési közegekben. Ahol nagy mennyiségû öntözõvizet juttatnak ki a termesztési ciklusban, ott is jó eredményeket tud az ásógép produkálni, fõleg ha fontos hogy a talajban egyenlet legyen a víz eloszlása.
+Elsõsorban igényes kertészeti kultúrákba ajánlom. Kifejezetten olyan években tud jó eredményeket produkálni, mint az idei, amikor nagyon hasznos volt, hogy hamarabb melegedett fel a talajunk. 
+Az ásógépnél viszont érdemes figyelembe venni azt is, hogy magas a beruházási költsége. Igazán beleilleszkedik egy modern precíziós termesztési modellbe, viszont az eszköz újonnani ára nagyon magas más mûvelõ eszközökhöz képest. Több mozgó alkatrész található benne, ami növeli a karbantartási költségeit. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Összefoglalás
+A kutatás, a Kecskeméti Neumann János Egyetem, és Szentkirályi Agroskill Kft. együttmûködésébõl valósult meg. A kutatás során olyan talajmûvelési eljárásokat figyelhettünk meg, ahol egymás mellett láthattuk a megszokott, hagyományos mûvelési rendszereket, és mellé tudtuk tenni az olyan talajmûvelõ eszközt, amely mûködési elve régóta ismert, viszont alkalmazása nem széleskörû. A kísérletekben megfigyelt területeken nem csak a tudományos megfigyelés érvényesült, hanem egyszerre volt jelen a gazdasági termelés is. A területek talajtani adottságai is eltérõek voltak, így láthattuk, hogy bizonyos mûvelési módszerek hol, milyen hatásfokúak voltak, és hogyan hatottak a talajokra. 
+A területek Kecskemét-Borbás, Szentkirály, és Lakitelek határában helyezkedtek el. A területek régóta termesztésbe vont területek voltak. A Kecskeméti, és a Lakiteleki területek ipari paradicsom, a Szentkirályi területen pedig vöröshagyma volt a termesztett kultúra. Az ásógépek hatásait a talajra más mûvelési módszerekkel összehasonlítva figyeltük meg, ami által összehasonlítási alapunk született, más mûvelési módszerekkel. Az ásógépek közül három különbözõ típus talajra gyakorolt hatásait elemeztük, ami az ásógépek munkáján belül is még részletesebb eredményeket generált. A talajok szerkezetére negatívan ható, nagy mennyiségû öntözés volt jelen a területeken, ami a talajok fokozatos tömörödését eredményezi. A kísérletben erre a problémára is próbáltunk válaszokat találni a mûvelési módszerek idõszakos megfigyelésével.
+Az eszközrõl olyan információkat sikerült megtudni, amelyek segítenek abban, hogy tudjunk mérlegelni az alkalmazása mellet. A laza, középkötött talajokon termesztett kertészeti kultúrák egyik sikeres mûvelõ eszköze az Imants ásógép. Az eszköz nemcsak felépítésben, hanem a munkáját tekintve is az új szemléletû, és a modern növénytermesztés igényeit képviseli. A kutatáshoz rendelkezésre álló eszköztár is segítette az aprólékos kutatást. Az Agroskill Kft. a kísérlet sikeresebbé tétele érdekében egy penetrométert adott, amivel a tömörödést tudtuk megfigyelni a kísérleti területeken. Az információ mennyiséget bõvítette, hogy a területeken vett talajmintákat az egyetem laborjában megvizsgálva aprólékos és pontos kiértékeléseket kaptunk a talajok kémiai tulajdonságaikról.
+A modern mezõgazdasági termelés alapköve az innováció, és a fejlesztés. Folyamatosan érdemes kiértékelni mind azon rendszereket, amelyek hatással vannak arra a környezetre, amiben élünk, és amiben dolgozunk. A talajaink megóvása, védelme, és javítása mindig is célunk kell hogy legyen, egy olyan cél, ami sosem lehet elég tökéletes, amit mindig lehet csiszolni, javítani, fejleszteni.
+Az Imants ásógépek munkájának vizsgálatát ezen elvek alapján figyeltük meg, és célunk volt, hogy a róluk elnyert információk alapján  még inkább lássuk, hol van neki a helye a talajmûvelési eljárások közt.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Irodalmi jegyzék
+1. Bereczki L. (2008): Talajmûvelési alapgondolatok, Nemzeti Szakképzési és Felnõttképzési Intézet Budapest. pp. 3-4.
+2. Birkás M., Dekemati I., Kende Z. (2017): Hungarian Geographical Bulletin, Review of soil tillage history and new challenges in Hungary, 66. évf. 1. sz. pp 55-64. DOI: 10.15201/hungeobull.66.1.6
+3. Birkás M. (2001): Talajmûvelés a fenntartható gazdálkodásban, Akaprint nyomdaipari Kft. pp. 133.
+4. Birkás M. (2002): Környezetkímélõ és energiatakarékos talajmûvelés, Akaprint nyomdaipari Kft. pp. 199.
+5. Birkás M. (2017): Földmûvelés és földhasználat, Mezõgazda lap- és könyvkiadó, Budapest. pp. 107.
+6. Birkás M. (2017): Földmûvelés és földhasználat, Mezõgazda lap- és könyvkiadó, Budapest. pp. 130-131.
+7. Birkás M. (2017): Talajmûvelési ABC, Mezõgazda könyvek kiadó, Budapest. pp. 124-127.
+8. Cserni I. (2000): Talajtan és agrokémia, Dr. Kovács András oktatási fõigazgató-helyettes, Kecskemét. pp. 179.
+9. Dóka L. F., Ragánné Szabó É., Szabó A. (2024): Talajmûvelés-pro és kontra, Agrárágazat 2024 1 sz.
+10. Ersek K. (2023): The history of no-till farming, holganix, szeptember 14
+11. FERWANT (2023): Tárcsázás a jó termés titka, Szarvas, 2025. szeptember 18. www.ferwant.hu 
+12. Kökény A. (2023): Mezõgazdasági technikák fogalomgyûjteménye, Talajmegújító Mezõgazdaság-TMMG, január 10
+13. Kutos-Herczeg Zs. (2023): Trágyázás hatása egyszerûsített talaj nélküli rendszerben termesztett paradicsom beltartalmi értékeire, Budapest, pp. 9-12.
+14. Nyiri L. (1993): Földmûveléstan, Mezõgazda kiadó, Budapest. pp. 144-148.
+15. Remete Farkas L. (2019): Kárpát-medencei régi-népi földmûvelés, Budapest, pp. 64-65.
+16. Schmidt R. (2011): Földmûveléstan TÁMOP-4.1.2-08/1/A-2009-0010 projekt pp. 2-7.
+17. Stefanovics P., Filep Gy., Füleky Gy. (1999): Talajtan, Mezõgazda kiadó, Budapest. pp. 250-251.
+18. Szendrõ P. (1993): Mezõgazdasági géptan, Mezõgazda kiadó, Budapest. pp. 170-172.
+19. Szendrõ P. (1993): Mezõgazdasági géptan, Mezõgazda kiadó, Budapest. pp. 180-183.
+20. Terbe I. (2022): Az étkezési vöröshagyma talaj és tápanyag igénye, valamint trágyázása, Mezõhír, 12. sz.
+21. ALFA-GEP (2025) zöldségtermesztés gépei, Imants ásógépek, www.alfa-gep.hu 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Táblázatok jegyzéke
+1. A kísérleti területek talajmintáinak laboratóriumi eredményei
+2. Lakiteleki terület parcelláinak felosztása, mûvelései
+3. A Kecskeméti kísérleti parcellák méréseinek idõpontjai
+4. A Szentkirályi kísérleti parcellák méréseinek idõpontjai
+5. A Lakiteleki kísérleti parcellák méréseinek idõpontjai
+
+Ábrák jegyzéke
+1. Imants 40SX mélyásógép
+2. Imants 38WX ásógép
+3. Imants 38SX ásógép
+4. Kecskemét-Borbási terület
+5. Szentkirályi terület
+6. Lakiteleki terület
+7. Penterométer, és a vele történõ mérés
+8. Combi 5000 mérõmûszer
+9. Lakiteleki terület talajának tömörödöttsége
+10. Lakiteleki terület talajának hõmérséklete
+11. Lakiteleki terület talajának víztelítettsége
+12. Lakiteleki terület talajának oldott sótartalma
+13. Szentkirályi terület talajának tömörödöttsége
+14. Szentkirályi terület talajhõmérséklete
+15. Kecskemét-Borbási terület tömörödöttsége
+16. Kecskemét-Borbási terület talajhõmérséklete
+17. Kecskemét-Borbási terület víztelítettsége
+18. Kecskemét-Borbási terület oldott sótartalma
+19. Kecskemét-Borbási terület paradicsom állománya júniusban
+20. Szentkirályi terület hagyma állománya júniusban
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Köszönetnyílvánítás
+Ezúton szeretném hálámat kifejezni az Agroskill Kft. tulajdonosának, Kis Pálnak a munkámban való segítségért, valamint hogy hozzájárult a kísérletben szereplõ eszközök mennyiségének növelésében, ezáltal a kutatásom minõségében.
+Köszönöm a segítségét Dunai Lászlónak, aki a Lakiteleki, Univer-product Zrt. területén végzett kísérlet során segítette munkánkat, idõt és energiát nem sajnálva.
+A Szentkirályi terület tulajdonosának, Halasi Ernõnek is köszönöm, hogy hozzájárult a kutatásunkhoz azzal, hogy a területén végzett talajmûvelési eljárásokról kutatásokat végezzünk.
+A Kecskemét-Borbási terület tulajdonosának, Sáringer Attilának is köszönöm, hogy a területén végzett talajmûvelési eljárásokról kutatásokat végezhettünk. 
+A kutatásban való segítséget köszönöm Dr. Hüvely Attila egyetemi docensnek, aki a kutatás konzulense volt, valamint, a kutatás menetét, lebonyolítását segítette. Dolgozatom elkészítésében, a már sok éves munkájának, és szakmaiságának köszönhetõen rengeteg segítséget kaptam.
+
+41
+
+

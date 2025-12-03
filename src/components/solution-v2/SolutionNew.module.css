@@ -1,0 +1,223 @@
+.sectionSolution {
+  background: var(--color-earth-800);
+  color: var(--color-cream);
+  padding: var(--space-5xl) 0;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Optional subtle grid background for blueprint feel */
+.sectionSolution::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+  pointer-events: none;
+}
+
+.header {
+  text-align: left;
+  margin-bottom: 10vh; /* Adjusted for consistency */
+  position: relative;
+  z-index: 1;
+  min-height: 85vh; /* Increased to push content below fold fully */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-4xl);
+}
+
+@media (min-width: 768px) {
+  .benefitsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.blueprintGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 1200px) {
+  .blueprintGrid {
+    grid-template-columns: 1.2fr 1fr; /* Balanced split */
+    align-items: stretch;
+  }
+  
+  /* Force benefits grid to 1 column when inside the blueprint grid layout */
+  .blueprintGrid .benefitsGrid {
+    grid-template-columns: 1fr;
+    margin-bottom: 0;
+  }
+}
+
+.benefitCard {
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.02);
+  transition: all 0.3s ease;
+}
+
+.benefitCard:hover {
+  border-color: var(--color-gold);
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-4px);
+}
+
+.mainTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.1;
+  font-weight: 800;
+  color: var(--color-white);
+  margin: var(--space-lg) 0 var(--space-md);
+  letter-spacing: -0.02em;
+}
+
+.subTitle {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: rgba(245, 240, 232, 0.8);
+  max-width: 65ch;
+}
+
+.subTitle em {
+  color: var(--color-gold);
+  font-style: normal;
+}
+
+.scrollDownButton {
+  margin-top: var(--space-3xl);
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: var(--color-white);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scrollDownButton:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  background: rgba(212, 168, 75, 0.1);
+}
+
+.contentWrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5xl);
+}
+
+/* Blueprint Container */
+.blueprintContainer {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.blueprintHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2xl);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: var(--space-md);
+}
+
+.blueprintTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.blueprintBadge {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--color-gold);
+  border: 1px solid var(--color-gold);
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Footer / CTA */
+.footer {
+  margin-top: var(--space-4xl);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.footerText {
+  font-size: 1.25rem;
+  font-family: var(--font-display);
+  color: var(--color-white);
+  font-weight: 600;
+}
+
+.nextButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-2xl);
+  background: var(--color-white);
+  color: var(--color-earth-900);
+  border-radius: 100px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.modelImageWrapper {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+  /* Ensure the white background of the image is clipped */
+  background: white; 
+}
+
+.modelImage {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  object-fit: contain;
+}
+

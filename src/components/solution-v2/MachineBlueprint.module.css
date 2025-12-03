@@ -1,0 +1,252 @@
+.container {
+  background: rgba(10, 10, 10, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.5);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: var(--space-md);
+}
+
+.titleGroup h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--color-white);
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+}
+
+.badge {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--color-gold);
+  background: rgba(212, 168, 75, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 168, 75, 0.3);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+}
+
+.blueprintArea {
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gridBg {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+}
+
+.imageInner {
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+}
+
+.machineImage {
+  border-radius: var(--radius-lg);
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  border: 2px solid var(--color-white);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.hotspotLabel {
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 0.875rem;
+  position: relative;
+  z-index: 2;
+}
+
+.hotspotRing {
+  position: absolute;
+  inset: -4px;
+  border: 1px solid var(--color-gold);
+  border-radius: 50%;
+  opacity: 0;
+  animation: pulse 2s infinite;
+}
+
+.hotspot:hover, .hotspot.active {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-earth-900);
+}
+
+.hotspot:hover .hotspotRing {
+  opacity: 1;
+}
+
+.detailPanel {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
+  padding: var(--space-lg);
+  z-index: 20;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.panelIcon {
+  color: var(--color-gold);
+}
+
+.panelHeader h4 {
+  color: var(--color-white);
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.panelContent p {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin-bottom: var(--space-md);
+}
+
+.closeButton {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.6);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.closeButton:hover {
+  border-color: var(--color-white);
+  color: var(--color-white);
+}
+
+.mobileDetails {
+  display: none;
+  margin-top: var(--space-xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .blueprintArea {
+    min-height: 300px;
+  }
+  
+  .hotspot {
+    /* Hide interactive hotspots on mobile to avoid clutter, 
+       or make them smaller. For now, we hide and show list below. */
+    display: none; 
+  }
+
+  .detailPanel {
+    display: none; /* Force hide overlay on mobile */
+  }
+
+  .mobileDetails {
+    display: grid;
+  }
+
+  .mobileItem {
+    background: rgba(255,255,255,0.05);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .mobileHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .mobileNumber {
+    font-family: monospace;
+    color: var(--color-gold);
+    border: 1px solid var(--color-gold);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.75rem;
+  }
+  
+  .mobileHeader h4 {
+    color: var(--color-white);
+    margin: 0;
+  }
+  
+  .mobileItem p {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.875rem;
+    margin: 0;
+  }
+}
