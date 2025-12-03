@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import LocationContent from './LocationContent'
+import LocationSelector from './LocationSelector'
 import { locations } from '@/lib/data'
 import styles from './Experiment.module.css'
 
@@ -19,20 +20,6 @@ export default function LocationTabs() {
 
   return (
     <>
-      <div className={styles.locationTabs}>
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            className={`${styles.locationTab} ${activeLocation === tab.key ? styles.active : ''}`}
-            onClick={() => setActiveLocation(tab.key)}
-          >
-            <span className={styles.tabNumber}>{tab.number}</span>
-            <span className={styles.tabName}>{tab.name}</span>
-            <span className={styles.tabCrop}>{tab.crop}</span>
-          </button>
-        ))}
-      </div>
-
       <AnimatePresence mode="wait">
         <motion.div
           key={activeLocation}
@@ -45,6 +32,12 @@ export default function LocationTabs() {
           <LocationContent location={activeLocation} data={locations[activeLocation]} />
         </motion.div>
       </AnimatePresence>
+
+      {/* Floating Location Selector with Modal */}
+      <LocationSelector 
+        activeLocation={activeLocation} 
+        onLocationChange={setActiveLocation} 
+      />
     </>
   )
 }

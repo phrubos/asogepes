@@ -105,11 +105,17 @@ Mikor érdemes ásógépet használni?
 ### [x] 5.1 Oldalak közötti navigáció
 Minden oldal végén: "Előző" / "Következő" gombok
 
-### [ ] 5.2 Progress indicator (opcionális)
+### [x] 5.2 Progress indicator
 Vizuális jelzés, hogy a látogató hol tart a "történetben"
+- ProgressIndicator komponens az oldal alján
+- Lépések vizualizációja pontokkal és progress bar-ral
+- Automatikus téma váltás (világos/sötét oldalakhoz)
 
-### [ ] 5.3 Anchor linkek (opcionális)
+### [x] 5.3 Anchor linkek
 Hosszabb oldalakon belüli navigáció (pl. Kísérlet oldalon helyszín-választó)
+- AnchorNav komponens a Kísérlet oldalon
+- Lebegő helyszín-választó a jobb oldalon
+- "Vissza a tetejére" gomb
 
 ---
 
@@ -151,4 +157,7 @@ Ha a felhasználó elérhetővé teszi a fájlok tartalmát:
 ### Következő lépések (opcionális):
 - [ ] Valódi ábrák/fotók hozzáadása a placeholder-ek helyére
 - [ ] PDF/PPTX tartalom kinyerése további adatokhoz
-- [ ] Progress indicator hozzáadása
+
+### Fázis 5 kiegészítések (2024.12.03):
+- ✅ Progress indicator (ProgressIndicator komponens) - vizuális lépésjelző az oldal alján
+- ✅ Anchor linkek (AnchorNav komponens) - helyszín-választó a Kísérlet oldalon
