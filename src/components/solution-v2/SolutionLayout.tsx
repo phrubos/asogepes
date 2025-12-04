@@ -52,6 +52,64 @@ export default function SolutionLayout() {
     setModalOpen(true)
   }
 
+  const [hoveredButton, setHoveredButton] = useState<ModelId | null>(null)
+
+  // Framer Motion variants
+  const buttonVariants = {
+    initial: { scale: 1, y: 0, rotateX: 0 },
+    hover: { 
+      scale: 1.06, 
+      y: -12, 
+      rotateX: 2,
+      transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
+    },
+    tap: { scale: 1.02, y: -6 }
+  }
+
+  const imageVariants = {
+    initial: { scale: 1, filter: 'brightness(0.9)' },
+    hover: { 
+      scale: 1.15,
+      filter: 'brightness(1)',
+      transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }
+    }
+  }
+
+  const labelVariants = {
+    initial: { y: 0, color: 'rgba(255, 255, 255, 0.6)' },
+    hover: { 
+      y: -2,
+      color: 'rgba(232, 200, 122, 1)',
+      transition: { duration: 0.3 }
+    }
+  }
+
+  const titleVariants = {
+    initial: { x: 0, color: '#FFFFFF' },
+    hover: { 
+      x: 6,
+      color: '#D4A84B',
+      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+    }
+  }
+
+  const indicatorVariants = {
+    initial: { opacity: 0, y: -8 },
+    hover: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.3, delay: 0.1 }
+    }
+  }
+
+  const shineVariants = {
+    initial: { x: '-100%' },
+    hover: { 
+      x: '200%',
+      transition: { duration: 0.6, ease: 'easeInOut' }
+    }
+  }
+
   return (
     <section className={styles.sectionSolution}>
       <div className="container">
@@ -80,62 +138,176 @@ export default function SolutionLayout() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            <button
+            <motion.button
               className={styles.navButton}
               onClick={() => scrollToContent('38sx')}
               onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
+              onMouseEnter={() => setHoveredButton('38sx')}
+              onMouseLeave={(e) => {
+                handleMouseLeave(e)
+                setHoveredButton(null)
+              }}
               aria-label="Ugrás a 38SX modell szekcióra"
+              variants={buttonVariants}
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
+              style={{ transformStyle: 'preserve-3d' }}
             >
-              <img
+              {/* Shine sweep */}
+              <motion.div 
+                className={styles.shineSweep}
+                variants={shineVariants}
+                initial="initial"
+                animate={hoveredButton === '38sx' ? 'hover' : 'initial'}
+              />
+              
+              <motion.img
                 src="/images/38SX.png"
                 alt=""
                 className={styles.navButtonImage}
                 aria-hidden="true"
+                variants={imageVariants}
               />
               <div className={styles.navButtonOverlay}>
-                <span className={styles.navButtonLabel}>Nagy szériás</span>
-                <span className={styles.navButtonTitle}>38SX</span>
+                <motion.span 
+                  className={styles.navButtonLabel}
+                  variants={labelVariants}
+                >
+                  Nagy szériás
+                </motion.span>
+                <motion.span 
+                  className={styles.navButtonTitle}
+                  variants={titleVariants}
+                >
+                  38SX
+                </motion.span>
               </div>
-            </button>
+              
+              {/* Indicator dots */}
+              <motion.div 
+                className={styles.indicator}
+                variants={indicatorVariants}
+              >
+                <span className={styles.indicatorDotActive}></span>
+                <span className={styles.indicatorDot}></span>
+                <span className={styles.indicatorDot}></span>
+              </motion.div>
+            </motion.button>
 
-            <button
+            <motion.button
               className={styles.navButton}
               onClick={() => scrollToContent('38wx')}
               onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
+              onMouseEnter={() => setHoveredButton('38wx')}
+              onMouseLeave={(e) => {
+                handleMouseLeave(e)
+                setHoveredButton(null)
+              }}
               aria-label="Ugrás a 38WX modell szekcióra"
+              variants={buttonVariants}
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
+              style={{ transformStyle: 'preserve-3d' }}
             >
-              <img
+              {/* Shine sweep */}
+              <motion.div 
+                className={styles.shineSweep}
+                variants={shineVariants}
+                initial="initial"
+                animate={hoveredButton === '38wx' ? 'hover' : 'initial'}
+              />
+              
+              <motion.img
                 src="/images/38WX.png"
                 alt=""
                 className={styles.navButtonImage}
                 aria-hidden="true"
+                variants={imageVariants}
               />
               <div className={styles.navButtonOverlay}>
-                <span className={styles.navButtonLabel}>Lazítókéses</span>
-                <span className={styles.navButtonTitle}>38WX</span>
+                <motion.span 
+                  className={styles.navButtonLabel}
+                  variants={labelVariants}
+                >
+                  Lazítókéses
+                </motion.span>
+                <motion.span 
+                  className={styles.navButtonTitle}
+                  variants={titleVariants}
+                >
+                  38WX
+                </motion.span>
               </div>
-            </button>
+              
+              {/* Indicator dots */}
+              <motion.div 
+                className={styles.indicator}
+                variants={indicatorVariants}
+              >
+                <span className={styles.indicatorDot}></span>
+                <span className={styles.indicatorDotActive}></span>
+                <span className={styles.indicatorDot}></span>
+              </motion.div>
+            </motion.button>
 
-            <button
+            <motion.button
               className={styles.navButton}
               onClick={() => scrollToContent('40sx')}
               onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
+              onMouseEnter={() => setHoveredButton('40sx')}
+              onMouseLeave={(e) => {
+                handleMouseLeave(e)
+                setHoveredButton(null)
+              }}
               aria-label="Ugrás a 40SX modell szekcióra"
+              variants={buttonVariants}
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
+              style={{ transformStyle: 'preserve-3d' }}
             >
-              <img
+              {/* Shine sweep */}
+              <motion.div 
+                className={styles.shineSweep}
+                variants={shineVariants}
+                initial="initial"
+                animate={hoveredButton === '40sx' ? 'hover' : 'initial'}
+              />
+              
+              <motion.img
                 src="/images/40SX.png"
                 alt=""
                 className={styles.navButtonImage}
                 aria-hidden="true"
+                variants={imageVariants}
               />
               <div className={styles.navButtonOverlay}>
-                <span className={styles.navButtonLabel}>Mélyásógép</span>
-                <span className={styles.navButtonTitle}>40SX</span>
+                <motion.span 
+                  className={styles.navButtonLabel}
+                  variants={labelVariants}
+                >
+                  Mélyásógép
+                </motion.span>
+                <motion.span 
+                  className={styles.navButtonTitle}
+                  variants={titleVariants}
+                >
+                  40SX
+                </motion.span>
               </div>
-            </button>
+              
+              {/* Indicator dots */}
+              <motion.div 
+                className={styles.indicator}
+                variants={indicatorVariants}
+              >
+                <span className={styles.indicatorDot}></span>
+                <span className={styles.indicatorDot}></span>
+                <span className={styles.indicatorDotActive}></span>
+              </motion.div>
+            </motion.button>
           </motion.div>
         </header>
 

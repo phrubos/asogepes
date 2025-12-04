@@ -119,7 +119,6 @@
 }
 
 .navButton:hover {
-  transform: translateY(-8px) scale(1.05);
   border-color: var(--color-gold);
   --shadow-color: rgba(0, 0, 0, 0.6);
   --shadow-blur: 60px;
@@ -127,6 +126,63 @@
     var(--shadow-x) var(--shadow-y) var(--shadow-blur) -12px var(--shadow-color),
     0 0 0 1px var(--color-gold);
   z-index: 10;
+}
+
+/* Glow ring effect */
+.navButton::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: calc(16px + 3px);
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light), var(--color-gold));
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.4s ease;
+}
+
+.navButton:hover::before {
+  opacity: 0.3;
+}
+
+/* Shine sweep effect */
+.shineSweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transform: skewX(-20deg);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Indicator dots */
+.indicator {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 4px;
+}
+
+.indicatorDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.indicatorDotActive {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-gold);
 }
 
 .navButtonImage {
@@ -175,14 +231,7 @@
   transition: transform 0.3s ease;
 }
 
-.navButton:hover .navButtonLabel {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.navButton:hover .navButtonTitle {
-  transform: translateX(4px);
-  color: var(--color-gold);
-}
+/* Hover states now handled by Framer Motion */
 
 .benefitsGrid {
   display: grid;

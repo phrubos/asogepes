@@ -1,9 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import SectionHeader from '@/components/ui/SectionHeader'
 import styles from './ProblemNew.module.css'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ArrowDown } from 'lucide-react'
 
 interface ProblemLayoutProps {
   compactionContent: React.ReactNode
@@ -11,6 +12,8 @@ interface ProblemLayoutProps {
 }
 
 export default function ProblemLayout({ compactionContent, ploughingContent }: ProblemLayoutProps) {
+  const [hoveredButton, setHoveredButton] = useState<string | null>(null)
+  
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -23,27 +26,78 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.currentTarget;
     const rect = button.getBoundingClientRect();
-    const x = e.clientX - rect.left; // Mouse X relative to button
-    const y = e.clientY - rect.top;  // Mouse Y relative to button
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
     
-    // Calculate shadow offset (inverted mouse movement)
-    // When mouse is top-left, shadow goes bottom-right
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
-    const shadowX = (centerX - x) / 10; // Max offset +/- 15px approx
+    const shadowX = (centerX - x) / 10;
     const shadowY = (centerY - y) / 10;
 
     button.style.setProperty('--shadow-x', `${shadowX}px`);
-    button.style.setProperty('--shadow-y', `${shadowY + 20}px`); // Keep base offset
+    button.style.setProperty('--shadow-y', `${shadowY + 20}px`);
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.currentTarget;
-    // Reset to defaults defined in CSS
     button.style.removeProperty('--shadow-x');
     button.style.removeProperty('--shadow-y');
   };
+
+  // Framer Motion variants
+  const buttonVariants = {
+    initial: { scale: 1, y: 0, rotateX: 0 },
+    hover: { 
+      scale: 1.06, 
+      y: -12, 
+      rotateX: 2,
+      transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
+    },
+    tap: { scale: 1.02, y: -6 }
+  }
+
+  const imageVariants = {
+    initial: { scale: 1 },
+    hover: { 
+      scale: 1.12,
+      transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }
+    }
+  }
+
+  const titleVariants = {
+    initial: { x: 0 },
+    hover: { 
+      x: 6,
+      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+    }
+  }
+
+  const cornerVariants = {
+    initial: { opacity: 0 },
+    hover: { 
+      opacity: 0.9,
+      transition: { duration: 0.4 }
+    }
+  }
+
+  const arrowVariants = {
+    initial: { opacity: 0, x: -4, y: 4 },
+    hover: { 
+      opacity: 1, 
+      x: 0, 
+      y: 0,
+      transition: { duration: 0.3, delay: 0.1 }
+    }
+  }
+
+  const shineVariants = {
+    initial: { x: '-100%' },
+    hover: { 
+      x: '200%',
+      transition: { duration: 0.6, ease: 'easeInOut' }
+    }
+  }
 
   return (
     <section className={styles.sectionProblem}>
@@ -72,41 +126,107 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            <button 
+            <motion.button 
               className={styles.navButton}
               onClick={() => scrollToSection('compaction')}
               onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
+              onMouseEnter={() => setHoveredButton('compaction')}
+              onMouseLeave={(e) => {
+                handleMouseLeave(e)
+                setHoveredButton(null)
+              }}
               aria-label="Ugrás a Tömörödés szekcióra"
+              variants={buttonVariants}
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
+              style={{ transformStyle: 'preserve-3d' }}
             >
-              <img 
+              {/* Shine sweep effect */}
+              <motion.div 
+                className={styles.shineSweep}
+                variants={shineVariants}
+                initial="initial"
+                animate={hoveredButton === 'compaction' ? 'hover' : 'initial'}
+              />
+              
+              <motion.img 
                 src="/images/tömörités_cover.png" 
                 alt="" 
                 className={styles.navButtonImage}
                 aria-hidden="true"
+                variants={imageVariants}
               />
               <div className={styles.navButtonOverlay}>
-                <span className={styles.navButtonTitle}>A Tömörödés</span>
+                <motion.span 
+                  className={styles.navButtonTitle}
+                  variants={titleVariants}
+                >
+                  A Tömörödés
+                </motion.span>
               </div>
-            </button>
+              
+              {/* Corner accent */}
+              <motion.div 
+                className={styles.cornerAccent}
+                variants={cornerVariants}
+              >
+                <motion.div variants={arrowVariants}>
+                  <ArrowDown size={16} />
+                </motion.div>
+              </motion.div>
+            </motion.button>
 
-            <button 
+            <motion.button 
               className={styles.navButton}
               onClick={() => scrollToSection('ploughing')}
               onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
+              onMouseEnter={() => setHoveredButton('ploughing')}
+              onMouseLeave={(e) => {
+                handleMouseLeave(e)
+                setHoveredButton(null)
+              }}
               aria-label="Ugrás a Szántás Korlátai szekcióra"
+              variants={buttonVariants}
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
+              style={{ transformStyle: 'preserve-3d' }}
             >
-              <img 
+              {/* Shine sweep effect */}
+              <motion.div 
+                className={styles.shineSweep}
+                variants={shineVariants}
+                initial="initial"
+                animate={hoveredButton === 'ploughing' ? 'hover' : 'initial'}
+              />
+              
+              <motion.img 
                 src="/images/szantas_korlatai_cover.png" 
                 alt="" 
                 className={styles.navButtonImage}
                 aria-hidden="true"
+                variants={imageVariants}
               />
               <div className={styles.navButtonOverlay}>
-                <span className={styles.navButtonTitle}>A Szántás Korlátai</span>
+                <motion.span 
+                  className={styles.navButtonTitle}
+                  variants={titleVariants}
+                >
+                  A Szántás Korlátai
+                </motion.span>
               </div>
-            </button>
+              
+              {/* Corner accent */}
+              <motion.div 
+                className={styles.cornerAccent}
+                variants={cornerVariants}
+              >
+                <motion.div variants={arrowVariants}>
+                  <ArrowDown size={16} />
+                </motion.div>
+              </motion.div>
+            </motion.button>
           </motion.div>
         </header>
 

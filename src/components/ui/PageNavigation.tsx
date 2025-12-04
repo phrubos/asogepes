@@ -14,6 +14,8 @@ const pages = [
   { path: '/eredmenyek', label: 'Eredmények' },
 ]
 
+const lineWidths = [24, 40, 32, 20]
+
 export default function PageNavigation() {
   const pathname = usePathname()
   const router = useRouter()
@@ -29,7 +31,6 @@ export default function PageNavigation() {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in an input
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
         return
       }
@@ -45,8 +46,6 @@ export default function PageNavigation() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [prevPage, nextPage, handleNavigate])
 
-  // Determine page theme for navigation visibility
-  // Home, Megoldás, Eredmények are dark. Probléma, Kísérletek are light.
   const isLightPage = pathname === '/problema' || pathname === '/kiserlet'
 
   return (
@@ -61,11 +60,43 @@ export default function PageNavigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
           >
+            {/* Glow Effect */}
+            <div className={styles.navGlow} />
+            
+            {/* Decorative Lines */}
+            <div className={styles.navLines}>
+              {lineWidths.map((width, i) => (
+                <div
+                  key={i}
+                  className={styles.navLine}
+                  style={{ width, transitionDelay: `${i * 0.05}s` }}
+                />
+              ))}
+            </div>
+
+            {/* Expanding Ring */}
+            <div className={styles.navRing} />
+
+            {/* Button */}
             <div className={styles.navButton}>
               <ChevronLeft strokeWidth={1.5} />
             </div>
+
+            {/* Tooltip */}
             <span className={styles.tooltip}>{prevPage.label}</span>
+
+            {/* Progress Dots */}
+            <div className={styles.navProgress}>
+              {pages.map((_, i) => (
+                <div
+                  key={i}
+                  className={`${styles.progressDot} ${i === currentIndex ? styles.active : ''}`}
+                  style={{ transitionDelay: `${i * 0.05}s` }}
+                />
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -80,11 +111,43 @@ export default function PageNavigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
           >
+            {/* Glow Effect */}
+            <div className={styles.navGlow} />
+            
+            {/* Decorative Lines */}
+            <div className={styles.navLines}>
+              {lineWidths.map((width, i) => (
+                <div
+                  key={i}
+                  className={styles.navLine}
+                  style={{ width, transitionDelay: `${i * 0.05}s` }}
+                />
+              ))}
+            </div>
+
+            {/* Expanding Ring */}
+            <div className={styles.navRing} />
+
+            {/* Button */}
             <div className={styles.navButton}>
               <ChevronRight strokeWidth={1.5} />
             </div>
+
+            {/* Tooltip */}
             <span className={styles.tooltip}>{nextPage.label}</span>
+
+            {/* Progress Dots */}
+            <div className={styles.navProgress}>
+              {pages.map((_, i) => (
+                <div
+                  key={i}
+                  className={`${styles.progressDot} ${i === currentIndex ? styles.active : ''}`}
+                  style={{ transitionDelay: `${i * 0.05}s` }}
+                />
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
