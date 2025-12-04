@@ -2,13 +2,18 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import styles from './Hero.module.css'
 import { heroStats } from '@/lib/data'
+import { useParallax } from '@/hooks/useParallax'
 
 export default function Hero() {
+  const { style: parallaxStyle } = useParallax({ speed: 0.3, maxOffset: 150 })
+
   return (
     <header className={styles.hero}>
-      <div className={styles.heroBg}>
+      <div className={styles.heroBg} style={parallaxStyle}>
         <Image
           src="/images/hero-bg-final.png"
           alt="Ásógép munkában - kontrasztos mezőgazdasági tájkép"
@@ -76,6 +81,18 @@ export default function Hero() {
               )}
             </motion.div>
           ))}
+        </motion.div>
+
+        <motion.div
+          className={styles.heroCta}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+        >
+          <Link href="/problema" className={styles.ctaButton}>
+            Fedezd fel a kutatást
+            <ArrowRight size={20} />
+          </Link>
         </motion.div>
       </div>
     </header>

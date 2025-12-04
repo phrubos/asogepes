@@ -135,30 +135,45 @@
 /* Mobile Handling */
 @media (max-width: 768px) {
     .navZone {
-        width: 60px;
-        background: transparent !important; /* No dark overlay on mobile */
+        width: 80px; /* Increased from 60px */
+        height: 200px; /* Reduced height for better tap area */
+        background: transparent !important;
+    }
+    
+    .navZone::before {
+        display: none; /* No blur effect on mobile */
     }
     
     .navButton {
-        opacity: 0.4; /* Faintly visible on mobile so users know they can tap */
+        opacity: 0.5; /* Slightly more visible */
         transform: translateX(0);
-    }
-    
-    /* Small indicator circles for mobile instead of full arrows */
-    .navButton {
-        width: 40px;
-        height: 40px;
-        background: rgba(0,0,0,0.2);
+        width: 48px; /* WCAG 2.5.5 minimum 44px */
+        height: 48px;
+        background: rgba(0, 0, 0, 0.3);
         border-radius: 50%;
         backdrop-filter: blur(4px);
     }
 
     .navButton svg {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
+    }
+    
+    .navZone:hover .navButton,
+    .navZone:active .navButton {
+        opacity: 0.9;
+        background: rgba(0, 0, 0, 0.5);
     }
     
     .tooltip {
         display: none;
+    }
+}
+
+/* Touch device specific */
+@media (pointer: coarse) {
+    .navButton {
+        min-width: 44px;
+        min-height: 44px;
     }
 }

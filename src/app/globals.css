@@ -3,7 +3,7 @@
    Agrár-editorial design system
    =========================================== */
 
-/* CSS Variables */
+/* CSS Variables - Light Theme (Default) */
 :root {
     /* Colors - Earth palette */
     --color-earth-900: #1A1612;
@@ -26,7 +26,15 @@
 
     --color-accent: #C45C3E;
 
-    /* Typography */
+    /* Theme-aware colors */
+    --bg-primary: var(--color-cream);
+    --bg-secondary: var(--color-white);
+    --text-primary: var(--color-earth-900);
+    --text-secondary: var(--color-earth-600);
+}
+
+/* Typography */
+:root {
     --font-display: var(--font-fraunces), Georgia, serif;
     --font-body: var(--font-inter), -apple-system, sans-serif;
 
@@ -212,4 +220,39 @@ em {
 .animate-on-scroll.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* ===========================================
+   ACCESSIBILITY
+   =========================================== */
+
+/* Skip Link */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: var(--space-lg);
+    background: var(--color-gold);
+    color: var(--color-earth-900);
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    z-index: 1000;
+    transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+    top: var(--space-lg);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

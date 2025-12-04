@@ -1,0 +1,63 @@
+/* ===========================================
+   OPTIMIZED IMAGE COMPONENT
+   =========================================== */
+
+.imageWrapper {
+    position: relative;
+    overflow: hidden;
+    background: var(--placeholder-color, var(--color-cream-dark));
+}
+
+.placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        var(--placeholder-color, var(--color-cream-dark)) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        var(--placeholder-color, var(--color-cream-dark)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.image {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image.loaded {
+    opacity: 1;
+}
+
+.errorState {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-cream-dark);
+    color: var(--color-earth-500);
+    font-size: 0.875rem;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .placeholder {
+        animation: none;
+    }
+    
+    .image {
+        transition: none;
+        opacity: 1;
+    }
+}

@@ -35,9 +35,9 @@ export default function PloughingView() {
       initial="hidden"
       animate="visible"
     >
-      <div style={{ maxWidth: '800px', margin: '0 auto var(--space-3xl)', textAlign: 'center' }}>
+      <div className={styles.centeredTextBlock}>
         <p className={styles.subTitle}>
-          A hagyományos szántás rövid távon megoldásnak tűnik, de valójában egy <strong style={{ color: 'var(--color-earth-900)' }}>ördögi kört</strong> tart fenn.
+          A hagyományos szántás rövid távon megoldásnak tűnik, de valójában egy <strong>ördögi kört</strong> tart fenn.
           A forgatás tönkreteszi azt, amit védeni kellene.
         </p>
       </div>
@@ -64,16 +64,10 @@ export default function PloughingView() {
       </div>
 
       <motion.div 
-        style={{ marginTop: 'var(--space-4xl)' }}
+        className={styles.comparisonWrapper}
         variants={itemVariants}
       >
-        <div style={{ 
-             background: 'var(--color-white)', 
-             padding: 'var(--space-2xl)', 
-             borderRadius: 'var(--radius-lg)',
-             boxShadow: '0 20px 40px -10px rgba(0,0,0,0.05)',
-             border: '1px solid rgba(0,0,0,0.05)'
-        }}>
+        <div className={styles.comparisonCard}>
           <SoilComparison />
         </div>
       </motion.div>

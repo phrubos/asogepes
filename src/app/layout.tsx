@@ -30,6 +30,9 @@ export default function RootLayout({
   return (
     <html lang="hu" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
+        <a href="#main-content" className="skip-link">
+          Ugrás a tartalomhoz
+        </a>
         <ScrollProgress color="green" />
         <Navigation />
         <PageNavigation />

@@ -70,20 +70,9 @@ export default function CompactionView() {
           className={styles.interactiveWrapper}
           variants={itemVariants}
         >
-           <div style={{ 
-             background: 'var(--color-white)', 
-             padding: 'var(--space-xl)', 
-             borderRadius: 'var(--radius-lg)',
-             boxShadow: '0 20px 40px -10px rgba(0,0,0,0.05)',
-             border: '1px solid rgba(0,0,0,0.05)'
-           }}>
+           <div className={styles.interactiveCard}>
              <InteractiveSoil />
-             <p style={{
-               textAlign: 'center',
-               marginTop: 'var(--space-md)',
-               color: 'var(--color-earth-500)',
-               fontSize: '0.875rem'
-             }}>
+             <p className={styles.interactiveCaption}>
                Kattints a rétegekre a részletekért
              </p>
            </div>

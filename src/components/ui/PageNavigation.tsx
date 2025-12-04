@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -21,9 +22,28 @@ export default function PageNavigation() {
   const prevPage = currentIndex > 0 ? pages[currentIndex - 1] : null
   const nextPage = currentIndex < pages.length - 1 ? pages[currentIndex + 1] : null
 
-  const handleNavigate = (path: string) => {
+  const handleNavigate = useCallback((path: string) => {
     router.push(path)
-  }
+  }, [router])
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return
+      }
+      
+      if (e.key === 'ArrowLeft' && prevPage) {
+        handleNavigate(prevPage.path)
+      } else if (e.key === 'ArrowRight' && nextPage) {
+        handleNavigate(nextPage.path)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [prevPage, nextPage, handleNavigate])
 
   // Determine page theme for navigation visibility
   // Home, Megoldás, Eredmények are dark. Probléma, Kísérletek are light.

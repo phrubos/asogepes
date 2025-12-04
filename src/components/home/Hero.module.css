@@ -19,8 +19,9 @@
 
 .heroBg {
     position: absolute;
-    inset: 0;
+    inset: -50px; /* Extra space for parallax movement */
     z-index: 0;
+    will-change: transform;
 }
 
 .heroImage {
@@ -95,12 +96,12 @@
 
 .heroSubtitle {
     font-size: 1.25rem;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.95); /* Improved contrast from 0.85 */
     max-width: 600px;
     margin: 0 0 var(--space-4xl);
     animation: fadeInUp 0.8s ease 0.3s both;
     line-height: 1.6;
-    font-weight: 300;
+    font-weight: 400; /* Slightly heavier for better readability */
     border-left: 3px solid var(--color-gold);
     padding-left: var(--space-lg);
 }
@@ -154,9 +155,40 @@
 .statSublabel {
     display: block;
     font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.8); /* Improved contrast from 0.6 */
     margin-top: var(--space-xs);
     font-weight: 400;
+}
+
+/* CTA Button */
+.heroCta {
+    margin-top: var(--space-2xl);
+}
+
+.ctaButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-2xl);
+    background: var(--color-gold);
+    color: var(--color-earth-900);
+    border-radius: 100px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(212, 168, 75, 0.3);
+}
+
+.ctaButton:hover {
+    background: var(--color-gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(212, 168, 75, 0.4);
+}
+
+.ctaButton:active {
+    transform: translateY(0);
 }
 
 @media (max-width: 1024px) {
