@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -9,95 +9,146 @@ import styles from './Navigation.module.css'
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
-  const [hoveredPath, setHoveredPath] = useState<string | null>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
+  const navRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+
+  const navItems = [
+    { href: '/', label: 'Főoldal' },
+    { href: '/problema', label: 'Probléma' },
+    { href: '/megoldas', label: 'Megoldás' },
+    { href: '/kiserlet', label: 'Kísérletek' },
+    { href: '/eredmenyek', label: 'Eredmények' },
+  ]
+
+  // Find active index based on pathname
+  useEffect(() => {
+    const index = navItems.findIndex(item => item.href === pathname)
+    setActiveIndex(index >= 0 ? index : 0)
+  }, [pathname])
+
+  // Update indicator position
+  useEffect(() => {
+    const updateIndicator = () => {
+      if (!navRef.current) return
+      const targetIndex = hoverIndex !== null ? hoverIndex : activeIndex
+      const links = navRef.current.querySelectorAll('a')
+      const activeLink = links[targetIndex] as HTMLElement
+      if (activeLink) {
+        const navRect = navRef.current.getBoundingClientRect()
+        const linkRect = activeLink.getBoundingClientRect()
+        setIndicatorStyle({
+          left: linkRect.left - navRect.left,
+          width: linkRect.width,
+        })
+      }
+    }
+    updateIndicator()
+    window.addEventListener('resize', updateIndicator)
+    return () => window.removeEventListener('resize', updateIndicator)
+  }, [activeIndex, hoverIndex])
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
+      setScrolled(window.scrollY > 50)
     }
-
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false)
   }, [pathname])
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
     }
-    return () => {
-      document.body.style.overflow = ''
-    }
+    return () => { document.body.style.overflow = '' }
   }, [mobileMenuOpen])
 
-  const navItems = [
-    { href: '/', label: 'Főoldal' },
-    { href: '/problema', label: 'A Probléma' },
-    { href: '/megoldas', label: 'Megoldás' },
-    { href: '/kiserlet', label: 'Kísérletek' },
-    { href: '/eredmenyek', label: 'Eredmények' },
-  ]
+  // Dark pages need light text
+  const isDarkPage = pathname === '/' || pathname === '/megoldas' || pathname === '/eredmenyek'
 
   return (
-    <div className={styles.navContainer}>
-      <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
-        <Link href="/" className={styles.navLogo} aria-label="Ásógép Kutatás Főoldal">
-          <span className={styles.logoIcon}>◈</span>
+    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''} ${isDarkPage && !scrolled ? styles.onDark : ''}`}>
+      <div className={styles.headerInner}>
+        {/* Logo */}
+        <Link href="/" className={styles.logo}>
+          <motion.span 
+            className={styles.logoMark}
+            whileHover={{ rotate: 90 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+          >
+            ◈
+          </motion.span>
+          <span className={styles.logoText}>Ásógép</span>
         </Link>
 
-        <div className={styles.navLinks}>
-          {navItems.filter(item => item.href !== '/').map((item) => (
+        {/* Desktop Navigation */}
+        <nav className={styles.nav} ref={navRef}>
+          {/* Sliding Indicator */}
+          <motion.div
+            className={styles.indicator}
+            animate={{
+              left: indicatorStyle.left,
+              width: indicatorStyle.width,
+            }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+          />
+          
+          {navItems.map((item, index) => (
             <Link
               key={item.href}
               href={item.href}
               className={`${styles.navLink} ${pathname === item.href ? styles.active : ''}`}
-              onMouseEnter={() => setHoveredPath(item.href)}
-              onMouseLeave={() => setHoveredPath(null)}
+              onMouseEnter={() => setHoverIndex(index)}
+              onMouseLeave={() => setHoverIndex(null)}
             >
-              <span style={{ position: 'relative', zIndex: 2 }}>{item.label}</span>
-              
-              {/* Hover Pill */}
-              {hoveredPath === item.href && (
-                <motion.div
-                  className={styles.hoverPill}
-                  layoutId="hoverPill"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-
-              {/* Active Dot */}
-              {pathname === item.href && (
-                <motion.div
-                  className={styles.activeDot}
-                  layoutId="activeDot"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
+              {item.label}
             </Link>
           ))}
-        </div>
+        </nav>
 
-        {/* Mobile Hamburger Button */}
-        <button 
-          className={styles.hamburger}
+        {/* Mobile Toggle */}
+        <button
+          className={styles.menuToggle}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? 'Menü bezárása' : 'Menü megnyitása'}
           aria-expanded={mobileMenuOpen}
         >
-          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          <motion.div
+            className={styles.menuIcon}
+            animate={mobileMenuOpen ? 'open' : 'closed'}
+          >
+            <motion.span
+              variants={{
+                closed: { rotate: 0, y: 0 },
+                open: { rotate: 45, y: 6 },
+              }}
+            />
+            <motion.span
+              variants={{
+                closed: { opacity: 1, x: 0 },
+                open: { opacity: 0, x: 10 },
+              }}
+            />
+            <motion.span
+              variants={{
+                closed: { rotate: 0, y: 0 },
+                open: { rotate: -45, y: -6 },
+              }}
+            />
+          </motion.div>
         </button>
-      </nav>
+      </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
@@ -108,35 +159,45 @@ export default function Navigation() {
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
             />
-            <motion.div
-              className={styles.mobileMenu}
-              initial={{ opacity: 0, scale: 0.95, y: -20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            <motion.nav
+              className={styles.mobileNav}
+              initial={{ clipPath: 'inset(0 0 100% 0)' }}
+              animate={{ clipPath: 'inset(0 0 0% 0)' }}
+              exit={{ clipPath: 'inset(0 0 100% 0)' }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              <nav className={styles.mobileNav}>
+              <div className={styles.mobileNavInner}>
                 {navItems.map((item, index) => (
                   <motion.div
                     key={item.href}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ delay: 0.1 + index * 0.05 }}
                   >
                     <Link
                       href={item.href}
-                      className={`${styles.mobileNavLink} ${pathname === item.href ? styles.mobileActive : ''}`}
+                      className={`${styles.mobileLink} ${pathname === item.href ? styles.mobileActive : ''}`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      {item.label}
+                      <span className={styles.mobileLinkNumber}>
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <span className={styles.mobileLinkText}>{item.label}</span>
+                      {pathname === item.href && (
+                        <motion.span
+                          className={styles.mobileActiveMark}
+                          layoutId="mobileActive"
+                        />
+                      )}
                     </Link>
                   </motion.div>
                 ))}
-              </nav>
-            </motion.div>
+              </div>
+            </motion.nav>
           </>
         )}
       </AnimatePresence>
-    </div>
+    </header>
   )
 }
