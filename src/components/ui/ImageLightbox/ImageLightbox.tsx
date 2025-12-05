@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
-import { motion, AnimatePresence, useMotionValue } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { X, ZoomIn, ZoomOut, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import styles from './ImageLightbox.module.css'
 
@@ -49,14 +49,8 @@ export default function ImageLightbox({
 }: ImageLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex)
   const [zoom, setZoom] = useState(1)
-  const [isDragging, setIsDragging] = useState(false)
   const [mounted, setMounted] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const imageRef = useRef<HTMLDivElement>(null)
-  
-  // Motion values for pan
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
   
   // Get current image
   const currentImage = images ? images[currentIndex] : { src, alt }
@@ -67,14 +61,53 @@ export default function ImageLightbox({
     setMounted(true)
   }, [])
 
-  // Reset zoom and position when image changes
+  // Reset state when lightbox opens
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentIndex(initialIndex)
+      setZoom(1)
+    }
+  }, [isOpen, initialIndex])
+
+  // Reset zoom when navigating between images
   useEffect(() => {
     setZoom(1)
-    x.set(0)
-    y.set(0)
-  }, [currentIndex, x, y])
+  }, [currentIndex])
 
-  // Keyboard navigation
+  // Navigation functions - defined before useEffect that uses them
+  const navigateNext = useCallback(() => {
+    if (!images) return
+    setCurrentIndex((prev) => (prev + 1) % images.length)
+  }, [images])
+
+  const navigatePrev = useCallback(() => {
+    if (!images) return
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
+  }, [images])
+
+  const handleZoomIn = useCallback(() => {
+    setZoom((prev) => Math.min(prev + 0.5, 4))
+  }, [])
+
+  const handleZoomOut = useCallback(() => {
+    setZoom((prev) => Math.max(prev - 0.5, 0.5))
+  }, [])
+
+  const handleReset = useCallback(() => {
+    setZoom(1)
+  }, [])
+
+  // Body scroll lock - separate effect with only isOpen dependency
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
+  // Keyboard navigation - separate from scroll lock
   useEffect(() => {
     if (!isOpen) return
 
@@ -103,44 +136,18 @@ export default function ImageLightbox({
     }
 
     document.addEventListener('keydown', handleKeyDown)
-    document.body.style.overflow = 'hidden'
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = ''
     }
-  }, [isOpen, hasMultiple, currentIndex])
+  }, [isOpen, hasMultiple, onClose, navigatePrev, navigateNext, handleZoomIn, handleZoomOut, handleReset])
 
-  const navigateNext = useCallback(() => {
-    if (!images) return
-    setCurrentIndex((prev) => (prev + 1) % images.length)
-  }, [images])
-
-  const navigatePrev = useCallback(() => {
-    if (!images) return
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
-  }, [images])
-
-  const handleZoomIn = () => {
-    setZoom((prev) => Math.min(prev + 0.5, 4))
-  }
-
-  const handleZoomOut = () => {
-    setZoom((prev) => Math.max(prev - 0.5, 0.5))
-  }
-
-  const handleReset = () => {
-    setZoom(1)
-    x.set(0)
-    y.set(0)
-  }
-
-  // Handle wheel zoom
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault()
+  // Handle wheel zoom - removed preventDefault to avoid passive listener errors
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    // Don't call preventDefault - causes errors with passive listeners
     const delta = e.deltaY > 0 ? -0.1 : 0.1
     setZoom((prev) => Math.max(0.5, Math.min(4, prev + delta)))
-  }
+  }, [])
 
   // Handle double click to zoom
   const handleDoubleClick = () => {
@@ -151,14 +158,20 @@ export default function ImageLightbox({
     }
   }
 
-  // Don't render on server
-  if (!mounted) return null
+  // Don't render on server or when closed
+  if (!mounted || !isOpen) return null
 
   // Use portal to render at document body level
   return createPortal(
-    <AnimatePresence>
-      {isOpen && (
-        <div className={styles.lightbox} ref={containerRef}>
+    (
+        <motion.div 
+          className={styles.lightbox} 
+          ref={containerRef}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
           {/* Backdrop */}
           <motion.div
             className={styles.backdrop}
@@ -243,19 +256,11 @@ export default function ImageLightbox({
             onDoubleClick={handleDoubleClick}
           >
             <motion.div
-              ref={imageRef}
               className={styles.imageWrapper}
               style={{ 
                 scale: zoom,
-                x: zoom > 1 ? x : 0,
-                y: zoom > 1 ? y : 0,
-                cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in'
+                cursor: zoom > 1 ? 'zoom-out' : 'zoom-in'
               }}
-              drag={zoom > 1}
-              dragConstraints={containerRef}
-              dragElastic={0.1}
-              onDragStart={() => setIsDragging(true)}
-              onDragEnd={() => setIsDragging(false)}
             >
               <Image
                 src={currentImage.src}
@@ -281,9 +286,8 @@ export default function ImageLightbox({
             {hasMultiple && <span>← → navigáció</span>}
             <span>+/- zoom</span>
           </div>
-        </div>
-      )}
-    </AnimatePresence>,
+        </motion.div>
+    ),
     document.body
   )
 }

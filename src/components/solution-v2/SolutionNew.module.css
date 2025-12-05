@@ -369,6 +369,7 @@
 .contentWrapper {
   position: relative;
   z-index: 1;
+  min-height: 600px;
 }
 
 .modelSectionActive {
