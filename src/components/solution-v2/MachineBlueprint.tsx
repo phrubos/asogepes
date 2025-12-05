@@ -100,13 +100,48 @@ export default function MachineBlueprint() {
               className={`${styles.hotspot} ${activeHotspot === spot.id ? styles.active : ''}`}
               style={{ left: `${spot.x}%`, top: `${spot.y}%` }}
               onClick={() => setActiveHotspot(activeHotspot === spot.id ? null : spot.id)}
-              whileHover={{ scale: 1.1 }}
+              whileHover={{ scale: 1.15 }}
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 + parseInt(spot.label) * 0.1 }}
             >
               <span className={styles.hotspotLabel}>{spot.label}</span>
-              <span className={styles.hotspotRing} />
+              {/* Enhanced pulse ring */}
+              <motion.span 
+                className={styles.hotspotRing}
+                animate={{ 
+                  scale: [1, 1.8, 1],
+                  opacity: [0.6, 0, 0.6]
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              {/* Second pulse ring for depth */}
+              <motion.span 
+                className={styles.hotspotRingOuter}
+                animate={{ 
+                  scale: [1, 2.2, 1],
+                  opacity: [0.3, 0, 0.3]
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.3
+                }}
+              />
+              {/* Glow effect on active */}
+              {activeHotspot === spot.id && (
+                <motion.span 
+                  className={styles.hotspotGlow}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                />
+              )}
             </motion.button>
           ))}
         </div>

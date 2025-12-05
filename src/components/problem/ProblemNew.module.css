@@ -340,6 +340,16 @@
   font-weight: 500;
 }
 
+.statValue {
+  display: inline;
+}
+
+.statSeparator {
+  display: inline;
+  margin: 0 0.1em;
+  color: var(--color-earth-300);
+}
+
 .statDescription {
   font-size: 1.125rem;
   color: var(--color-earth-600);
@@ -356,17 +366,11 @@
   display: flex;
   gap: var(--space-lg);
   align-items: flex-start;
-  padding: var(--space-lg);
   background: var(--color-white);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
-}
-
-.challengeItem:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
-  border-color: var(--color-green-light);
+  border: 1px solid var(--color-earth-100);
+  /* TiltCard handles hover effects */
+  height: 100%;
 }
 
 .iconBox {
@@ -428,16 +432,9 @@
 .consequenceCard {
   background: var(--color-white);
   border-radius: var(--radius-lg);
-  padding: var(--space-xl);
   border: 1px solid transparent;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.consequenceCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  border-color: var(--color-gold);
+  /* TiltCard handles hover effects */
+  height: 100%;
 }
 
 .cardHeader {

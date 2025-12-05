@@ -1,44 +1,58 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { ReactNode } from 'react'
 
 interface PageTransitionProps {
   children: ReactNode
+  variant?: 'fade' | 'slide' | 'scale'
 }
 
-const pageVariants = {
-  initial: {
-    opacity: 0,
-    x: 60,
-    scale: 0.98,
+const variants = {
+  fade: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 }
   },
-  animate: {
-    opacity: 1,
-    x: 0,
-    scale: 1,
+  slide: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 }
   },
-  exit: {
-    opacity: 0,
-    x: -60,
-    scale: 0.98,
-  },
+  scale: {
+    initial: { opacity: 0, scale: 0.98, y: 10 },
+    animate: { opacity: 1, scale: 1, y: 0 },
+    exit: { opacity: 0, scale: 0.99, y: -5 }
+  }
 }
 
 const pageTransition = {
   type: 'tween',
-  ease: [0.25, 0.46, 0.45, 0.94], // Custom easing for smooth feel
+  ease: [0.22, 1, 0.36, 1], // Custom ease-out-expo
   duration: 0.4,
 }
 
-export default function PageTransition({ children }: PageTransitionProps) {
+const reducedMotionTransition = {
+  duration: 0
+}
+
+export default function PageTransition({ 
+  children, 
+  variant = 'scale' 
+}: PageTransitionProps) {
+  const prefersReducedMotion = useReducedMotion()
+  
+  if (prefersReducedMotion) {
+    return <div style={{ width: '100%' }}>{children}</div>
+  }
+
   return (
     <motion.div
       initial="initial"
       animate="animate"
       exit="exit"
-      variants={pageVariants}
-      transition={pageTransition}
+      variants={variants[variant]}
+      transition={prefersReducedMotion ? reducedMotionTransition : pageTransition}
       style={{ width: '100%' }}
     >
       {children}

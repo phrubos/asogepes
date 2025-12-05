@@ -1,0 +1,152 @@
+/* ===========================================
+   SECTION INDICATOR
+   Floating navigation dots for long pages
+   =========================================== */
+
+.indicator {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  padding: var(--space-md);
+}
+
+.left {
+  left: var(--space-lg);
+}
+
+.right {
+  right: var(--space-lg);
+}
+
+.progressTrack {
+  position: absolute;
+  top: var(--space-md);
+  bottom: var(--space-md);
+  width: 2px;
+  background: var(--color-earth-200, rgba(0, 0, 0, 0.1));
+  border-radius: 1px;
+}
+
+.left .progressTrack {
+  left: calc(var(--space-md) + 5px);
+}
+
+.right .progressTrack {
+  right: calc(var(--space-md) + 5px);
+}
+
+.progressLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-gold);
+  border-radius: 1px;
+}
+
+.dotList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  position: relative;
+}
+
+.dotButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: none;
+  border: none;
+  padding: var(--space-xs);
+  cursor: pointer;
+  position: relative;
+}
+
+.left .dotButton {
+  flex-direction: row;
+}
+
+.right .dotButton {
+  flex-direction: row-reverse;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-earth-300, #a89c8c);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.dotButton:hover .dot {
+  background: var(--color-gold-light);
+}
+
+.dotButton.active .dot {
+  background: var(--color-gold);
+}
+
+.activeRing {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-gold);
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.left .activeRing {
+  left: calc(var(--space-xs) - 6px);
+}
+
+.right .activeRing {
+  right: calc(var(--space-xs) - 6px);
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-earth-700);
+  white-space: nowrap;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-white);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.left .label {
+  margin-left: var(--space-sm);
+}
+
+.right .label {
+  margin-right: var(--space-sm);
+}
+
+/* Accessibility focus styles */
+.dotButton:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+  .indicator {
+    display: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .dot,
+  .progressLine {
+    transition: none;
+  }
+}

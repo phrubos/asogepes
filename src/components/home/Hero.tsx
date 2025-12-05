@@ -7,6 +7,9 @@ import { ArrowRight } from 'lucide-react'
 import styles from './Hero.module.css'
 import { heroStats } from '@/lib/data'
 import { useParallax } from '@/hooks/useParallax'
+import AnimatedNumber from '@/components/ui/AnimatedNumber'
+import { MagneticButton } from '@/components/ui/MagneticButton'
+import { TextReveal } from '@/components/ui/TextReveal'
 
 export default function Hero() {
   const { style: parallaxStyle } = useParallax({ speed: 0.3, maxOffset: 150 })
@@ -36,29 +39,23 @@ export default function Hero() {
         </motion.div>
 
         <h1 className={styles.heroTitle}>
-          <motion.span
+          <TextReveal 
+            type="word" 
+            tag="span" 
             className={styles.titleLine}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
+            delay={0.1}
+            highlightWords={['végtelen', 'erőforrás']}
+            highlightClassName={styles.titleAccent}
           >
-            A talaj nem
-          </motion.span>
-          <motion.span
-            className={`${styles.titleLine} ${styles.titleAccent}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            végtelen erőforrás
-          </motion.span>
+            A talaj nem végtelen erőforrás
+          </TextReveal>
         </h1>
 
         <motion.p
           className={styles.heroSubtitle}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
         >
           Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról öntözött kertészeti kultúrákban
         </motion.p>
@@ -67,14 +64,21 @@ export default function Hero() {
           className={styles.heroStats}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
         >
           {heroStats.map((stat, index) => (
             <motion.div 
               key={index} 
               className={styles.stat}
             >
-              <span className={styles.statNumber}>{stat.number}</span>
+              <span className={styles.statNumber}>
+                <AnimatedNumber 
+                  value={parseInt(stat.number.replace(/\D/g, '')) || 0} 
+                  suffix={stat.number.replace(/[0-9]/g, '')}
+                  duration={2000}
+                  delay={index * 150}
+                />
+              </span>
               <span className={styles.statLabel}>{stat.label}</span>
               {stat.sublabel && (
                 <span className={styles.statSublabel}>{stat.sublabel}</span>
@@ -87,11 +91,17 @@ export default function Hero() {
           className={styles.heroCta}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <Link href="/problema" className={styles.ctaButton}>
-            Fedezd fel a kutatást
-            <ArrowRight size={20} />
+          <Link href="/problema">
+            <MagneticButton 
+              variant="primary" 
+              size="lg"
+              magneticStrength={0.25}
+            >
+              Fedezd fel a kutatást
+              <ArrowRight size={20} />
+            </MagneticButton>
           </Link>
         </motion.div>
       </div>

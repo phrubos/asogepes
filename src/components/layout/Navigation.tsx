@@ -78,20 +78,8 @@ export default function Navigation() {
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''} ${isDarkPage && !scrolled ? styles.onDark : ''}`}>
       <div className={styles.headerInner}>
-        {/* Logo */}
-        <Link href="/" className={styles.logo}>
-          <motion.span 
-            className={styles.logoMark}
-            whileHover={{ rotate: 90 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-          >
-            ◈
-          </motion.span>
-          <span className={styles.logoText}>Ásógép</span>
-        </Link>
-
         {/* Desktop Navigation */}
-        <nav className={styles.nav} ref={navRef}>
+        <nav className={styles.nav} ref={navRef} aria-label="Fő navigáció">
           {/* Sliding Indicator */}
           <motion.div
             className={styles.indicator}
@@ -109,6 +97,7 @@ export default function Navigation() {
               className={`${styles.navLink} ${pathname === item.href ? styles.active : ''}`}
               onMouseEnter={() => setHoverIndex(index)}
               onMouseLeave={() => setHoverIndex(null)}
+              aria-current={pathname === item.href ? 'page' : undefined}
             >
               {item.label}
             </Link>
@@ -165,6 +154,7 @@ export default function Navigation() {
               animate={{ clipPath: 'inset(0 0 0% 0)' }}
               exit={{ clipPath: 'inset(0 0 100% 0)' }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              aria-label="Mobil navigáció"
             >
               <div className={styles.mobileNavInner}>
                 {navItems.map((item, index) => (
@@ -179,6 +169,7 @@ export default function Navigation() {
                       href={item.href}
                       className={`${styles.mobileLink} ${pathname === item.href ? styles.mobileActive : ''}`}
                       onClick={() => setMobileMenuOpen(false)}
+                      aria-current={pathname === item.href ? 'page' : undefined}
                     >
                       <span className={styles.mobileLinkNumber}>
                         {String(index + 1).padStart(2, '0')}

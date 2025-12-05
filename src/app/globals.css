@@ -67,16 +67,56 @@
     padding: 0;
 }
 
-/* Focus States for Accessibility */
+/* ===========================================
+   FOCUS STATES FOR ACCESSIBILITY
+   =========================================== */
+
+/* Default focus visible style */
 :focus-visible {
     outline: 2px solid var(--color-gold);
-    outline-offset: 2px;
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
 }
 
+/* Interactive elements */
 button:focus-visible,
-a:focus-visible {
+a:focus-visible,
+[role="button"]:focus-visible {
     outline: 2px solid var(--color-gold);
-    outline-offset: 2px;
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+}
+
+/* Card-like elements need larger offset */
+[role="article"]:focus-visible,
+.card:focus-visible {
+    outline-offset: 4px;
+    border-radius: var(--radius-md);
+}
+
+/* Dark background focus (gold outline works well) */
+.dark-bg :focus-visible,
+[data-theme="dark"] :focus-visible {
+    outline-color: var(--color-gold-light);
+}
+
+/* Input elements */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 0;
+    box-shadow: 0 0 0 4px rgba(212, 168, 75, 0.15);
+}
+
+/* Tab-like navigation */
+[role="tablist"] [role="tab"]:focus-visible {
+    outline-offset: -2px;
+}
+
+/* Remove focus ring for mouse users where supported */
+:focus:not(:focus-visible) {
+    outline: none;
 }
 
 html {
@@ -255,4 +295,49 @@ em {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+}
+
+/* ===========================================
+   ADDITIONAL ACCESSIBILITY UTILITIES
+   =========================================== */
+
+/* Screen reader only content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Make sr-only content visible on focus (for skip links) */
+.sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* High contrast mode improvements */
+@media (forced-colors: active) {
+    a, button {
+        forced-color-adjust: none;
+    }
+    
+    :focus-visible {
+        outline: 3px solid CanvasText;
+    }
+}
+
+/* Ensure decorative elements are properly hidden */
+[aria-hidden="true"] {
+    pointer-events: none;
 }

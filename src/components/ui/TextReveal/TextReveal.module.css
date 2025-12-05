@@ -1,0 +1,106 @@
+/* ========================================
+   TEXT REVEAL COMPONENT
+   ======================================== */
+
+.textReveal {
+  display: block;
+}
+
+.container {
+  display: inline;
+}
+
+/* ========================================
+   WORD & CHARACTER STYLES
+   ======================================== */
+
+.word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.char {
+  display: inline-block;
+  transform-origin: bottom;
+}
+
+.space {
+  display: inline-block;
+}
+
+.blurWord {
+  transform-origin: center;
+}
+
+/* ========================================
+   LINE REVEAL STYLES
+   ======================================== */
+
+.line .container {
+  display: block;
+}
+
+.lineWrapper {
+  display: block;
+  overflow: hidden;
+}
+
+.lineInner {
+  display: block;
+}
+
+/* ========================================
+   GRADIENT TEXT
+   ======================================== */
+
+.gradientText {
+  background: linear-gradient(
+    90deg,
+    var(--color-earth-900, #1A1612) 0%,
+    var(--color-gold, #D4A84B) 50%,
+    var(--color-earth-900, #1A1612) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========================================
+   HIGHLIGHT STYLES
+   ======================================== */
+
+.highlight {
+  color: var(--color-gold, #D4A84B);
+}
+
+/* For gradient text highlight */
+.gradient .highlight {
+  -webkit-text-fill-color: var(--color-gold, #D4A84B);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .textReveal {
+    /* Mobile optimizations applied at component level */
+    will-change: auto;
+  }
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .char,
+  .word,
+  .lineInner,
+  .gradientText {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

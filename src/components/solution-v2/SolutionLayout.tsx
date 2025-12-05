@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
 import SectionHeader from '@/components/ui/SectionHeader'
+import MagneticButton from '@/components/ui/MagneticButton'
 import ModelSection from './ModelSection'
 import FieldDataModal from './FieldDataModal'
 import styles from './SolutionNew.module.css'
@@ -11,6 +13,7 @@ import { ArrowRight } from 'lucide-react'
 type ModelId = '38sx' | '38wx' | '40sx'
 
 export default function SolutionLayout() {
+  const router = useRouter()
   const [activeModel, setActiveModel] = useState<ModelId>('38sx')
   const [modalOpen, setModalOpen] = useState(false)
   const [modalModelId, setModalModelId] = useState<ModelId>('38sx')
@@ -313,61 +316,80 @@ export default function SolutionLayout() {
 
         {/* Content Area with Sticky Tabs */}
         <div className={styles.contentArea} id="content-area">
-          {/* Sticky Model Tabs */}
+          {/* Sticky Model Tabs with Animated Indicator */}
           <nav className={styles.modelTabs}>
-            <button
-              className={`${styles.modelTab} ${activeModel === '38sx' ? styles.active : ''}`}
-              onClick={() => setActiveModel('38sx')}
-            >
-              38SX
-            </button>
-            <button
-              className={`${styles.modelTab} ${activeModel === '38wx' ? styles.active : ''}`}
-              onClick={() => setActiveModel('38wx')}
-            >
-              38WX
-            </button>
-            <button
-              className={`${styles.modelTab} ${activeModel === '40sx' ? styles.active : ''}`}
-              onClick={() => setActiveModel('40sx')}
-            >
-              40SX
-            </button>
+            {(['38sx', '38wx', '40sx'] as ModelId[]).map((modelId) => (
+              <button
+                key={modelId}
+                className={`${styles.modelTab} ${activeModel === modelId ? styles.active : ''}`}
+                onClick={() => setActiveModel(modelId)}
+              >
+                {modelId.toUpperCase()}
+                {activeModel === modelId && (
+                  <motion.div
+                    className={styles.tabIndicator}
+                    layoutId="activeTabIndicator"
+                    transition={{ 
+                      type: 'spring', 
+                      stiffness: 400, 
+                      damping: 30 
+                    }}
+                  />
+                )}
+              </button>
+            ))}
           </nav>
 
-          {/* Model Sections */}
+          {/* Model Sections with AnimatePresence */}
           <div className={styles.contentWrapper}>
-            {activeModel === '38sx' && (
-              <div className={styles.modelSectionActive}>
-                <ModelSection modelId="38sx" onOpenModal={() => openFieldModal('38sx')} />
-              </div>
-            )}
-            {activeModel === '38wx' && (
-              <div className={styles.modelSectionActive}>
-                <ModelSection modelId="38wx" onOpenModal={() => openFieldModal('38wx')} />
-              </div>
-            )}
-            {activeModel === '40sx' && (
-              <div className={styles.modelSectionActive}>
-                <ModelSection modelId="40sx" onOpenModal={() => openFieldModal('40sx')} />
-              </div>
-            )}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeModel}
+                className={styles.modelSectionActive}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ 
+                  duration: 0.3, 
+                  ease: [0.22, 1, 0.36, 1]
+                }}
+              >
+                <ModelSection 
+                  modelId={activeModel} 
+                  onOpenModal={() => openFieldModal(activeModel)} 
+                />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
         {/* Footer CTA */}
         <motion.div
           className={styles.footer}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-           <p className={styles.footerText}>
+           <motion.p 
+             className={styles.footerText}
+             initial={{ opacity: 0 }}
+             whileInView={{ opacity: 1 }}
+             viewport={{ once: true }}
+             transition={{ delay: 0.2 }}
+           >
              Hogyan teljesített a gyakorlatban?
-           </p>
-           <a href="/kiserlet" className={styles.nextButton}>
+           </motion.p>
+           <MagneticButton
+             variant="primary"
+             size="lg"
+             showRipple
+             showShine
+             ariaLabel="Tovább a Kísérletekre"
+             onClick={() => router.push('/kiserlet')}
+           >
              Tovább a Kísérletekre <ArrowRight size={20} />
-           </a>
+           </MagneticButton>
         </motion.div>
       </div>
 

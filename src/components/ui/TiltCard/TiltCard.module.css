@@ -1,0 +1,94 @@
+/* ========================================
+   TILT CARD COMPONENT
+   ======================================== */
+
+.tiltCard {
+  position: relative;
+  border-radius: 20px;
+  background: var(--color-white, #FDFCFA);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.tiltCard:hover {
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(212, 168, 75, 0.2);
+}
+
+/* ========================================
+   GLOW EFFECT
+   ======================================== */
+
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.tiltCard:hover .glow {
+  opacity: 1;
+}
+
+/* ========================================
+   CONTENT
+   ======================================== */
+
+.content {
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+/* Elements that should "pop" out more */
+.content > :first-child {
+  transform-style: preserve-3d;
+}
+
+/* ========================================
+   DARK VARIANT
+   ======================================== */
+
+.tiltCard.dark {
+  background: var(--color-earth-800, #2D251E);
+  color: white;
+}
+
+.tiltCard.dark:hover {
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(212, 168, 75, 0.3);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .tiltCard {
+    border-radius: 16px;
+  }
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .tiltCard {
+    transform: none !important;
+  }
+
+  .content {
+    transform: none !important;
+  }
+
+  .glow {
+    display: none;
+  }
+}

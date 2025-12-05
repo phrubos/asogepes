@@ -4,22 +4,10 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Droplet, Weight, Layers } from 'lucide-react'
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
+import AnimatedNumber from '@/components/ui/AnimatedNumber'
+import TiltCard from '@/components/ui/TiltCard'
 import { problemStatistics, compactionChallenges } from '@/lib/data'
 import styles from './ProblemNew.module.css'
-
-// Animated counter component
-function AnimatedCounter({ value, suffix = '' }: { value: string, suffix?: string }) {
-  return (
-    <motion.span
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {value}{suffix}
-    </motion.span>
-  )
-}
 
 // Animated water drops for stat card
 function WaterDropAnimation() {
@@ -144,8 +132,17 @@ export default function CompactionView() {
           />
           
           <div className={styles.mainStat}>
-            <AnimatedCounter 
-              value={`${problemStatistics.irrigation.min}-${problemStatistics.irrigation.max}`} 
+            <AnimatedNumber 
+              value={problemStatistics.irrigation.min}
+              duration={1500}
+              className={styles.statValue}
+            />
+            <span className={styles.statSeparator}>-</span>
+            <AnimatedNumber 
+              value={problemStatistics.irrigation.max}
+              duration={1500}
+              delay={200}
+              className={styles.statValue}
             />
             <motion.span 
               className={styles.statUnit}
@@ -172,66 +169,70 @@ export default function CompactionView() {
           {compactionChallenges.map((challenge, index) => (
             <motion.div 
               key={index} 
-              className={styles.challengeItem}
               variants={itemVariants}
-              onHoverStart={() => setHoveredIndex(index)}
-              onHoverEnd={() => setHoveredIndex(null)}
-              whileHover={{ 
-                y: -6,
-                boxShadow: '0 20px 40px -15px rgba(0,0,0,0.15)',
-                borderColor: 'var(--color-green-light)',
-              }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
-              <motion.div 
-                className={styles.iconBox}
-                variants={iconVariants}
-                animate={hoveredIndex === index ? 'hover' : 'idle'}
-                style={{ 
-                  background: hoveredIndex === index 
-                    ? 'linear-gradient(135deg, var(--color-green-light), var(--color-green))' 
-                    : 'var(--color-cream)',
-                  color: hoveredIndex === index ? '#ffffff' : 'var(--color-green)',
-                }}
-                transition={{ duration: 0.3 }}
+              <TiltCard
+                tiltAmount={8}
+                glowColor="rgba(107, 139, 94, 0.2)"
+                scale={1.02}
+                className={styles.challengeItem}
               >
-                {iconMap[challenge.icon]}
-              </motion.div>
-              <div className={styles.itemContent}>
-                <motion.h3
-                  animate={{ 
-                    color: hoveredIndex === index ? 'var(--color-green-dark)' : 'var(--color-earth-900)' 
-                  }}
-                  transition={{ duration: 0.2 }}
+                <div
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  style={{ padding: 'var(--space-lg)', height: '100%' }}
                 >
-                  {challenge.title}
-                </motion.h3>
-                <p>{challenge.description}</p>
-                
-                {/* Data badge with micro-animation */}
-                {challenge.data && (
-                  <motion.span
-                    style={{
-                      display: 'inline-block',
-                      marginTop: '0.75rem',
-                      padding: '0.25rem 0.75rem',
-                      background: 'var(--color-earth-50)',
-                      borderRadius: '100px',
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                      color: 'var(--color-earth-600)',
+                  <motion.div 
+                    className={styles.iconBox}
+                    variants={iconVariants}
+                    animate={hoveredIndex === index ? 'hover' : 'idle'}
+                    style={{ 
+                      background: hoveredIndex === index 
+                        ? 'linear-gradient(135deg, var(--color-green-light), var(--color-green))' 
+                        : 'var(--color-cream)',
+                      color: hoveredIndex === index ? '#ffffff' : 'var(--color-green)',
                     }}
-                    whileHover={{ 
-                      background: 'var(--color-green-light)',
-                      color: 'var(--color-green-dark)',
-                      scale: 1.05,
-                    }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    {challenge.data}
-                  </motion.span>
-                )}
-              </div>
+                    {iconMap[challenge.icon]}
+                  </motion.div>
+                  <div className={styles.itemContent}>
+                    <motion.h3
+                      animate={{ 
+                        color: hoveredIndex === index ? 'var(--color-green-dark)' : 'var(--color-earth-900)' 
+                      }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {challenge.title}
+                    </motion.h3>
+                    <p>{challenge.description}</p>
+                    
+                    {/* Data badge with micro-animation */}
+                    {challenge.data && (
+                      <motion.span
+                        style={{
+                          display: 'inline-block',
+                          marginTop: '0.75rem',
+                          padding: '0.25rem 0.75rem',
+                          background: 'var(--color-earth-50)',
+                          borderRadius: '100px',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          color: 'var(--color-earth-600)',
+                        }}
+                        whileHover={{ 
+                          background: 'var(--color-green-light)',
+                          color: 'var(--color-green-dark)',
+                          scale: 1.05,
+                        }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {challenge.data}
+                      </motion.span>
+                    )}
+                  </div>
+                </div>
+              </TiltCard>
             </motion.div>
           ))}
         </div>

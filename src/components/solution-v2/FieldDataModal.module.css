@@ -3,10 +3,12 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(26, 23, 20, 0.92);
+  background: rgba(26, 23, 20, 0.85);
+  z-index: 1000;
+  /* Backdrop filter will be animated via Framer Motion */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  z-index: 1000;
+  will-change: opacity, backdrop-filter;
 }
 
 .modalContainer {
