@@ -121,6 +121,7 @@ textarea:focus-visible {
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -130,6 +131,7 @@ body {
     color: var(--color-earth-900);
     background: var(--color-cream);
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
 img {

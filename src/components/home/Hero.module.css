@@ -204,9 +204,8 @@
 /* Tablet / iPad landscape (769px - 1024px) */
 @media (max-width: 1024px) and (min-width: 769px) {
     .hero {
-        min-height: 100vh;
-        min-height: 100svh;
-        padding: var(--space-4xl) var(--space-xl);
+        min-height: auto;
+        padding: 140px var(--space-xl) var(--space-5xl) var(--space-xl);
     }
 
     .heroOverlay {
@@ -243,8 +242,9 @@
 /* Mobile and tablet portrait (max-width: 768px) */
 @media (max-width: 768px) {
     .hero {
-        min-height: auto;
-        padding: 120px var(--space-lg) var(--space-4xl) var(--space-lg);
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: 100px var(--space-lg) var(--space-3xl) var(--space-lg);
         align-items: center;
         justify-content: center;
     }
@@ -261,78 +261,103 @@
     .heroContent {
         width: 100%;
         max-width: none;
-        padding-bottom: var(--space-2xl);
+        padding-bottom: 0;
     }
 
     .heroBadge {
-        font-size: 0.875rem;
-        margin-bottom: var(--space-md);
+        font-size: 0.8125rem;
+        margin-bottom: var(--space-sm);
     }
 
     .titleLine {
-        font-size: clamp(2rem, 8vw, 2.5rem);
+        font-size: clamp(1.875rem, 7.5vw, 2.5rem);
+    }
+
+    .heroTitle {
+        margin-bottom: var(--space-lg);
     }
 
     .heroSubtitle {
-        font-size: 1rem;
-        margin-bottom: var(--space-2xl);
+        font-size: 0.9375rem;
+        margin-bottom: var(--space-xl);
         padding-left: var(--space-md);
+        border-left-width: 2px;
     }
 
     .heroStats {
         flex-direction: row;
         flex-wrap: wrap;
-        gap: var(--space-xl);
+        gap: var(--space-lg);
         border-top: none;
         padding-top: 0;
-        margin-bottom: var(--space-xl);
+        margin-bottom: var(--space-lg);
     }
 
     .stat {
         flex: 1 1 45%;
-        min-width: 120px;
+        min-width: 130px;
     }
 
     .statNumber {
-        font-size: 2.25rem;
+        font-size: 2rem;
+        margin-bottom: 4px;
     }
 
     .statLabel {
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
     }
 
     .statSublabel {
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
     }
 
     .heroCta {
-        margin-top: var(--space-lg);
+        margin-top: var(--space-md);
     }
 }
 
 /* Extra small mobile (max-width: 480px) */
 @media (max-width: 480px) {
     .hero {
-        padding: 100px var(--space-md) var(--space-3xl) var(--space-md);
+        padding: 90px var(--space-md) var(--space-2xl) var(--space-md);
+    }
+
+    .heroBadge {
+        font-size: 0.75rem;
     }
 
     .titleLine {
-        font-size: clamp(1.75rem, 9vw, 2rem);
+        font-size: clamp(1.625rem, 8.5vw, 1.875rem);
+    }
+
+    .heroTitle {
+        margin-bottom: var(--space-md);
     }
 
     .heroSubtitle {
-        font-size: 0.9375rem;
+        font-size: 0.875rem;
+        margin-bottom: var(--space-lg);
+        line-height: 1.5;
     }
 
     .heroStats {
-        gap: var(--space-lg);
+        gap: var(--space-md);
     }
 
     .stat {
         flex: 1 1 100%;
+        min-width: auto;
     }
 
     .statNumber {
-        font-size: 2rem;
+        font-size: 1.75rem;
+    }
+
+    .statLabel {
+        font-size: 0.6875rem;
+    }
+
+    .statSublabel {
+        font-size: 0.6875rem;
     }
 }

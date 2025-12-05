@@ -324,9 +324,10 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -50vw;
-  right: -50vw;
+  left: 50%;
   bottom: 0;
+  width: 100vw;
+  transform: translateX(-50%);
   background: var(--color-earth-800);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   z-index: -1;
