@@ -52,22 +52,23 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
     folder.style.transform = transforms[index] || ''
   }, [])
 
-  // Folder animation variants
+  // Folder animation variants - optimized for smooth 60fps
   const folderVariants = {
     initial: { scale: 1, y: 0 },
     hover: { 
       scale: 1.08, 
       y: -20,
-      transition: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }
+      transition: { duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }
     }
   }
 
   const folderFrontVariants = {
-    initial: { rotateY: 0, x: 0 },
+    initial: { rotateY: 0, x: 0, z: 0 },
     hover: { 
       rotateY: -15,
       x: 20,
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      z: 20,
+      transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -77,7 +78,7 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
       x: -25,
       y: -15,
       rotate: -2,
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -87,7 +88,7 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
       x: -15,
       y: -8,
       rotate: -1,
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -95,7 +96,7 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
     initial: { y: 0 },
     hover: { 
       y: -6,
-      transition: { duration: 0.4, ease: 'easeOut' }
+      transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -103,7 +104,7 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
     initial: { scale: 1 },
     hover: { 
       scale: 1.1,
-      transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -112,7 +113,7 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
     hover: { 
       x: 4,
       color: 'var(--color-green)',
-      transition: { duration: 0.3 }
+      transition: { duration: 0.25 }
     }
   }
 
@@ -120,7 +121,7 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
     initial: { opacity: 0 },
     hover: { 
       opacity: 1,
-      transition: { duration: 0.3 }
+      transition: { duration: 0.25 }
     }
   }
 

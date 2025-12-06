@@ -67,6 +67,15 @@
     padding: 0;
 }
 
+/* GPU Acceleration for smooth animations */
+@media (prefers-reduced-motion: no-preference) {
+    .folder,
+    [data-animate="true"] {
+        transform: translateZ(0);
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
 /* ===========================================
    FOCUS STATES FOR ACCESSIBILITY
    =========================================== */

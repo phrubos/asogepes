@@ -64,22 +64,23 @@ export default function SolutionLayout() {
     folder.style.transform = transforms[index] || ''
   }, [])
 
-  // Folder animation variants
+  // Folder animation variants - optimized for smooth 60fps
   const folderVariants = {
     initial: { scale: 1, y: 0 },
     hover: { 
       scale: 1.12, 
       y: -25,
-      transition: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }
+      transition: { duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }
     }
   }
 
   const folderFrontVariants = {
-    initial: { rotateY: 0, x: 0 },
+    initial: { rotateY: 0, x: 0, z: 0 },
     hover: { 
       rotateY: -15,
       x: 25,
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      z: 25,
+      transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -89,7 +90,7 @@ export default function SolutionLayout() {
       x: -30,
       y: -18,
       rotate: -2,
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -99,7 +100,7 @@ export default function SolutionLayout() {
       x: -18,
       y: -10,
       rotate: -1,
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -107,7 +108,7 @@ export default function SolutionLayout() {
     initial: { y: 0 },
     hover: { 
       y: -6,
-      transition: { duration: 0.4, ease: 'easeOut' }
+      transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -116,7 +117,7 @@ export default function SolutionLayout() {
     hover: { 
       scale: 1.15,
       filter: 'brightness(1)',
-      transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -124,7 +125,7 @@ export default function SolutionLayout() {
     initial: { color: '#FFFFFF' },
     hover: { 
       color: '#D4A84B',
-      transition: { duration: 0.3 }
+      transition: { duration: 0.25 }
     }
   }
 
@@ -133,7 +134,7 @@ export default function SolutionLayout() {
     hover: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.3 }
+      transition: { duration: 0.25 }
     }
   }
 
