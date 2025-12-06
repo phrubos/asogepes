@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micro-Interaction: Magnetic Button Components</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-earth-900: #1A1612;
+      --color-earth-800: #2D251E;
+      --color-gold: #D4A84B;
+      --color-gold-light: #E8C87A;
+      --color-green: #4A6741;
+      --color-green-light: #6B8B5E;
+      --color-cream: #F5F0E8;
+      --color-white: #FDFCFA;
+      
+      --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, #1A1612 0%, #2D251E 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4rem;
+      padding: 4rem 2rem;
+      color: var(--color-white);
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--color-gold);
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      max-width: 600px;
+      margin-bottom: 3rem;
+    }
+
+    .demo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .demo-label {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-gold);
+      opacity: 0.8;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ========================================
+       MAGNETIC BUTTON - Primary CTA
+    ======================================== */
+    .magnetic-btn {
+      position: relative;
+      padding: 1.25rem 2.5rem;
+      background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+      border: none;
+      border-radius: 100px;
+      font-family: 'Fraunces', serif;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-earth-900);
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.1s linear;
+      will-change: transform;
+    }
+
+    .magnetic-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .magnetic-btn:hover::before {
+      opacity: 1;
+    }
+
+    /* Ripple container */
+    .magnetic-btn .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      transform: scale(0);
+      animation: ripple-effect 0.6s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-effect {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* Shine sweep effect */
+    .magnetic-btn .shine {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transform: skewX(-25deg);
+      transition: left 0.5s var(--ease-out-expo);
+    }
+
+    .magnetic-btn:hover .shine {
+      left: 150%;
+    }
+
+    .magnetic-btn .btn-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: transform 0.3s var(--ease-out-expo);
+    }
+
+    .magnetic-btn:hover .btn-content {
+      transform: translateX(4px);
+    }
+
+    .magnetic-btn .arrow {
+      transition: transform 0.3s var(--ease-out-expo);
+    }
+
+    .magnetic-btn:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    /* Glow effect */
+    .magnetic-btn::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+      border-radius: inherit;
+      z-index: -1;
+      opacity: 0;
+      filter: blur(20px);
+      transition: opacity 0.3s ease;
+    }
+
+    .magnetic-btn:hover::after {
+      opacity: 0.6;
+    }
+
+    /* ========================================
+       MAGNETIC BUTTON - Secondary/Outline
+    ======================================== */
+    .magnetic-btn-outline {
+      position: relative;
+      padding: 1.25rem 2.5rem;
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 100px;
+      font-family: 'Fraunces', serif;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-white);
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.1s linear, border-color 0.3s ease, background 0.3s ease;
+      will-change: transform;
+    }
+
+    .magnetic-btn-outline::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--color-gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s var(--ease-out-expo);
+      z-index: 0;
+    }
+
+    .magnetic-btn-outline:hover::before {
+      transform: scaleX(1);
+    }
+
+    .magnetic-btn-outline:hover {
+      border-color: var(--color-gold);
+      color: var(--color-earth-900);
+    }
+
+    .magnetic-btn-outline .btn-content {
+      position: relative;
+      z-index: 2;
+      transition: color 0.3s ease;
+    }
+
+    .magnetic-btn-outline:hover .btn-content {
+      color: var(--color-earth-900);
+    }
+
+    /* ========================================
+       MAGNETIC BUTTON - Icon Only (Floating)
+    ======================================== */
+    .magnetic-btn-icon {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.1s linear, background 0.3s ease, border-color 0.3s ease;
+      will-change: transform;
+      backdrop-filter: blur(10px);
+    }
+
+    .magnetic-btn-icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--color-white);
+      transition: transform 0.3s var(--ease-out-back), color 0.3s ease;
+    }
+
+    .magnetic-btn-icon:hover {
+      background: var(--color-gold);
+      border-color: var(--color-gold);
+    }
+
+    .magnetic-btn-icon:hover svg {
+      color: var(--color-earth-900);
+      transform: scale(1.1);
+    }
+
+    /* Ring effect */
+    .magnetic-btn-icon::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 2px solid var(--color-gold);
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.3s ease, transform 0.3s var(--ease-out-expo);
+    }
+
+    .magnetic-btn-icon:hover::after {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+
+    /* ========================================
+       MAGNETIC BUTTON - Green variant
+    ======================================== */
+    .magnetic-btn-green {
+      position: relative;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, var(--color-green), var(--color-green-light));
+      border: none;
+      border-radius: 12px;
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-white);
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.1s linear, box-shadow 0.3s ease;
+      will-change: transform;
+      box-shadow: 0 4px 20px rgba(74, 103, 65, 0.3);
+    }
+
+    .magnetic-btn-green:hover {
+      box-shadow: 0 8px 40px rgba(74, 103, 65, 0.5);
+    }
+
+    .magnetic-btn-green .btn-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .magnetic-btn-green .shine {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: skewX(-25deg);
+      transition: left 0.6s var(--ease-out-expo);
+    }
+
+    .magnetic-btn-green:hover .shine {
+      left: 150%;
+    }
+
+    /* ========================================
+       PILL BUTTON with count badge
+    ======================================== */
+    .pill-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--color-white);
+      cursor: pointer;
+      transition: transform 0.1s linear, background 0.3s ease, border-color 0.3s ease;
+      will-change: transform;
+      backdrop-filter: blur(10px);
+    }
+
+    .pill-btn:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: var(--color-gold);
+    }
+
+    .pill-btn .badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 0.5rem;
+      background: var(--color-gold);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-earth-900);
+      transition: transform 0.3s var(--ease-out-back);
+    }
+
+    .pill-btn:hover .badge {
+      transform: scale(1.1);
+    }
+
+    /* ========================================
+       INTERACTIVE DEMO AREA
+    ======================================== */
+    .demo-info {
+      margin-top: 4rem;
+      padding: 2rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      max-width: 600px;
+    }
+
+    .demo-info h3 {
+      font-family: 'Fraunces', serif;
+      color: var(--color-gold);
+      margin-bottom: 1rem;
+    }
+
+    .demo-info ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .demo-info li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+    }
+
+    .demo-info li::before {
+      content: '→';
+      color: var(--color-gold);
+      flex-shrink: 0;
+    }
+
+    code {
+      background: rgba(212, 168, 75, 0.15);
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8125rem;
+      color: var(--color-gold-light);
+    }
+  </style>
+</head>
+<body>
+  <h1>Magnetic Button Components</h1>
+  <p class="subtitle">Kurzorvezérelt mágneses effekt, ripple animáció, shine sweep és glow effektek. Húzd az egeret a gombok fölé!</p>
+
+  <div class="demo-section">
+    <span class="demo-label">Primary CTA - Gold</span>
+    <div class="button-row">
+      <button class="magnetic-btn" data-magnetic>
+        <span class="shine"></span>
+        <span class="btn-content">
+          Fedezd fel a kutatást
+          <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </span>
+      </button>
+      <button class="magnetic-btn" data-magnetic>
+        <span class="shine"></span>
+        <span class="btn-content">
+          Tovább a Megoldáshoz
+          <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <span class="demo-label">Secondary - Outline</span>
+    <div class="button-row">
+      <button class="magnetic-btn-outline" data-magnetic>
+        <span class="btn-content">Részletek</span>
+      </button>
+      <button class="magnetic-btn-outline" data-magnetic>
+        <span class="btn-content">Táblázat megtekintése</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <span class="demo-label">Green Variant</span>
+    <div class="button-row">
+      <button class="magnetic-btn-green" data-magnetic>
+        <span class="shine"></span>
+        <span class="btn-content">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Új mérés hozzáadása
+        </span>
+      </button>
+      <button class="magnetic-btn-green" data-magnetic>
+        <span class="shine"></span>
+        <span class="btn-content">
+          Eredmények
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <span class="demo-label">Icon Buttons</span>
+    <div class="button-row">
+      <button class="magnetic-btn-icon" data-magnetic>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <button class="magnetic-btn-icon" data-magnetic>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+      <button class="magnetic-btn-icon" data-magnetic>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v8M8 12h8"/>
+        </svg>
+      </button>
+      <button class="magnetic-btn-icon" data-magnetic>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <span class="demo-label">Pill Buttons with Badge</span>
+    <div class="button-row">
+      <button class="pill-btn" data-magnetic>
+        <span>Értesítések</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="pill-btn" data-magnetic>
+        <span>Új eredmények</span>
+        <span class="badge">12</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="demo-info">
+    <h3>Implementációs Jegyzet</h3>
+    <ul>
+      <li>A <code>data-magnetic</code> attribútum aktiválja a mágneses effektet</li>
+      <li>A <code>transform: translate(x, y)</code> értékeket JavaScript számolja ki a kurzor pozíciója alapján</li>
+      <li>Ripple effekt: click eseményre létrejön egy <code>.ripple</code> elem a kattintás pozíciójában</li>
+      <li>Shine sweep: CSS transition mozgatja balról jobbra hover-re</li>
+      <li>Glow: <code>::after</code> pseudo-element blur filterrel</li>
+      <li>Framer Motion-ban: <code>useMotionValue</code> + <code>useSpring</code></li>
+    </ul>
+  </div>
+
+  <script>
+    // Magnetic effect
+    document.querySelectorAll('[data-magnetic]').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        // Magnetic strength (0.3 = 30% of cursor distance)
+        const strength = 0.3;
+        btn.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate(0, 0)';
+      });
+
+      // Ripple effect on click (for primary buttons)
+      if (btn.classList.contains('magnetic-btn')) {
+        btn.addEventListener('click', (e) => {
+          const rect = btn.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          const ripple = document.createElement('span');
+          ripple.className = 'ripple';
+          ripple.style.left = x + 'px';
+          ripple.style.top = y + 'px';
+          ripple.style.width = ripple.style.height = Math.max(rect.width, rect.height) + 'px';
+          
+          btn.appendChild(ripple);
+          
+          setTimeout(() => ripple.remove(), 600);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

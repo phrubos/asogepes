@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micro-Interaction: Scroll-Triggered Animated Counters</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-earth-900: #1A1612;
+      --color-earth-800: #2D251E;
+      --color-earth-600: #4A3F33;
+      --color-earth-100: #E8E0D4;
+      --color-gold: #D4A84B;
+      --color-gold-light: #E8C87A;
+      --color-green: #4A6741;
+      --color-green-light: #6B8B5E;
+      --color-cream: #F5F0E8;
+      --color-white: #FDFCFA;
+      
+      --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--color-cream);
+      color: var(--color-earth-900);
+      line-height: 1.6;
+    }
+
+    .scroll-hint {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.75rem 1.5rem;
+      background: var(--color-earth-900);
+      color: white;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 100;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+      40% { transform: translateX(-50%) translateY(-10px); }
+      60% { transform: translateX(-50%) translateY(-5px); }
+    }
+
+    .spacer {
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--color-earth-600);
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 6rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-label {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(212, 168, 75, 0.1);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-gold);
+      margin-bottom: 1rem;
+    }
+
+    /* ========================================
+       1. HERO STATS (Scroll Triggered)
+    ======================================== */
+    .hero-stats {
+      display: flex;
+      gap: 4rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .hero-stat {
+      text-align: center;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s var(--ease-out-expo);
+    }
+
+    .hero-stat.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-stat:nth-child(1) { transition-delay: 0s; }
+    .hero-stat:nth-child(2) { transition-delay: 0.15s; }
+    .hero-stat:nth-child(3) { transition-delay: 0.3s; }
+
+    .hero-stat .number {
+      font-family: 'Fraunces', serif;
+      font-size: 5rem;
+      font-weight: 800;
+      color: var(--color-earth-900);
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+    }
+
+    .hero-stat .number .unit {
+      font-size: 2rem;
+      color: var(--color-gold);
+      margin-left: 0.25rem;
+    }
+
+    .hero-stat .label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.5rem;
+    }
+
+    .hero-stat .sublabel {
+      font-size: 0.875rem;
+      color: var(--color-earth-600);
+      margin-top: 0.25rem;
+    }
+
+    /* ========================================
+       2. CIRCULAR PROGRESS
+    ======================================== */
+    .circular-stats {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .circular-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.6s var(--ease-out-expo);
+    }
+
+    .circular-stat.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .circular-progress {
+      position: relative;
+      width: 160px;
+      height: 160px;
+    }
+
+    .circular-progress svg {
+      transform: rotate(-90deg);
+    }
+
+    .circular-progress .bg {
+      fill: none;
+      stroke: var(--color-earth-100);
+      stroke-width: 12;
+    }
+
+    .circular-progress .progress {
+      fill: none;
+      stroke: var(--color-green);
+      stroke-width: 12;
+      stroke-linecap: round;
+      stroke-dasharray: 440;
+      stroke-dashoffset: 440;
+      transition: stroke-dashoffset 1.5s var(--ease-out-expo);
+    }
+
+    .circular-stat.visible .progress {
+      stroke-dashoffset: calc(440 - (440 * var(--progress, 0) / 100));
+    }
+
+    .circular-progress .value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--color-earth-900);
+    }
+
+    .circular-stat .label {
+      margin-top: 1rem;
+      font-weight: 600;
+      color: var(--color-earth-800);
+      text-align: center;
+    }
+
+    /* ========================================
+       3. ODOMETER STYLE COUNTER
+    ======================================== */
+    .odometer-stats {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .odometer-stat {
+      background: var(--color-white);
+      border-radius: 20px;
+      padding: 2rem 3rem;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s var(--ease-out-expo);
+    }
+
+    .odometer-stat.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .odometer-display {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .odometer-digit {
+      width: 48px;
+      height: 64px;
+      background: var(--color-earth-900);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .odometer-digit .digit-inner {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      transition: transform 1s var(--ease-out-expo);
+    }
+
+    .odometer-digit .digit-value {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .odometer-stat .label {
+      font-weight: 600;
+      color: var(--color-earth-600);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.875rem;
+    }
+
+    /* ========================================
+       4. BAR CHART COUNTER
+    ======================================== */
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .bar-item {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: all 0.6s var(--ease-out-expo);
+    }
+
+    .bar-item.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .bar-item:nth-child(1) { transition-delay: 0s; }
+    .bar-item:nth-child(2) { transition-delay: 0.1s; }
+    .bar-item:nth-child(3) { transition-delay: 0.2s; }
+    .bar-item:nth-child(4) { transition-delay: 0.3s; }
+
+    .bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .bar-label {
+      font-weight: 600;
+      color: var(--color-earth-800);
+    }
+
+    .bar-value {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      color: var(--color-green);
+    }
+
+    .bar-track {
+      height: 12px;
+      background: var(--color-earth-100);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-green), var(--color-green-light));
+      border-radius: 6px;
+      width: 0;
+      transition: width 1.2s var(--ease-out-expo);
+      position: relative;
+    }
+
+    .bar-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 20px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .bar-item.visible .bar-fill {
+      width: var(--progress, 0%);
+    }
+
+    /* ========================================
+       5. COUNTING TICKER
+    ======================================== */
+    .ticker-stats {
+      display: flex;
+      gap: 4rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .ticker-stat {
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .ticker-stat.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ticker-number {
+      font-family: 'Fraunces', serif;
+      font-size: 4rem;
+      font-weight: 800;
+      color: var(--color-gold);
+      line-height: 1;
+      position: relative;
+    }
+
+    .ticker-number::after {
+      content: attr(data-suffix);
+      font-size: 2rem;
+      margin-left: 0.125rem;
+    }
+
+    .ticker-label {
+      font-size: 0.9375rem;
+      color: var(--color-earth-600);
+      margin-top: 0.75rem;
+    }
+
+    /* ========================================
+       6. SPLIT FLAP DISPLAY
+    ======================================== */
+    .split-flap {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      perspective: 500px;
+    }
+
+    .flap-unit {
+      width: 56px;
+      height: 80px;
+      position: relative;
+    }
+
+    .flap-digit {
+      position: absolute;
+      width: 100%;
+      height: 50%;
+      background: var(--color-earth-900);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--color-gold);
+      overflow: hidden;
+      backface-visibility: hidden;
+    }
+
+    .flap-digit.top {
+      top: 0;
+      border-radius: 8px 8px 0 0;
+      border-bottom: 1px solid rgba(0,0,0,0.3);
+      align-items: flex-end;
+      padding-bottom: 0;
+    }
+
+    .flap-digit.top span {
+      transform: translateY(50%);
+    }
+
+    .flap-digit.bottom {
+      bottom: 0;
+      border-radius: 0 0 8px 8px;
+      align-items: flex-start;
+      padding-top: 0;
+    }
+
+    .flap-digit.bottom span {
+      transform: translateY(-50%);
+    }
+
+    .split-flap-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.6s var(--ease-out-expo);
+    }
+
+    .split-flap-container.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .split-flap-label {
+      font-weight: 600;
+      color: var(--color-earth-600);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.875rem;
+    }
+
+    /* Dark section */
+    .dark-section {
+      background: linear-gradient(180deg, var(--color-earth-900), var(--color-earth-800));
+      color: white;
+    }
+
+    .dark-section .section-title {
+      color: white;
+    }
+
+    .dark-section .hero-stat .number {
+      color: white;
+    }
+
+    .dark-section .hero-stat .sublabel {
+      color: rgba(255,255,255,0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-hint">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 5v14M19 12l-7 7-7-7"/>
+    </svg>
+    Görgess lefelé
+  </div>
+
+  <div class="spacer">↓ Görgess a számláló animációkért ↓</div>
+
+  <!-- Section 1: Hero Stats -->
+  <section>
+    <span class="section-label">1. Hero Stats</span>
+    <h2 class="section-title">Kutatási Számok</h2>
+    <div class="hero-stats" data-animate>
+      <div class="hero-stat">
+        <div class="number">
+          <span class="counter" data-target="600" data-suffix="">0</span>
+          <span class="unit">mm</span>
+        </div>
+        <div class="label">Öntözési víz</div>
+        <div class="sublabel">évente a talajban</div>
+      </div>
+      <div class="hero-stat">
+        <div class="number">
+          <span class="counter" data-target="3" data-suffix="">0</span>
+          <span class="unit">év</span>
+        </div>
+        <div class="label">Kutatás</div>
+        <div class="sublabel">tudományos vizsgálat</div>
+      </div>
+      <div class="hero-stat">
+        <div class="number">
+          <span class="counter" data-target="12" data-suffix="">0</span>
+          <span class="unit">db</span>
+        </div>
+        <div class="label">Parcella</div>
+        <div class="sublabel">különböző kezelés</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Circular Progress -->
+  <section class="dark-section">
+    <span class="section-label">2. Circular Progress</span>
+    <h2 class="section-title">Hatékonyság Mutatók</h2>
+    <div class="circular-stats" data-animate>
+      <div class="circular-stat" style="--progress: 92">
+        <div class="circular-progress">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="bg" cx="80" cy="80" r="70"/>
+            <circle class="progress" cx="80" cy="80" r="70"/>
+          </svg>
+          <span class="value counter" data-target="92" data-suffix="%">0%</span>
+        </div>
+        <div class="label">Vízelvezetés</div>
+      </div>
+      <div class="circular-stat" style="--progress: 78">
+        <div class="circular-progress">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="bg" cx="80" cy="80" r="70"/>
+            <circle class="progress" cx="80" cy="80" r="70"/>
+          </svg>
+          <span class="value counter" data-target="78" data-suffix="%">0%</span>
+        </div>
+        <div class="label">Gyökérbehatolás</div>
+      </div>
+      <div class="circular-stat" style="--progress: 85">
+        <div class="circular-progress">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="bg" cx="80" cy="80" r="70"/>
+            <circle class="progress" cx="80" cy="80" r="70"/>
+          </svg>
+          <span class="value counter" data-target="85" data-suffix="%">0%</span>
+        </div>
+        <div class="label">Talajélet</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Odometer -->
+  <section>
+    <span class="section-label">3. Odometer Display</span>
+    <h2 class="section-title">Teljesítmény Adatok</h2>
+    <div class="odometer-stats" data-animate>
+      <div class="odometer-stat">
+        <div class="odometer-display">
+          <div class="odometer-digit" data-value="1">
+            <div class="digit-inner">
+              <div class="digit-value">0</div>
+              <div class="digit-value">1</div>
+            </div>
+          </div>
+          <div class="odometer-digit" data-value="8">
+            <div class="digit-inner">
+              <div class="digit-value">0</div>
+              <div class="digit-value">1</div>
+              <div class="digit-value">2</div>
+              <div class="digit-value">3</div>
+              <div class="digit-value">4</div>
+              <div class="digit-value">5</div>
+              <div class="digit-value">6</div>
+              <div class="digit-value">7</div>
+              <div class="digit-value">8</div>
+            </div>
+          </div>
+          <div class="odometer-digit" data-value="0">
+            <div class="digit-inner">
+              <div class="digit-value">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">Lóerő minimum</div>
+      </div>
+      <div class="odometer-stat">
+        <div class="odometer-display">
+          <div class="odometer-digit" data-value="4">
+            <div class="digit-inner">
+              <div class="digit-value">0</div>
+              <div class="digit-value">1</div>
+              <div class="digit-value">2</div>
+              <div class="digit-value">3</div>
+              <div class="digit-value">4</div>
+            </div>
+          </div>
+          <div class="odometer-digit" data-value="5">
+            <div class="digit-inner">
+              <div class="digit-value">0</div>
+              <div class="digit-value">1</div>
+              <div class="digit-value">2</div>
+              <div class="digit-value">3</div>
+              <div class="digit-value">4</div>
+              <div class="digit-value">5</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">CM munkamélység</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Bar Chart -->
+  <section class="dark-section">
+    <span class="section-label">4. Animated Bar Chart</span>
+    <h2 class="section-title">Terméshozam Javulás</h2>
+    <div class="bar-chart" data-animate>
+      <div class="bar-item" style="--progress: 92%">
+        <div class="bar-header">
+          <span class="bar-label">Ásógép + Szántás</span>
+          <span class="bar-value counter" data-target="92" data-suffix="%">0%</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill"></div>
+        </div>
+      </div>
+      <div class="bar-item" style="--progress: 85%">
+        <div class="bar-header">
+          <span class="bar-label">Önálló Ásógép</span>
+          <span class="bar-value counter" data-target="85" data-suffix="%">0%</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill"></div>
+        </div>
+      </div>
+      <div class="bar-item" style="--progress: 65%">
+        <div class="bar-header">
+          <span class="bar-label">Mélyszántás</span>
+          <span class="bar-value counter" data-target="65" data-suffix="%">0%</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill"></div>
+        </div>
+      </div>
+      <div class="bar-item" style="--progress: 45%">
+        <div class="bar-header">
+          <span class="bar-label">Hagyományos szántás</span>
+          <span class="bar-value counter" data-target="45" data-suffix="%">0%</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Ticker -->
+  <section>
+    <span class="section-label">5. Counting Ticker</span>
+    <h2 class="section-title">Eredmények Számokban</h2>
+    <div class="ticker-stats" data-animate>
+      <div class="ticker-stat">
+        <div class="ticker-number" data-suffix="%">
+          <span class="counter" data-target="25">0</span>
+        </div>
+        <div class="ticker-label">Hozamnövekedés átlagosan</div>
+      </div>
+      <div class="ticker-stat">
+        <div class="ticker-number" data-suffix="x">
+          <span class="counter" data-target="2" data-decimals="1">0</span>
+        </div>
+        <div class="ticker-label">Jobb vízbeszivárgás</div>
+      </div>
+      <div class="ticker-stat">
+        <div class="ticker-number" data-suffix="">
+          <span class="counter" data-target="150">0</span>
+        </div>
+        <div class="ticker-label">Mérési pont összesen</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Split Flap -->
+  <section class="dark-section">
+    <span class="section-label">6. Split Flap Display</span>
+    <h2 class="section-title">Parcella Azonosító</h2>
+    <div class="split-flap-container" data-animate>
+      <div class="split-flap">
+        <div class="flap-unit">
+          <div class="flap-digit top"><span>3</span></div>
+          <div class="flap-digit bottom"><span>3</span></div>
+        </div>
+        <div class="flap-unit">
+          <div class="flap-digit top"><span>8</span></div>
+          <div class="flap-digit bottom"><span>8</span></div>
+        </div>
+        <div class="flap-unit">
+          <div class="flap-digit top"><span>S</span></div>
+          <div class="flap-digit bottom"><span>S</span></div>
+        </div>
+        <div class="flap-unit">
+          <div class="flap-digit top"><span>X</span></div>
+          <div class="flap-digit bottom"><span>X</span></div>
+        </div>
+      </div>
+      <div class="split-flap-label">Modell azonosító</div>
+    </div>
+  </section>
+
+  <div class="spacer">✓ Demo vége</div>
+
+  <script>
+    // Intersection Observer for scroll-triggered animations
+    const observerOptions = {
+      threshold: 0.3,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const animateOnScroll = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Add visible class to children
+          const children = entry.target.querySelectorAll('.hero-stat, .circular-stat, .odometer-stat, .bar-item, .ticker-stat, .split-flap-container');
+          children.forEach((child, i) => {
+            setTimeout(() => {
+              child.classList.add('visible');
+            }, i * 100);
+          });
+          
+          // If it's a direct container with data-animate
+          if (entry.target.classList.contains('split-flap-container')) {
+            entry.target.classList.add('visible');
+          }
+
+          // Start counter animations
+          const counters = entry.target.querySelectorAll('.counter');
+          counters.forEach(counter => {
+            animateCounter(counter);
+          });
+
+          // Odometer animation
+          const odometerDigits = entry.target.querySelectorAll('.odometer-digit');
+          odometerDigits.forEach(digit => {
+            const value = parseInt(digit.dataset.value);
+            const inner = digit.querySelector('.digit-inner');
+            setTimeout(() => {
+              inner.style.transform = `translateY(-${value * 64}px)`;
+            }, 300);
+          });
+
+          animateOnScroll.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('[data-animate]').forEach(el => {
+      animateOnScroll.observe(el);
+    });
+
+    // Counter animation function
+    function animateCounter(counter) {
+      const target = parseFloat(counter.dataset.target);
+      const suffix = counter.dataset.suffix || '';
+      const decimals = parseInt(counter.dataset.decimals) || 0;
+      const duration = 1500;
+      const startTime = Date.now();
+
+      function update() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Ease out expo
+        const eased = 1 - Math.pow(1 - progress, 4);
+        const current = target * eased;
+        
+        counter.textContent = current.toFixed(decimals) + suffix;
+        
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          counter.textContent = target.toFixed(decimals) + suffix;
+        }
+      }
+
+      update();
+    }
+
+    // Hide scroll hint after first scroll
+    window.addEventListener('scroll', () => {
+      const hint = document.querySelector('.scroll-hint');
+      if (window.scrollY > 100) {
+        hint.style.opacity = '0';
+        hint.style.pointerEvents = 'none';
+      }
+    }, { once: true });
+  </script>
+</body>
+</html>

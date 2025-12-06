@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottie Animation Concepts - Animáció Katalógus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0f0a;
+            --bg-card: rgba(20, 28, 20, 0.8);
+            --border: rgba(107, 139, 94, 0.2);
+            --text-primary: #f0f5f0;
+            --text-secondary: rgba(240, 245, 240, 0.7);
+            --text-muted: rgba(240, 245, 240, 0.5);
+            --accent-green: #6b8b5e;
+            --accent-gold: #d4a84b;
+            --accent-red: #c45c5c;
+            --accent-blue: #5a8ac4;
+        }
+
+        body {
+            background: var(--bg-dark);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 3rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .animation-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .animation-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-green);
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.4);
+        }
+
+        .animation-preview {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.2);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .animation-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .animation-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .animation-usage {
+            font-size: 0.75rem;
+            color: var(--accent-gold);
+            padding: 0.5rem 1rem;
+            background: rgba(212, 168, 75, 0.1);
+            border-radius: 100px;
+        }
+
+        /* ========================================
+           ANIMATION 1: Water Drop Compaction
+           ======================================== */
+        .water-compaction {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .soil-surface {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(180deg, #4a5a42, #3a4a38);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .soil-particles-container {
+            position: absolute;
+            bottom: 40%;
+            left: 10%;
+            right: 10%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .soil-dot {
+            width: 8px;
+            height: 8px;
+            background: #5a6a52;
+            border-radius: 50%;
+            animation: compress 2s ease-in-out infinite;
+        }
+
+        .soil-dot:nth-child(odd) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes compress {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(5px) scale(1.2, 0.8); }
+        }
+
+        .water-drop-anim {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 22px;
+            background: linear-gradient(180deg, rgba(100, 150, 200, 0.9), rgba(100, 150, 200, 0.5));
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: drop-fall 2s ease-in infinite;
+        }
+
+        @keyframes drop-fall {
+            0% { top: 10%; opacity: 0; transform: translateX(-50%) scale(0.5); }
+            10% { opacity: 1; transform: translateX(-50%) scale(1); }
+            70% { top: 35%; opacity: 1; }
+            80% { top: 38%; opacity: 0; transform: translateX(-50%) scale(1.5, 0.3); }
+            100% { top: 38%; opacity: 0; }
+        }
+
+        .ripple-effect {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 10px;
+            border: 2px solid rgba(100, 150, 200, 0.5);
+            border-radius: 50%;
+            opacity: 0;
+            animation: ripple 2s ease-out infinite;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes ripple {
+            0% { transform: translateX(-50%) scale(0.5); opacity: 0.8; }
+            100% { transform: translateX(-50%) scale(2); opacity: 0; }
+        }
+
+        /* ========================================
+           ANIMATION 2: Root Growth Comparison
+           ======================================== */
+        .root-comparison {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: relative;
+        }
+
+        .root-side {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .root-side.bad {
+            border-right: 1px dashed rgba(255,255,255,0.1);
+        }
+
+        .root-label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 0.25rem;
+        }
+
+        .root-soil {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(180deg, #4a5a42 0%, #5a4a3a 40%, #7a6050 40%, #7a6050 55%, #6a5a4a 55%);
+            margin: 0.25rem;
+            border-radius: 4px;
+        }
+
+        .root-side.good .root-soil {
+            background: linear-gradient(180deg, #4a5a42 0%, #5a5a42 30%, #5a4a3a 60%, #6a5a4a 100%);
+        }
+
+        .root-line {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            width: 3px;
+            background: linear-gradient(180deg, #5a8a4a, #3a6a2a);
+            transform: translateX(-50%);
+            border-radius: 10px;
+        }
+
+        .root-side.bad .root-line {
+            height: 0;
+            animation: grow-short 3s ease-out forwards infinite;
+        }
+
+        .root-side.good .root-line {
+            height: 0;
+            animation: grow-long 3s ease-out forwards infinite;
+        }
+
+        @keyframes grow-short {
+            0% { height: 0; }
+            50%, 100% { height: 30%; }
+        }
+
+        @keyframes grow-long {
+            0% { height: 0; }
+            50%, 100% { height: 75%; }
+        }
+
+        .root-branch {
+            position: absolute;
+            width: 2px;
+            height: 15px;
+            background: #4a7a3a;
+            border-radius: 5px;
+        }
+
+        /* ========================================
+           ANIMATION 3: Spade Motion
+           ======================================== */
+        .spade-motion {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .spade-blades-container {
+            position: absolute;
+            bottom: 35%;
+            left: 15%;
+            right: 15%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .spade-blade-item {
+            width: 10px;
+            height: 50px;
+            background: linear-gradient(180deg, #8a8a8a, #5a5a5a);
+            border-radius: 2px 2px 4px 4px;
+            transform-origin: top center;
+        }
+
+        .spade-blade-item:nth-child(1) { animation: spade-dig 1.5s ease-in-out infinite 0s; }
+        .spade-blade-item:nth-child(2) { animation: spade-dig 1.5s ease-in-out infinite 0.15s; }
+        .spade-blade-item:nth-child(3) { animation: spade-dig 1.5s ease-in-out infinite 0.3s; }
+        .spade-blade-item:nth-child(4) { animation: spade-dig 1.5s ease-in-out infinite 0.45s; }
+        .spade-blade-item:nth-child(5) { animation: spade-dig 1.5s ease-in-out infinite 0.6s; }
+
+        @keyframes spade-dig {
+            0%, 100% { transform: rotate(0deg) translateY(0); }
+            25% { transform: rotate(-25deg) translateY(-15px); }
+            50% { transform: rotate(0deg) translateY(-5px); }
+            75% { transform: rotate(25deg) translateY(-15px); }
+        }
+
+        .spade-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 35%;
+            background: linear-gradient(180deg, #5a4a3a, #4a3a2a);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .soil-flying {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #6a5a4a;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .soil-flying:nth-child(1) { left: 20%; animation: soil-fly 1.5s ease-out infinite 0.25s; }
+        .soil-flying:nth-child(2) { left: 40%; animation: soil-fly 1.5s ease-out infinite 0.4s; }
+        .soil-flying:nth-child(3) { left: 60%; animation: soil-fly 1.5s ease-out infinite 0.55s; }
+        .soil-flying:nth-child(4) { left: 80%; animation: soil-fly 1.5s ease-out infinite 0.7s; }
+
+        @keyframes soil-fly {
+            0% { bottom: 35%; opacity: 0; transform: translateY(0) translateX(0); }
+            20% { opacity: 1; }
+            100% { bottom: 55%; opacity: 0; transform: translateY(-20px) translateX(var(--fly-x, 10px)); }
+        }
+
+        .soil-flying:nth-child(1) { --fly-x: -15px; }
+        .soil-flying:nth-child(2) { --fly-x: 10px; }
+        .soil-flying:nth-child(3) { --fly-x: -8px; }
+        .soil-flying:nth-child(4) { --fly-x: 12px; }
+
+        /* ========================================
+           ANIMATION 4: Temperature Comparison
+           ======================================== */
+        .temp-comparison {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            padding: 0.5rem;
+        }
+
+        .temp-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .temp-label-top {
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .temp-bar.cold .temp-label-top { color: var(--accent-blue); }
+        .temp-bar.warm .temp-label-top { color: var(--accent-gold); }
+
+        .thermometer {
+            width: 30px;
+            height: 120px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .thermometer-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-radius: 15px;
+        }
+
+        .temp-bar.cold .thermometer-fill {
+            background: linear-gradient(180deg, var(--accent-blue), #3a6a9a);
+            animation: fill-cold 3s ease-out forwards infinite;
+        }
+
+        .temp-bar.warm .thermometer-fill {
+            background: linear-gradient(180deg, var(--accent-gold), #b88a3a);
+            animation: fill-warm 3s ease-out forwards infinite;
+        }
+
+        @keyframes fill-cold {
+            0% { height: 0; }
+            50%, 100% { height: 45%; }
+        }
+
+        @keyframes fill-warm {
+            0% { height: 0; }
+            50%, 100% { height: 75%; }
+        }
+
+        .temp-label-bottom {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        /* ========================================
+           ANIMATION 5: Water Infiltration
+           ======================================== */
+        .water-infiltration {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .infiltration-side {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(180deg, #4a5a42 0%, #5a4a3a 30%, #7a6050 30%, #7a6050 50%, #6a5a4a 50%);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .infiltration-side.good {
+            background: linear-gradient(180deg, #4a5a42 0%, #5a5a42 35%, #5a4a3a 70%, #6a5a4a 100%);
+        }
+
+        .water-arrow {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            background: rgba(100, 150, 200, 0.7);
+            border-radius: 2px;
+        }
+
+        .infiltration-side.bad .water-arrow {
+            top: 5%;
+            animation: water-blocked 2.5s ease-out infinite;
+        }
+
+        .infiltration-side.good .water-arrow {
+            top: 5%;
+            animation: water-through 2.5s ease-out infinite;
+        }
+
+        @keyframes water-blocked {
+            0% { height: 0; opacity: 0; }
+            20% { opacity: 1; }
+            50% { height: 25%; }
+            60% { height: 25%; opacity: 0.5; }
+            100% { height: 25%; opacity: 0; }
+        }
+
+        @keyframes water-through {
+            0% { height: 0; opacity: 0; }
+            20% { opacity: 1; }
+            80% { height: 85%; opacity: 1; }
+            100% { height: 90%; opacity: 0; }
+        }
+
+        .block-indicator {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-red);
+            border-radius: 50%;
+            opacity: 0;
+            animation: show-block 2.5s ease-out infinite;
+            animation-delay: 1s;
+        }
+
+        @keyframes show-block {
+            0%, 40% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1); }
+            100% { opacity: 0; transform: translateX(-50%) scale(1.2); }
+        }
+
+        .side-label {
+            position: absolute;
+            bottom: 0.25rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.7);
+            background: rgba(0,0,0,0.3);
+            padding: 0.15rem;
+        }
+
+        /* ========================================
+           ANIMATION 6: Yield Chart
+           ======================================== */
+        .yield-chart {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 0.5rem;
+        }
+
+        .yield-bar {
+            width: 30px;
+            background: linear-gradient(180deg, var(--accent-gold), #8a6a2a);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+        }
+
+        .yield-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .yield-bar:nth-child(1) { animation: bar-grow-1 2s ease-out forwards infinite; }
+        .yield-bar:nth-child(2) { animation: bar-grow-2 2s ease-out forwards infinite; }
+        .yield-bar:nth-child(3) { animation: bar-grow-3 2s ease-out forwards infinite; }
+        .yield-bar:nth-child(4) { 
+            background: rgba(255,255,255,0.1);
+            animation: bar-grow-4 2s ease-out forwards infinite; 
+        }
+
+        @keyframes bar-grow-1 { 0% { height: 0; } 50%, 100% { height: 60%; } }
+        @keyframes bar-grow-2 { 0% { height: 0; } 50%, 100% { height: 80%; } }
+        @keyframes bar-grow-3 { 0% { height: 0; } 50%, 100% { height: 50%; } }
+        @keyframes bar-grow-4 { 0% { height: 0; } 50%, 100% { height: 25%; } }
+
+        /* ========================================
+           ANIMATION 7: Loader/Transition
+           ======================================== */
+        .soil-loader {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+
+        .loader-ring {
+            position: absolute;
+            inset: 0;
+            border: 3px solid transparent;
+            border-top-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+
+        .loader-ring:nth-child(2) {
+            inset: 8px;
+            border-top-color: var(--accent-green);
+            animation-duration: 2s;
+            animation-direction: reverse;
+        }
+
+        .loader-ring:nth-child(3) {
+            inset: 16px;
+            border-top-color: rgba(255,255,255,0.3);
+            animation-duration: 2.5s;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
+        }
+
+        /* ========================================
+           ANIMATION 8: Progress Indicator
+           ======================================== */
+        .progress-ring-container {
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+
+        .progress-ring-svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: rgba(107, 139, 94, 0.2);
+            stroke-width: 8;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: var(--accent-gold);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 251;
+            stroke-dashoffset: 251;
+            animation: progress-draw 3s ease-out forwards infinite;
+        }
+
+        @keyframes progress-draw {
+            0% { stroke-dashoffset: 251; }
+            50%, 100% { stroke-dashoffset: 63; }
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .progress-label {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        /* Note Section */
+        .implementation-note {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent-gold);
+            border-radius: 0 1rem 1rem 0;
+            padding: 1.5rem 2rem;
+            margin-top: 2rem;
+        }
+
+        .implementation-note h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-gold);
+        }
+
+        .implementation-note p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .implementation-note ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .implementation-note li {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .implementation-note li::before {
+            content: '→';
+            color: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lottie Animáció Koncepciók</h1>
+        <p class="subtitle">CSS prototípusok, amelyek Lottie JSON-ra konvertálhatók Framer Motion integrációval</p>
+
+        <!-- Section 1: Problem Animations -->
+        <h2 class="section-title">Probléma Oldal Animációk</h2>
+        <div class="grid">
+            <!-- Water Compaction -->
+            <div class="animation-card">
+                <div class="animation-preview">
+                    <div class="water-compaction">
+                        <div class="water-drop-anim"></div>
+                        <div class="ripple-effect"></div>
+                        <div class="soil-surface">
+                            <div class="soil-particles-container">
+                                <div class="soil-dot"></div>
+                                <div class="soil-dot"></div>
+                                <div class="soil-dot"></div>
+                                <div class="soil-dot"></div>
+                                <div class="soil-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="animation-title">Víz Tömörítés</h3>
+                <p class="animation-desc">Öntözővíz cseppek hatása a talaj tömörödésére. A részecskék összepréselődnek.</p>
+                <span class="animation-usage">Tömörödés szekció hero</span>
+            </div>
+
+            <!-- Root Comparison -->
+            <div class="animation-card">
+                <div class="animation-preview">
+                    <div class="root-comparison">
+                        <div class="root-side bad">
+                            <span class="root-label">Szántás</span>
+                            <div class="root-soil">
+                                <div class="root-line"></div>
+                            </div>
+                        </div>
+                        <div class="root-side good">
+                            <span class="root-label">Ásógép</span>
+                            <div class="root-soil">
+                                <div class="root-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="animation-title">Gyökérnövekedés</h3>
+                <p class="animation-desc">Összehasonlító animáció: szántott vs lazított talaj gyökérmélysége.</p>
+                <span class="animation-usage">Összehasonlító kártyák</span>
+            </div>
+
+            <!-- Water Infiltration -->
+            <div class="animation-card">
+                <div class="animation-preview">
+                    <div class="water-infiltration">
+                        <div class="infiltration-side bad">
+                            <div class="water-arrow"></div>
+                            <div class="block-indicator"></div>
+                            <span class="side-label">Tömör</span>
+                        </div>
+                        <div class="infiltration-side good">
+                            <div class="water-arrow"></div>
+                            <span class="side-label">Lazított</span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="animation-title">Vízbeszivárgás</h3>
+                <p class="animation-desc">Víz útja tömör vs lazított talajban. Látható az eketalp blokkoló hatása.</p>
+                <span class="animation-usage">Probléma vizualizáció</span>
+            </div>
+        </div>
+
+        <!-- Section 2: Solution Animations -->
+        <h2 class="section-title">Megoldás Oldal Animációk</h2>
+        <div class="grid">
+            <!-- Spade Motion -->
+            <div class="animation-card">
+                <div class="animation-preview">
+                    <div class="spade-motion">
+                        <div class="spade-blades-container">
+                            <div class="spade-blade-item"></div>
+                            <div class="spade-blade-item"></div>
+                            <div class="spade-blade-item"></div>
+                            <div class="spade-blade-item"></div>
+                            <div class="spade-blade-item"></div>
+                        </div>
+                        <div class="soil-flying"></div>
+                        <div class="soil-flying"></div>
+                        <div class="soil-flying"></div>
+                        <div class="soil-flying"></div>
+                        <div class="spade-ground"></div>
+                    </div>
+                </div>
+                <h3 class="animation-title">Ásólapát Mozgás</h3>
+                <p class="animation-desc">Az Imants gép ásólapátjainak karakterisztikus alternáló mozgása.</p>
+                <span class="animation-usage">Gép bemutató szekció</span>
+            </div>
+
+            <!-- Temperature Comparison -->
+            <div class="animation-card">
+                <div class="animation-preview">
+                    <div class="temp-comparison">
+                        <div class="temp-bar cold">
+                            <span class="temp-label-top">12°C</span>
+                            <div class="thermometer">
+                                <div class="thermometer-fill"></div>
+                            </div>
+                            <span class="temp-label-bottom">Szántott</span>
+                        </div>
+                        <div class="temp-bar warm">
+                            <span class="temp-label-top">16°C</span>
+                            <div class="thermometer">
+                                <div class="thermometer-fill"></div>
+                            </div>
+                            <span class="temp-label-bottom">Lazított</span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="animation-title">Hőmérséklet</h3>
+                <p class="animation-desc">Tavaszi talajhőmérséklet összehasonlítás hőmérő animációval.</p>
+                <span class="animation-usage">Eredmények szekció</span>
+            </div>
+
+            <!-- Yield Chart -->
+            <div class="animation-card">
+                <div class="animation-preview">
+                    <div class="yield-chart">
+                        <div class="yield-bar" data-value="+28%"></div>
+                        <div class="yield-bar" data-value="+37%"></div>
+                        <div class="yield-bar" data-value="+21%"></div>
+                        <div class="yield-bar" data-value="0%"></div>
+                    </div>
+                </div>
+                <h3 class="animation-title">Hozam Diagram</h3>
+                <p class="animation-desc">Animált oszlopdiagram a terméshozam növekedés bemutatására.</p>
+                <span class="animation-usage">Eredmények összefoglaló</span>
+            </div>
+        </div>
+
+        <!-- Section 3: UI Animations -->
+        <h2 class="section-title">UI Mikro-animációk</h2>
+        <div class="grid">
+            <!-- Loader -->
+            <div class="animation-card">
+                <div class="animation-preview">
+                    <div class="soil-loader">
+                        <div class="loader-ring"></div>
+                        <div class="loader-ring"></div>
+                        <div class="loader-ring"></div>
+                        <div class="loader-center"></div>
+                    </div>
+                </div>
+                <h3 class="animation-title">Betöltő Animáció</h3>
+                <p class="animation-desc">Egyedi loading spinner a márka színeivel, page transition-höz.</p>
+                <span class="animation-usage">Page transitions</span>
+            </div>
+
+            <!-- Progress Ring -->
+            <div class="animation-card">
+                <div class="animation-preview">
+                    <div class="progress-ring-container">
+                        <svg class="progress-ring-svg" width="100" height="100">
+                            <circle class="progress-ring-bg" cx="50" cy="50" r="40"/>
+                            <circle class="progress-ring-fill" cx="50" cy="50" r="40"/>
+                        </svg>
+                        <span class="progress-text">75%</span>
+                        <span class="progress-label">Talajjavulás</span>
+                    </div>
+                </div>
+                <h3 class="animation-title">Progress Ring</h3>
+                <p class="animation-desc">Kördiagram animáció százalékos értékek megjelenítéséhez.</p>
+                <span class="animation-usage">Stat kártyák</span>
+            </div>
+        </div>
+
+        <!-- Implementation Note -->
+        <div class="implementation-note">
+            <h3>Implementációs Javaslatok</h3>
+            <p>
+                Ezek a CSS prototípusok könnyen konvertálhatók Lottie JSON formátumra After Effects + Bodymovin plugin segítségével, 
+                vagy közvetlenül implementálhatók Framer Motion-nel React komponensekként.
+            </p>
+            <ul>
+                <li><strong>LottieFiles:</strong> Ingyenes Lottie könyvtár hasonló animációkhoz</li>
+                <li><strong>Rive:</strong> Interaktív animációkhoz, state machine támogatással</li>
+                <li><strong>Framer Motion:</strong> React natív animáció, legjobb scroll-triggered-hez</li>
+                <li><strong>GSAP:</strong> Komplex timeline animációkhoz SVG-vel</li>
+                <li><strong>react-lottie-player:</strong> Lottie JSON fájlok React integrációja</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -13,6 +14,53 @@ import { TextReveal } from '@/components/ui/TextReveal'
 
 export default function Hero() {
   const { style: parallaxStyle } = useParallax({ speed: 0.3, maxOffset: 150 })
+  
+  // Typewriter effect for "végtelen erőforrás"
+  const [typewriterText, setTypewriterText] = useState('')
+  const [isTyping, setIsTyping] = useState(true)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [hasInitialDelay, setHasInitialDelay] = useState(true)
+  
+  const fullText = 'végtelen erőforrás'
+  
+  useEffect(() => {
+    // Initial delay before starting
+    if (hasInitialDelay) {
+      const initialTimeout = setTimeout(() => {
+        setHasInitialDelay(false)
+      }, 1000)
+      return () => clearTimeout(initialTimeout)
+    }
+    
+    let timeout: NodeJS.Timeout
+    
+    if (isTyping && !isDeleting) {
+      if (typewriterText.length < fullText.length) {
+        timeout = setTimeout(() => {
+          setTypewriterText(fullText.slice(0, typewriterText.length + 1))
+        }, 80)
+      } else {
+        // Finished typing, wait 10 seconds then delete
+        timeout = setTimeout(() => {
+          setIsDeleting(true)
+        }, 10000)
+      }
+    } else if (isDeleting) {
+      if (typewriterText.length > 0) {
+        timeout = setTimeout(() => {
+          setTypewriterText(typewriterText.slice(0, -1))
+        }, 40)
+      } else {
+        // Finished deleting, restart typing
+        timeout = setTimeout(() => {
+          setIsDeleting(false)
+          setIsTyping(true)
+        }, 500)
+      }
+    }
+    
+    return () => clearTimeout(timeout)
+  }, [typewriterText, isTyping, isDeleting, hasInitialDelay, fullText])
 
   return (
     <header className={styles.hero}>
@@ -39,16 +87,24 @@ export default function Hero() {
         </motion.div>
 
         <h1 className={styles.heroTitle}>
-          <TextReveal 
-            type="word" 
-            tag="span" 
+          <motion.span 
             className={styles.titleLine}
-            delay={0.1}
-            highlightWords={['végtelen', 'erőforrás']}
-            highlightClassName={styles.titleAccent}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
           >
-            A talaj nem végtelen erőforrás
-          </TextReveal>
+            A talaj nem{' '}
+            <span className={styles.titleAccent}>
+              {typewriterText}
+              <motion.span
+                className={styles.cursor}
+                animate={{ opacity: [1, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }}
+              >
+                |
+              </motion.span>
+            </span>
+          </motion.span>
         </h1>
 
         <motion.p

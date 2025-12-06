@@ -166,9 +166,17 @@ em {
 /* Layout */
 .container {
     width: 100%;
-    max-width: 1280px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 var(--space-lg);
+}
+
+/* Wide container for hero sections */
+.containerWide {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 var(--space-xl);
 }
 
 .section {

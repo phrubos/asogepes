@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probléma Hero - Irattartó Navigáció</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+    <style>
+        :root {
+            --color-cream: #F5F0E8;
+            --color-cream-dark: #EDE5D8;
+            --color-earth-900: #2D251E;
+            --color-earth-800: #3D3328;
+            --color-earth-600: #6B5D4D;
+            --color-earth-400: #9A8B78;
+            --color-earth-100: #E8E0D4;
+            --color-green: #6B8B5E;
+            --color-green-dark: #4A6B3E;
+            --color-green-light: #9FD88C;
+            --color-gold: #D4A84B;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-cream);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Organic background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(107, 139, 94, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 20%, rgba(139, 115, 85, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse 70% 60% at 60% 80%, rgba(107, 139, 94, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Subtle horizontal lines like soil layers */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 100px,
+                    rgba(107, 139, 94, 0.03) 100px,
+                    rgba(107, 139, 94, 0.03) 101px
+                );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1.4fr; /* More space for folders */
+            gap: 4rem;
+            align-items: center;
+            padding: 4rem 5%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Left side - Title area */
+        .hero-content {
+            max-width: 500px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-number {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-green);
+            letter-spacing: 0.1em;
+        }
+
+        .section-line {
+            width: 40px;
+            height: 2px;
+            background: var(--color-green);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-earth-600);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            color: var(--color-earth-900);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+            color: var(--color-earth-600);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            max-width: 45ch;
+        }
+
+        .hero-hint {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--color-earth-400);
+        }
+
+        .hero-hint svg {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        /* Right side - Folder navigation */
+        .folder-nav {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+            transform-style: preserve-3d;
+            padding: 2rem;
+        }
+
+        .folder {
+            position: relative;
+            width: 280px;
+            height: 420px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Unified direction - all folders face the same way */
+        .folder:first-child {
+            transform: translateY(-20px) translateX(-15px);
+            z-index: 1;
+        }
+
+        .folder:last-child {
+            transform: translateY(20px) translateX(15px);
+            z-index: 2;
+        }
+
+        .folder:hover {
+            transform: translateY(-20px) rotateY(0deg) scale(1.08) !important;
+            z-index: 100;
+        }
+
+        /* Folder back (spine area) */
+        .folder-back {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #c9a96e 0%, #b8955a 100%);
+            border-radius: 8px;
+            transform: translateZ(-20px);
+            box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .folder:nth-child(2) .folder-back {
+            background: linear-gradient(135deg, #7eb8a2 0%, #6aa38d 100%);
+        }
+
+        /* Folder front (main visible part) */
+        .folder-front {
+            position: absolute;
+            inset: 0;
+            background: #faf8f4;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(0, 0, 0, 0.05);
+            transform: translateZ(0);
+            transform-origin: left center;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .folder:hover .folder-front {
+            transform: translateZ(20px) rotateY(-15deg) translateX(20px);
+        }
+
+        /* Paper texture */
+        .folder-front::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            pointer-events: none;
+        }
+
+        /* Document lines */
+        .folder-front::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 24px,
+                rgba(180, 180, 180, 0.2) 24px,
+                rgba(180, 180, 180, 0.2) 25px
+            );
+            pointer-events: none;
+        }
+
+        /* Red margin line */
+        .margin-line {
+            position: absolute;
+            left: 50px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(220, 80, 80, 0.3);
+            z-index: 2;
+        }
+
+        /* Hole punches */
+        .hole-punch {
+            position: absolute;
+            left: 20px;
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #ddd 0%, #bbb 100%);
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.15);
+            z-index: 3;
+        }
+
+        .hole-punch:nth-child(1) { top: 50px; }
+        .hole-punch:nth-child(2) { top: 210px; }
+        .hole-punch:nth-child(3) { top: 370px; }
+
+        /* Folder tab */
+        .folder-tab {
+            position: absolute;
+            top: -24px;
+            right: 40px;
+            width: 100px;
+            height: 32px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+            z-index: 5;
+            transition: transform 0.4s ease;
+        }
+
+        .folder:first-child .folder-tab {
+            background: linear-gradient(180deg, #d4b87a 0%, #c9a96e 100%);
+            color: #4a3728;
+        }
+
+        .folder:last-child .folder-tab {
+            background: linear-gradient(180deg, #8ec9b2 0%, #7eb8a2 100%);
+            color: #1e3d32;
+        }
+
+        .folder:hover .folder-tab {
+            transform: translateY(-5px);
+        }
+
+        /* Image container */
+        .folder-image-container {
+            position: absolute;
+            top: 30px;
+            left: 65px;
+            right: 20px;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .folder-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .folder:hover .folder-image {
+            transform: scale(1.1);
+        }
+
+        /* Content area */
+        .folder-content {
+            position: absolute;
+            bottom: 25px;
+            left: 65px;
+            right: 20px;
+        }
+
+        .folder-label {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-earth-900);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .folder-desc {
+            font-size: 0.875rem;
+            color: var(--color-earth-600);
+            line-height: 1.5;
+            display: block;
+        }
+
+        /* Paper sheets behind */
+        .folder-sheets {
+            position: absolute;
+            top: 10px;
+            left: 5px;
+            right: 5px;
+            bottom: 10px;
+            transform: translateZ(-10px);
+            pointer-events: none;
+        }
+
+        .sheet {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #fff 0%, #f8f8f5 100%);
+            border-radius: 6px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .sheet:nth-child(1) {
+            transform: translateX(-8px) translateY(-5px);
+        }
+
+        .sheet:nth-child(2) {
+            transform: translateX(-4px) translateY(-2px);
+        }
+
+        .folder:hover .sheet:nth-child(1) {
+            transform: translateX(-25px) translateY(-15px) rotateZ(-2deg);
+        }
+
+        .folder:hover .sheet:nth-child(2) {
+            transform: translateX(-15px) translateY(-8px) rotateZ(-1deg);
+        }
+
+        /* Lottie animation container */
+        .lottie-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .folder:hover .lottie-container {
+            opacity: 1;
+        }
+
+        /* Corner accent with arrow */
+        .corner-accent {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(-45deg, var(--color-green) 50%, transparent 50%);
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            padding: 8px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .folder:hover .corner-accent {
+            opacity: 1;
+        }
+
+        .corner-accent svg {
+            transform: rotate(45deg);
+        }
+
+        /* Glow effect on hover */
+        .folder::before {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(circle at center, rgba(107, 139, 94, 0.15) 0%, transparent 70%);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .folder:hover::before {
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+
+            .hero-content {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .hero-subtitle {
+                max-width: none;
+            }
+
+            .hero-hint {
+                justify-content: center;
+            }
+
+            .folder-nav {
+                flex-direction: row;
+                gap: 1.5rem;
+            }
+
+            .folder {
+                width: 240px;
+                height: 360px;
+            }
+
+            .folder:first-child,
+            .folder:last-child {
+                transform: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1.5rem;
+            }
+
+            .folder-nav {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .folder {
+                width: 280px;
+                height: 380px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <span class="section-line"></span>
+                <span class="section-title">A Probléma</span>
+            </div>
+            <h1 class="hero-title">
+                Miért fulladnak meg<br>
+                a gyökerek?
+            </h1>
+            <p class="hero-subtitle">
+                Az intenzív öntözés és a nehéz gépek taposása láthatatlanul teszi tönkre a talajszerkezetet. 
+                Két fő ellenséggel küzdünk.
+            </p>
+            <div class="hero-hint">
+                <span>Válassz egy témát a felfedezéshez</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </div>
+        </div>
+
+        <nav class="folder-nav">
+            <a href="#compaction" class="folder">
+                <div class="folder-tab">01</div>
+                <div class="folder-back"></div>
+                <div class="folder-sheets">
+                    <div class="sheet"></div>
+                    <div class="sheet"></div>
+                </div>
+                <div class="folder-front">
+                    <div class="hole-punch"></div>
+                    <div class="hole-punch"></div>
+                    <div class="hole-punch"></div>
+                    <div class="margin-line"></div>
+                    <div class="folder-image-container">
+                        <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=300&fit=crop" alt="Tömörödés" class="folder-image">
+                    </div>
+                    <div class="folder-content">
+                        <span class="folder-label">A Tömörödés</span>
+                        <span class="folder-desc">Hogyan zárja el a víz és levegő útját a tömörödött talaj?</span>
+                    </div>
+                    <div class="corner-accent">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="lottie-container">
+                    <dotlottie-player 
+                        src="https://lottie.host/4db68bbd-31f6-4cd8-84eb-189b2ce4b00b/Hy4HxZxmzQ.lottie"
+                        background="transparent"
+                        speed="1"
+                        style="width: 100%; height: 100%"
+                        loop
+                        autoplay>
+                    </dotlottie-player>
+                </div>
+            </a>
+
+            <a href="#ploughing" class="folder">
+                <div class="folder-tab">02</div>
+                <div class="folder-back"></div>
+                <div class="folder-sheets">
+                    <div class="sheet"></div>
+                    <div class="sheet"></div>
+                </div>
+                <div class="folder-front">
+                    <div class="hole-punch"></div>
+                    <div class="hole-punch"></div>
+                    <div class="hole-punch"></div>
+                    <div class="margin-line"></div>
+                    <div class="folder-image-container">
+                        <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=400&h=300&fit=crop" alt="Szántás" class="folder-image">
+                    </div>
+                    <div class="folder-content">
+                        <span class="folder-label">A Szántás Korlátai</span>
+                        <span class="folder-desc">Miért nem oldja meg a hagyományos szántás a problémát?</span>
+                    </div>
+                    <div class="corner-accent">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="lottie-container">
+                    <dotlottie-player 
+                        src="https://lottie.host/4db68bbd-31f6-4cd8-84eb-189b2ce4b00b/Hy4HxZxmzQ.lottie"
+                        background="transparent"
+                        speed="1"
+                        style="width: 100%; height: 100%"
+                        loop
+                        autoplay>
+                    </dotlottie-player>
+                </div>
+            </a>
+        </nav>
+    </section>
+
+    <script>
+        // Add smooth hover interactions with JS for extra polish
+        document.querySelectorAll('.folder').forEach(folder => {
+            folder.addEventListener('mouseenter', () => {
+                // Play lottie animation
+                const lottie = folder.querySelector('dotlottie-player');
+                if (lottie) {
+                    lottie.play();
+                }
+            });
+
+            folder.addEventListener('mouseleave', () => {
+                const lottie = folder.querySelector('dotlottie-player');
+                if (lottie) {
+                    lottie.stop();
+                }
+            });
+
+            // Parallax effect on mouse move
+            folder.addEventListener('mousemove', (e) => {
+                const rect = folder.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                folder.style.transform = `
+                    translateY(-20px) 
+                    scale(1.08) 
+                    rotateX(${rotateX}deg) 
+                    rotateY(${rotateY}deg)
+                `;
+            });
+
+            folder.addEventListener('mouseleave', () => {
+                // Reset to original position based on which folder
+                const isFirst = folder === document.querySelector('.folder:first-child');
+                if (isFirst) {
+                    folder.style.transform = 'translateY(-20px) translateX(-15px)';
+                } else {
+                    folder.style.transform = 'translateY(20px) translateX(15px)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

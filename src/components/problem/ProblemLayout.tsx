@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import SectionHeader from '@/components/ui/SectionHeader'
 import styles from './ProblemNew.module.css'
-import { ArrowRight, ArrowDown } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 interface ProblemLayoutProps {
   compactionContent: React.ReactNode
@@ -12,7 +12,7 @@ interface ProblemLayoutProps {
 }
 
 export default function ProblemLayout({ compactionContent, ploughingContent }: ProblemLayoutProps) {
-  const [hoveredButton, setHoveredButton] = useState<string | null>(null)
+  const [hoveredFolder, setHoveredFolder] = useState<string | null>(null)
   
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -23,79 +23,104 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
     }
   }
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const button = e.currentTarget;
-    const rect = button.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  const handleFolderMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>, index: number) => {
+    const folder = e.currentTarget
+    const rect = folder.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
     
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 25
+    const rotateY = (centerX - x) / 25
     
-    const shadowX = (centerX - x) / 10;
-    const shadowY = (centerY - y) / 10;
+    folder.style.transform = `
+      translateY(-20px) 
+      scale(1.08) 
+      rotateX(${rotateX}deg) 
+      rotateY(${rotateY}deg)
+    `
+  }, [])
 
-    button.style.setProperty('--shadow-x', `${shadowX}px`);
-    button.style.setProperty('--shadow-y', `${shadowY + 20}px`);
-  };
+  const handleFolderMouseLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>, index: number) => {
+    const folder = e.currentTarget
+    // Reset to original staggered position
+    const transforms = [
+      'translateY(-20px) translateX(-15px)',
+      'translateY(20px) translateX(15px)'
+    ]
+    folder.style.transform = transforms[index] || ''
+  }, [])
 
-  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const button = e.currentTarget;
-    button.style.removeProperty('--shadow-x');
-    button.style.removeProperty('--shadow-y');
-  };
-
-  // Framer Motion variants
-  const buttonVariants = {
-    initial: { scale: 1, y: 0, rotateX: 0 },
+  // Folder animation variants
+  const folderVariants = {
+    initial: { scale: 1, y: 0 },
     hover: { 
-      scale: 1.06, 
-      y: -12, 
-      rotateX: 2,
-      transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
-    },
-    tap: { scale: 1.02, y: -6 }
+      scale: 1.08, 
+      y: -20,
+      transition: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }
+    }
+  }
+
+  const folderFrontVariants = {
+    initial: { rotateY: 0, x: 0 },
+    hover: { 
+      rotateY: -15,
+      x: 20,
+      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+    }
+  }
+
+  const sheetVariants = {
+    initial: { x: -8, y: -5, rotate: 0 },
+    hover: { 
+      x: -25,
+      y: -15,
+      rotate: -2,
+      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+    }
+  }
+
+  const sheet2Variants = {
+    initial: { x: -4, y: -2, rotate: 0 },
+    hover: { 
+      x: -15,
+      y: -8,
+      rotate: -1,
+      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+    }
+  }
+
+  const tabVariants = {
+    initial: { y: 0 },
+    hover: { 
+      y: -6,
+      transition: { duration: 0.4, ease: 'easeOut' }
+    }
   }
 
   const imageVariants = {
     initial: { scale: 1 },
     hover: { 
-      scale: 1.12,
+      scale: 1.1,
       transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
-  const titleVariants = {
-    initial: { x: 0 },
+  const labelVariants = {
+    initial: { x: 0, color: 'var(--color-earth-900)' },
     hover: { 
-      x: 6,
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      x: 4,
+      color: 'var(--color-green)',
+      transition: { duration: 0.3 }
     }
   }
 
   const cornerVariants = {
     initial: { opacity: 0 },
     hover: { 
-      opacity: 0.9,
-      transition: { duration: 0.4 }
-    }
-  }
-
-  const arrowVariants = {
-    initial: { opacity: 0, x: -4, y: 4 },
-    hover: { 
-      opacity: 1, 
-      x: 0, 
-      y: 0,
-      transition: { duration: 0.3, delay: 0.1 }
-    }
-  }
-
-  const shineVariants = {
-    initial: { x: '-100%' },
-    hover: { 
-      x: '200%',
-      transition: { duration: 0.6, ease: 'easeInOut' }
+      opacity: 1,
+      transition: { duration: 0.3 }
     }
   }
 
@@ -120,114 +145,130 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
             </p>
           </motion.div>
 
-          <motion.div 
-            className={styles.navButtons}
+          <motion.nav 
+            className={styles.folderNav}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
+            {/* Folder 1: A Tömörödés */}
             <motion.button 
-              className={styles.navButton}
+              className={styles.folder}
               onClick={() => scrollToSection('compaction')}
-              onMouseMove={handleMouseMove}
-              onMouseEnter={() => setHoveredButton('compaction')}
-              onMouseLeave={(e) => {
-                handleMouseLeave(e)
-                setHoveredButton(null)
-              }}
+              onMouseEnter={() => setHoveredFolder('compaction')}
+              onMouseLeave={() => setHoveredFolder(null)}
               aria-label="Ugrás a Tömörödés szekcióra"
-              variants={buttonVariants}
+              variants={folderVariants}
               initial="initial"
               whileHover="hover"
-              whileTap="tap"
               style={{ transformStyle: 'preserve-3d' }}
             >
-              {/* Shine sweep effect */}
               <motion.div 
-                className={styles.shineSweep}
-                variants={shineVariants}
-                initial="initial"
-                animate={hoveredButton === 'compaction' ? 'hover' : 'initial'}
-              />
-              
-              <motion.img 
-                src="/images/tömörités_cover.png" 
-                alt="" 
-                className={styles.navButtonImage}
-                aria-hidden="true"
-                variants={imageVariants}
-              />
-              <div className={styles.navButtonOverlay}>
-                <motion.span 
-                  className={styles.navButtonTitle}
-                  variants={titleVariants}
-                >
-                  A Tömörödés
-                </motion.span>
-              </div>
-              
-              {/* Corner accent */}
-              <motion.div 
-                className={styles.cornerAccent}
-                variants={cornerVariants}
+                className={`${styles.folderTab} ${styles.folderTabBrown}`}
+                variants={tabVariants}
               >
-                <motion.div variants={arrowVariants}>
-                  <ArrowDown size={16} />
+                01
+              </motion.div>
+              <div className={`${styles.folderBack} ${styles.folderBackBrown}`} />
+              <div className={styles.folderSheets}>
+                <motion.div className={styles.sheet} variants={sheetVariants} />
+                <motion.div className={styles.sheet} variants={sheet2Variants} />
+              </div>
+              <motion.div 
+                className={styles.folderFront}
+                variants={folderFrontVariants}
+              >
+                <div className={styles.holePunch} style={{ top: '50px' }} />
+                <div className={styles.holePunch} style={{ top: '150px' }} />
+                <div className={styles.holePunch} style={{ top: '250px' }} />
+                <div className={styles.marginLine} />
+                <div className={styles.folderImageContainer}>
+                  <motion.img 
+                    src="/images/tömörités_cover.png" 
+                    alt="" 
+                    className={styles.folderImage}
+                    variants={imageVariants}
+                  />
+                </div>
+                <div className={styles.folderContent}>
+                  <motion.span 
+                    className={styles.folderLabel}
+                    variants={labelVariants}
+                  >
+                    A Tömörödés
+                  </motion.span>
+                  <span className={styles.folderDesc}>
+                    Hogyan zárja el a víz és levegő útját a tömörödött talaj?
+                  </span>
+                </div>
+                <motion.div 
+                  className={styles.folderCornerAccent}
+                  variants={cornerVariants}
+                >
+                  <ArrowRight size={16} style={{ transform: 'rotate(45deg)' }} />
                 </motion.div>
               </motion.div>
             </motion.button>
 
+            {/* Folder 2: A Szántás Korlátai */}
             <motion.button 
-              className={styles.navButton}
+              className={styles.folder}
               onClick={() => scrollToSection('ploughing')}
-              onMouseMove={handleMouseMove}
-              onMouseEnter={() => setHoveredButton('ploughing')}
-              onMouseLeave={(e) => {
-                handleMouseLeave(e)
-                setHoveredButton(null)
-              }}
+              onMouseEnter={() => setHoveredFolder('ploughing')}
+              onMouseLeave={() => setHoveredFolder(null)}
               aria-label="Ugrás a Szántás Korlátai szekcióra"
-              variants={buttonVariants}
+              variants={folderVariants}
               initial="initial"
               whileHover="hover"
-              whileTap="tap"
               style={{ transformStyle: 'preserve-3d' }}
             >
-              {/* Shine sweep effect */}
               <motion.div 
-                className={styles.shineSweep}
-                variants={shineVariants}
-                initial="initial"
-                animate={hoveredButton === 'ploughing' ? 'hover' : 'initial'}
-              />
-              
-              <motion.img 
-                src="/images/szantas_korlatai_cover.png" 
-                alt="" 
-                className={styles.navButtonImage}
-                aria-hidden="true"
-                variants={imageVariants}
-              />
-              <div className={styles.navButtonOverlay}>
-                <motion.span 
-                  className={styles.navButtonTitle}
-                  variants={titleVariants}
-                >
-                  A Szántás Korlátai
-                </motion.span>
-              </div>
-              
-              {/* Corner accent */}
-              <motion.div 
-                className={styles.cornerAccent}
-                variants={cornerVariants}
+                className={`${styles.folderTab} ${styles.folderTabGreen}`}
+                variants={tabVariants}
               >
-                <motion.div variants={arrowVariants}>
-                  <ArrowDown size={16} />
+                02
+              </motion.div>
+              <div className={`${styles.folderBack} ${styles.folderBackGreen}`} />
+              <div className={styles.folderSheets}>
+                <motion.div className={styles.sheet} variants={sheetVariants} />
+                <motion.div className={styles.sheet} variants={sheet2Variants} />
+              </div>
+              <motion.div 
+                className={styles.folderFront}
+                variants={folderFrontVariants}
+              >
+                <div className={styles.holePunch} style={{ top: '50px' }} />
+                <div className={styles.holePunch} style={{ top: '150px' }} />
+                <div className={styles.holePunch} style={{ top: '250px' }} />
+                <div className={styles.marginLine} />
+                <div className={styles.folderImageContainer}>
+                  <motion.img 
+                    src="/images/szantas_korlatai_cover.png" 
+                    alt="" 
+                    className={styles.folderImage}
+                    variants={imageVariants}
+                  />
+                </div>
+                <div className={styles.folderContent}>
+                  <motion.span 
+                    className={styles.folderLabel}
+                    variants={labelVariants}
+                  >
+                    A Szántás Korlátai
+                  </motion.span>
+                  <span className={styles.folderDesc}>
+                    Miért nem oldja meg a hagyományos szántás a problémát?
+                  </span>
+                </div>
+                <motion.div 
+                  className={styles.folderCornerAccent}
+                  variants={cornerVariants}
+                >
+                  <ArrowRight size={16} style={{ transform: 'rotate(45deg)' }} />
                 </motion.div>
               </motion.div>
             </motion.button>
-          </motion.div>
+          </motion.nav>
         </header>
 
         <div className={styles.contentWrapper}>

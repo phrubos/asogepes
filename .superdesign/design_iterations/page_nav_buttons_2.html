@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Navigation V2 - Minimal Elegant Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1A1612 0%, #2D251E 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .demo-content {
+            text-align: center;
+            color: rgba(255,255,255,0.2);
+        }
+        .demo-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* ============================================
+           NAVIGATION V2 - Minimal & Elegant
+           ============================================ */
+        .nav-zone {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 200px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .nav-zone.left { left: 0; }
+        .nav-zone.right { right: 0; }
+
+        /* The pill-shaped button */
+        .nav-pill {
+            position: relative;
+            width: 48px;
+            height: 100px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        /* Gradient line accent */
+        .nav-pill::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 0;
+            background: linear-gradient(180deg, transparent, #D4A84B, transparent);
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .left .nav-pill::before {
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .right .nav-pill::before {
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .nav-zone:hover .nav-pill::before {
+            height: 60px;
+        }
+
+        .nav-zone:hover .nav-pill {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(212, 168, 75, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Arrow icon */
+        .nav-pill svg {
+            width: 20px;
+            height: 20px;
+            color: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .nav-zone:hover .nav-pill svg {
+            color: #D4A84B;
+        }
+
+        /* Animated arrow on hover */
+        .nav-zone:hover .nav-pill svg {
+            animation: arrowBounce 1s ease-in-out infinite;
+        }
+
+        .left:hover .nav-pill svg {
+            animation: arrowBounceLeft 1s ease-in-out infinite;
+        }
+
+        @keyframes arrowBounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(3px); }
+        }
+
+        @keyframes arrowBounceLeft {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-3px); }
+        }
+
+        /* Progress dots */
+        .nav-dots {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.3s ease 0.1s;
+        }
+
+        .nav-zone:hover .nav-dots {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .nav-dot.active {
+            background: #D4A84B;
+            width: 4px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* Tooltip */
+        .nav-tooltip {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.7);
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .left .nav-tooltip {
+            left: 70px;
+            transform: translateX(-10px);
+        }
+
+        .right .nav-tooltip {
+            right: 70px;
+            transform: translateX(10px);
+        }
+
+        .nav-zone:hover .nav-tooltip {
+            opacity: 1;
+        }
+
+        .left:hover .nav-tooltip {
+            transform: translateX(0);
+        }
+
+        .right:hover .nav-tooltip {
+            transform: translateX(0);
+        }
+
+        /* ============================================
+           LIGHT MODE VARIANT
+           ============================================ */
+        .light-mode {
+            background: linear-gradient(135deg, #F5F0E8 0%, #E8E0D4 100%);
+        }
+
+        .light-mode .demo-content {
+            color: rgba(26, 22, 18, 0.2);
+        }
+
+        .light-mode .nav-pill {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        .light-mode .nav-zone:hover .nav-pill {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(74, 103, 65, 0.4);
+        }
+
+        .light-mode .nav-pill::before {
+            background: linear-gradient(180deg, transparent, #4A6741, transparent);
+        }
+
+        .light-mode .nav-pill svg {
+            color: rgba(26, 22, 18, 0.4);
+        }
+
+        .light-mode .nav-zone:hover .nav-pill svg {
+            color: #4A6741;
+        }
+
+        .light-mode .nav-dot {
+            background: rgba(26, 22, 18, 0.15);
+        }
+
+        .light-mode .nav-dot.active {
+            background: #4A6741;
+        }
+
+        .light-mode .nav-tooltip {
+            color: rgba(26, 22, 18, 0.7);
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            color: white;
+            font-size: 0.85rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .mode-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .light-mode .mode-toggle {
+            background: rgba(0,0,0,0.05);
+            border-color: rgba(0,0,0,0.1);
+            color: #1A1612;
+        }
+    </style>
+</head>
+<body>
+    <!-- Left Navigation -->
+    <div class="nav-zone left">
+        <div class="nav-pill">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+            <div class="nav-dots">
+                <div class="nav-dot active"></div>
+                <div class="nav-dot"></div>
+                <div class="nav-dot"></div>
+                <div class="nav-dot"></div>
+                <div class="nav-dot"></div>
+            </div>
+        </div>
+        <span class="nav-tooltip">Főoldal</span>
+    </div>
+
+    <!-- Right Navigation -->
+    <div class="nav-zone right">
+        <div class="nav-pill">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+            <div class="nav-dots">
+                <div class="nav-dot"></div>
+                <div class="nav-dot active"></div>
+                <div class="nav-dot"></div>
+                <div class="nav-dot"></div>
+                <div class="nav-dot"></div>
+            </div>
+        </div>
+        <span class="nav-tooltip">Megoldás</span>
+    </div>
+
+    <!-- Demo Content -->
+    <div class="demo-content">
+        <h1>A Probléma</h1>
+        <p>Hover over the edges to see the navigation</p>
+    </div>
+
+    <!-- Mode Toggle -->
+    <button class="mode-toggle" onclick="document.body.classList.toggle('light-mode')">
+        Toggle Light/Dark Mode
+    </button>
+</body>
+</html>

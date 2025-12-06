@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micro-Interaction: Interactive Data Cards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-earth-900: #1A1612;
+      --color-earth-800: #2D251E;
+      --color-earth-600: #4A3F33;
+      --color-earth-100: #E8E0D4;
+      --color-gold: #D4A84B;
+      --color-gold-light: #E8C87A;
+      --color-green: #4A6741;
+      --color-green-light: #6B8B5E;
+      --color-cream: #F5F0E8;
+      --color-white: #FDFCFA;
+      --color-warning: #E57373;
+      
+      --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--color-cream);
+      min-height: 100vh;
+      padding: 4rem 2rem;
+      color: var(--color-earth-900);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .page-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      color: var(--color-earth-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      color: var(--color-earth-600);
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--color-earth-800);
+    }
+
+    .card-grid {
+      display: grid;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .card-grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .card-grid-4 {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    /* ========================================
+       1. 3D TILT CARD
+    ======================================== */
+    .tilt-card {
+      background: var(--color-white);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.1s linear, box-shadow 0.3s ease;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .tilt-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(212, 168, 75, 0.15),
+        transparent 40%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .tilt-card:hover::before {
+      opacity: 1;
+    }
+
+    .tilt-card:hover {
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(212, 168, 75, 0.2);
+    }
+
+    .tilt-card .card-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--color-green), var(--color-green-light));
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin-bottom: 1.5rem;
+      transform: translateZ(30px);
+      transition: transform 0.3s var(--ease-out-back);
+    }
+
+    .tilt-card:hover .card-icon {
+      transform: translateZ(50px) scale(1.1);
+    }
+
+    .tilt-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      transform: translateZ(20px);
+    }
+
+    .tilt-card p {
+      font-size: 0.9375rem;
+      color: var(--color-earth-600);
+      line-height: 1.6;
+      transform: translateZ(10px);
+    }
+
+    .tilt-card .card-badge {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.375rem 0.875rem;
+      background: rgba(74, 103, 65, 0.1);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-green);
+      transform: translateZ(15px);
+    }
+
+    /* ========================================
+       2. GLOW BORDER CARD
+    ======================================== */
+    .glow-card {
+      background: var(--color-white);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      transition: transform 0.3s var(--ease-out-expo);
+      overflow: hidden;
+    }
+
+    .glow-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 2px;
+      background: linear-gradient(
+        135deg,
+        transparent 0%,
+        transparent 40%,
+        var(--color-gold) 50%,
+        transparent 60%,
+        transparent 100%
+      );
+      background-size: 300% 300%;
+      background-position: 100% 100%;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      transition: background-position 0.5s var(--ease-out-expo);
+    }
+
+    .glow-card:hover::before {
+      background-position: 0% 0%;
+    }
+
+    .glow-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .glow-card .stat-value {
+      font-family: 'Fraunces', serif;
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--color-earth-900);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .glow-card .stat-value span {
+      font-size: 1.5rem;
+      color: var(--color-gold);
+    }
+
+    .glow-card .stat-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-earth-600);
+      margin-bottom: 0.75rem;
+    }
+
+    .glow-card .stat-desc {
+      font-size: 0.875rem;
+      color: var(--color-earth-600);
+      line-height: 1.5;
+    }
+
+    /* ========================================
+       3. PROGRESS BAR CARD
+    ======================================== */
+    .progress-card {
+      background: var(--color-white);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s ease;
+      border: 1px solid var(--color-earth-100);
+    }
+
+    .progress-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      border-color: var(--color-gold);
+    }
+
+    .progress-card .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .progress-card h4 {
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+
+    .progress-card .percentage {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      color: var(--color-green);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--color-earth-100);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    .progress-bar .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-green), var(--color-green-light));
+      border-radius: 4px;
+      width: 0;
+      transition: width 1s var(--ease-out-expo);
+    }
+
+    .progress-card:hover .progress-bar .fill,
+    .progress-card.animate .progress-bar .fill {
+      width: var(--progress, 0%);
+    }
+
+    .progress-card .meta {
+      font-size: 0.8125rem;
+      color: var(--color-earth-600);
+    }
+
+    /* ========================================
+       4. FLIP CARD
+    ======================================== */
+    .flip-card {
+      perspective: 1000px;
+      height: 280px;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s var(--ease-out-expo);
+      transform-style: preserve-3d;
+    }
+
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .flip-card-front {
+      background: linear-gradient(135deg, var(--color-earth-800), var(--color-earth-900));
+      color: white;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .flip-card-front .icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .flip-card-front h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .flip-card-front p {
+      font-size: 0.875rem;
+      opacity: 0.7;
+    }
+
+    .flip-card-back {
+      background: var(--color-gold);
+      color: var(--color-earth-900);
+      transform: rotateY(180deg);
+      justify-content: center;
+    }
+
+    .flip-card-back h4 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.125rem;
+      margin-bottom: 1rem;
+    }
+
+    .flip-card-back ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .flip-card-back li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    /* ========================================
+       5. EXPANDABLE CARD
+    ======================================== */
+    .expand-card {
+      background: var(--color-white);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s var(--ease-out-expo);
+      border: 1px solid var(--color-earth-100);
+    }
+
+    .expand-card:hover {
+      border-color: var(--color-green-light);
+    }
+
+    .expand-card .card-preview {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .expand-card .preview-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--color-cream);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-green);
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .expand-card:hover .preview-icon {
+      background: var(--color-green);
+      color: white;
+    }
+
+    .expand-card .preview-content h4 {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .expand-card .preview-content p {
+      font-size: 0.8125rem;
+      color: var(--color-earth-600);
+    }
+
+    .expand-card .preview-arrow {
+      margin-left: auto;
+      transition: transform 0.3s var(--ease-out-expo);
+      color: var(--color-earth-600);
+    }
+
+    .expand-card.expanded .preview-arrow {
+      transform: rotate(180deg);
+    }
+
+    .expand-card .card-expanded {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s var(--ease-out-expo);
+    }
+
+    .expand-card.expanded .card-expanded {
+      max-height: 300px;
+    }
+
+    .expand-card .expanded-content {
+      padding: 0 1.5rem 1.5rem;
+      border-top: 1px solid var(--color-earth-100);
+      padding-top: 1.5rem;
+    }
+
+    .expand-card .expanded-content p {
+      font-size: 0.9375rem;
+      color: var(--color-earth-600);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .expand-card .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--color-earth-100);
+      font-size: 0.875rem;
+    }
+
+    .expand-card .data-row:last-child {
+      border-bottom: none;
+    }
+
+    .expand-card .data-row span:last-child {
+      font-weight: 600;
+      color: var(--color-green);
+    }
+
+    /* ========================================
+       6. COMPARISON CARD
+    ======================================== */
+    .compare-card {
+      background: var(--color-white);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .compare-card .card-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--color-earth-100);
+    }
+
+    .compare-card .tab {
+      flex: 1;
+      padding: 1rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .compare-card .tab.active {
+      color: var(--color-green);
+    }
+
+    .compare-card .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--color-green);
+      border-radius: 3px 3px 0 0;
+    }
+
+    .compare-card .tab:not(.active):hover {
+      background: var(--color-cream);
+    }
+
+    .compare-card .card-content {
+      padding: 2rem;
+    }
+
+    .compare-card .value-large {
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--color-earth-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .compare-card .value-label {
+      font-size: 0.875rem;
+      color: var(--color-earth-600);
+      margin-bottom: 1.5rem;
+    }
+
+    .compare-card .compare-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .compare-card .bar-segment {
+      height: 8px;
+      border-radius: 4px;
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .compare-card .bar-good {
+      background: var(--color-green);
+    }
+
+    .compare-card .bar-warning {
+      background: var(--color-warning);
+    }
+
+    .compare-card .legend {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.8125rem;
+    }
+
+    .compare-card .legend span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .compare-card .legend .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .compare-card .legend .dot.good { background: var(--color-green); }
+    .compare-card .legend .dot.warning { background: var(--color-warning); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Interactive Data Cards</h1>
+      <p>3D tilt, glow border, progress bar, flip és expandable kártya variációk</p>
+    </div>
+
+    <!-- 3D Tilt Cards -->
+    <h2 class="section-title">1. 3D Tilt Cards (Mouse-following glow)</h2>
+    <div class="card-grid card-grid-3">
+      <div class="tilt-card" data-tilt>
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3>Talajvédelem</h3>
+        <p>A forgatás nélküli lazítás megőrzi a talaj természetes szerkezetét és biológiai életét.</p>
+        <span class="card-badge">Fenntartható</span>
+      </div>
+
+      <div class="tilt-card" data-tilt>
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 12h5l2.5-9 5 18 2.5-9h5"/>
+          </svg>
+        </div>
+        <h3>Teljesítménynövekedés</h3>
+        <p>Az ásógéppel kezelt területeken 15-25%-kal jobb terméseredmények mérhetők.</p>
+        <span class="card-badge">+25% hozam</span>
+      </div>
+
+      <div class="tilt-card" data-tilt>
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <h3>Időtakarékos</h3>
+        <p>Egyetlen menetben elvégezhető a lazítás, szemben a hagyományos többszöri műveléssel.</p>
+        <span class="card-badge">-40% idő</span>
+      </div>
+    </div>
+
+    <!-- Glow Border Cards -->
+    <h2 class="section-title">2. Glow Border Cards (Stats)</h2>
+    <div class="card-grid card-grid-4">
+      <div class="glow-card">
+        <div class="stat-value">600<span>mm</span></div>
+        <div class="stat-label">Öntözési víz</div>
+        <div class="stat-desc">Éves vízmennyiség a talajban</div>
+      </div>
+      <div class="glow-card">
+        <div class="stat-value">45<span>cm</span></div>
+        <div class="stat-label">Munkamélység</div>
+        <div class="stat-desc">Az ásógép lazítási mélysége</div>
+      </div>
+      <div class="glow-card">
+        <div class="stat-value">3<span>év</span></div>
+        <div class="stat-label">Kutatási idő</div>
+        <div class="stat-desc">Tudományos vizsgálat időtartama</div>
+      </div>
+      <div class="glow-card">
+        <div class="stat-value">12<span>db</span></div>
+        <div class="stat-label">Tesztparcella</div>
+        <div class="stat-desc">Különböző kezelési módokkal</div>
+      </div>
+    </div>
+
+    <!-- Progress Bar Cards -->
+    <h2 class="section-title">3. Progress Bar Cards</h2>
+    <div class="card-grid card-grid-4">
+      <div class="progress-card animate" style="--progress: 92%">
+        <div class="card-header">
+          <h4>Vízelvezetés</h4>
+          <span class="percentage">92%</span>
+        </div>
+        <div class="progress-bar"><div class="fill"></div></div>
+        <div class="meta">Ásógép kezelés után</div>
+      </div>
+      <div class="progress-card animate" style="--progress: 45%">
+        <div class="card-header">
+          <h4>Vízelvezetés</h4>
+          <span class="percentage">45%</span>
+        </div>
+        <div class="progress-bar"><div class="fill"></div></div>
+        <div class="meta">Hagyományos szántás</div>
+      </div>
+      <div class="progress-card animate" style="--progress: 78%">
+        <div class="card-header">
+          <h4>Gyökérbehatolás</h4>
+          <span class="percentage">78%</span>
+        </div>
+        <div class="progress-bar"><div class="fill"></div></div>
+        <div class="meta">Optimális mélységig</div>
+      </div>
+      <div class="progress-card animate" style="--progress: 85%">
+        <div class="card-header">
+          <h4>Talajélet aktivitás</h4>
+          <span class="percentage">85%</span>
+        </div>
+        <div class="progress-bar"><div class="fill"></div></div>
+        <div class="meta">Mikrobiológiai mutatók</div>
+      </div>
+    </div>
+
+    <!-- Flip Cards -->
+    <h2 class="section-title">4. Flip Cards (Hover to reveal)</h2>
+    <div class="card-grid card-grid-3">
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+            </div>
+            <h3>38SX Modell</h3>
+            <p>Nagy szériás ásógép</p>
+          </div>
+          <div class="flip-card-back">
+            <h4>Specifikációk</h4>
+            <ul>
+              <li>✓ Munkaszélesség: 2.5m</li>
+              <li>✓ Munkamélység: 35-45cm</li>
+              <li>✓ Teljesítményigény: 180 LE</li>
+              <li>✓ Kapacitás: 1.5 ha/h</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+            </div>
+            <h3>38WX Modell</h3>
+            <p>Lazítókéses verzió</p>
+          </div>
+          <div class="flip-card-back">
+            <h4>Specifikációk</h4>
+            <ul>
+              <li>✓ Munkaszélesség: 2.5m</li>
+              <li>✓ Munkamélység: 40-55cm</li>
+              <li>✓ Teljesítményigény: 200 LE</li>
+              <li>✓ Kapacitás: 1.2 ha/h</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div class="icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+            </div>
+            <h3>40SX Modell</h3>
+            <p>Mélyásógép</p>
+          </div>
+          <div class="flip-card-back">
+            <h4>Specifikációk</h4>
+            <ul>
+              <li>✓ Munkaszélesség: 2.0m</li>
+              <li>✓ Munkamélység: 50-80cm</li>
+              <li>✓ Teljesítményigény: 250 LE</li>
+              <li>✓ Kapacitás: 0.8 ha/h</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expandable Cards -->
+    <h2 class="section-title">5. Expandable Cards (Click to expand)</h2>
+    <div class="card-grid card-grid-3">
+      <div class="expand-card" onclick="this.classList.toggle('expanded')">
+        <div class="card-preview">
+          <div class="preview-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="preview-content">
+            <h4>Tömörödés vizsgálat</h4>
+            <p>Penetrométeres mérések</p>
+          </div>
+          <svg class="preview-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </div>
+        <div class="card-expanded">
+          <div class="expanded-content">
+            <p>A talaj tömörödését penetrométerrel mértük, 5 cm-es mélységközönként 60 cm mélységig.</p>
+            <div class="data-row"><span>Mérési pontok</span><span>48 db</span></div>
+            <div class="data-row"><span>Ismétlések</span><span>4x</span></div>
+            <div class="data-row"><span>Max. ellenállás</span><span>3.2 MPa</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="expand-card" onclick="this.classList.toggle('expanded')">
+        <div class="card-preview">
+          <div class="preview-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div class="preview-content">
+            <h4>Vízáteresztő képesség</h4>
+            <p>Infiltrációs mérések</p>
+          </div>
+          <svg class="preview-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </div>
+        <div class="card-expanded">
+          <div class="expanded-content">
+            <p>Dupla gyűrűs infiltrométerrel mért víznyelési sebesség a különböző kezelésű parcellákon.</p>
+            <div class="data-row"><span>Ásógép után</span><span>45 mm/h</span></div>
+            <div class="data-row"><span>Szántás után</span><span>18 mm/h</span></div>
+            <div class="data-row"><span>Javulás</span><span>+150%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="expand-card" onclick="this.classList.toggle('expanded')">
+        <div class="card-preview">
+          <div class="preview-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 12h5l2.5-9 5 18 2.5-9h5"/>
+            </svg>
+          </div>
+          <div class="preview-content">
+            <h4>Terméseredmények</h4>
+            <p>Hozam összehasonlítás</p>
+          </div>
+          <svg class="preview-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </div>
+        <div class="card-expanded">
+          <div class="expanded-content">
+            <p>A vizsgált kultúrák terméseredményei a 2023-as tenyészidőszakban.</p>
+            <div class="data-row"><span>Paprika</span><span>+22%</span></div>
+            <div class="data-row"><span>Paradicsom</span><span>+18%</span></div>
+            <div class="data-row"><span>Uborka</span><span>+25%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Card -->
+    <h2 class="section-title">6. Comparison Card (Tab switch)</h2>
+    <div class="card-grid card-grid-3">
+      <div class="compare-card">
+        <div class="card-tabs">
+          <div class="tab active" onclick="switchTab(this, 0)">Ásógép</div>
+          <div class="tab" onclick="switchTab(this, 1)">Szántás</div>
+        </div>
+        <div class="card-content">
+          <div class="value-large">92%</div>
+          <div class="value-label">Vízbeszivárgási arány</div>
+          <div class="compare-bar">
+            <div class="bar-segment bar-good" style="flex: 92"></div>
+            <div class="bar-segment bar-warning" style="flex: 8"></div>
+          </div>
+          <div class="legend">
+            <span><div class="dot good"></div>Hatékony</span>
+            <span><div class="dot warning"></div>Veszteség</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 3D Tilt effect
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+      });
+    });
+
+    // Tab switch for comparison card
+    function switchTab(el, index) {
+      const card = el.closest('.compare-card');
+      card.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      
+      // Update values based on tab
+      const values = index === 0 
+        ? { value: '92%', bar1: 92, bar2: 8 }
+        : { value: '45%', bar1: 45, bar2: 55 };
+      
+      card.querySelector('.value-large').textContent = values.value;
+      const bars = card.querySelectorAll('.bar-segment');
+      bars[0].style.flex = values.bar1;
+      bars[1].style.flex = values.bar2;
+    }
+  </script>
+</body>
+</html>

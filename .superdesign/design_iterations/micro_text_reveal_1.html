@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micro-Interaction: Text Reveal & Stagger Animations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-earth-900: #1A1612;
+      --color-earth-600: #4A3F33;
+      --color-gold: #D4A84B;
+      --color-gold-light: #E8C87A;
+      --color-green: #4A6741;
+      --color-cream: #F5F0E8;
+      --color-white: #FDFCFA;
+      
+      --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--color-cream);
+      min-height: 100vh;
+      padding: 4rem 2rem;
+      color: var(--color-earth-900);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .page-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      color: var(--color-earth-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      color: var(--color-earth-600);
+    }
+
+    section {
+      margin-bottom: 5rem;
+      padding: 3rem;
+      background: var(--color-white);
+      border-radius: 24px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+    }
+
+    .section-label {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(212, 168, 75, 0.1);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .trigger-btn {
+      margin-top: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--color-earth-900);
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-white);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .trigger-btn:hover {
+      background: var(--color-earth-600);
+    }
+
+    /* ========================================
+       1. CHARACTER BY CHARACTER REVEAL
+    ======================================== */
+    .char-reveal {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      overflow: hidden;
+    }
+
+    .char-reveal .char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: opacity 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
+    }
+
+    .char-reveal.animate .char {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .char-reveal .word {
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .char-reveal .space {
+      display: inline-block;
+      width: 0.3em;
+    }
+
+    /* Gold highlight */
+    .char-reveal .highlight .char {
+      color: var(--color-gold);
+    }
+
+    /* ========================================
+       2. WORD BY WORD REVEAL
+    ======================================== */
+    .word-reveal {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .word-reveal .word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(40px) rotateX(20deg);
+      transform-origin: bottom;
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .word-reveal.animate .word {
+      opacity: 1;
+      transform: translateY(0) rotateX(0);
+    }
+
+    /* ========================================
+       3. LINE BY LINE (CLIP) REVEAL
+    ======================================== */
+    .line-reveal {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .line-reveal .line {
+      display: block;
+      overflow: hidden;
+    }
+
+    .line-reveal .line-inner {
+      display: block;
+      transform: translateY(100%);
+      transition: transform 0.6s var(--ease-out-expo);
+    }
+
+    .line-reveal.animate .line-inner {
+      transform: translateY(0);
+    }
+
+    .line-reveal .line:nth-child(2) .line-inner {
+      transition-delay: 0.1s;
+    }
+
+    .line-reveal .line:nth-child(3) .line-inner {
+      transition-delay: 0.2s;
+    }
+
+    /* ========================================
+       4. TYPEWRITER EFFECT
+    ======================================== */
+    .typewriter {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.25rem;
+      color: var(--color-earth-600);
+      line-height: 1.6;
+    }
+
+    .typewriter .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.2em;
+      background: var(--color-gold);
+      margin-left: 2px;
+      animation: blink 0.8s infinite;
+      vertical-align: text-bottom;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* ========================================
+       5. STAGGER LIST ITEMS
+    ======================================== */
+    .stagger-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stagger-list li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--color-cream);
+      border-radius: 12px;
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .stagger-list.animate li {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .stagger-list li:nth-child(1) { transition-delay: 0s; }
+    .stagger-list li:nth-child(2) { transition-delay: 0.08s; }
+    .stagger-list li:nth-child(3) { transition-delay: 0.16s; }
+    .stagger-list li:nth-child(4) { transition-delay: 0.24s; }
+    .stagger-list li:nth-child(5) { transition-delay: 0.32s; }
+
+    .stagger-list .icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--color-green), #6B8B5E);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .stagger-list .content h4 {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .stagger-list .content p {
+      font-size: 0.875rem;
+      color: var(--color-earth-600);
+    }
+
+    /* ========================================
+       6. SPLIT TEXT WITH GRADIENT REVEAL
+    ======================================== */
+    .gradient-reveal {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      background: linear-gradient(
+        90deg, 
+        var(--color-earth-900) 0%, 
+        var(--color-gold) 50%, 
+        var(--color-earth-900) 100%
+      );
+      background-size: 200% 100%;
+      background-position: 100% 0;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: background-position 1.5s var(--ease-out-expo);
+    }
+
+    .gradient-reveal.animate {
+      background-position: 0% 0;
+    }
+
+    /* ========================================
+       7. BLUR TO FOCUS
+    ======================================== */
+    .blur-reveal {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+    }
+
+    .blur-reveal .word {
+      display: inline-block;
+      opacity: 0;
+      filter: blur(10px);
+      transform: scale(1.1);
+      transition: all 0.6s var(--ease-out-expo);
+    }
+
+    .blur-reveal.animate .word {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1);
+    }
+
+    /* ========================================
+       8. SCRAMBLE TEXT (requires JS)
+    ======================================== */
+    .scramble-text {
+      font-family: 'Inter', monospace;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    /* ========================================
+       DEMO NOTES
+    ======================================== */
+    .demo-notes {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(212, 168, 75, 0.08);
+      border-left: 3px solid var(--color-gold);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.875rem;
+      color: var(--color-earth-600);
+    }
+
+    .demo-notes code {
+      background: rgba(0,0,0,0.05);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.8125rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Text Reveal & Stagger Animations</h1>
+      <p>Kattints a gombokra az animációk triggereléshez. Framer Motion-ban: <code>variants</code> + <code>staggerChildren</code></p>
+    </div>
+
+    <!-- 1. Character by Character -->
+    <section>
+      <span class="section-label">1. Karakter animáció</span>
+      <div class="char-reveal" id="charReveal">
+        <span class="word"><span class="char">A</span></span>
+        <span class="space"></span>
+        <span class="word"><span class="char">t</span><span class="char">a</span><span class="char">l</span><span class="char">a</span><span class="char">j</span></span>
+        <span class="space"></span>
+        <span class="word highlight"><span class="char">n</span><span class="char">e</span><span class="char">m</span></span>
+        <span class="space"></span>
+        <span class="word highlight"><span class="char">v</span><span class="char">é</span><span class="char">g</span><span class="char">t</span><span class="char">e</span><span class="char">l</span><span class="char">e</span><span class="char">n</span></span>
+        <span class="space"></span>
+        <span class="word"><span class="char">e</span><span class="char">r</span><span class="char">ő</span><span class="char">f</span><span class="char">o</span><span class="char">r</span><span class="char">r</span><span class="char">á</span><span class="char">s</span></span>
+      </div>
+      <button class="trigger-btn" onclick="triggerAnimation('charReveal')">Animálás</button>
+      <div class="demo-notes">
+        <strong>Framer Motion:</strong> <code>variants={{ hidden: { y: "100%" }, visible: { y: 0 } }}</code> + <code>staggerChildren: 0.02</code>
+      </div>
+    </section>
+
+    <!-- 2. Word by Word -->
+    <section>
+      <span class="section-label">2. Szó animáció (3D rotateX)</span>
+      <div class="word-reveal" id="wordReveal">
+        <span class="word">Miért</span>
+        <span class="word">fulladnak</span>
+        <span class="word">meg</span>
+        <span class="word">a</span>
+        <span class="word">gyökerek?</span>
+      </div>
+      <button class="trigger-btn" onclick="triggerAnimation('wordReveal')">Animálás</button>
+      <div class="demo-notes">
+        <strong>Framer Motion:</strong> <code>initial={{ y: 40, rotateX: 20 }}</code> + <code>staggerChildren: 0.1</code>
+      </div>
+    </section>
+
+    <!-- 3. Line by Line (Clip) -->
+    <section>
+      <span class="section-label">3. Sor animáció (Clip Reveal)</span>
+      <div class="line-reveal" id="lineReveal">
+        <span class="line"><span class="line-inner">Lazítás</span></span>
+        <span class="line"><span class="line-inner">forgatás</span></span>
+        <span class="line"><span class="line-inner">nélkül</span></span>
+      </div>
+      <button class="trigger-btn" onclick="triggerAnimation('lineReveal')">Animálás</button>
+      <div class="demo-notes">
+        <strong>Technika:</strong> <code>overflow: hidden</code> container + <code>translateY(100%)</code> → <code>translateY(0)</code>
+      </div>
+    </section>
+
+    <!-- 4. Typewriter -->
+    <section>
+      <span class="section-label">4. Typewriter Effect</span>
+      <div class="typewriter" id="typewriter">
+        <span class="text"></span><span class="cursor"></span>
+      </div>
+      <button class="trigger-btn" onclick="triggerTypewriter()">Animálás</button>
+      <div class="demo-notes">
+        <strong>JS:</strong> <code>setInterval</code> karakterenként hozzáfűz. <strong>Framer Motion:</strong> <code>animate={{ width: "100%" }}</code> monospace font-tal.
+      </div>
+    </section>
+
+    <!-- 5. Stagger List -->
+    <section>
+      <span class="section-label">5. Stagger List Items</span>
+      <ul class="stagger-list" id="staggerList">
+        <li>
+          <div class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <div class="content">
+            <h4>Talajszerkezet megőrzése</h4>
+            <p>A forgatás nélküli lazítás nem borítja fel a természetes rétegeket.</p>
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <div class="content">
+            <h4>Eketalp megszüntetése</h4>
+            <p>Az ásógép 45+ cm mélységig dolgozik, áttörve a tömör réteget.</p>
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <div class="content">
+            <h4>Jobb vízgazdálkodás</h4>
+            <p>A lazított talaj képes elvezetni és tárolni a vizet.</p>
+          </div>
+        </li>
+        <li>
+          <div class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <div class="content">
+            <h4>Gyökérzóna bővülése</h4>
+            <p>A növények mélyebb gyökérrendszert fejleszthetnek.</p>
+          </div>
+        </li>
+      </ul>
+      <button class="trigger-btn" onclick="triggerAnimation('staggerList')">Animálás</button>
+      <div class="demo-notes">
+        <strong>Framer Motion:</strong> <code>staggerChildren: 0.08</code>, <code>delayChildren: 0.2</code>
+      </div>
+    </section>
+
+    <!-- 6. Gradient Reveal -->
+    <section>
+      <span class="section-label">6. Gradient Sweep Reveal</span>
+      <div class="gradient-reveal" id="gradientReveal">
+        Tudományos kutatás a talajszerkezetről
+      </div>
+      <button class="trigger-btn" onclick="triggerAnimation('gradientReveal')">Animálás</button>
+      <div class="demo-notes">
+        <strong>CSS:</strong> <code>background-size: 200%</code> + <code>background-position</code> animáció. Gradient a szövegen áthalad.
+      </div>
+    </section>
+
+    <!-- 7. Blur to Focus -->
+    <section>
+      <span class="section-label">7. Blur → Focus</span>
+      <div class="blur-reveal" id="blurReveal">
+        <span class="word">Az</span>
+        <span class="word">intenzív</span>
+        <span class="word">öntözés</span>
+        <span class="word">és</span>
+        <span class="word">a</span>
+        <span class="word">nehéz</span>
+        <span class="word">gépek</span>
+        <span class="word">taposása</span>
+      </div>
+      <button class="trigger-btn" onclick="triggerAnimation('blurReveal')">Animálás</button>
+      <div class="demo-notes">
+        <strong>Framer Motion:</strong> <code>initial={{ filter: "blur(10px)", scale: 1.1 }}</code> → <code>animate={{ filter: "blur(0)", scale: 1 }}</code>
+      </div>
+    </section>
+
+    <!-- 8. Scramble Text -->
+    <section>
+      <span class="section-label">8. Scramble Text</span>
+      <div class="scramble-text" id="scrambleText">ÁSÓGÉP TECHNOLÓGIA</div>
+      <button class="trigger-btn" onclick="triggerScramble()">Animálás</button>
+      <div class="demo-notes">
+        <strong>JS:</strong> Random karakterek → fokozatosan cserélődnek a végleges betűkre. Ideális tech/modern feel-hez.
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Simple animation trigger
+    function triggerAnimation(id) {
+      const el = document.getElementById(id);
+      el.classList.remove('animate');
+      void el.offsetWidth; // Force reflow
+      el.classList.add('animate');
+    }
+
+    // Add stagger delays for char reveal
+    document.querySelectorAll('.char-reveal .char').forEach((char, i) => {
+      char.style.transitionDelay = `${i * 0.025}s`;
+    });
+
+    // Add stagger delays for word reveals
+    document.querySelectorAll('.word-reveal .word, .blur-reveal .word').forEach((word, i) => {
+      word.style.transitionDelay = `${i * 0.08}s`;
+    });
+
+    // Typewriter effect
+    const typewriterText = "Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról öntözött kertészeti kultúrákban.";
+    let typewriterIndex = 0;
+
+    function triggerTypewriter() {
+      const textEl = document.querySelector('#typewriter .text');
+      textEl.textContent = '';
+      typewriterIndex = 0;
+      
+      const interval = setInterval(() => {
+        if (typewriterIndex < typewriterText.length) {
+          textEl.textContent += typewriterText[typewriterIndex];
+          typewriterIndex++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 40);
+    }
+
+    // Scramble text effect
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    
+    function triggerScramble() {
+      const el = document.getElementById('scrambleText');
+      const finalText = 'ÁSÓGÉP TECHNOLÓGIA';
+      const duration = 1500;
+      const startTime = Date.now();
+      
+      function update() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        let result = '';
+        for (let i = 0; i < finalText.length; i++) {
+          if (finalText[i] === ' ') {
+            result += ' ';
+          } else if (i < finalText.length * progress) {
+            result += finalText[i];
+          } else {
+            result += chars[Math.floor(Math.random() * chars.length)];
+          }
+        }
+        
+        el.textContent = result;
+        
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        }
+      }
+      
+      update();
+    }
+
+    // Auto-trigger on load for demo
+    setTimeout(() => {
+      triggerAnimation('charReveal');
+    }, 500);
+  </script>
+</body>
+</html>

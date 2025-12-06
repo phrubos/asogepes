@@ -29,137 +29,319 @@
   z-index: 1;
   min-height: 85vh;
   display: grid;
-  grid-template-columns: 2fr 1fr; /* Narrower navigation column */
-  gap: var(--space-4xl);
+  grid-template-columns: 1fr 1.6fr;
+  gap: 3rem;
   align-items: center;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .header {
     grid-template-columns: 1fr;
     text-align: center;
     min-height: auto;
     padding-top: var(--space-4xl);
     margin-bottom: var(--space-4xl);
+    gap: var(--space-xl);
   }
 }
 
 .headerContent {
   width: 100%;
-  max-width: 800px;
+  max-width: 480px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .headerContent {
     margin: 0 auto;
+    max-width: 550px;
   }
 }
 
-.navButtons {
+/* Typewriter styles */
+.typewriterText {
+  display: inline;
+}
+
+.cursor {
+  display: inline-block;
+  margin-left: 2px;
+  font-weight: 300;
+  color: var(--color-gold);
+}
+
+/* Folder Navigation */
+.folderNav {
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 0;
-  position: relative;
-  perspective: 1000px;
-  align-items: flex-end;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: flex-start;
+  perspective: 1800px;
+  transform-style: preserve-3d;
+  padding: 2rem 1rem;
 }
 
-@media (max-width: 1024px) {
-  .navButtons {
-    align-items: center;
-    padding: 0;
-    gap: var(--space-lg);
+@media (max-width: 1200px) {
+  .folderNav {
+    gap: 1rem;
   }
 }
 
-.navButton {
+@media (max-width: 768px) {
+  .folderNav {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+.folder {
   position: relative;
-  width: 100%;
-  max-width: 300px; /* Narrower */
-  height: 200px;
-  border-radius: 16px;
-  overflow: hidden;
+  width: 240px;
+  height: 360px;
   cursor: pointer;
-  border: 4px solid rgba(255,255,255,0.1); /* Frame */
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), z-index 0s;
+  background: transparent;
+  border: none;
   padding: 0;
-  background: var(--color-earth-900); /* Solid background instead of transparent */
-  
-  /* Dynamic Shadow Variables */
-  --shadow-x: 0px;
-  --shadow-y: 25px;
-  --shadow-blur: 50px;
-  --shadow-color: rgba(0, 0, 0, 0.5);
-
-  box-shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) -12px var(--shadow-color);
-  
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s ease, box-shadow 0.1s ease;
 }
 
-/* Staggered Layout for 3 buttons */
-@media (min-width: 1025px) {
-  .navButton:nth-child(1) {
-    align-self: flex-end;
-    margin-right: 80px;
-    margin-bottom: -40px;
-    z-index: 1;
-  }
+/* Staggered layout - each folder lower than previous */
+.folder:nth-child(1) {
+  margin-top: 0;
+  z-index: 3;
+}
 
-  .navButton:nth-child(2) {
-    align-self: flex-end;
-    margin-right: 40px;
-    margin-bottom: -40px;
-    z-index: 2;
-  }
+.folder:nth-child(2) {
+  margin-top: 40px;
+  z-index: 2;
+}
 
-  .navButton:nth-child(3) {
-    align-self: flex-end;
-    z-index: 3;
+.folder:nth-child(3) {
+  margin-top: 80px;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .folder:nth-child(1),
+  .folder:nth-child(2),
+  .folder:nth-child(3) {
+    margin-top: 0;
   }
 }
 
-.navButton:hover {
-  border-color: var(--color-gold);
-  --shadow-color: rgba(0, 0, 0, 0.6);
-  --shadow-blur: 60px;
+.folder:hover {
+  transform: translateY(-25px) rotateY(0deg) scale(1.12) !important;
+  z-index: 100 !important;
+}
+
+/* Folder back (spine area) - metallic look */
+.folderBack {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  transform: translateZ(-25px);
+  box-shadow: -15px 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.folderBackBrown {
+  background: linear-gradient(135deg, #8B7355 0%, #6B5344 100%);
+}
+
+.folderBackGreen {
+  background: linear-gradient(135deg, #7A8B6B 0%, #5A6B4B 100%);
+}
+
+.folderBackBlue {
+  background: linear-gradient(135deg, #6B7A8B 0%, #4B5A6B 100%);
+}
+
+/* Folder front */
+.folderFront {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #1a1714 0%, #252019 100%);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 
-    var(--shadow-x) var(--shadow-y) var(--shadow-blur) -12px var(--shadow-color),
-    0 0 0 1px var(--color-gold);
-  z-index: 10;
+    0 30px 60px -15px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transform: translateZ(0);
+  transform-origin: left center;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+  backface-visibility: hidden;
 }
 
-/* Glow ring effect */
-.navButton::before {
+.folder:hover .folderFront {
+  transform: translateZ(25px) rotateY(-15deg) translateX(25px);
+  border-color: var(--color-gold);
+}
+
+/* Subtle grid pattern on front */
+.folderFront::before {
   content: '';
   position: absolute;
-  inset: -3px;
-  border-radius: calc(16px + 3px);
-  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light), var(--color-gold));
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.4s ease;
-}
-
-.navButton:hover::before {
-  opacity: 0.3;
-}
-
-/* Shine sweep effect */
-.shineSweep {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.15),
-    transparent
-  );
-  transform: skewX(-20deg);
-  z-index: 10;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.5;
   pointer-events: none;
+}
+
+/* Folder tab - technical badge style */
+.folderTab {
+  position: absolute;
+  top: -28px;
+  right: 30px;
+  padding: 6px 16px;
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+  transition: transform 0.4s ease, background 0.3s ease;
+}
+
+.folderTabBrown {
+  background: linear-gradient(180deg, #8B7355 0%, #7A6244 100%);
+  color: #fff;
+}
+
+.folderTabGreen {
+  background: linear-gradient(180deg, #7A8B6B 0%, #697A5A 100%);
+  color: #fff;
+}
+
+.folderTabBlue {
+  background: linear-gradient(180deg, #6B7A8B 0%, #5A697A 100%);
+  color: #fff;
+}
+
+.folder:hover .folderTab {
+  transform: translateY(-6px);
+  background: var(--color-gold) !important;
+  color: var(--color-earth-900) !important;
+}
+
+/* Model type label */
+.modelType {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  transition: color 0.3s ease;
+}
+
+.folder:hover .modelType {
+  color: var(--color-gold);
+}
+
+/* Image container */
+.folderImageContainer {
+  position: absolute;
+  top: 45px;
+  left: 16px;
+  right: 16px;
+  height: 160px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.folderImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.6s ease, filter 0.3s ease;
+  filter: brightness(0.9);
+}
+
+.folder:hover .folderImage {
+  transform: scale(1.15);
+  filter: brightness(1);
+}
+
+/* Content area */
+.folderContent {
+  position: absolute;
+  bottom: 20px;
+  left: 16px;
+  right: 16px;
+}
+
+.folderLabel {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.25rem;
+  display: block;
+  transition: color 0.3s ease;
+  text-align: left;
+}
+
+.folder:hover .folderLabel {
+  color: var(--color-gold);
+}
+
+.folderDesc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.4;
+  display: block;
+  text-align: left;
+}
+
+/* Paper sheets behind - darker for dark theme */
+.folderSheets {
+  position: absolute;
+  top: 8px;
+  left: 4px;
+  right: 4px;
+  bottom: 8px;
+  transform: translateZ(-12px);
+  pointer-events: none;
+}
+
+.sheet {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #2a2520 0%, #1f1b17 100%);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backface-visibility: hidden;
+}
+
+.sheet:nth-child(1) {
+  transform: translateX(-10px) translateY(-6px);
+}
+
+.sheet:nth-child(2) {
+  transform: translateX(-5px) translateY(-3px);
+}
+
+.folder:hover .sheet:nth-child(1) {
+  transform: translateX(-30px) translateY(-18px) rotateZ(-2deg);
+}
+
+.folder:hover .sheet:nth-child(2) {
+  transform: translateX(-18px) translateY(-10px) rotateZ(-1deg);
 }
 
 /* Indicator dots */
@@ -169,69 +351,61 @@
   right: 16px;
   display: flex;
   gap: 4px;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.folder:hover .indicator {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .indicatorDot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .indicatorDotActive {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--color-gold);
 }
 
-.navButtonImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+/* Glow effect on hover */
+.folder::before {
+  content: '';
+  position: absolute;
+  inset: -30px;
+  background: radial-gradient(circle at center, rgba(212, 168, 75, 0.12) 0%, transparent 70%);
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+.folder:hover::before {
   opacity: 1;
 }
 
-.navButton:hover .navButtonImage {
-  transform: scale(1.1);
-}
-
-.navButtonOverlay {
+/* Gold ring glow */
+.folder::after {
+  content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.1) 100%);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: var(--space-lg);
+  inset: -3px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light), var(--color-gold));
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.4s ease;
 }
 
-.navButtonLabel {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 2px;
+.folder:hover::after {
+  opacity: 0.3;
 }
-
-.navButtonTitle {
-  display: block;
-  color: var(--color-white);
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 800;
-  text-align: left;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  transform: translateY(0);
-  transition: transform 0.3s ease;
-}
-
-/* Hover states now handled by Framer Motion */
 
 .benefitsGrid {
   display: grid;
@@ -483,13 +657,18 @@
    =========================================== */
 
 @media (max-width: 1024px) {
-  .navButtons {
-    gap: var(--space-md);
+  .folder {
+    width: 200px;
+    height: 300px;
   }
   
-  .navButton {
-    max-width: 280px;
-    height: 180px;
+  .folderImageContainer {
+    height: 120px;
+    top: 40px;
+  }
+  
+  .folderLabel {
+    font-size: 1.25rem;
   }
   
   .blueprintGrid {
@@ -512,17 +691,17 @@
     font-size: clamp(1.75rem, 8vw, 2.5rem);
   }
   
-  .navButtons {
-    gap: var(--space-sm);
+  .folder {
+    width: 260px;
+    height: 320px;
   }
   
-  .navButton {
-    max-width: 100%;
-    height: 160px;
+  .folderImageContainer {
+    height: 140px;
   }
   
-  .navButtonTitle {
-    font-size: 1.25rem;
+  .folderLabel {
+    font-size: 1.5rem;
   }
   
   .blueprintContainer {
@@ -564,12 +743,13 @@
     gap: var(--space-xl);
   }
   
-  .navButton {
-    height: 140px;
+  .folder {
+    width: 240px;
+    height: 300px;
   }
   
-  .navButtonTitle {
-    font-size: 1.125rem;
+  .folderLabel {
+    font-size: 1.25rem;
   }
   
   .blueprintContainer {

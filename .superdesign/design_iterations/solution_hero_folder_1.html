@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Megoldás Hero - Irattartó Navigáció</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+    <style>
+        :root {
+            --color-cream: #F5F0E8;
+            --color-earth-900: #2D251E;
+            --color-earth-800: #3D3328;
+            --color-earth-700: #4D4338;
+            --color-earth-600: #6B5D4D;
+            --color-earth-400: #9A8B78;
+            --color-gold: #D4A84B;
+            --color-gold-light: #E8C87A;
+            --color-gold-dark: #B8923A;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-earth-800);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Blueprint grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Ambient glow */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 50%;
+            right: 20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(212, 168, 75, 0.08) 0%, transparent 70%);
+            transform: translateY(-50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1.6fr; /* Even more space for 3 folders */
+            gap: 3rem;
+            align-items: center;
+            padding: 4rem 4%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Left side - Title area */
+        .hero-content {
+            max-width: 480px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-number {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-gold);
+            letter-spacing: 0.1em;
+        }
+
+        .section-line {
+            width: 40px;
+            height: 2px;
+            background: var(--color-gold);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.0625rem;
+            color: rgba(245, 240, 232, 0.85);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            max-width: 42ch;
+        }
+
+        .hero-subtitle em {
+            color: var(--color-gold);
+            font-style: normal;
+        }
+
+        .hero-hint {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-hint svg {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        /* Right side - Folder navigation */
+        .folder-nav {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: center;
+            perspective: 1800px;
+            transform-style: preserve-3d;
+            padding: 2rem 1rem;
+        }
+
+        .folder {
+            position: relative;
+            width: 240px;
+            height: 360px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), z-index 0s;
+        }
+
+        /* Staggered layout - unified direction, all face forward */
+        .folder:nth-child(1) {
+            transform: translateY(-30px) translateX(-20px);
+            z-index: 1;
+        }
+
+        .folder:nth-child(2) {
+            transform: translateY(0px) translateX(0px);
+            z-index: 2;
+        }
+
+        .folder:nth-child(3) {
+            transform: translateY(30px) translateX(20px);
+            z-index: 3;
+        }
+
+        .folder:hover {
+            transform: translateY(-25px) rotateY(0deg) scale(1.12) !important;
+            z-index: 100 !important;
+        }
+
+        /* Folder back (spine area) - metallic look */
+        .folder-back {
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            transform: translateZ(-25px);
+            box-shadow: -15px 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .folder:nth-child(1) .folder-back {
+            background: linear-gradient(135deg, #8B7355 0%, #6B5344 100%);
+        }
+
+        .folder:nth-child(2) .folder-back {
+            background: linear-gradient(135deg, #7A8B6B 0%, #5A6B4B 100%);
+        }
+
+        .folder:nth-child(3) .folder-back {
+            background: linear-gradient(135deg, #6B7A8B 0%, #4B5A6B 100%);
+        }
+
+        /* Folder front */
+        .folder-front {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #1a1714 0%, #252019 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 30px 60px -15px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transform: translateZ(0);
+            transform-origin: left center;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .folder:hover .folder-front {
+            transform: translateZ(25px) rotateY(-15deg) translateX(25px);
+            border-color: var(--color-gold);
+        }
+
+        /* Subtle grid pattern on front */
+        .folder-front::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Folder tab - technical badge style */
+        .folder-tab {
+            position: absolute;
+            top: -28px;
+            right: 30px;
+            padding: 6px 16px;
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 5;
+            transition: transform 0.4s ease, background 0.3s ease;
+        }
+
+        .folder:nth-child(1) .folder-tab {
+            background: linear-gradient(180deg, #8B7355 0%, #7A6244 100%);
+            color: #fff;
+        }
+
+        .folder:nth-child(2) .folder-tab {
+            background: linear-gradient(180deg, #7A8B6B 0%, #697A5A 100%);
+            color: #fff;
+        }
+
+        .folder:nth-child(3) .folder-tab {
+            background: linear-gradient(180deg, #6B7A8B 0%, #5A697A 100%);
+            color: #fff;
+        }
+
+        .folder:hover .folder-tab {
+            transform: translateY(-6px);
+            background: var(--color-gold) !important;
+            color: var(--color-earth-900) !important;
+        }
+
+        /* Model type label */
+        .model-type {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            transition: color 0.3s ease;
+        }
+
+        .folder:hover .model-type {
+            color: var(--color-gold);
+        }
+
+        /* Image container */
+        .folder-image-container {
+            position: absolute;
+            top: 45px;
+            left: 16px;
+            right: 16px;
+            height: 160px;
+            overflow: hidden;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .folder-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.6s ease, filter 0.3s ease;
+            filter: brightness(0.9);
+        }
+
+        .folder:hover .folder-image {
+            transform: scale(1.15);
+            filter: brightness(1);
+        }
+
+        /* Content area */
+        .folder-content {
+            position: absolute;
+            bottom: 20px;
+            left: 16px;
+            right: 16px;
+        }
+
+        .folder-label {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.25rem;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+        .folder:hover .folder-label {
+            color: var(--color-gold);
+        }
+
+        .folder-desc {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.4;
+            display: block;
+        }
+
+        /* Paper sheets behind - darker for dark theme */
+        .folder-sheets {
+            position: absolute;
+            top: 8px;
+            left: 4px;
+            right: 4px;
+            bottom: 8px;
+            transform: translateZ(-12px);
+            pointer-events: none;
+        }
+
+        .sheet {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #2a2520 0%, #1f1b17 100%);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .sheet:nth-child(1) {
+            transform: translateX(-10px) translateY(-6px);
+        }
+
+        .sheet:nth-child(2) {
+            transform: translateX(-5px) translateY(-3px);
+        }
+
+        .folder:hover .sheet:nth-child(1) {
+            transform: translateX(-30px) translateY(-18px) rotateZ(-2deg);
+        }
+
+        .folder:hover .sheet:nth-child(2) {
+            transform: translateX(-18px) translateY(-10px) rotateZ(-1deg);
+        }
+
+        /* Indicator dots */
+        .indicator {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .folder:hover .indicator {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .indicator-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .indicator-dot.active {
+            background: var(--color-gold);
+        }
+
+        /* Glow effect on hover */
+        .folder::before {
+            content: '';
+            position: absolute;
+            inset: -30px;
+            background: radial-gradient(circle at center, rgba(212, 168, 75, 0.12) 0%, transparent 70%);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .folder:hover::before {
+            opacity: 1;
+        }
+
+        /* Gold ring glow */
+        .folder::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 11px;
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light), var(--color-gold));
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+        }
+
+        .folder:hover::after {
+            opacity: 0.3;
+        }
+
+        /* Lottie container for gear animation */
+        .lottie-container {
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .folder:hover .lottie-container {
+            opacity: 0.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .folder {
+                width: 220px;
+                height: 340px;
+            }
+
+            .folder-image-container {
+                height: 140px;
+            }
+
+            .folder-label {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+
+            .hero-content {
+                max-width: 550px;
+                margin: 0 auto;
+            }
+
+            .hero-subtitle {
+                max-width: none;
+            }
+
+            .hero-hint {
+                justify-content: center;
+            }
+
+            .folder-nav {
+                gap: 1rem;
+            }
+
+            .folder {
+                width: 200px;
+                height: 300px;
+            }
+
+            .folder:nth-child(1),
+            .folder:nth-child(2),
+            .folder:nth-child(3) {
+                transform: none;
+            }
+
+            .folder-image-container {
+                height: 120px;
+                top: 40px;
+            }
+
+            .folder-label {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1.5rem;
+            }
+
+            .folder-nav {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .folder {
+                width: 260px;
+                height: 320px;
+            }
+
+            .folder-image-container {
+                height: 140px;
+            }
+
+            .folder-label {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="section-header">
+                <span class="section-number">02</span>
+                <span class="section-line"></span>
+                <span class="section-title">A Megoldás</span>
+            </div>
+            <h1 class="hero-title">
+                Lazítás<br>
+                forgatás nélkül
+            </h1>
+            <p class="hero-subtitle">
+                Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
+                miközben megszünteti a tömörödést. Ismerje meg a gép működését.
+            </p>
+            <div class="hero-hint">
+                <span>Válassz egy modellt a részletekhez</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </div>
+        </div>
+
+        <nav class="folder-nav">
+            <a href="#38sx" class="folder">
+                <div class="folder-tab">Model</div>
+                <div class="folder-back"></div>
+                <div class="folder-sheets">
+                    <div class="sheet"></div>
+                    <div class="sheet"></div>
+                </div>
+                <div class="folder-front">
+                    <span class="model-type">Nagy szériás</span>
+                    <div class="indicator">
+                        <span class="indicator-dot active"></span>
+                        <span class="indicator-dot"></span>
+                        <span class="indicator-dot"></span>
+                    </div>
+                    <div class="folder-image-container">
+                        <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&h=300&fit=crop" alt="38SX" class="folder-image">
+                    </div>
+                    <div class="folder-content">
+                        <span class="folder-label">38SX</span>
+                        <span class="folder-desc">Univerzális ásógép nagy teljesítménnyel</span>
+                    </div>
+                </div>
+                <div class="lottie-container">
+                    <dotlottie-player 
+                        src="https://lottie.host/e7b3e5a1-5c9a-4c1e-9b5a-1c5a1e5a1c5a/gear.lottie"
+                        background="transparent"
+                        speed="0.5"
+                        style="width: 100%; height: 100%"
+                        loop
+                        autoplay>
+                    </dotlottie-player>
+                </div>
+            </a>
+
+            <a href="#38wx" class="folder">
+                <div class="folder-tab">Model</div>
+                <div class="folder-back"></div>
+                <div class="folder-sheets">
+                    <div class="sheet"></div>
+                    <div class="sheet"></div>
+                </div>
+                <div class="folder-front">
+                    <span class="model-type">Lazítókéses</span>
+                    <div class="indicator">
+                        <span class="indicator-dot"></span>
+                        <span class="indicator-dot active"></span>
+                        <span class="indicator-dot"></span>
+                    </div>
+                    <div class="folder-image-container">
+                        <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&h=300&fit=crop" alt="38WX" class="folder-image">
+                    </div>
+                    <div class="folder-content">
+                        <span class="folder-label">38WX</span>
+                        <span class="folder-desc">Kombinált lazítás és művelés</span>
+                    </div>
+                </div>
+                <div class="lottie-container">
+                    <dotlottie-player 
+                        src="https://lottie.host/e7b3e5a1-5c9a-4c1e-9b5a-1c5a1e5a1c5a/gear.lottie"
+                        background="transparent"
+                        speed="0.5"
+                        style="width: 100%; height: 100%"
+                        loop
+                        autoplay>
+                    </dotlottie-player>
+                </div>
+            </a>
+
+            <a href="#40sx" class="folder">
+                <div class="folder-tab">Model</div>
+                <div class="folder-back"></div>
+                <div class="folder-sheets">
+                    <div class="sheet"></div>
+                    <div class="sheet"></div>
+                </div>
+                <div class="folder-front">
+                    <span class="model-type">Mélyásógép</span>
+                    <div class="indicator">
+                        <span class="indicator-dot"></span>
+                        <span class="indicator-dot"></span>
+                        <span class="indicator-dot active"></span>
+                    </div>
+                    <div class="folder-image-container">
+                        <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&h=300&fit=crop" alt="40SX" class="folder-image">
+                    </div>
+                    <div class="folder-content">
+                        <span class="folder-label">40SX</span>
+                        <span class="folder-desc">Mély talajművelés 60cm-ig</span>
+                    </div>
+                </div>
+                <div class="lottie-container">
+                    <dotlottie-player 
+                        src="https://lottie.host/e7b3e5a1-5c9a-4c1e-9b5a-1c5a1e5a1c5a/gear.lottie"
+                        background="transparent"
+                        speed="0.5"
+                        style="width: 100%; height: 100%"
+                        loop
+                        autoplay>
+                    </dotlottie-player>
+                </div>
+            </a>
+        </nav>
+    </section>
+
+    <script>
+        // Enhanced hover interactions
+        document.querySelectorAll('.folder').forEach((folder, index) => {
+            // Parallax effect on mouse move
+            folder.addEventListener('mousemove', (e) => {
+                const rect = folder.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 25;
+                const rotateY = (centerX - x) / 25;
+                
+                folder.style.transform = `
+                    translateY(-25px) 
+                    scale(1.12) 
+                    rotateX(${rotateX}deg) 
+                    rotateY(${rotateY}deg)
+                `;
+            });
+
+            folder.addEventListener('mouseleave', () => {
+                // Reset to original staggered position - unified direction
+                const transforms = [
+                    'translateY(-30px) translateX(-20px)',
+                    'translateY(0px) translateX(0px)',
+                    'translateY(30px) translateX(20px)'
+                ];
+                folder.style.transform = transforms[index];
+            });
+        });
+
+        // Smooth scroll hint animation
+        const hint = document.querySelector('.hero-hint');
+        if (hint) {
+            setInterval(() => {
+                hint.style.opacity = '0.5';
+                setTimeout(() => {
+                    hint.style.opacity = '1';
+                }, 500);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micro-Interaction: Hero Parallax & Particle System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-earth-900: #1A1612;
+      --color-earth-800: #2D251E;
+      --color-earth-600: #4A3F33;
+      --color-gold: #D4A84B;
+      --color-gold-light: #E8C87A;
+      --color-green: #4A6741;
+      --color-green-light: #6B8B5E;
+      --color-cream: #F5F0E8;
+      --color-white: #FDFCFA;
+      
+      --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    html, body {
+      font-family: 'Inter', sans-serif;
+      background: var(--color-earth-900);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* ========================================
+       HERO SECTION WITH PARALLAX
+    ======================================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background layers */
+    .hero-bg {
+      position: absolute;
+      inset: -100px; /* Extra space for parallax */
+      z-index: 0;
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      inset: 0;
+      background: 
+        linear-gradient(180deg, rgba(26, 22, 18, 0) 0%, rgba(26, 22, 18, 0.3) 100%),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%232D251E"/><circle cx="600" cy="400" r="300" fill="%233D3229"/><circle cx="200" cy="600" r="150" fill="%234A3F33"/><circle cx="1000" cy="200" r="200" fill="%233D3229"/></svg>');
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Gradient overlay */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(26, 22, 18, 0.95) 0%,
+        rgba(26, 22, 18, 0.7) 40%,
+        rgba(26, 22, 18, 0.3) 70%,
+        rgba(26, 22, 18, 0) 100%
+      );
+      z-index: 1;
+    }
+
+    /* Film grain overlay */
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      opacity: 0.03;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* Particle system container */
+    .particles {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: float-up linear infinite;
+    }
+
+    .particle.dust {
+      width: 3px;
+      height: 3px;
+      background: rgba(212, 168, 75, 0.4);
+    }
+
+    .particle.orb {
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, rgba(232, 200, 122, 0.6), transparent);
+      box-shadow: 0 0 10px rgba(212, 168, 75, 0.3);
+    }
+
+    .particle.spark {
+      width: 2px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    @keyframes float-up {
+      0% {
+        transform: translateY(100vh) translateX(0) scale(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) translateX(var(--drift, 50px)) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* Floating orbs (larger ambient particles) */
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212, 168, 75, 0.15), transparent 70%);
+      filter: blur(40px);
+      animation: ambient-float 20s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    @keyframes ambient-float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(50px, -30px) scale(1.1); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(30px, 40px) scale(1.05); }
+    }
+
+    /* Hero content */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 700px;
+      padding: 0 4rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      color: var(--color-gold);
+      font-size: 0.9375rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s var(--ease-out-expo) 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title .line {
+      display: block;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+    }
+
+    .hero-title .line:nth-child(1) { animation-delay: 0.3s; }
+    .hero-title .line:nth-child(2) { animation-delay: 0.4s; color: var(--color-gold); }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      max-width: 550px;
+      margin-bottom: 2.5rem;
+      padding-left: 1.5rem;
+      border-left: 3px solid var(--color-gold);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s var(--ease-out-expo) 0.5s forwards;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s var(--ease-out-expo) 0.6s forwards;
+    }
+
+    .stat {
+      text-align: left;
+    }
+
+    .stat-number {
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .hero-cta {
+      margin-top: 2.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s var(--ease-out-expo) 0.7s forwards;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.125rem 2rem;
+      background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+      color: var(--color-earth-900);
+      border: none;
+      border-radius: 100px;
+      font-family: 'Fraunces', serif;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: skewX(-25deg);
+      transition: left 0.5s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 40px rgba(212, 168, 75, 0.4);
+    }
+
+    .cta-button:hover::before {
+      left: 150%;
+    }
+
+    .cta-button svg {
+      transition: transform 0.3s ease;
+    }
+
+    .cta-button:hover svg {
+      transform: translateX(4px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      animation: fadeInUp 0.8s var(--ease-out-expo) 1s forwards;
+    }
+
+    .scroll-indicator .mouse {
+      width: 24px;
+      height: 40px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      position: relative;
+    }
+
+    .scroll-indicator .wheel {
+      width: 4px;
+      height: 8px;
+      background: var(--color-gold);
+      border-radius: 2px;
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: scroll-wheel 1.5s ease-in-out infinite;
+    }
+
+    @keyframes scroll-wheel {
+      0%, 100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      50% { opacity: 0.3; transform: translateX(-50%) translateY(10px); }
+    }
+
+    /* ========================================
+       SECOND SECTION - PARALLAX LAYERS
+    ======================================== */
+    .parallax-section {
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--color-earth-900) 0%, var(--color-earth-800) 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .parallax-layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .parallax-layer.layer-1 {
+      z-index: 1;
+    }
+
+    .parallax-layer.layer-2 {
+      z-index: 2;
+    }
+
+    .parallax-layer.layer-3 {
+      z-index: 3;
+    }
+
+    .layer-shape {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(212, 168, 75, 0.1), transparent);
+    }
+
+    .layer-1 .layer-shape {
+      width: 600px;
+      height: 600px;
+      right: -100px;
+      top: 10%;
+    }
+
+    .layer-2 .layer-shape {
+      width: 400px;
+      height: 400px;
+      left: 10%;
+      bottom: 20%;
+      background: linear-gradient(135deg, rgba(74, 103, 65, 0.15), transparent);
+    }
+
+    .layer-3 .layer-shape {
+      width: 200px;
+      height: 200px;
+      right: 20%;
+      bottom: 30%;
+    }
+
+    .parallax-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 2rem;
+    }
+
+    .parallax-content h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s var(--ease-out-expo);
+    }
+
+    .parallax-content h2.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .parallax-content p {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.7;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s var(--ease-out-expo) 0.2s;
+    }
+
+    .parallax-content p.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========================================
+       MOUSE CURSOR GLOW
+    ======================================== */
+    .cursor-glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212, 168, 75, 0.08), transparent 70%);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .cursor-glow.active {
+      opacity: 1;
+    }
+
+    /* ========================================
+       INFO PANEL
+    ======================================== */
+    .info-panel {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      font-size: 0.8125rem;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 280px;
+    }
+
+    .info-panel h4 {
+      color: var(--color-gold);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-panel ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    .info-panel li::before {
+      content: '→';
+      color: var(--color-gold);
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Cursor glow effect -->
+  <div class="cursor-glow"></div>
+
+  <!-- Info Panel -->
+  <div class="info-panel">
+    <h4>Interakciók</h4>
+    <ul>
+      <li>Parallax scroll effect</li>
+      <li>Particle system (dust, orbs, sparks)</li>
+      <li>Mouse-following glow</li>
+      <li>Ambient floating orbs</li>
+      <li>Film grain overlay</li>
+    </ul>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <!-- Background with parallax -->
+    <div class="hero-bg" data-parallax="0.3">
+      <div class="hero-bg-image"></div>
+    </div>
+    
+    <!-- Gradient overlay -->
+    <div class="hero-overlay"></div>
+    
+    <!-- Film grain -->
+    <div class="hero-grain"></div>
+    
+    <!-- Ambient floating orbs -->
+    <div class="ambient-orb" style="width: 400px; height: 400px; top: 10%; right: 15%; animation-delay: 0s;"></div>
+    <div class="ambient-orb" style="width: 300px; height: 300px; bottom: 20%; left: 10%; animation-delay: -5s;"></div>
+    <div class="ambient-orb" style="width: 200px; height: 200px; top: 50%; right: 40%; animation-delay: -10s;"></div>
+    
+    <!-- Particle system -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Content -->
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>Neumann János Egyetem × Agroskill Kft.</span>
+        <span style="opacity: 0.5">2025</span>
+      </div>
+      
+      <h1 class="hero-title">
+        <span class="line">A talaj nem</span>
+        <span class="line">végtelen erőforrás</span>
+      </h1>
+      
+      <p class="hero-subtitle">
+        Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról öntözött kertészeti kultúrákban
+      </p>
+      
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-number counter" data-target="600">0</div>
+          <div class="stat-label">mm öntözés/év</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number counter" data-target="3">0</div>
+          <div class="stat-label">év kutatás</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number counter" data-target="12">0</div>
+          <div class="stat-label">tesztparcella</div>
+        </div>
+      </div>
+      
+      <div class="hero-cta">
+        <button class="cta-button">
+          Fedezd fel a kutatást
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">
+      <div class="mouse">
+        <div class="wheel"></div>
+      </div>
+      <span>Görgess</span>
+    </div>
+  </section>
+
+  <!-- Parallax Layers Section -->
+  <section class="parallax-section">
+    <div class="parallax-layer layer-1" data-parallax="0.1">
+      <div class="layer-shape"></div>
+    </div>
+    <div class="parallax-layer layer-2" data-parallax="0.2">
+      <div class="layer-shape"></div>
+    </div>
+    <div class="parallax-layer layer-3" data-parallax="0.3">
+      <div class="layer-shape"></div>
+    </div>
+    
+    <div class="parallax-content">
+      <h2>Multi-layer Parallax Demo</h2>
+      <p>Scroll to see different layers move at different speeds, creating depth and dimension. Combined with particle effects and ambient lighting for an immersive experience.</p>
+    </div>
+  </section>
+
+  <script>
+    // ========================================
+    // PARTICLE SYSTEM
+    // ========================================
+    const particlesContainer = document.getElementById('particles');
+    const particleTypes = ['dust', 'orb', 'spark'];
+
+    function createParticle() {
+      const particle = document.createElement('div');
+      const type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+      
+      particle.className = `particle ${type}`;
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.setProperty('--drift', `${(Math.random() - 0.5) * 100}px`);
+      particle.style.animationDuration = `${8 + Math.random() * 12}s`;
+      particle.style.animationDelay = `${Math.random() * 2}s`;
+      
+      particlesContainer.appendChild(particle);
+      
+      // Remove after animation
+      setTimeout(() => {
+        particle.remove();
+      }, 20000);
+    }
+
+    // Create initial particles
+    for (let i = 0; i < 30; i++) {
+      setTimeout(createParticle, i * 200);
+    }
+
+    // Continuously create new particles
+    setInterval(createParticle, 500);
+
+    // ========================================
+    // PARALLAX SCROLL
+    // ========================================
+    const parallaxElements = document.querySelectorAll('[data-parallax]');
+
+    function handleParallax() {
+      const scrollY = window.scrollY;
+      
+      parallaxElements.forEach(el => {
+        const speed = parseFloat(el.dataset.parallax);
+        const offset = scrollY * speed;
+        el.style.transform = `translateY(${offset}px)`;
+      });
+    }
+
+    window.addEventListener('scroll', handleParallax, { passive: true });
+
+    // ========================================
+    // CURSOR GLOW
+    // ========================================
+    const cursorGlow = document.querySelector('.cursor-glow');
+    let cursorX = 0, cursorY = 0;
+    let glowX = 0, glowY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      cursorX = e.clientX;
+      cursorY = e.clientY;
+      cursorGlow.classList.add('active');
+    });
+
+    document.addEventListener('mouseleave', () => {
+      cursorGlow.classList.remove('active');
+    });
+
+    // Smooth follow
+    function updateGlow() {
+      glowX += (cursorX - glowX) * 0.1;
+      glowY += (cursorY - glowY) * 0.1;
+      
+      cursorGlow.style.left = `${glowX}px`;
+      cursorGlow.style.top = `${glowY}px`;
+      
+      requestAnimationFrame(updateGlow);
+    }
+    updateGlow();
+
+    // ========================================
+    // COUNTER ANIMATION
+    // ========================================
+    const counters = document.querySelectorAll('.counter');
+    
+    counters.forEach(counter => {
+      const target = parseInt(counter.dataset.target);
+      const duration = 2000;
+      const startTime = Date.now();
+      
+      function updateCounter() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        
+        counter.textContent = Math.floor(target * eased);
+        
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        } else {
+          counter.textContent = target;
+        }
+      }
+      
+      // Start after hero animation
+      setTimeout(updateCounter, 800);
+    });
+
+    // ========================================
+    // SCROLL-TRIGGERED CONTENT
+    // ========================================
+    const parallaxContent = document.querySelector('.parallax-content');
+    const parallaxH2 = parallaxContent.querySelector('h2');
+    const parallaxP = parallaxContent.querySelector('p');
+
+    const contentObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          parallaxH2.classList.add('visible');
+          parallaxP.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    contentObserver.observe(parallaxContent);
+  </script>
+</body>
+</html>

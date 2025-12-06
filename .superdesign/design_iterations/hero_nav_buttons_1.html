@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Nav Buttons - Enhanced Animation Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-earth-800: #2D251E;
+            --color-earth-900: #1A1612;
+            --color-gold: #D4A84B;
+            --color-gold-light: #E8C87A;
+            --color-cream: #F5F0E8;
+            --color-white: #FDFCFA;
+            --color-green: #4A6741;
+            --radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .demo-container {
+            display: flex;
+            gap: 80px;
+        }
+
+        /* ============================================
+           DARK THEME (Megoldás page style)
+           ============================================ */
+        .dark-section {
+            background: var(--color-earth-800);
+            padding: 60px;
+            border-radius: 24px;
+        }
+
+        .dark-section h2 {
+            color: var(--color-cream);
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+            opacity: 0.7;
+        }
+
+        .nav-buttons-dark {
+            display: flex;
+            flex-direction: column;
+            perspective: 1000px;
+            align-items: flex-end;
+        }
+
+        .nav-button-dark {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            background: var(--color-earth-900);
+            
+            /* Dynamic Shadow */
+            --shadow-x: 0px;
+            --shadow-y: 25px;
+            
+            box-shadow: 
+                var(--shadow-x) var(--shadow-y) 50px -12px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 3px rgba(255, 255, 255, 0.08);
+            
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        /* Staggered layout */
+        .nav-button-dark:nth-child(1) {
+            margin-right: 60px;
+            margin-bottom: -35px;
+            z-index: 1;
+        }
+        .nav-button-dark:nth-child(2) {
+            margin-right: 30px;
+            margin-bottom: -35px;
+            z-index: 2;
+        }
+        .nav-button-dark:nth-child(3) {
+            z-index: 3;
+        }
+
+        /* Glow ring on hover */
+        .nav-button-dark::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: calc(var(--radius-lg) + 3px);
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light), var(--color-gold));
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Shine sweep effect */
+        .nav-button-dark::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.15),
+                transparent
+            );
+            transform: skewX(-20deg);
+            transition: left 0.6s ease;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .nav-button-dark:hover {
+            transform: translateY(-12px) scale(1.06) rotateX(2deg);
+            box-shadow: 
+                var(--shadow-x) calc(var(--shadow-y) + 15px) 60px -8px rgba(0, 0, 0, 0.6),
+                inset 0 0 0 3px var(--color-gold);
+            z-index: 10 !important;
+        }
+
+        .nav-button-dark:hover::before {
+            opacity: 0.3;
+        }
+
+        .nav-button-dark:hover::after {
+            left: 130%;
+        }
+
+        .nav-button-dark .image-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .nav-button-dark img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s ease;
+            filter: brightness(0.9);
+        }
+
+        .nav-button-dark:hover img {
+            transform: scale(1.15);
+            filter: brightness(1);
+        }
+
+        .nav-button-dark .overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            transition: background 0.4s ease;
+        }
+
+        .nav-button-dark:hover .overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);
+        }
+
+        .nav-button-dark .label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 4px;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .nav-button-dark:hover .label {
+            color: var(--color-gold-light);
+            transform: translateY(-2px);
+        }
+
+        .nav-button-dark .title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            transform: translateX(0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-button-dark:hover .title {
+            transform: translateX(6px);
+            color: var(--color-gold);
+            text-shadow: 0 2px 12px rgba(212, 168, 75, 0.3);
+        }
+
+        /* Floating indicator dots */
+        .nav-button-dark .indicator {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: all 0.3s ease 0.1s;
+        }
+
+        .nav-button-dark:hover .indicator {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-button-dark .indicator span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-button-dark .indicator span:first-child {
+            background: var(--color-gold);
+        }
+
+        /* ============================================
+           LIGHT THEME (Probléma page style)
+           ============================================ */
+        .light-section {
+            background: var(--color-cream);
+            padding: 60px;
+            border-radius: 24px;
+        }
+
+        .light-section h2 {
+            color: var(--color-earth-900);
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+            opacity: 0.7;
+        }
+
+        .nav-buttons-light {
+            display: flex;
+            flex-direction: column;
+            perspective: 1000px;
+            align-items: flex-end;
+        }
+
+        .nav-button-light {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            background: var(--color-white);
+            
+            --shadow-x: 0px;
+            --shadow-y: 20px;
+            
+            box-shadow: 
+                var(--shadow-x) var(--shadow-y) 40px -10px rgba(0, 0, 0, 0.12),
+                inset 0 0 0 3px var(--color-white);
+            
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        /* Staggered layout */
+        .nav-button-light:nth-child(1) {
+            margin-right: 40px;
+            margin-bottom: -50px;
+            z-index: 1;
+        }
+        .nav-button-light:nth-child(2) {
+            z-index: 2;
+        }
+
+        /* Green glow ring */
+        .nav-button-light::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: calc(var(--radius-lg) + 3px);
+            background: linear-gradient(135deg, var(--color-green), #6B8B5E, var(--color-green));
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Shine sweep */
+        .nav-button-light::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.4),
+                transparent
+            );
+            transform: skewX(-20deg);
+            transition: left 0.6s ease;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .nav-button-light:hover {
+            transform: translateY(-12px) scale(1.06) rotateX(2deg);
+            box-shadow: 
+                var(--shadow-x) calc(var(--shadow-y) + 15px) 50px -8px rgba(0, 0, 0, 0.18),
+                inset 0 0 0 3px var(--color-green);
+            z-index: 10 !important;
+        }
+
+        .nav-button-light:hover::before {
+            opacity: 0.2;
+        }
+
+        .nav-button-light:hover::after {
+            left: 130%;
+        }
+
+        .nav-button-light .image-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .nav-button-light img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-button-light:hover img {
+            transform: scale(1.12);
+        }
+
+        .nav-button-light .overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            transition: background 0.4s ease;
+        }
+
+        .nav-button-light:hover .overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0) 100%);
+        }
+
+        .nav-button-light .title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            transform: translateX(0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-button-light:hover .title {
+            transform: translateX(6px);
+            color: #9FD88C;
+            text-shadow: 0 2px 12px rgba(107, 139, 94, 0.4);
+        }
+
+        /* Corner accent */
+        .nav-button-light .corner-accent {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, transparent 50%, var(--color-green) 50%);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .nav-button-light:hover .corner-accent {
+            opacity: 0.9;
+        }
+
+        .nav-button-light .corner-accent svg {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            width: 16px;
+            height: 16px;
+            color: white;
+            opacity: 0;
+            transform: translate(-4px, 4px);
+            transition: all 0.3s ease 0.1s;
+        }
+
+        .nav-button-light:hover .corner-accent svg {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        /* Pulse animation on active/focus */
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(1.05);
+                opacity: 0;
+            }
+        }
+
+        .nav-button-dark:active::before,
+        .nav-button-light:active::before {
+            animation: pulse-ring 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Dark Theme Demo (Megoldás page) -->
+        <div class="dark-section">
+            <h2>Megoldás oldal</h2>
+            <div class="nav-buttons-dark">
+                <button class="nav-button-dark">
+                    <div class="image-wrapper">
+                        <img src="https://placehold.co/400x300/2D251E/666?text=38SX" alt="">
+                    </div>
+                    <div class="overlay">
+                        <span class="label">Nagy szériás</span>
+                        <span class="title">38SX</span>
+                    </div>
+                    <div class="indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+
+                <button class="nav-button-dark">
+                    <div class="image-wrapper">
+                        <img src="https://placehold.co/400x300/2D251E/666?text=38WX" alt="">
+                    </div>
+                    <div class="overlay">
+                        <span class="label">Lazítókéses</span>
+                        <span class="title">38WX</span>
+                    </div>
+                    <div class="indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+
+                <button class="nav-button-dark">
+                    <div class="image-wrapper">
+                        <img src="https://placehold.co/400x300/2D251E/666?text=40SX" alt="">
+                    </div>
+                    <div class="overlay">
+                        <span class="label">Mélyásógép</span>
+                        <span class="title">40SX</span>
+                    </div>
+                    <div class="indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Light Theme Demo (Probléma page) -->
+        <div class="light-section">
+            <h2>Probléma oldal</h2>
+            <div class="nav-buttons-light">
+                <button class="nav-button-light">
+                    <div class="image-wrapper">
+                        <img src="https://placehold.co/400x300/E8E0D4/999?text=Tömörödés" alt="">
+                    </div>
+                    <div class="overlay">
+                        <span class="title">A Tömörödés</span>
+                    </div>
+                    <div class="corner-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                    </div>
+                </button>
+
+                <button class="nav-button-light">
+                    <div class="image-wrapper">
+                        <img src="https://placehold.co/400x300/E8E0D4/999?text=Szántás" alt="">
+                    </div>
+                    <div class="overlay">
+                        <span class="title">A Szántás Korlátai</span>
+                    </div>
+                    <div class="corner-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

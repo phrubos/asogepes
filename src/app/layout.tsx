@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
 import { Inter, Fraunces } from 'next/font/google'
+import { Suspense } from 'react'
 import './globals.css'
 import Navigation from '@/components/layout/Navigation'
 import Footer from '@/components/layout/Footer'
 import PageNavigation from '@/components/ui/PageNavigation'
 import ScrollProgress from '@/components/ui/ScrollProgress'
 import BackToTop from '@/components/ui/BackToTop'
+import RouteLoadingProvider from '@/components/providers/RouteLoadingProvider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -30,15 +32,19 @@ export default function RootLayout({
   return (
     <html lang="hu" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
-        <a href="#main-content" className="skip-link">
-          Ugrás a tartalomhoz
-        </a>
-        <ScrollProgress color="green" />
-        <Navigation />
-        <PageNavigation />
-        {children}
-        <Footer />
-        <BackToTop threshold={400} />
+        <Suspense fallback={null}>
+          <RouteLoadingProvider>
+            <a href="#main-content" className="skip-link">
+              Ugrás a tartalomhoz
+            </a>
+            <ScrollProgress color="green" />
+            <Navigation />
+            <PageNavigation />
+            {children}
+            <Footer />
+            <BackToTop threshold={400} />
+          </RouteLoadingProvider>
+        </Suspense>
       </body>
     </html>
   )

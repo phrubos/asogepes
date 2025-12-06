@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Megoldás - v2 | Ásógépes Technológia</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* ============================================
+       ROOT VARIABLES
+       ============================================ */
+    :root {
+      --color-earth-900: #1a1714;
+      --color-earth-800: #2d2620;
+      --color-earth-700: #3d352c;
+      --color-cream: #f5f0e8;
+      --color-gold: #cfa657;
+      --color-gold-light: #e4c078;
+      --color-white: #ffffff;
+
+      --modal-backdrop: rgba(26, 23, 20, 0.92);
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.1);
+
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      --space-3xl: 4rem;
+      --space-4xl: 6rem;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body) !important;
+      background: var(--color-earth-800) !important;
+      color: var(--color-cream) !important;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display) !important;
+      line-height: 1.2;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+    }
+
+    /* ============================================
+       SECTION
+       ============================================ */
+    .section-solution {
+      background: var(--color-earth-800);
+      padding: var(--space-4xl) 0;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .section-solution::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ============================================
+       HERO HEADER (Simulated existing design)
+       ============================================ */
+    .hero-header {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: var(--space-3xl);
+      align-items: center;
+      min-height: 70vh;
+      margin-bottom: var(--space-4xl);
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        min-height: auto;
+        padding: var(--space-2xl) 0;
+      }
+    }
+
+    .hero-content {
+      max-width: 700px;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-content {
+        margin: 0 auto;
+      }
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--color-gold);
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-md);
+    }
+
+    .main-title {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 400;
+      color: var(--color-white);
+      margin-bottom: var(--space-lg);
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 1.125rem;
+      color: rgba(245, 240, 232, 0.75);
+      max-width: 55ch;
+    }
+
+    .subtitle em {
+      color: var(--color-gold);
+      font-style: normal;
+    }
+
+    /* Nav Buttons (Staggered) */
+    .nav-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      perspective: 1000px;
+    }
+
+    @media (max-width: 1024px) {
+      .nav-buttons {
+        flex-direction: row;
+        justify-content: center;
+        gap: var(--space-md);
+        margin-top: var(--space-2xl);
+      }
+    }
+
+    .nav-btn {
+      position: relative;
+      width: 280px;
+      height: 180px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      cursor: pointer;
+      border: 3px solid rgba(255,255,255,0.1);
+      background: var(--color-earth-900);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+    }
+
+    @media (min-width: 1025px) {
+      .nav-btn:nth-child(1) {
+        margin-right: 70px;
+        margin-bottom: -35px;
+        z-index: 1;
+      }
+      .nav-btn:nth-child(2) {
+        margin-right: 35px;
+        margin-bottom: -35px;
+        z-index: 2;
+      }
+      .nav-btn:nth-child(3) {
+        z-index: 3;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .nav-btn {
+        width: 160px;
+        height: 120px;
+      }
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-8px) scale(1.03);
+      border-color: var(--color-gold);
+      box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6), 0 0 0 1px var(--color-gold);
+      z-index: 10 !important;
+    }
+
+    .nav-btn-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .nav-btn:hover .nav-btn-image {
+      transform: scale(1.1);
+    }
+
+    .nav-btn-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: var(--space-lg);
+    }
+
+    .nav-btn-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 2px;
+    }
+
+    .nav-btn-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--color-white);
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 1024px) {
+      .nav-btn-title {
+        font-size: 1.125rem;
+      }
+    }
+
+    .nav-btn:hover .nav-btn-title {
+      color: var(--color-gold);
+      transform: translateX(4px);
+    }
+
+    /* ============================================
+       CONTENT WRAPPER
+       ============================================ */
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================
+       MODEL TABS (Sticky)
+       ============================================ */
+    .model-tabs {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--color-earth-800);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: var(--space-md) 0;
+      margin-bottom: var(--space-2xl);
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    .model-tabs::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100vw;
+      right: -100vw;
+      bottom: 0;
+      background: var(--color-earth-800);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      z-index: -1;
+    }
+
+    .model-tab {
+      padding: var(--space-sm) var(--space-xl);
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--radius-sm);
+      color: rgba(255,255,255,0.6);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .model-tab:hover {
+      border-color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.9);
+    }
+
+    .model-tab.active {
+      background: var(--color-gold);
+      border-color: var(--color-gold);
+      color: var(--color-earth-900);
+    }
+
+    /* ============================================
+       MODEL SECTION
+       ============================================ */
+    .model-section {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .model-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section Header */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-lg);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .model-name {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--color-white);
+    }
+
+    .type-badge {
+      padding: 6px 16px;
+      background: var(--color-gold);
+      color: var(--color-earth-900);
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Specs Layout */
+    .specs-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    @media (max-width: 900px) {
+      .specs-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .image-wrapper {
+      background: rgba(255,255,255,0.95);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 50px -15px rgba(0,0,0,0.4);
+    }
+
+    .machine-image {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .specs-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+    }
+
+    .specs-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 1.125rem;
+      color: var(--color-white);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .specs-title svg {
+      color: var(--color-gold);
+    }
+
+    .spec-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .spec-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(207,166,87,0.1);
+      border: 1px solid rgba(207,166,87,0.2);
+      border-radius: var(--radius-md);
+      color: var(--color-gold);
+      flex-shrink: 0;
+    }
+
+    .spec-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .spec-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .spec-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-white);
+    }
+
+    .features-section {
+      margin-top: var(--space-lg);
+      padding-top: var(--space-lg);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .features-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-sm);
+    }
+
+    .features-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 0.9375rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .feature-item svg {
+      color: var(--color-gold);
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ============================================
+       FIELD RESULTS CARD (Clickable → Modal)
+       ============================================ */
+    .field-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: var(--space-xl);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+    }
+
+    @media (max-width: 768px) {
+      .field-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field-card:hover {
+      border-color: var(--color-gold);
+      background: rgba(207,166,87,0.05);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.4);
+    }
+
+    .field-card-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .field-card-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-white);
+    }
+
+    .field-card-title svg {
+      color: var(--color-gold);
+    }
+
+    .field-card-preview {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.6;
+    }
+
+    .field-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .meta-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .meta-tag svg {
+      width: 12px;
+      height: 12px;
+      color: var(--color-gold);
+    }
+
+    .field-card-cta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-top: auto;
+      padding-top: var(--space-md);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-gold);
+    }
+
+    .field-card-cta svg {
+      transition: transform 0.3s ease;
+    }
+
+    .field-card:hover .field-card-cta svg {
+      transform: translateX(4px);
+    }
+
+    /* Mini Chart Preview */
+    .mini-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--space-sm);
+      height: 60px;
+      padding: var(--space-md);
+      background: rgba(0,0,0,0.2);
+      border-radius: var(--radius-sm);
+    }
+
+    .mini-bar {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+      transition: all 0.3s ease;
+    }
+
+    .mini-bar.gold {
+      background: var(--color-gold);
+    }
+
+    .mini-bar.gray {
+      background: rgba(255,255,255,0.25);
+    }
+
+    .field-card:hover .mini-bar {
+      filter: brightness(1.1);
+    }
+
+    /* ============================================
+       HIGHLIGHT BOX
+       ============================================ */
+    .highlight-box {
+      display: flex;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      background: rgba(207,166,87,0.08);
+      border-left: 4px solid var(--color-gold);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin-bottom: var(--space-3xl);
+    }
+
+    @media (max-width: 600px) {
+      .highlight-box {
+        flex-direction: column;
+      }
+    }
+
+    .highlight-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-gold);
+      color: var(--color-earth-900);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .highlight-content {
+      flex: 1;
+    }
+
+    .highlight-title {
+      font-size: 1.125rem;
+      color: var(--color-white);
+      margin-bottom: var(--space-xs);
+    }
+
+    .highlight-text {
+      font-size: 0.9375rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.6;
+    }
+
+    /* ============================================
+       CTA FOOTER
+       ============================================ */
+    .cta-footer {
+      text-align: center;
+      padding: var(--space-3xl) 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .cta-text {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--color-white);
+      margin-bottom: var(--space-md);
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-2xl);
+      background: var(--color-white);
+      color: var(--color-earth-900);
+      border-radius: 100px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+
+    .cta-btn svg {
+      transition: transform 0.3s ease;
+    }
+
+    .cta-btn:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* ============================================
+       MODAL
+       ============================================ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: var(--modal-backdrop);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-container {
+      position: fixed;
+      inset: 0;
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-lg);
+      pointer-events: none;
+    }
+
+    .modal {
+      background: var(--color-earth-900);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 800px;
+      max-height: 85vh;
+      overflow: hidden;
+      box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
+      pointer-events: auto;
+      opacity: 0;
+      transform: translateY(30px) scale(0.96);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-backdrop.active .modal {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-xl) var(--space-2xl);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .modal-header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .modal-header-left svg {
+      color: var(--color-gold);
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--color-white);
+    }
+
+    .modal-subtitle {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .close-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .close-btn:hover {
+      background: rgba(255,255,255,0.1);
+      color: var(--color-white);
+      transform: rotate(90deg);
+    }
+
+    .modal-body {
+      padding: var(--space-2xl);
+      overflow-y: auto;
+      max-height: calc(85vh - 100px);
+    }
+
+    /* Modal Location Info */
+    .modal-location {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md) var(--space-xl);
+      padding: var(--space-lg);
+      background: rgba(255,255,255,0.02);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    .modal-location-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .modal-location-item svg {
+      width: 16px;
+      height: 16px;
+      color: var(--color-gold);
+    }
+
+    /* Modal Treatments */
+    .treatments-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin-bottom: var(--space-2xl);
+    }
+
+    @media (max-width: 600px) {
+      .treatments-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .treatment-col {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+    }
+
+    .treatment-col.spade {
+      border-color: rgba(207,166,87,0.3);
+      background: rgba(207,166,87,0.05);
+    }
+
+    .treatment-col-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-white);
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .treatment-col.spade .treatment-col-title {
+      color: var(--color-gold);
+    }
+
+    .treatment-list {
+      list-style: none;
+    }
+
+    .treatment-list li {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.75);
+      padding: var(--space-xs) 0;
+      padding-left: var(--space-md);
+      position: relative;
+    }
+
+    .treatment-list li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--color-gold);
+    }
+
+    /* Modal Chart */
+    .modal-chart-title {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-lg);
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+
+    .chart-item {
+      text-align: center;
+    }
+
+    .chart-month {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      margin-bottom: var(--space-md);
+    }
+
+    .chart-bars {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-md);
+      height: 100px;
+      align-items: flex-end;
+    }
+
+    .bar-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .bar {
+      width: 32px;
+      border-radius: 6px 6px 0 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 6px;
+      min-height: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .bar:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+    }
+
+    .bar-value {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--color-white);
+    }
+
+    .bar.spade {
+      background: linear-gradient(to top, var(--color-gold), var(--color-gold-light));
+    }
+
+    .bar.control {
+      background: linear-gradient(to top, rgba(255,255,255,0.3), rgba(255,255,255,0.15));
+    }
+
+    .bar-label {
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.4);
+      margin-top: 4px;
+    }
+
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-xl);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    .legend-dot.spade {
+      background: var(--color-gold);
+    }
+
+    .legend-dot.control {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* Modal Highlight */
+    .modal-highlight {
+      display: flex;
+      gap: var(--space-md);
+      padding: var(--space-lg);
+      background: rgba(207,166,87,0.1);
+      border-left: 3px solid var(--color-gold);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-top: var(--space-xl);
+    }
+
+    .modal-highlight svg {
+      color: var(--color-gold);
+      flex-shrink: 0;
+    }
+
+    .modal-highlight p {
+      font-size: 0.9375rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+
+    /* Scrollbar */
+    .modal-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .modal-body::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="section-solution">
+    <div class="container">
+
+      <!-- Hero Header with Nav Buttons -->
+      <header class="hero-header">
+        <div class="hero-content">
+          <span class="section-label">02 — A MEGOLDÁS</span>
+          <h1 class="main-title">Lazítás<br>forgatás nélkül</h1>
+          <p class="subtitle">
+            Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
+            miközben megszünteti a tömörödést. Ismerje meg a gép működését.
+          </p>
+        </div>
+
+        <nav class="nav-buttons">
+          <button class="nav-btn" onclick="scrollToModel('38sx')">
+            <img src="/images/38SX.png" alt="" class="nav-btn-image">
+            <div class="nav-btn-overlay">
+              <span class="nav-btn-label">Nagy szériás</span>
+              <span class="nav-btn-title">38SX</span>
+            </div>
+          </button>
+          <button class="nav-btn" onclick="scrollToModel('38wx')">
+            <img src="/images/38WX.png" alt="" class="nav-btn-image">
+            <div class="nav-btn-overlay">
+              <span class="nav-btn-label">Lazítókéses</span>
+              <span class="nav-btn-title">38WX</span>
+            </div>
+          </button>
+          <button class="nav-btn" onclick="scrollToModel('40sx')">
+            <img src="/images/40SX.png" alt="" class="nav-btn-image">
+            <div class="nav-btn-overlay">
+              <span class="nav-btn-label">Mélyásógép</span>
+              <span class="nav-btn-title">40SX</span>
+            </div>
+          </button>
+        </nav>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-wrapper" id="contentArea">
+
+        <!-- Model Tabs (Sticky) -->
+        <nav class="model-tabs">
+          <button class="model-tab active" data-model="38sx" onclick="switchModel('38sx')">38SX</button>
+          <button class="model-tab" data-model="38wx" onclick="switchModel('38wx')">38WX</button>
+          <button class="model-tab" data-model="40sx" onclick="switchModel('40sx')">40SX</button>
+        </nav>
+
+        <!-- 38SX Section -->
+        <div class="model-section active" id="section-38sx">
+          <div class="section-header">
+            <h2 class="model-name">38SX</h2>
+            <span class="type-badge">Nagy szériás</span>
+          </div>
+
+          <div class="specs-layout">
+            <div class="image-wrapper">
+              <img src="/images/38SX.png" alt="38SX" class="machine-image">
+            </div>
+            <div class="specs-card">
+              <h3 class="specs-title">
+                <i data-lucide="wrench"></i>
+                Műszaki Adatok
+              </h3>
+              <div class="spec-row">
+                <div class="spec-icon"><i data-lucide="ruler"></i></div>
+                <div class="spec-info">
+                  <span class="spec-label">Munkamélység</span>
+                  <span class="spec-value">15-35 cm</span>
+                </div>
+              </div>
+              <div class="spec-row">
+                <div class="spec-icon"><i data-lucide="gauge"></i></div>
+                <div class="spec-info">
+                  <span class="spec-label">Teljesítmény igény</span>
+                  <span class="spec-value">80-150 LE</span>
+                </div>
+              </div>
+              <div class="features-section">
+                <span class="features-label">Főbb jellemzők</span>
+                <ul class="features-list">
+                  <li class="feature-item"><i data-lucide="check-circle-2"></i> Kompakt felépítés</li>
+                  <li class="feature-item"><i data-lucide="check-circle-2"></i> Költséghatékony</li>
+                  <li class="feature-item"><i data-lucide="check-circle-2"></i> Könnyű karbantartás</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Field Results Card -->
+          <div class="field-card" onclick="openModal('38sx')">
+            <div class="field-card-section">
+              <h4 class="field-card-title">
+                <i data-lucide="map-pin"></i>
+                Terep Eredmények
+              </h4>
+              <p class="field-card-preview">Lakitelek kísérlet: III. és VII. parcella eredményei ipari paradicsom kultúrában.</p>
+              <div class="field-card-meta">
+                <span class="meta-tag"><i data-lucide="leaf"></i> Ipari paradicsom</span>
+                <span class="meta-tag"><i data-lucide="droplets"></i> 450 mm</span>
+                <span class="meta-tag"><i data-lucide="calendar"></i> Máj-Aug</span>
+              </div>
+              <span class="field-card-cta">
+                Részletek megtekintése
+                <i data-lucide="arrow-right"></i>
+              </span>
+            </div>
+            <div class="field-card-section">
+              <h4 class="field-card-title">
+                <i data-lucide="bar-chart-3"></i>
+                Mérési Adatok
+              </h4>
+              <div class="mini-chart">
+                <div class="mini-bar gold" style="height: 55%;"></div>
+                <div class="mini-bar gray" style="height: 70%;"></div>
+                <div class="mini-bar gold" style="height: 50%;"></div>
+                <div class="mini-bar gray" style="height: 80%;"></div>
+              </div>
+              <p class="field-card-preview" style="margin-top: var(--space-sm);">
+                <strong style="color: var(--color-gold);">-1 cm</strong> változás — legjobb stabilitás
+              </p>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <div class="highlight-icon"><i data-lucide="lightbulb"></i></div>
+            <div class="highlight-content">
+              <h4 class="highlight-title">Legjobb stabilitás</h4>
+              <p class="highlight-text">A szántás + ásógép kombináció (VII. parcella) adta a legjobb stabilitást (-1 cm változás), míg az önálló ásógép is kiváló eredményt hozott.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 38WX Section -->
+        <div class="model-section" id="section-38wx">
+          <div class="section-header">
+            <h2 class="model-name">38WX</h2>
+            <span class="type-badge">Lazítókéses</span>
+          </div>
+
+          <div class="specs-layout">
+            <div class="image-wrapper">
+              <img src="/images/38WX.png" alt="38WX" class="machine-image">
+            </div>
+            <div class="specs-card">
+              <h3 class="specs-title">
+                <i data-lucide="wrench"></i>
+                Műszaki Adatok
+              </h3>
+              <div class="spec-row">
+                <div class="spec-icon"><i data-lucide="ruler"></i></div>
+                <div class="spec-info">
+                  <span class="spec-label">Munkamélység</span>
+                  <span class="spec-value">35 cm + 55 cm lazítás</span>
+                </div>
+              </div>
+              <div class="spec-row">
+                <div class="spec-icon"><i data-lucide="gauge"></i></div>
+                <div class="spec-info">
+                  <span class="spec-label">Teljesítmény igény</span>
+                  <span class="spec-value">100-180 LE</span>
+                </div>
+              </div>
+              <div class="features-section">
+                <span class="features-label">Főbb jellemzők</span>
+                <ul class="features-list">
+                  <li class="feature-item"><i data-lucide="check-circle-2"></i> Dupla működési mélység</li>
+                  <li class="feature-item"><i data-lucide="check-circle-2"></i> Mélylazító kések</li>
+                  <li class="feature-item"><i data-lucide="check-circle-2"></i> Tömör talajokra optimalizált</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-card" onclick="openModal('38wx')">
+            <div class="field-card-section">
+              <h4 class="field-card-title">
+                <i data-lucide="map-pin"></i>
+                Terep Eredmények
+              </h4>
+              <p class="field-card-preview">Szentkirály kísérlet: vöröshagyma kultúra 4 hónapos mérési időszak.</p>
+              <div class="field-card-meta">
+                <span class="meta-tag"><i data-lucide="leaf"></i> Vöröshagyma</span>
+                <span class="meta-tag"><i data-lucide="droplets"></i> 350 mm</span>
+                <span class="meta-tag"><i data-lucide="calendar"></i> Márc-Jún</span>
+              </div>
+              <span class="field-card-cta">
+                Részletek megtekintése
+                <i data-lucide="arrow-right"></i>
+              </span>
+            </div>
+            <div class="field-card-section">
+              <h4 class="field-card-title">
+                <i data-lucide="bar-chart-3"></i>
+                Mérési Adatok
+              </h4>
+              <div class="mini-chart">
+                <div class="mini-bar gold" style="height: 87%;"></div>
+                <div class="mini-bar gray" style="height: 20%;"></div>
+                <div class="mini-bar gold" style="height: 42%;"></div>
+                <div class="mini-bar gray" style="height: 12%;"></div>
+              </div>
+              <p class="field-card-preview" style="margin-top: var(--space-sm);">
+                <strong style="color: var(--color-gold);">35 cm → 17 cm</strong> lazaság időszak végén
+              </p>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <div class="highlight-icon"><i data-lucide="lightbulb"></i></div>
+            <div class="highlight-content">
+              <h4 class="highlight-title">Látható különbség</h4>
+              <p class="highlight-text">A júniusi helyszíni bejáráson szemmel látható volt: az ásógépezett parcellán jelentősen kevesebb gyom fejlődött, mint a hagyományos művelésű területen.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 40SX Section -->
+        <div class="model-section" id="section-40sx">
+          <div class="section-header">
+            <h2 class="model-name">40SX</h2>
+            <span class="type-badge">Mélyásógép</span>
+          </div>
+
+          <div class="specs-layout">
+            <div class="image-wrapper">
+              <img src="/images/40SX.png" alt="40SX" class="machine-image">
+            </div>
+            <div class="specs-card">
+              <h3 class="specs-title">
+                <i data-lucide="wrench"></i>
+                Műszaki Adatok
+              </h3>
+              <div class="spec-row">
+                <div class="spec-icon"><i data-lucide="ruler"></i></div>
+                <div class="spec-info">
+                  <span class="spec-label">Munkamélység</span>
+                  <span class="spec-value">20-50 cm</span>
+                </div>
+              </div>
+              <div class="spec-row">
+                <div class="spec-icon"><i data-lucide="gauge"></i></div>
+                <div class="spec-info">
+                  <span class="spec-label">Teljesítmény igény</span>
+                  <span class="spec-value">100-250 LE</span>
+                </div>
+              </div>
+              <div class="features-section">
+                <span class="features-label">Főbb jellemzők</span>
+                <ul class="features-list">
+                  <li class="feature-item"><i data-lucide="check-circle-2"></i> Dupla rotor rendszer</li>
+                  <li class="feature-item"><i data-lucide="check-circle-2"></i> Automata kenés</li>
+                  <li class="feature-item"><i data-lucide="check-circle-2"></i> Beépített kővédelem</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-card" onclick="openModal('40sx')">
+            <div class="field-card-section">
+              <h4 class="field-card-title">
+                <i data-lucide="map-pin"></i>
+                Terep Eredmények
+              </h4>
+              <p class="field-card-preview">Kecskemét-Borbás kísérlet: ipari paradicsom 45 cm mélységű műveléssel.</p>
+              <div class="field-card-meta">
+                <span class="meta-tag"><i data-lucide="leaf"></i> Ipari paradicsom</span>
+                <span class="meta-tag"><i data-lucide="droplets"></i> 400 mm</span>
+                <span class="meta-tag"><i data-lucide="calendar"></i> Máj-Jún</span>
+              </div>
+              <span class="field-card-cta">
+                Részletek megtekintése
+                <i data-lucide="arrow-right"></i>
+              </span>
+            </div>
+            <div class="field-card-section">
+              <h4 class="field-card-title">
+                <i data-lucide="bar-chart-3"></i>
+                Mérési Adatok
+              </h4>
+              <div class="mini-chart">
+                <div class="mini-bar gold" style="height: 100%;"></div>
+                <div class="mini-bar gray" style="height: 87%;"></div>
+                <div class="mini-bar gold" style="height: 92%;"></div>
+                <div class="mini-bar gray" style="height: 67%;"></div>
+              </div>
+              <p class="field-card-preview" style="margin-top: var(--space-sm);">
+                <strong style="color: var(--color-gold);">10 cm</strong> különbség júniusban
+              </p>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <div class="highlight-icon"><i data-lucide="lightbulb"></i></div>
+            <div class="highlight-content">
+              <h4 class="highlight-title">Szembetűnő növekedési különbség</h4>
+              <p class="highlight-text">A júniusi fotón jól látható: az ásógépezett sorok paradicsomjai nagyobbak és fejlettebbek, mint a hagyományos művelésű terület növényei.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA Footer -->
+        <footer class="cta-footer">
+          <p class="cta-text">Hogyan teljesített a gyakorlatban?</p>
+          <a href="/kiserlet" class="cta-btn">
+            Tovább a Kísérletekre
+            <i data-lucide="arrow-right"></i>
+          </a>
+        </footer>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal()">
+    <div class="modal-container">
+      <div class="modal" onclick="event.stopPropagation()">
+
+        <header class="modal-header">
+          <div class="modal-header-left">
+            <i data-lucide="map-pin"></i>
+            <div>
+              <h2 class="modal-title" id="modalLocation">Szentkirály</h2>
+              <span class="modal-subtitle" id="modalModel">38WX Lazítókéses</span>
+            </div>
+          </div>
+          <button class="close-btn" onclick="closeModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </header>
+
+        <div class="modal-body">
+          <!-- Location Meta -->
+          <div class="modal-location" id="modalMeta">
+            <div class="modal-location-item"><i data-lucide="leaf"></i><span>Vöröshagyma</span></div>
+            <div class="modal-location-item"><i data-lucide="layers"></i><span>Réti csernozjom (KA: 28,5)</span></div>
+            <div class="modal-location-item"><i data-lucide="droplets"></i><span>350 mm öntözés</span></div>
+            <div class="modal-location-item"><i data-lucide="calendar"></i><span>Március – Június</span></div>
+          </div>
+
+          <!-- Treatments -->
+          <div class="treatments-grid" id="treatmentsGrid">
+            <div class="treatment-col spade">
+              <h4 class="treatment-col-title">Ásógépes kezelés</h4>
+              <ul class="treatment-list" id="spadeTreatments">
+                <li>Őszi nehézkultivátor</li>
+                <li>Tavaszi nehézkultivátor</li>
+                <li>38WX ásógép (30 cm + 55 cm lazítókés)</li>
+              </ul>
+            </div>
+            <div class="treatment-col">
+              <h4 class="treatment-col-title">Kontroll kezelés</h4>
+              <ul class="treatment-list" id="controlTreatments">
+                <li>Őszi nehézkultivátor</li>
+                <li>Tavaszi nehézkultivátor</li>
+                <li>Kombinátor</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Chart -->
+          <h4 class="modal-chart-title">Penetrométeres mérések (cm)</h4>
+          <div class="chart-grid" id="chartGrid">
+            <!-- Populated by JS -->
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><span class="legend-dot spade"></span> Ásógépes kezelés</div>
+            <div class="legend-item"><span class="legend-dot control"></span> Kontroll</div>
+          </div>
+
+          <!-- Highlight -->
+          <div class="modal-highlight">
+            <i data-lucide="lightbulb"></i>
+            <p id="modalHighlight">A júniusi helyszíni bejáráson szemmel látható volt: az ásógépezett parcellán jelentősen kevesebb gyom fejlődött.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Data
+    const modalData = {
+      '38sx': {
+        location: 'Lakitelek',
+        model: '38SX Nagy szériás',
+        meta: [
+          { icon: 'leaf', text: 'Ipari paradicsom' },
+          { icon: 'layers', text: 'Humuszos homok (KA: 27)' },
+          { icon: 'droplets', text: '450 mm öntözés' },
+          { icon: 'calendar', text: 'Május – Augusztus' }
+        ],
+        spadeTreatments: ['Ásógép (30 cm) önállóan', 'Szántás + Ásógép (25 cm)'],
+        controlTreatments: ['Szántás + Kombinátor', 'Hagyományos művelés'],
+        chartData: [
+          { month: 'Május', spade: 22, control: 28 },
+          { month: 'Augusztus', spade: 20, control: 32 }
+        ],
+        highlight: 'A szántás + ásógép kombináció (VII. parcella) adta a legjobb stabilitást (-1 cm változás), míg az önálló ásógép is kiváló eredményt hozott.'
+      },
+      '38wx': {
+        location: 'Szentkirály',
+        model: '38WX Lazítókéses',
+        meta: [
+          { icon: 'leaf', text: 'Vöröshagyma' },
+          { icon: 'layers', text: 'Réti csernozjom (KA: 28,5)' },
+          { icon: 'droplets', text: '350 mm öntözés' },
+          { icon: 'calendar', text: 'Március – Június' }
+        ],
+        spadeTreatments: ['Őszi nehézkultivátor', 'Tavaszi nehézkultivátor', '38WX ásógép (30 cm + 55 cm lazítókés)'],
+        controlTreatments: ['Őszi nehézkultivátor', 'Tavaszi nehézkultivátor', 'Kombinátor'],
+        chartData: [
+          { month: 'Március', spade: 35, control: 8 },
+          { month: 'Április', spade: 30, control: 25 },
+          { month: 'Május', spade: 22, control: 23 },
+          { month: 'Június', spade: 17, control: 5 }
+        ],
+        highlight: 'A júniusi helyszíni bejáráson szemmel látható volt: az ásógépezett parcellán jelentősen kevesebb gyom fejlődött, mint a hagyományos művelésű területen.'
+      },
+      '40sx': {
+        location: 'Kecskemét-Borbás',
+        model: '40SX Mélyásógép',
+        meta: [
+          { icon: 'leaf', text: 'Ipari paradicsom' },
+          { icon: 'layers', text: 'Réti csernozjom (KA: 28)' },
+          { icon: 'droplets', text: '400 mm öntözés' },
+          { icon: 'calendar', text: 'Május – Június' }
+        ],
+        spadeTreatments: ['Őszi szántás (28 cm)', 'Simítózás', 'Ásóborona', '40SX mélyásógép (45 cm)'],
+        controlTreatments: ['Őszi szántás (28 cm)', 'Simítózás', 'Ásóborona'],
+        chartData: [
+          { month: 'Május', spade: 40, control: 35 },
+          { month: 'Június', spade: 37, control: 27 }
+        ],
+        highlight: 'A júniusi fotón jól látható: az ásógépezett sorok paradicsomjai nagyobbak és fejlettebbek, mint a hagyományos művelésű terület növényei.'
+      }
+    };
+
+    // Model switching
+    function switchModel(modelId) {
+      document.querySelectorAll('.model-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.model === modelId);
+      });
+      document.querySelectorAll('.model-section').forEach(section => {
+        section.classList.toggle('active', section.id === `section-${modelId}`);
+      });
+      lucide.createIcons();
+    }
+
+    function scrollToModel(modelId) {
+      switchModel(modelId);
+      document.getElementById('contentArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Modal
+    function openModal(modelId) {
+      const data = modalData[modelId];
+
+      document.getElementById('modalLocation').textContent = data.location;
+      document.getElementById('modalModel').textContent = data.model;
+
+      document.getElementById('modalMeta').innerHTML = data.meta.map(m =>
+        `<div class="modal-location-item"><i data-lucide="${m.icon}"></i><span>${m.text}</span></div>`
+      ).join('');
+
+      document.getElementById('spadeTreatments').innerHTML =
+        data.spadeTreatments.map(t => `<li>${t}</li>`).join('');
+      document.getElementById('controlTreatments').innerHTML =
+        data.controlTreatments.map(t => `<li>${t}</li>`).join('');
+
+      document.getElementById('chartGrid').innerHTML = data.chartData.map(d => `
+        <div class="chart-item">
+          <span class="chart-month">${d.month}</span>
+          <div class="chart-bars">
+            <div class="bar-group">
+              <div class="bar spade" style="height: ${Math.max(20, d.spade * 2.5)}px;">
+                <span class="bar-value">${d.spade}</span>
+              </div>
+              <span class="bar-label">Ásógép</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar control" style="height: ${Math.max(15, d.control * 2.5)}px;">
+                <span class="bar-value">${d.control}</span>
+              </div>
+              <span class="bar-label">Kontroll</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('modalHighlight').textContent = data.highlight;
+
+      document.getElementById('modalBackdrop').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => lucide.createIcons(), 50);
+    }
+
+    function closeModal() {
+      document.getElementById('modalBackdrop').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+
+</body>
+</html>

@@ -94,6 +94,13 @@
     font-style: normal; /* Remove italic for more modern look */
 }
 
+.cursor {
+    display: inline-block;
+    margin-left: 2px;
+    font-weight: 300;
+    color: var(--color-gold);
+}
+
 .heroSubtitle {
     font-size: 1.25rem;
     color: rgba(255, 255, 255, 0.95); /* Improved contrast from 0.85 */

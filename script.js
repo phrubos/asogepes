@@ -1,6 +1,7 @@
 /**
  * Ásógépes Talajművelés - Marketing Weboldal
  * JavaScript funkciók
+ * Enhanced with micro-interactions
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,6 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavHighlight();
     initChartAnimations();
     initSoilInfographic();
+
+    // New enhanced interactions
+    initProblemSectionAnimations();
+    initWaterParticles();
+    initStatDigitAnimation();
+    initSoilCardInteraction();
 });
 
 /**
@@ -363,4 +370,386 @@ function initChartInteractions() {
 // Initialize chart interactions
 document.addEventListener('DOMContentLoaded', () => {
     initChartInteractions();
+});
+
+/**
+ * ============================================
+ * ENHANCED MICRO-INTERACTIONS
+ * Problem Section Animations
+ * ============================================
+ */
+
+/**
+ * Initialize Problem Section Entry Animations
+ */
+function initProblemSectionAnimations() {
+    const problemSection = document.querySelector('.section-problem');
+    if (!problemSection) return;
+
+    // Observe when section comes into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                triggerProblemAnimations();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2 });
+
+    observer.observe(problemSection);
+}
+
+/**
+ * Trigger all problem section animations
+ */
+function triggerProblemAnimations() {
+    // Animate stat block
+    const statBlock = document.querySelector('.problem-stat-block');
+    if (statBlock) {
+        statBlock.style.opacity = '1';
+        statBlock.style.transform = 'translateY(0)';
+    }
+
+    // Re-trigger info card animations
+    const infoCards = document.querySelectorAll('.info-card');
+    infoCards.forEach((card, index) => {
+        card.style.animationDelay = `${0.2 + index * 0.15}s`;
+        card.style.animationPlayState = 'running';
+    });
+}
+
+/**
+ * Animate statistic digits with spring physics
+ */
+function initStatDigitAnimation() {
+    const statElement = document.getElementById('irrigationStat');
+    if (!statElement) return;
+
+    const text = statElement.textContent;
+
+    // Wrap each character in a span
+    statElement.innerHTML = text.split('').map((char, index) => {
+        if (char === '-') {
+            return `<span class="stat-digit" style="animation-delay: ${0.3 + index * 0.05}s">${char}</span>`;
+        }
+        return `<span class="stat-digit" style="animation-delay: ${0.1 + index * 0.08}s">${char}</span>`;
+    }).join('');
+
+    // Observe and trigger
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const digits = entry.target.querySelectorAll('.stat-digit');
+                digits.forEach(digit => {
+                    digit.style.animationPlayState = 'running';
+                });
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    observer.observe(statElement);
+}
+
+/**
+ * Create and animate water droplet particles
+ */
+function initWaterParticles() {
+    const skyContainer = document.getElementById('skyParticles');
+    if (!skyContainer) return;
+
+    // Create initial water drops
+    function createWaterDrop() {
+        const drop = document.createElement('div');
+        drop.className = 'water-drop';
+
+        // Random position
+        drop.style.left = `${Math.random() * 100}%`;
+
+        // Random animation delay and duration
+        const delay = Math.random() * 2;
+        const duration = 1.5 + Math.random() * 1;
+        drop.style.animationDelay = `${delay}s`;
+        drop.style.animationDuration = `${duration}s`;
+
+        skyContainer.appendChild(drop);
+
+        // Remove after animation
+        setTimeout(() => {
+            drop.remove();
+        }, (delay + duration) * 1000);
+    }
+
+    // Create drops at intervals
+    let dropInterval;
+
+    const startDrops = () => {
+        // Initial burst
+        for (let i = 0; i < 5; i++) {
+            setTimeout(createWaterDrop, i * 200);
+        }
+
+        // Continuous drops
+        dropInterval = setInterval(() => {
+            if (Math.random() > 0.3) {
+                createWaterDrop();
+            }
+        }, 400);
+    };
+
+    // Only run when visible
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                startDrops();
+            } else {
+                clearInterval(dropInterval);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    observer.observe(skyContainer);
+}
+
+/**
+ * Enhanced Soil Card Interaction with State Toggle
+ */
+function initSoilCardInteraction() {
+    const soilCard = document.getElementById('soilCard');
+    const toggleBtn = document.getElementById('soilToggleBtnNew');
+    const cardTitle = document.querySelector('.soil-card-title');
+    const rootZoneValue = document.getElementById('rootZoneValue');
+    const waterValue = document.getElementById('waterValue');
+
+    if (!soilCard || !toggleBtn) return;
+
+    let isHealthy = false;
+
+    const states = {
+        compacted: {
+            title: 'Tömörödött talaj (Eketalp)',
+            buttonText: 'Javítás',
+            rootZone: 'Sekély (25cm)',
+            water: 'Pangóvíz',
+            rootZoneClass: '',
+            waterClass: ''
+        },
+        healthy: {
+            title: 'Egészséges talaj',
+            buttonText: 'Tömörítés',
+            rootZone: 'Mély (45cm)',
+            water: 'Átjárható',
+            rootZoneClass: 'good',
+            waterClass: 'good'
+        }
+    };
+
+    toggleBtn.addEventListener('click', () => {
+        isHealthy = !isHealthy;
+        const state = isHealthy ? states.healthy : states.compacted;
+
+        // Button press animation
+        toggleBtn.style.transform = 'scale(0.92)';
+        setTimeout(() => {
+            toggleBtn.style.transform = 'scale(1)';
+        }, 150);
+
+        // Toggle state class with transition
+        soilCard.classList.toggle('state-healthy', isHealthy);
+        soilCard.classList.toggle('state-compacted', !isHealthy);
+
+        // Update content with fade transition
+        cardTitle.style.opacity = '0';
+        rootZoneValue.style.opacity = '0';
+        waterValue.style.opacity = '0';
+
+        setTimeout(() => {
+            cardTitle.textContent = state.title;
+            toggleBtn.querySelector('span').textContent = state.buttonText;
+            rootZoneValue.textContent = state.rootZone;
+            waterValue.textContent = state.water;
+
+            rootZoneValue.className = `soil-stat-value ${state.rootZoneClass}`;
+            waterValue.className = `soil-stat-value ${state.waterClass}`;
+
+            cardTitle.style.opacity = '1';
+            rootZoneValue.style.opacity = '1';
+            waterValue.style.opacity = '1';
+        }, 200);
+
+        // Re-trigger plant animations
+        restartPlantAnimation(isHealthy);
+    });
+
+    // Layer hover interactions
+    const layers = document.querySelectorAll('.soil-layer-hover');
+    const caption = document.querySelector('.soil-card-caption');
+
+    const layerInfo = {
+        sky: 'Légkör: Az öntözővíz felülről érkezik',
+        topsoil: 'Felső talajréteg: Itt fejlődnek a gyökerek',
+        subsoil: 'Altalaj: Vízzáró eketalp réteg'
+    };
+
+    layers.forEach(layer => {
+        layer.addEventListener('mouseenter', () => {
+            const info = layerInfo[layer.dataset.layer];
+            if (caption && info) {
+                caption.textContent = info;
+                caption.style.fontWeight = '600';
+            }
+        });
+
+        layer.addEventListener('mouseleave', () => {
+            if (caption) {
+                caption.textContent = 'Kattints a rétegekre a részletekért';
+                caption.style.fontWeight = '400';
+            }
+        });
+    });
+}
+
+/**
+ * Restart plant animation based on state
+ */
+function restartPlantAnimation(isHealthy) {
+    const plantStem = document.querySelector('.plant-stem');
+    const leaves = document.querySelectorAll('.leaf');
+    const roots = document.querySelectorAll('.root-path');
+
+    if (!plantStem) return;
+
+    // Reset animations
+    plantStem.style.animation = 'none';
+    leaves.forEach(leaf => leaf.style.animation = 'none');
+    roots.forEach(root => root.style.animation = 'none');
+
+    // Force reflow
+    void plantStem.offsetWidth;
+
+    // Re-apply animations with appropriate state
+    if (isHealthy) {
+        plantStem.style.animation = 'stemGrow 1s ease-out forwards';
+        leaves.forEach((leaf, i) => {
+            leaf.style.animation = `leafGrow 0.5s ease-out ${0.8 + i * 0.2}s forwards`;
+        });
+        roots.forEach((root, i) => {
+            root.style.animation = `rootGrow 1.5s ease-out ${0.5 + i * 0.2}s forwards`;
+        });
+    } else {
+        plantStem.style.animation = 'stemShrink 0.6s ease forwards';
+        leaves.forEach(leaf => {
+            leaf.style.animation = 'leafWilt 0.6s ease forwards';
+        });
+        roots.forEach(root => {
+            root.style.animation = 'rootShrink 0.6s ease forwards';
+        });
+    }
+}
+
+/**
+ * Add magnetic hover effect to info cards
+ */
+function initMagneticCards() {
+    const cards = document.querySelectorAll('.info-card');
+
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const deltaX = (x - centerX) / centerX;
+            const deltaY = (y - centerY) / centerY;
+
+            card.style.transform = `
+                translateY(-4px)
+                translateX(4px)
+                rotateX(${deltaY * -3}deg)
+                rotateY(${deltaX * 3}deg)
+            `;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0) translateX(0) rotateX(0) rotateY(0)';
+        });
+    });
+}
+
+// Initialize magnetic cards effect
+document.addEventListener('DOMContentLoaded', () => {
+    initMagneticCards();
+});
+
+/**
+ * Soil particle effect (floating soil particles)
+ */
+function createSoilParticles() {
+    const vizContainer = document.getElementById('soilVizContainer');
+    if (!vizContainer) return;
+
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: absolute;
+            width: ${2 + Math.random() * 3}px;
+            height: ${2 + Math.random() * 3}px;
+            background: rgba(139, 115, 85, ${0.3 + Math.random() * 0.4});
+            border-radius: 50%;
+            bottom: ${30 + Math.random() * 30}%;
+            left: ${Math.random() * 100}%;
+            pointer-events: none;
+            animation: floatParticle ${3 + Math.random() * 2}s ease-in-out infinite;
+            animation-delay: ${Math.random() * 2}s;
+        `;
+
+        vizContainer.appendChild(particle);
+
+        // Remove after some time
+        setTimeout(() => particle.remove(), 10000);
+    }
+
+    // Create particles periodically
+    setInterval(() => {
+        if (Math.random() > 0.6) {
+            createParticle();
+        }
+    }, 800);
+}
+
+// Add floating particle keyframes
+const floatParticleStyle = document.createElement('style');
+floatParticleStyle.textContent = `
+    @keyframes floatParticle {
+        0%, 100% {
+            transform: translateY(0) translateX(0);
+            opacity: 0.6;
+        }
+        50% {
+            transform: translateY(-20px) translateX(${Math.random() > 0.5 ? '' : '-'}10px);
+            opacity: 0.3;
+        }
+    }
+`;
+document.head.appendChild(floatParticleStyle);
+
+// Initialize soil particles when visible
+document.addEventListener('DOMContentLoaded', () => {
+    const vizContainer = document.getElementById('soilVizContainer');
+    if (vizContainer) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    createSoilParticles();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        observer.observe(vizContainer);
+    }
 });

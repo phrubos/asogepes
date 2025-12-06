@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bento Hero Concept - Főoldal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0f0a;
+            --bg-card: rgba(20, 28, 20, 0.6);
+            --bg-card-hover: rgba(30, 42, 30, 0.8);
+            --border: rgba(107, 139, 94, 0.2);
+            --border-glow: rgba(107, 139, 94, 0.5);
+            --text-primary: #f0f5f0;
+            --text-secondary: rgba(240, 245, 240, 0.7);
+            --text-muted: rgba(240, 245, 240, 0.5);
+            --accent-green: #6b8b5e;
+            --accent-gold: #d4a84b;
+            --accent-gold-light: rgba(212, 168, 75, 0.15);
+            --gradient-earth: linear-gradient(135deg, #2d3b2d 0%, #1a2318 100%);
+        }
+
+        body {
+            background: var(--bg-dark);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(107, 139, 94, 0.15), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 168, 75, 0.08), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .grain-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header Badge */
+        .badge-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .uni-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            backdrop-filter: blur(10px);
+        }
+
+        .uni-badge .year {
+            padding: 0.25rem 0.75rem;
+            background: var(--accent-gold-light);
+            color: var(--accent-gold);
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        /* Title Section */
+        .hero-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-title h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title h1 .accent {
+            background: linear-gradient(135deg, var(--accent-gold), #e8c07a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== BENTO GRID ===== */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(120px, auto);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .bento-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            backdrop-filter: blur(20px);
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(107, 139, 94, 0.06), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .bento-card:hover::before {
+            opacity: 1;
+        }
+
+        .bento-card:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Card Sizes */
+        .bento-hero-image {
+            grid-column: span 8;
+            grid-row: span 3;
+            padding: 0;
+        }
+
+        .bento-stat-large {
+            grid-column: span 4;
+            grid-row: span 2;
+        }
+
+        .bento-stat-small {
+            grid-column: span 4;
+            grid-row: span 1;
+        }
+
+        .bento-lottie {
+            grid-column: span 3;
+            grid-row: span 2;
+        }
+
+        .bento-cta {
+            grid-column: span 5;
+            grid-row: span 2;
+        }
+
+        .bento-quote {
+            grid-column: span 4;
+            grid-row: span 2;
+        }
+
+        /* Hero Image Card */
+        .bento-hero-image {
+            position: relative;
+        }
+
+        .bento-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 1.5rem;
+        }
+
+        .bento-hero-image .overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 15, 10, 0.9) 0%, transparent 50%);
+            border-radius: 1.5rem;
+        }
+
+        .bento-hero-image .image-label {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            right: 1.5rem;
+        }
+
+        .bento-hero-image .image-label span {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .bento-hero-image .image-label p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--accent-gold), var(--text-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-value.large {
+            font-size: 5rem;
+        }
+
+        .stat-unit {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .stat-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-gold-light);
+            border-radius: 12px;
+            color: var(--accent-gold);
+        }
+
+        /* Lottie Animation Card */
+        .lottie-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .lottie-container {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1rem;
+        }
+
+        .lottie-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* CTA Card */
+        .cta-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            background: linear-gradient(135deg, rgba(107, 139, 94, 0.15), rgba(107, 139, 94, 0.05));
+        }
+
+        .cta-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: var(--accent-gold);
+            color: #1a1a1a;
+            border: none;
+            border-radius: 100px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px -10px rgba(212, 168, 75, 0.5);
+        }
+
+        .cta-button svg {
+            transition: transform 0.3s;
+        }
+
+        .cta-button:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* Quote Card */
+        .quote-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-left: 3px solid var(--accent-gold);
+        }
+
+        .quote-card blockquote {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .quote-card cite {
+            display: block;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            font-style: normal;
+            color: var(--accent-gold);
+        }
+
+        /* Animated Counter */
+        .counter {
+            display: inline-block;
+        }
+
+        /* Soil Layer Animation Card */
+        .soil-card {
+            grid-column: span 3;
+            grid-row: span 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .soil-layers {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .soil-layer {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .soil-layer.topsoil {
+            background: linear-gradient(90deg, #3d4a3d, #2d3a2d);
+        }
+
+        .soil-layer.subsoil {
+            background: linear-gradient(90deg, #5a4a3a, #4a3a2a);
+        }
+
+        .soil-layer.compacted {
+            background: linear-gradient(90deg, #6a5040, #5a4030);
+        }
+
+        .soil-layer.deep {
+            background: linear-gradient(90deg, #7a6050, #6a5040);
+        }
+
+        .soil-layer::after {
+            content: '';
+            position: absolute;
+            right: -100%;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { right: -100%; }
+            100% { right: 200%; }
+        }
+
+        /* Progress Ring */
+        .progress-ring {
+            width: 80px;
+            height: 80px;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 6;
+        }
+
+        .progress-ring .bg {
+            stroke: rgba(107, 139, 94, 0.2);
+        }
+
+        .progress-ring .progress {
+            stroke: var(--accent-gold);
+            stroke-linecap: round;
+            stroke-dasharray: 220;
+            stroke-dashoffset: 55;
+            animation: progress-animation 2s ease-out forwards;
+        }
+
+        @keyframes progress-animation {
+            from {
+                stroke-dashoffset: 220;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .bento-hero-image {
+                grid-column: span 12;
+                grid-row: span 2;
+            }
+            .bento-stat-large,
+            .bento-stat-small,
+            .bento-lottie,
+            .bento-cta,
+            .bento-quote,
+            .soil-card {
+                grid-column: span 6;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .bento-hero-image,
+            .bento-stat-large,
+            .bento-stat-small,
+            .bento-lottie,
+            .bento-cta,
+            .bento-quote,
+            .soil-card {
+                grid-column: span 1;
+            }
+            .stat-value.large {
+                font-size: 3rem;
+            }
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    <div class="grain-overlay"></div>
+    
+    <!-- Floating Particles -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 35%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 65%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 2.5s;"></div>
+    </div>
+
+    <div class="container">
+        <!-- Badge -->
+        <div class="badge-row">
+            <div class="uni-badge">
+                <span>Neumann János Egyetem × Agroskill Kft.</span>
+                <span class="year">2025</span>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <div class="hero-title">
+            <h1>A talaj nem<br><span class="accent">végtelen erőforrás</span></h1>
+            <p class="hero-subtitle">
+                Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról öntözött kertészeti kultúrákban
+            </p>
+        </div>
+
+        <!-- Bento Grid -->
+        <div class="bento-grid">
+            <!-- Hero Image - Large -->
+            <div class="bento-card bento-hero-image">
+                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&q=80" alt="Agricultural field">
+                <div class="overlay"></div>
+                <div class="image-label">
+                    <span>Kísérleti terület</span>
+                    <p>Imants 38SX működés közben - Kerekegyháza, 2025</p>
+                </div>
+            </div>
+
+            <!-- Stat - Yield Increase -->
+            <div class="bento-card bento-stat-large">
+                <div class="stat-card">
+                    <span class="stat-label">Termésnövekedés</span>
+                    <div class="stat-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20V10M18 20V4M6 20v-4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="stat-value large counter" data-target="37">0</span>
+                        <span class="stat-unit">% többlet hozam</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stat - Working Depth -->
+            <div class="bento-card bento-stat-small">
+                <div class="stat-card">
+                    <span class="stat-label">Munkamélység</span>
+                    <div>
+                        <span class="stat-value counter" data-target="45">0</span>
+                        <span class="stat-unit">cm</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lottie Animation - Soil Health -->
+            <div class="bento-card bento-lottie lottie-card">
+                <div class="lottie-container">
+                    <!-- Placeholder for Lottie - Using CSS animation fallback -->
+                    <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(107,139,94,0.2)" stroke-width="8"/>
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="#d4a84b" stroke-width="8" 
+                                stroke-dasharray="251" stroke-dashoffset="63" stroke-linecap="round"
+                                style="transform: rotate(-90deg); transform-origin: center; animation: progress-animation 2s ease-out forwards;">
+                            <animate attributeName="stroke-dashoffset" from="251" to="63" dur="2s" fill="freeze"/>
+                        </circle>
+                        <text x="50" y="55" text-anchor="middle" fill="#d4a84b" font-size="20" font-weight="bold">75%</text>
+                    </svg>
+                </div>
+                <span class="lottie-label">Talajszerkezet javulás</span>
+            </div>
+
+            <!-- CTA Card -->
+            <div class="bento-card bento-cta cta-card">
+                <h3>Fedezd fel a kutatás eredményeit</h3>
+                <a href="#" class="cta-button">
+                    Indulás
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Soil Layers Visualization -->
+            <div class="bento-card soil-card">
+                <span class="stat-label">Talajrétegek</span>
+                <div class="soil-layers">
+                    <div class="soil-layer topsoil">Feltalaj (0-25cm)</div>
+                    <div class="soil-layer subsoil">Altalaj (25-40cm)</div>
+                    <div class="soil-layer compacted">Tömörödött zóna</div>
+                    <div class="soil-layer deep">Mélyréteg (40cm+)</div>
+                </div>
+            </div>
+
+            <!-- Quote Card -->
+            <div class="bento-card bento-quote quote-card">
+                <blockquote>
+                    "Az ásógép nem forgat, hanem lazít — megőrzi a talaj természetes rétegződését."
+                </blockquote>
+                <cite>— Dr. Szakértő, Talajbiológus</cite>
+            </div>
+
+            <!-- Stat - Research Period -->
+            <div class="bento-card bento-stat-small">
+                <div class="stat-card">
+                    <span class="stat-label">Kutatási időszak</span>
+                    <div>
+                        <span class="stat-value counter" data-target="4">0</span>
+                        <span class="stat-unit">hónap tesztelés</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stat - Models Tested -->
+            <div class="bento-card bento-stat-small">
+                <div class="stat-card">
+                    <span class="stat-label">Tesztelt modellek</span>
+                    <div>
+                        <span class="stat-value counter" data-target="3">0</span>
+                        <span class="stat-unit">Imants típus</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animated Counters
+        const counters = document.querySelectorAll('.counter');
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = parseInt(counter.dataset.target);
+                    const duration = 2000;
+                    const increment = target / (duration / 16);
+                    let current = 0;
+
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.textContent = Math.floor(current);
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.textContent = target;
+                        }
+                    };
+
+                    updateCounter();
+                    observer.unobserve(counter);
+                }
+            });
+        }, observerOptions);
+
+        counters.forEach(counter => observer.observe(counter));
+
+        // Mouse tracking for glow effect
+        document.querySelectorAll('.bento-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+    </script>
+</body>
+</html>

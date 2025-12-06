@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Navigation Buttons - Enhanced Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1A1612 0%, #2D251E 50%, #3D3229 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Demo content */
+        .demo-content {
+            text-align: center;
+            color: rgba(255,255,255,0.3);
+        }
+        .demo-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .demo-content p {
+            font-size: 1rem;
+            opacity: 0.6;
+        }
+
+        /* ============================================
+           NAVIGATION ZONE - Enhanced Design
+           ============================================ */
+        .nav-zone {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100px;
+            height: 320px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: visible;
+        }
+
+        .nav-zone.left { left: 0; }
+        .nav-zone.right { right: 0; }
+
+        /* Glow Background - Animated gradient orb */
+        .nav-glow {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        .left .nav-glow {
+            left: -100px;
+            background: radial-gradient(circle, rgba(212, 168, 75, 0.4) 0%, rgba(212, 168, 75, 0) 70%);
+        }
+
+        .right .nav-glow {
+            right: -100px;
+            background: radial-gradient(circle, rgba(106, 139, 94, 0.5) 0%, rgba(106, 139, 94, 0) 70%);
+        }
+
+        .nav-zone:hover .nav-glow {
+            opacity: 1;
+            transform: scale(1.3);
+        }
+
+        /* Decorative Lines - Animated on hover */
+        .nav-lines {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .left .nav-lines {
+            left: 16px;
+            transform: translateX(-10px);
+        }
+
+        .right .nav-lines {
+            right: 16px;
+            transform: translateX(10px);
+        }
+
+        .nav-line {
+            height: 2px;
+            background: linear-gradient(90deg, rgba(212, 168, 75, 0.8), rgba(212, 168, 75, 0));
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .right .nav-line {
+            background: linear-gradient(270deg, rgba(106, 139, 94, 0.8), rgba(106, 139, 94, 0));
+        }
+
+        .nav-line:nth-child(1) { width: 24px; transition-delay: 0.05s; }
+        .nav-line:nth-child(2) { width: 40px; transition-delay: 0.1s; }
+        .nav-line:nth-child(3) { width: 32px; transition-delay: 0.15s; }
+        .nav-line:nth-child(4) { width: 20px; transition-delay: 0.2s; }
+
+        .nav-zone:hover .nav-lines {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Arrow Button - Glassmorphism style */
+        .nav-button {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .left .nav-button {
+            transform: translateX(-20px) scale(0.8);
+        }
+
+        .right .nav-button {
+            transform: translateX(20px) scale(0.8);
+        }
+
+        .nav-zone:hover .nav-button {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Arrow Icon */
+        .nav-button svg {
+            width: 28px;
+            height: 28px;
+            color: rgba(255, 255, 255, 0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-zone:hover .nav-button svg {
+            animation: arrowPulse 1.5s ease-in-out infinite;
+        }
+
+        .left .nav-zone:hover .nav-button svg {
+            animation: arrowPulseLeft 1.5s ease-in-out infinite;
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(4px); }
+        }
+
+        @keyframes arrowPulseLeft {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-4px); }
+        }
+
+        /* Ring Animation */
+        .nav-ring {
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .left .nav-ring {
+            border-color: rgba(212, 168, 75, 0.5);
+        }
+
+        .right .nav-ring {
+            border-color: rgba(106, 139, 94, 0.6);
+        }
+
+        .nav-zone:hover .nav-ring {
+            opacity: 1;
+            animation: ringExpand 1.5s ease-out infinite;
+        }
+
+        @keyframes ringExpand {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.8);
+                opacity: 0;
+            }
+        }
+
+        /* Tooltip Label */
+        .nav-tooltip {
+            position: absolute;
+            bottom: -40px;
+            white-space: nowrap;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease 0.1s;
+        }
+
+        .nav-zone:hover .nav-tooltip {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Progress Indicator - Shows page position */
+        .nav-progress {
+            position: absolute;
+            bottom: -80px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: rgba(212, 168, 75, 0.8);
+            transform: scale(1.2);
+        }
+
+        .nav-zone:hover .progress-dot {
+            opacity: 1;
+        }
+
+        /* Hover state enhancement */
+        .nav-zone::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(0,0,0,0.3) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .right::after {
+            background: linear-gradient(270deg, rgba(0,0,0,0.3) 0%, transparent 100%);
+        }
+
+        .nav-zone:hover::after {
+            opacity: 1;
+        }
+
+        /* ============================================
+           LIGHT MODE VARIANT
+           ============================================ */
+        .light-mode {
+            background: linear-gradient(135deg, #F5F0E8 0%, #E8E0D4 100%);
+        }
+
+        .light-mode .demo-content {
+            color: rgba(26, 22, 18, 0.3);
+        }
+
+        .light-mode .nav-button {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .light-mode .nav-zone:hover .nav-button {
+            background: rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .light-mode .nav-button svg {
+            color: rgba(26, 22, 18, 0.9);
+        }
+
+        .light-mode .nav-tooltip {
+            color: rgba(26, 22, 18, 0.8);
+        }
+
+        .light-mode .left .nav-glow {
+            background: radial-gradient(circle, rgba(196, 92, 62, 0.3) 0%, rgba(196, 92, 62, 0) 70%);
+        }
+
+        .light-mode .right .nav-glow {
+            background: radial-gradient(circle, rgba(74, 103, 65, 0.3) 0%, rgba(74, 103, 65, 0) 70%);
+        }
+
+        .light-mode .left .nav-ring {
+            border-color: rgba(196, 92, 62, 0.5);
+        }
+
+        .light-mode .right .nav-ring {
+            border-color: rgba(74, 103, 65, 0.5);
+        }
+
+        .light-mode .nav-line {
+            background: linear-gradient(90deg, rgba(196, 92, 62, 0.6), rgba(196, 92, 62, 0));
+        }
+
+        .light-mode .right .nav-line {
+            background: linear-gradient(270deg, rgba(74, 103, 65, 0.6), rgba(74, 103, 65, 0));
+        }
+
+        .light-mode .progress-dot.active {
+            background: rgba(196, 92, 62, 0.8);
+        }
+
+        /* Toggle button for demo */
+        .mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            color: white;
+            font-size: 0.85rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .mode-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .light-mode .mode-toggle {
+            background: rgba(0,0,0,0.05);
+            border-color: rgba(0,0,0,0.1);
+            color: #1A1612;
+        }
+    </style>
+</head>
+<body>
+    <!-- Left Navigation -->
+    <div class="nav-zone left">
+        <div class="nav-glow"></div>
+        <div class="nav-lines">
+            <div class="nav-line"></div>
+            <div class="nav-line"></div>
+            <div class="nav-line"></div>
+            <div class="nav-line"></div>
+        </div>
+        <div class="nav-ring"></div>
+        <div class="nav-button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+        </div>
+        <span class="nav-tooltip">Főoldal</span>
+        <div class="nav-progress">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+        </div>
+    </div>
+
+    <!-- Right Navigation -->
+    <div class="nav-zone right">
+        <div class="nav-glow"></div>
+        <div class="nav-lines">
+            <div class="nav-line"></div>
+            <div class="nav-line"></div>
+            <div class="nav-line"></div>
+            <div class="nav-line"></div>
+        </div>
+        <div class="nav-ring"></div>
+        <div class="nav-button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+        </div>
+        <span class="nav-tooltip">Megoldás</span>
+        <div class="nav-progress">
+            <div class="progress-dot"></div>
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+        </div>
+    </div>
+
+    <!-- Demo Content -->
+    <div class="demo-content">
+        <h1>A Probléma</h1>
+        <p>Hover over the edges to see the enhanced navigation</p>
+    </div>
+
+    <!-- Mode Toggle -->
+    <button class="mode-toggle" onclick="document.body.classList.toggle('light-mode')">
+        Toggle Light/Dark Mode
+    </button>
+</body>
+</html>

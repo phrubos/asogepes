@@ -1,0 +1,25 @@
+.typewriter {
+  display: inline;
+}
+
+.textContainer {
+  display: inline;
+}
+
+.text {
+  display: inline;
+}
+
+.cursor {
+  display: inline-block;
+  margin-left: 2px;
+  font-weight: 300;
+  color: currentColor;
+}
+
+/* Ensure the cursor doesn't affect layout */
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none;
+  }
+}

@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bento Solution Showcase - Megoldás Oldal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0c120c;
+            --bg-card: rgba(18, 26, 18, 0.8);
+            --bg-card-light: rgba(30, 42, 30, 0.6);
+            --border: rgba(107, 139, 94, 0.2);
+            --border-glow: rgba(107, 139, 94, 0.5);
+            --text-primary: #f0f5f0;
+            --text-secondary: rgba(240, 245, 240, 0.7);
+            --text-muted: rgba(240, 245, 240, 0.5);
+            --accent-green: #6b8b5e;
+            --accent-gold: #d4a84b;
+            --accent-gold-light: rgba(212, 168, 75, 0.15);
+            --gradient-gold: linear-gradient(135deg, #d4a84b, #e8c07a);
+        }
+
+        body {
+            background: var(--bg-dark);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Background Effects */
+        .bg-glow {
+            position: fixed;
+            top: -50%;
+            right: -30%;
+            width: 80%;
+            height: 150%;
+            background: radial-gradient(ellipse at center, rgba(107, 139, 94, 0.08), transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow-gold {
+            position: fixed;
+            bottom: -30%;
+            left: -20%;
+            width: 60%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(212, 168, 75, 0.05), transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+            padding: 0.25rem 0.75rem;
+            background: var(--accent-gold-light);
+            border-radius: 100px;
+        }
+
+        .section-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        .page-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .page-title em {
+            font-style: normal;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        /* ===== BENTO SHOWCASE GRID ===== */
+        .bento-showcase {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(100px, auto);
+            gap: 1rem;
+        }
+
+        .bento-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            backdrop-filter: blur(20px);
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(212, 168, 75, 0.06), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .bento-card:hover::before {
+            opacity: 1;
+        }
+
+        .bento-card:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -15px rgba(0,0,0,0.4);
+        }
+
+        /* ===== MACHINE HERO CARD ===== */
+        .machine-hero {
+            grid-column: span 8;
+            grid-row: span 4;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .machine-hero-inner {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: linear-gradient(180deg, rgba(107, 139, 94, 0.1), rgba(0,0,0,0.3));
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+
+        .machine-tabs {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .machine-tab {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .machine-tab:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .machine-tab.active {
+            background: var(--accent-gold);
+            color: #1a1a1a;
+            border-color: var(--accent-gold);
+        }
+
+        .machine-display {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .machine-image-container {
+            position: relative;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .machine-image {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.5));
+            animation: float-machine 4s ease-in-out infinite;
+        }
+
+        @keyframes float-machine {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+
+        .machine-glow {
+            position: absolute;
+            bottom: -20%;
+            left: 10%;
+            right: 10%;
+            height: 40%;
+            background: radial-gradient(ellipse at center, rgba(107, 139, 94, 0.3), transparent 70%);
+            filter: blur(30px);
+        }
+
+        .machine-info {
+            padding: 1.5rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            position: relative;
+            z-index: 2;
+        }
+
+        .machine-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .machine-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ===== LOTTIE SPADING ANIMATION ===== */
+        .lottie-spading {
+            grid-column: span 4;
+            grid-row: span 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(107, 139, 94, 0.15), rgba(107, 139, 94, 0.05));
+        }
+
+        .spading-animation {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        /* CSS Spading Motion Animation */
+        .spade-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .spade-blade {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            width: 8px;
+            height: 60px;
+            background: linear-gradient(180deg, #8a8a8a, #5a5a5a);
+            border-radius: 2px;
+            transform-origin: bottom center;
+            animation: spade-motion 1.5s ease-in-out infinite;
+        }
+
+        .spade-blade:nth-child(1) { transform: translateX(-30px); animation-delay: 0s; }
+        .spade-blade:nth-child(2) { transform: translateX(-10px); animation-delay: 0.2s; }
+        .spade-blade:nth-child(3) { transform: translateX(10px); animation-delay: 0.4s; }
+        .spade-blade:nth-child(4) { transform: translateX(30px); animation-delay: 0.6s; }
+
+        @keyframes spade-motion {
+            0%, 100% {
+                transform: translateX(var(--tx, 0)) rotate(0deg) translateY(0);
+            }
+            25% {
+                transform: translateX(var(--tx, 0)) rotate(-30deg) translateY(-20px);
+            }
+            50% {
+                transform: translateX(var(--tx, 0)) rotate(0deg) translateY(-10px);
+            }
+            75% {
+                transform: translateX(var(--tx, 0)) rotate(30deg) translateY(-20px);
+            }
+        }
+
+        .spade-blade:nth-child(1) { --tx: -30px; }
+        .spade-blade:nth-child(2) { --tx: -10px; }
+        .spade-blade:nth-child(3) { --tx: 10px; }
+        .spade-blade:nth-child(4) { --tx: 30px; }
+
+        .soil-particles {
+            position: absolute;
+            bottom: 15%;
+            left: 20%;
+            right: 20%;
+            height: 20px;
+        }
+
+        .soil-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #6a5a4a;
+            border-radius: 50%;
+            animation: particle-fly 1.5s ease-out infinite;
+        }
+
+        @keyframes particle-fly {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0;
+            }
+            30% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-40px) translateX(var(--px, 0)) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        .soil-particle:nth-child(1) { left: 10%; --px: -15px; animation-delay: 0.1s; }
+        .soil-particle:nth-child(2) { left: 30%; --px: 10px; animation-delay: 0.3s; }
+        .soil-particle:nth-child(3) { left: 50%; --px: -5px; animation-delay: 0.5s; }
+        .soil-particle:nth-child(4) { left: 70%; --px: 20px; animation-delay: 0.7s; }
+        .soil-particle:nth-child(5) { left: 90%; --px: -10px; animation-delay: 0.2s; }
+
+        .lottie-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .lottie-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== FEATURE CARDS ===== */
+        .feature-card {
+            grid-column: span 4;
+            grid-row: span 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-gold-light);
+            border-radius: 16px;
+            color: var(--accent-gold);
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .feature-stat {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .feature-stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== SPECS BENTO ===== */
+        .specs-grid {
+            grid-column: span 8;
+            grid-row: span 2;
+        }
+
+        .specs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .specs-header h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .specs-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .specs-toggle button {
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .specs-toggle button.active {
+            background: var(--accent-gold);
+            color: #1a1a1a;
+            border-color: var(--accent-gold);
+        }
+
+        .specs-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .spec-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .spec-item:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-2px);
+        }
+
+        .spec-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 0.25rem;
+        }
+
+        .spec-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ===== COMPARISON VISUAL ===== */
+        .comparison-visual {
+            grid-column: span 6;
+            grid-row: span 3;
+            padding: 0;
+        }
+
+        .comparison-inner {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+
+        .comparison-header {
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .comparison-header h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .comparison-visuals {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .comparison-side {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .comparison-side.before {
+            background: linear-gradient(180deg, rgba(196, 92, 92, 0.1), rgba(0,0,0,0.2));
+        }
+
+        .comparison-side.after {
+            background: linear-gradient(180deg, rgba(107, 139, 94, 0.1), rgba(0,0,0,0.2));
+        }
+
+        .comparison-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Soil Layer Visual */
+        .soil-visual {
+            width: 100%;
+            height: 150px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .soil-visual.compacted .layer {
+            transition: all 0.5s;
+        }
+
+        .soil-visual.compacted .layer-1 { height: 30%; background: #4a5a42; }
+        .soil-visual.compacted .layer-2 { height: 15%; background: #5a4a3a; }
+        .soil-visual.compacted .layer-3 { 
+            height: 20%; 
+            background: repeating-linear-gradient(0deg, #7a6050 0px, #7a6050 4px, #8a7060 4px, #8a7060 8px);
+        }
+        .soil-visual.compacted .layer-4 { height: 35%; background: #6a5a4a; }
+
+        .soil-visual.loose .layer-1 { height: 30%; background: #4a5a42; }
+        .soil-visual.loose .layer-2 { height: 25%; background: #5a5a42; }
+        .soil-visual.loose .layer-3 { height: 25%; background: #5a4a3a; }
+        .soil-visual.loose .layer-4 { height: 20%; background: #6a5a4a; }
+
+        .layer {
+            width: 100%;
+            position: relative;
+        }
+
+        /* Root Visualization */
+        .root-visual {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            background: linear-gradient(180deg, #5a8a4a, #3a6a2a);
+            border-radius: 10px;
+        }
+
+        .comparison-side.before .root-visual {
+            height: 25%;
+        }
+
+        .comparison-side.after .root-visual {
+            height: 60%;
+            animation: grow 2s ease-out forwards;
+        }
+
+        @keyframes grow {
+            from { height: 0; }
+        }
+
+        .comparison-stat {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .comparison-stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .comparison-side.before .comparison-stat-value {
+            color: #c45c5c;
+        }
+
+        .comparison-side.after .comparison-stat-value {
+            color: var(--accent-green);
+        }
+
+        .comparison-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== RESULTS CARD ===== */
+        .results-card {
+            grid-column: span 6;
+            grid-row: span 3;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .results-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .results-header h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-header p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .results-chart {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+
+        .chart-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 180px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px 12px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--gradient-gold);
+            border-radius: 12px 12px 0 0;
+            animation: bar-grow 1.5s ease-out forwards;
+        }
+
+        @keyframes bar-grow {
+            from { height: 0; }
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .bar-label {
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* ===== CTA CARD ===== */
+        .cta-card {
+            grid-column: span 4;
+            grid-row: span 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            background: linear-gradient(135deg, rgba(212, 168, 75, 0.15), rgba(212, 168, 75, 0.05));
+            border-color: rgba(212, 168, 75, 0.3);
+        }
+
+        .cta-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: var(--accent-gold);
+            color: #1a1a1a;
+            border: none;
+            border-radius: 100px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px -10px rgba(212, 168, 75, 0.4);
+        }
+
+        /* ===== VIDEO CARD ===== */
+        .video-card {
+            grid-column: span 8;
+            grid-row: span 2;
+            padding: 0;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 250px;
+            background: 
+                linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)),
+                url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(212, 168, 75, 0.3);
+        }
+
+        .video-card:hover .play-button {
+            transform: scale(1.1);
+            box-shadow: 0 15px 50px rgba(212, 168, 75, 0.5);
+        }
+
+        .play-button svg {
+            color: #1a1a1a;
+            margin-left: 4px;
+        }
+
+        .video-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .video-duration {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .machine-hero { grid-column: span 12; }
+            .lottie-spading { grid-column: span 4; }
+            .feature-card { grid-column: span 4; }
+            .specs-grid { grid-column: span 12; }
+            .comparison-visual { grid-column: span 6; }
+            .results-card { grid-column: span 6; }
+            .cta-card { grid-column: span 4; }
+            .video-card { grid-column: span 8; }
+        }
+
+        @media (max-width: 768px) {
+            .bento-showcase {
+                grid-template-columns: 1fr;
+            }
+            .machine-hero,
+            .lottie-spading,
+            .feature-card,
+            .specs-grid,
+            .comparison-visual,
+            .results-card,
+            .cta-card,
+            .video-card {
+                grid-column: span 1;
+            }
+            .specs-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .comparison-visuals {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-gold"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="section-header">
+            <span class="section-number">02</span>
+            <span class="section-label">A Megoldás</span>
+        </div>
+        
+        <h1 class="page-title">Lazítás<br><em>forgatás nélkül</em></h1>
+        <p class="page-subtitle">
+            Az Imants ásógép technológia megőrzi a talaj természetes rétegződését, miközben megszünteti a tömörödést.
+        </p>
+
+        <!-- Bento Showcase Grid -->
+        <div class="bento-showcase">
+            <!-- Machine Hero -->
+            <div class="bento-card machine-hero">
+                <div class="machine-hero-inner">
+                    <div class="machine-tabs">
+                        <button class="machine-tab active">38SX</button>
+                        <button class="machine-tab">38WX</button>
+                        <button class="machine-tab">40SX</button>
+                    </div>
+                    <div class="machine-display">
+                        <div class="machine-glow"></div>
+                        <div class="machine-image-container">
+                            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Imants 38SX" class="machine-image" style="opacity: 0.9; filter: saturate(0.8) brightness(1.1) drop-shadow(0 30px 60px rgba(0,0,0,0.5));">
+                        </div>
+                    </div>
+                    <div class="machine-info">
+                        <h2 class="machine-name">Imants 38SX</h2>
+                        <p class="machine-desc">Közepes intenzitású lazítás, ideális intenzív zöldségtermesztéshez. Minimális talajbolygatás mellett éri el a kívánt mélységet.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lottie Spading Animation -->
+            <div class="bento-card lottie-spading">
+                <div class="spading-animation">
+                    <div class="spade-container">
+                        <div class="spade-blade"></div>
+                        <div class="spade-blade"></div>
+                        <div class="spade-blade"></div>
+                        <div class="spade-blade"></div>
+                    </div>
+                    <div class="soil-particles">
+                        <div class="soil-particle"></div>
+                        <div class="soil-particle"></div>
+                        <div class="soil-particle"></div>
+                        <div class="soil-particle"></div>
+                        <div class="soil-particle"></div>
+                    </div>
+                </div>
+                <h4 class="lottie-title">Ásólapátos mozgás</h4>
+                <p class="lottie-desc">Függőleges lazítás forgatás nélkül</p>
+            </div>
+
+            <!-- Feature Cards -->
+            <div class="bento-card feature-card">
+                <div class="feature-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22V8M5 12H2a10 10 0 0020 0h-3"/>
+                    </svg>
+                </div>
+                <h3>Mélylazítás</h3>
+                <p>45 cm munkamélység a tömörödött rétegek teljes feltörésére, az eketalp megszüntetésére.</p>
+                <div class="feature-stat">
+                    <span class="feature-stat-value">45</span>
+                    <span class="feature-stat-label">cm mélység</span>
+                </div>
+            </div>
+
+            <div class="bento-card feature-card">
+                <div class="feature-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <h3>Rétegmegőrzés</h3>
+                <p>A talaj természetes rétegződése megmarad, a talajélet zavartalanul működhet tovább.</p>
+                <div class="feature-stat">
+                    <span class="feature-stat-value">100%</span>
+                    <span class="feature-stat-label">rétegmegőrzés</span>
+                </div>
+            </div>
+
+            <div class="bento-card feature-card">
+                <div class="feature-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <h3>Gyorsabb felmelegedés</h3>
+                <p>A lazított talaj 2-4°C-kal melegebb tavasszal, korábban indulhat a termelés.</p>
+                <div class="feature-stat">
+                    <span class="feature-stat-value">+4°C</span>
+                    <span class="feature-stat-label">különbség</span>
+                </div>
+            </div>
+
+            <!-- Specs Grid -->
+            <div class="bento-card specs-grid">
+                <div class="specs-header">
+                    <h3>Műszaki paraméterek</h3>
+                    <div class="specs-toggle">
+                        <button class="active">38SX</button>
+                        <button>38WX</button>
+                        <button>40SX</button>
+                    </div>
+                </div>
+                <div class="specs-content">
+                    <div class="spec-item">
+                        <div class="spec-value">38</div>
+                        <div class="spec-label">Munkaszélesség (cm)</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">45</div>
+                        <div class="spec-label">Max. mélység (cm)</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">120+</div>
+                        <div class="spec-label">Szükséges LE</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">2.8</div>
+                        <div class="spec-label">Súly (tonna)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Visual -->
+            <div class="bento-card comparison-visual">
+                <div class="comparison-inner">
+                    <div class="comparison-header">
+                        <h3>Talajszerkezet összehasonlítás</h3>
+                    </div>
+                    <div class="comparison-visuals">
+                        <div class="comparison-side before">
+                            <span class="comparison-label">Szántás után</span>
+                            <div class="soil-visual compacted">
+                                <div class="layer layer-1"></div>
+                                <div class="layer layer-2"></div>
+                                <div class="layer layer-3"></div>
+                                <div class="layer layer-4"></div>
+                                <div class="root-visual"></div>
+                            </div>
+                            <div class="comparison-stat">
+                                <div class="comparison-stat-value">25 cm</div>
+                                <div class="comparison-stat-label">gyökérmélység</div>
+                            </div>
+                        </div>
+                        <div class="comparison-side after">
+                            <span class="comparison-label">Ásógép után</span>
+                            <div class="soil-visual loose">
+                                <div class="layer layer-1"></div>
+                                <div class="layer layer-2"></div>
+                                <div class="layer layer-3"></div>
+                                <div class="layer layer-4"></div>
+                                <div class="root-visual"></div>
+                            </div>
+                            <div class="comparison-stat">
+                                <div class="comparison-stat-value">45+ cm</div>
+                                <div class="comparison-stat-label">gyökérmélység</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Card -->
+            <div class="bento-card results-card">
+                <div class="results-header">
+                    <h3>Kísérleti eredmények</h3>
+                    <p>Terméshozam növekedés modellenkénti bontásban</p>
+                </div>
+                <div class="results-chart">
+                    <div class="chart-bar">
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 75%;"></div>
+                            <span class="bar-value">+28%</span>
+                        </div>
+                        <div class="bar-label">38SX</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 90%;"></div>
+                            <span class="bar-value">+37%</span>
+                        </div>
+                        <div class="bar-label">38WX</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 60%;"></div>
+                            <span class="bar-value">+21%</span>
+                        </div>
+                        <div class="bar-label">40SX</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-container">
+                            <div class="bar-fill" style="height: 20%; background: rgba(255,255,255,0.1);"></div>
+                            <span class="bar-value" style="color: var(--text-muted);">0%</span>
+                        </div>
+                        <div class="bar-label">Kontroll</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Card -->
+            <div class="bento-card cta-card">
+                <h3>Látni szeretnéd az eredményeket?</h3>
+                <p>Részletes mérési adatok, hőtérképek és talajvizsgálatok a kísérleti parcellákról.</p>
+                <a href="#" class="cta-button">
+                    Eredmények megtekintése
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Video Card -->
+            <div class="bento-card video-card">
+                <div class="video-placeholder">
+                    <div class="play-button">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </div>
+                    <h4 class="video-title">Az Imants ásógép működés közben</h4>
+                    <span class="video-duration">2:34 perc</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mouse tracking for glow effect
+        document.querySelectorAll('.bento-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+
+        // Tab switching for machine
+        document.querySelectorAll('.machine-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.machine-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // Specs toggle
+        document.querySelectorAll('.specs-toggle button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.specs-toggle button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import SectionHeader from '@/components/ui/SectionHeader'
@@ -17,6 +17,7 @@ export default function SolutionLayout() {
   const [activeModel, setActiveModel] = useState<ModelId>('38sx')
   const [modalOpen, setModalOpen] = useState(false)
   const [modalModelId, setModalModelId] = useState<ModelId>('38sx')
+  const [hoveredFolder, setHoveredFolder] = useState<ModelId | null>(null)
 
   const scrollToContent = (id: ModelId) => {
     setActiveModel(id)
@@ -28,45 +29,86 @@ export default function SolutionLayout() {
     }
   }
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const button = e.currentTarget
-    const rect = button.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-
-    const shadowX = (centerX - x) / 12
-    const shadowY = (centerY - y) / 12
-
-    button.style.setProperty('--shadow-x', `${shadowX}px`)
-    button.style.setProperty('--shadow-y', `${shadowY + 25}px`)
-  }
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const button = e.currentTarget
-    button.style.removeProperty('--shadow-x')
-    button.style.removeProperty('--shadow-y')
-  }
-
   const openFieldModal = (modelId: ModelId) => {
     setModalModelId(modelId)
     setModalOpen(true)
   }
 
-  const [hoveredButton, setHoveredButton] = useState<ModelId | null>(null)
+  const handleFolderMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>, index: number) => {
+    const folder = e.currentTarget
+    const rect = folder.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+    
+    const rotateX = (y - centerY) / 25
+    const rotateY = (centerX - x) / 25
+    
+    folder.style.transform = `
+      translateY(-25px) 
+      scale(1.12) 
+      rotateX(${rotateX}deg) 
+      rotateY(${rotateY}deg)
+    `
+  }, [])
 
-  // Framer Motion variants
-  const buttonVariants = {
-    initial: { scale: 1, y: 0, rotateX: 0 },
+  const handleFolderMouseLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>, index: number) => {
+    const folder = e.currentTarget
+    // Reset to original staggered position
+    const transforms = [
+      'translateY(-30px) translateX(-20px)',
+      'translateY(0px) translateX(0px)',
+      'translateY(30px) translateX(20px)'
+    ]
+    folder.style.transform = transforms[index] || ''
+  }, [])
+
+  // Folder animation variants
+  const folderVariants = {
+    initial: { scale: 1, y: 0 },
     hover: { 
-      scale: 1.06, 
-      y: -12, 
-      rotateX: 2,
-      transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
-    },
-    tap: { scale: 1.02, y: -6 }
+      scale: 1.12, 
+      y: -25,
+      transition: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }
+    }
+  }
+
+  const folderFrontVariants = {
+    initial: { rotateY: 0, x: 0 },
+    hover: { 
+      rotateY: -15,
+      x: 25,
+      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+    }
+  }
+
+  const sheetVariants = {
+    initial: { x: -10, y: -6, rotate: 0 },
+    hover: { 
+      x: -30,
+      y: -18,
+      rotate: -2,
+      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+    }
+  }
+
+  const sheet2Variants = {
+    initial: { x: -5, y: -3, rotate: 0 },
+    hover: { 
+      x: -18,
+      y: -10,
+      rotate: -1,
+      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+    }
+  }
+
+  const tabVariants = {
+    initial: { y: 0 },
+    hover: { 
+      y: -6,
+      transition: { duration: 0.4, ease: 'easeOut' }
+    }
   }
 
   const imageVariants = {
@@ -79,37 +121,19 @@ export default function SolutionLayout() {
   }
 
   const labelVariants = {
-    initial: { y: 0, color: 'rgba(255, 255, 255, 0.6)' },
+    initial: { color: '#FFFFFF' },
     hover: { 
-      y: -2,
-      color: 'rgba(232, 200, 122, 1)',
+      color: '#D4A84B',
       transition: { duration: 0.3 }
     }
   }
 
-  const titleVariants = {
-    initial: { x: 0, color: '#FFFFFF' },
-    hover: { 
-      x: 6,
-      color: '#D4A84B',
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
-    }
-  }
-
   const indicatorVariants = {
-    initial: { opacity: 0, y: -8 },
+    initial: { opacity: 0, y: -5 },
     hover: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.3, delay: 0.1 }
-    }
-  }
-
-  const shineVariants = {
-    initial: { x: '-100%' },
-    hover: { 
-      x: '200%',
-      transition: { duration: 0.6, ease: 'easeInOut' }
+      transition: { duration: 0.3 }
     }
   }
 
@@ -135,183 +159,186 @@ export default function SolutionLayout() {
             </p>
           </motion.div>
 
-          <motion.div
-            className={styles.navButtons}
+          <motion.nav
+            className={styles.folderNav}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
+            {/* Folder 1: 38SX */}
             <motion.button
-              className={styles.navButton}
+              className={styles.folder}
               onClick={() => scrollToContent('38sx')}
-              onMouseMove={handleMouseMove}
-              onMouseEnter={() => setHoveredButton('38sx')}
-              onMouseLeave={(e) => {
-                handleMouseLeave(e)
-                setHoveredButton(null)
-              }}
+              onMouseEnter={() => setHoveredFolder('38sx')}
+              onMouseLeave={() => setHoveredFolder(null)}
               aria-label="Ugrás a 38SX modell szekcióra"
-              variants={buttonVariants}
+              variants={folderVariants}
               initial="initial"
               whileHover="hover"
-              whileTap="tap"
               style={{ transformStyle: 'preserve-3d' }}
             >
-              {/* Shine sweep */}
               <motion.div 
-                className={styles.shineSweep}
-                variants={shineVariants}
-                initial="initial"
-                animate={hoveredButton === '38sx' ? 'hover' : 'initial'}
-              />
-              
-              <motion.img
-                src="/images/38SX.png"
-                alt=""
-                className={styles.navButtonImage}
-                aria-hidden="true"
-                variants={imageVariants}
-              />
-              <div className={styles.navButtonOverlay}>
-                <motion.span 
-                  className={styles.navButtonLabel}
-                  variants={labelVariants}
-                >
-                  Nagy szériás
-                </motion.span>
-                <motion.span 
-                  className={styles.navButtonTitle}
-                  variants={titleVariants}
-                >
-                  38SX
-                </motion.span>
-              </div>
-              
-              {/* Indicator dots */}
-              <motion.div 
-                className={styles.indicator}
-                variants={indicatorVariants}
+                className={`${styles.folderTab} ${styles.folderTabBrown}`}
+                variants={tabVariants}
               >
-                <span className={styles.indicatorDotActive}></span>
-                <span className={styles.indicatorDot}></span>
-                <span className={styles.indicatorDot}></span>
+                Model
+              </motion.div>
+              <div className={`${styles.folderBack} ${styles.folderBackBrown}`} />
+              <div className={styles.folderSheets}>
+                <motion.div className={styles.sheet} variants={sheetVariants} />
+                <motion.div className={styles.sheet} variants={sheet2Variants} />
+              </div>
+              <motion.div 
+                className={styles.folderFront}
+                variants={folderFrontVariants}
+              >
+                <span className={styles.modelType}>Nagy szériás</span>
+                <motion.div 
+                  className={styles.indicator}
+                  variants={indicatorVariants}
+                >
+                  <span className={styles.indicatorDotActive}></span>
+                  <span className={styles.indicatorDot}></span>
+                  <span className={styles.indicatorDot}></span>
+                </motion.div>
+                <div className={styles.folderImageContainer}>
+                  <motion.img
+                    src="/images/38SX.png"
+                    alt=""
+                    className={styles.folderImage}
+                    variants={imageVariants}
+                  />
+                </div>
+                <div className={styles.folderContent}>
+                  <motion.span 
+                    className={styles.folderLabel}
+                    variants={labelVariants}
+                  >
+                    38SX
+                  </motion.span>
+                  <span className={styles.folderDesc}>
+                    Univerzális ásógép nagy teljesítménnyel
+                  </span>
+                </div>
               </motion.div>
             </motion.button>
 
+            {/* Folder 2: 38WX */}
             <motion.button
-              className={styles.navButton}
+              className={styles.folder}
               onClick={() => scrollToContent('38wx')}
-              onMouseMove={handleMouseMove}
-              onMouseEnter={() => setHoveredButton('38wx')}
-              onMouseLeave={(e) => {
-                handleMouseLeave(e)
-                setHoveredButton(null)
-              }}
+              onMouseEnter={() => setHoveredFolder('38wx')}
+              onMouseLeave={() => setHoveredFolder(null)}
               aria-label="Ugrás a 38WX modell szekcióra"
-              variants={buttonVariants}
+              variants={folderVariants}
               initial="initial"
               whileHover="hover"
-              whileTap="tap"
               style={{ transformStyle: 'preserve-3d' }}
             >
-              {/* Shine sweep */}
               <motion.div 
-                className={styles.shineSweep}
-                variants={shineVariants}
-                initial="initial"
-                animate={hoveredButton === '38wx' ? 'hover' : 'initial'}
-              />
-              
-              <motion.img
-                src="/images/38WX.png"
-                alt=""
-                className={styles.navButtonImage}
-                aria-hidden="true"
-                variants={imageVariants}
-              />
-              <div className={styles.navButtonOverlay}>
-                <motion.span 
-                  className={styles.navButtonLabel}
-                  variants={labelVariants}
-                >
-                  Lazítókéses
-                </motion.span>
-                <motion.span 
-                  className={styles.navButtonTitle}
-                  variants={titleVariants}
-                >
-                  38WX
-                </motion.span>
-              </div>
-              
-              {/* Indicator dots */}
-              <motion.div 
-                className={styles.indicator}
-                variants={indicatorVariants}
+                className={`${styles.folderTab} ${styles.folderTabGreen}`}
+                variants={tabVariants}
               >
-                <span className={styles.indicatorDot}></span>
-                <span className={styles.indicatorDotActive}></span>
-                <span className={styles.indicatorDot}></span>
+                Model
+              </motion.div>
+              <div className={`${styles.folderBack} ${styles.folderBackGreen}`} />
+              <div className={styles.folderSheets}>
+                <motion.div className={styles.sheet} variants={sheetVariants} />
+                <motion.div className={styles.sheet} variants={sheet2Variants} />
+              </div>
+              <motion.div 
+                className={styles.folderFront}
+                variants={folderFrontVariants}
+              >
+                <span className={styles.modelType}>Lazítókéses</span>
+                <motion.div 
+                  className={styles.indicator}
+                  variants={indicatorVariants}
+                >
+                  <span className={styles.indicatorDot}></span>
+                  <span className={styles.indicatorDotActive}></span>
+                  <span className={styles.indicatorDot}></span>
+                </motion.div>
+                <div className={styles.folderImageContainer}>
+                  <motion.img
+                    src="/images/38WX.png"
+                    alt=""
+                    className={styles.folderImage}
+                    variants={imageVariants}
+                  />
+                </div>
+                <div className={styles.folderContent}>
+                  <motion.span 
+                    className={styles.folderLabel}
+                    variants={labelVariants}
+                  >
+                    38WX
+                  </motion.span>
+                  <span className={styles.folderDesc}>
+                    Kombinált lazítás és művelés
+                  </span>
+                </div>
               </motion.div>
             </motion.button>
 
+            {/* Folder 3: 40SX */}
             <motion.button
-              className={styles.navButton}
+              className={styles.folder}
               onClick={() => scrollToContent('40sx')}
-              onMouseMove={handleMouseMove}
-              onMouseEnter={() => setHoveredButton('40sx')}
-              onMouseLeave={(e) => {
-                handleMouseLeave(e)
-                setHoveredButton(null)
-              }}
+              onMouseEnter={() => setHoveredFolder('40sx')}
+              onMouseLeave={() => setHoveredFolder(null)}
               aria-label="Ugrás a 40SX modell szekcióra"
-              variants={buttonVariants}
+              variants={folderVariants}
               initial="initial"
               whileHover="hover"
-              whileTap="tap"
               style={{ transformStyle: 'preserve-3d' }}
             >
-              {/* Shine sweep */}
               <motion.div 
-                className={styles.shineSweep}
-                variants={shineVariants}
-                initial="initial"
-                animate={hoveredButton === '40sx' ? 'hover' : 'initial'}
-              />
-              
-              <motion.img
-                src="/images/40SX.png"
-                alt=""
-                className={styles.navButtonImage}
-                aria-hidden="true"
-                variants={imageVariants}
-              />
-              <div className={styles.navButtonOverlay}>
-                <motion.span 
-                  className={styles.navButtonLabel}
-                  variants={labelVariants}
-                >
-                  Mélyásógép
-                </motion.span>
-                <motion.span 
-                  className={styles.navButtonTitle}
-                  variants={titleVariants}
-                >
-                  40SX
-                </motion.span>
-              </div>
-              
-              {/* Indicator dots */}
-              <motion.div 
-                className={styles.indicator}
-                variants={indicatorVariants}
+                className={`${styles.folderTab} ${styles.folderTabBlue}`}
+                variants={tabVariants}
               >
-                <span className={styles.indicatorDot}></span>
-                <span className={styles.indicatorDot}></span>
-                <span className={styles.indicatorDotActive}></span>
+                Model
+              </motion.div>
+              <div className={`${styles.folderBack} ${styles.folderBackBlue}`} />
+              <div className={styles.folderSheets}>
+                <motion.div className={styles.sheet} variants={sheetVariants} />
+                <motion.div className={styles.sheet} variants={sheet2Variants} />
+              </div>
+              <motion.div 
+                className={styles.folderFront}
+                variants={folderFrontVariants}
+              >
+                <span className={styles.modelType}>Mélyásógép</span>
+                <motion.div 
+                  className={styles.indicator}
+                  variants={indicatorVariants}
+                >
+                  <span className={styles.indicatorDot}></span>
+                  <span className={styles.indicatorDot}></span>
+                  <span className={styles.indicatorDotActive}></span>
+                </motion.div>
+                <div className={styles.folderImageContainer}>
+                  <motion.img
+                    src="/images/40SX.png"
+                    alt=""
+                    className={styles.folderImage}
+                    variants={imageVariants}
+                  />
+                </div>
+                <div className={styles.folderContent}>
+                  <motion.span 
+                    className={styles.folderLabel}
+                    variants={labelVariants}
+                  >
+                    40SX
+                  </motion.span>
+                  <span className={styles.folderDesc}>
+                    Mély talajművelés 60cm-ig
+                  </span>
+                </div>
               </motion.div>
             </motion.button>
-          </motion.div>
+          </motion.nav>
         </header>
 
         {/* Content Area with Sticky Tabs */}

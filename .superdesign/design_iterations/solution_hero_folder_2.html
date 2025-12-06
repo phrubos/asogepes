@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Megoldás Hero - Technical Archive v2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-cream: #F5F0E8;
+            --color-earth-900: #1C1816;
+            --color-earth-850: #252019;
+            --color-earth-800: #2D261F;
+            --color-earth-700: #3D3328;
+            --color-earth-600: #5A4D3F;
+            --color-earth-400: #9A8B78;
+            --color-gold: #D4A84B;
+            --color-gold-light: #E8C87A;
+            --color-gold-dark: #B8923A;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-earth-800);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Blueprint grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(212, 168, 75, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 168, 75, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(ellipse 80% 60% at 60% 50%, black 20%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Ambient glow */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 30%;
+            right: 10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(212, 168, 75, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 0.85fr 1.15fr;
+            gap: 2rem;
+            align-items: center;
+            padding: 4rem 3% 4rem 5%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Left side - Title */
+        .hero-content {
+            max-width: 480px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-number {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-gold);
+            letter-spacing: 0.1em;
+        }
+
+        .section-line {
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-gold), transparent);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.0625rem;
+            color: rgba(245, 240, 232, 0.75);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            max-width: 42ch;
+        }
+
+        .hero-subtitle em {
+            color: var(--color-gold);
+            font-style: normal;
+        }
+
+        .hero-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+            padding: 0.6rem 1rem;
+            background: rgba(212, 168, 75, 0.08);
+            border-radius: 100px;
+            border: 1px solid rgba(212, 168, 75, 0.15);
+            font-family: var(--font-mono);
+        }
+
+        .hero-hint svg {
+            animation: pulse 2s ease-in-out infinite;
+            color: var(--color-gold);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(0); opacity: 0.6; }
+            50% { transform: translateX(4px); opacity: 1; }
+        }
+
+        /* Right side - Technical folder display */
+        .folder-stage {
+            position: relative;
+            height: 580px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1400px;
+        }
+
+        /* The shelf container with unified perspective */
+        .folder-shelf {
+            position: relative;
+            display: flex;
+            gap: 0;
+            transform-style: preserve-3d;
+            transform: rotateX(8deg) rotateY(-15deg);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .folder-shelf:hover {
+            transform: rotateX(4deg) rotateY(-10deg);
+        }
+
+        /* Individual folder card */
+        .folder {
+            position: relative;
+            width: 200px;
+            height: 300px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-left: -30px;
+        }
+
+        .folder:first-child {
+            margin-left: 0;
+        }
+
+        /* Stacking z-index */
+        .folder:nth-child(1) { z-index: 3; }
+        .folder:nth-child(2) { z-index: 2; }
+        .folder:nth-child(3) { z-index: 1; }
+
+        .folder:hover {
+            transform: translateZ(100px) translateY(-25px) scale(1.08);
+            z-index: 100 !important;
+        }
+
+        /* Folder spine */
+        .folder-spine {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            transform: rotateY(-90deg) translateZ(10px);
+            transform-origin: right center;
+            border-radius: 3px 0 0 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .folder:nth-child(1) .folder-spine {
+            background: linear-gradient(180deg, #8B7355 0%, #6B5344 100%);
+        }
+
+        .folder:nth-child(2) .folder-spine {
+            background: linear-gradient(180deg, #7A8B6B 0%, #5A6B4B 100%);
+        }
+
+        .folder:nth-child(3) .folder-spine {
+            background: linear-gradient(180deg, #6B7A8B 0%, #4B5A6B 100%);
+        }
+
+        .folder-spine-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            font-family: var(--font-mono);
+            font-size: 0.55rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+        }
+
+        /* Folder front face */
+        .folder-front {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            width: calc(100% - 10px);
+            height: 100%;
+            background: linear-gradient(180deg, var(--color-earth-850) 0%, var(--color-earth-900) 100%);
+            border-radius: 0 10px 10px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 
+                6px 10px 35px -8px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backface-visibility: hidden;
+        }
+
+        .folder:hover .folder-front {
+            border-color: rgba(212, 168, 75, 0.3);
+            box-shadow: 
+                10px 15px 50px -10px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(212, 168, 75, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Technical grid overlay */
+        .folder-front::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 15px 15px;
+            pointer-events: none;
+        }
+
+        /* Model type badge */
+        .model-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.35);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            transition: color 0.3s ease;
+        }
+
+        .folder:hover .model-badge {
+            color: var(--color-gold);
+        }
+
+        /* Status indicator */
+        .status-dot {
+            position: absolute;
+            top: 14px;
+            right: 12px;
+            width: 6px;
+            height: 6px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .folder:hover .status-dot {
+            opacity: 1;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Image container */
+        .folder-image-wrap {
+            position: absolute;
+            top: 35px;
+            left: 12px;
+            right: 12px;
+            height: 120px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .folder-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .folder:hover .folder-image {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Content area */
+        .folder-content {
+            position: absolute;
+            bottom: 16px;
+            left: 12px;
+            right: 12px;
+        }
+
+        .folder-label {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.25rem;
+            display: block;
+            letter-spacing: -0.02em;
+            transition: color 0.3s ease;
+        }
+
+        .folder:hover .folder-label {
+            color: var(--color-gold);
+        }
+
+        .folder-desc {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.45);
+            line-height: 1.4;
+            display: block;
+        }
+
+        /* Technical specs line */
+        .folder-specs {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .spec {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .spec-value {
+            color: var(--color-gold-light);
+        }
+
+        /* Paper sheets behind */
+        .folder-papers {
+            position: absolute;
+            top: 4px;
+            left: 12px;
+            right: 2px;
+            bottom: 4px;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+
+        .paper {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #1f1b17 0%, #181512 100%);
+            border-radius: 0 8px 8px 0;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backface-visibility: hidden;
+        }
+
+        .paper:nth-child(1) {
+            transform: translateX(-5px) translateZ(-3px);
+        }
+
+        .paper:nth-child(2) {
+            transform: translateX(-2px) translateZ(-1px);
+        }
+
+        .folder:hover .paper:nth-child(1) {
+            transform: translateX(-16px) translateY(-6px) translateZ(-3px) rotateZ(-1deg);
+        }
+
+        .folder:hover .paper:nth-child(2) {
+            transform: translateX(-8px) translateY(-3px) translateZ(-1px) rotateZ(-0.5deg);
+        }
+
+        /* Glow effect */
+        .folder::after {
+            content: '';
+            position: absolute;
+            inset: -25px;
+            background: radial-gradient(ellipse at center, rgba(212, 168, 75, 0.08) 0%, transparent 70%);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .folder:hover::after {
+            opacity: 1;
+        }
+
+        /* Floating tech particles */
+        .tech-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--color-gold);
+            border-radius: 1px;
+            opacity: 0.2;
+            animation: techFloat 8s ease-in-out infinite;
+        }
+
+        .tech-particle:nth-child(1) { top: 15%; left: 8%; animation-delay: 0s; }
+        .tech-particle:nth-child(2) { top: 75%; left: 12%; animation-delay: 2s; width: 3px; height: 3px; }
+        .tech-particle:nth-child(3) { top: 25%; right: 8%; animation-delay: 4s; width: 5px; height: 5px; }
+        .tech-particle:nth-child(4) { top: 65%; right: 15%; animation-delay: 6s; }
+
+        @keyframes techFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+            50% { transform: translateY(-15px) rotate(90deg); opacity: 0.4; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1300px) {
+            .folder {
+                width: 180px;
+                height: 270px;
+            }
+
+            .folder-image-wrap {
+                height: 100px;
+            }
+
+            .folder-label {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 3rem 2rem;
+            }
+
+            .hero-content {
+                max-width: 550px;
+                margin: 0 auto;
+            }
+
+            .hero-subtitle {
+                max-width: none;
+            }
+
+            .hero-hint {
+                margin: 0 auto;
+            }
+
+            .folder-stage {
+                height: 480px;
+            }
+
+            .folder-shelf {
+                transform: rotateX(5deg) rotateY(-10deg);
+            }
+
+            .folder {
+                width: 160px;
+                height: 250px;
+                margin-left: -25px;
+            }
+
+            .folder-image-wrap {
+                height: 90px;
+                top: 30px;
+            }
+
+            .folder-label {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .folder-shelf {
+                flex-direction: column;
+                transform: rotateX(6deg) rotateY(0deg);
+                gap: 1rem;
+            }
+
+            .folder {
+                margin-left: 0;
+                width: 220px;
+                height: 280px;
+            }
+
+            .folder-stage {
+                height: auto;
+                padding: 2rem 0;
+            }
+
+            .folder-image-wrap {
+                height: 110px;
+            }
+
+            .folder-label {
+                font-size: 1.35rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="section-header">
+                <span class="section-number">02</span>
+                <span class="section-line"></span>
+                <span class="section-title">A Megoldás</span>
+            </div>
+            <h1 class="hero-title">
+                Lazítás<br>
+                forgatás nélkül
+            </h1>
+            <p class="hero-subtitle">
+                Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
+                miközben megszünteti a tömörödést.
+            </p>
+            <div class="hero-hint">
+                <span>select_model</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="folder-stage">
+            <div class="tech-particle"></div>
+            <div class="tech-particle"></div>
+            <div class="tech-particle"></div>
+            <div class="tech-particle"></div>
+
+            <nav class="folder-shelf">
+                <a href="#38sx" class="folder">
+                    <div class="folder-spine">
+                        <span class="folder-spine-text">38SX</span>
+                    </div>
+                    <div class="folder-papers">
+                        <div class="paper"></div>
+                        <div class="paper"></div>
+                    </div>
+                    <div class="folder-front">
+                        <span class="model-badge">Nagy szériás</span>
+                        <span class="status-dot"></span>
+                        <div class="folder-image-wrap">
+                            <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&h=250&fit=crop" alt="38SX" class="folder-image">
+                        </div>
+                        <div class="folder-content">
+                            <span class="folder-label">38SX</span>
+                            <span class="folder-desc">Univerzális ásógép</span>
+                            <div class="folder-specs">
+                                <span class="spec">Mélység: <span class="spec-value">38cm</span></span>
+                                <span class="spec">Szélesség: <span class="spec-value">2.5m</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#38wx" class="folder">
+                    <div class="folder-spine">
+                        <span class="folder-spine-text">38WX</span>
+                    </div>
+                    <div class="folder-papers">
+                        <div class="paper"></div>
+                        <div class="paper"></div>
+                    </div>
+                    <div class="folder-front">
+                        <span class="model-badge">Lazítókéses</span>
+                        <span class="status-dot"></span>
+                        <div class="folder-image-wrap">
+                            <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&h=250&fit=crop" alt="38WX" class="folder-image">
+                        </div>
+                        <div class="folder-content">
+                            <span class="folder-label">38WX</span>
+                            <span class="folder-desc">Kombinált lazítás</span>
+                            <div class="folder-specs">
+                                <span class="spec">Mélység: <span class="spec-value">38cm</span></span>
+                                <span class="spec">Kés: <span class="spec-value">+15cm</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="#40sx" class="folder">
+                    <div class="folder-spine">
+                        <span class="folder-spine-text">40SX</span>
+                    </div>
+                    <div class="folder-papers">
+                        <div class="paper"></div>
+                        <div class="paper"></div>
+                    </div>
+                    <div class="folder-front">
+                        <span class="model-badge">Mélyásógép</span>
+                        <span class="status-dot"></span>
+                        <div class="folder-image-wrap">
+                            <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&h=250&fit=crop" alt="40SX" class="folder-image">
+                        </div>
+                        <div class="folder-content">
+                            <span class="folder-label">40SX</span>
+                            <span class="folder-desc">Mély talajművelés</span>
+                            <div class="folder-specs">
+                                <span class="spec">Mélység: <span class="spec-value">60cm</span></span>
+                                <span class="spec">Szélesség: <span class="spec-value">3m</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </nav>
+        </div>
+    </section>
+
+    <script>
+        // Smooth 3D tilt following mouse
+        const stage = document.querySelector('.folder-stage');
+        const shelf = document.querySelector('.folder-shelf');
+
+        stage.addEventListener('mousemove', (e) => {
+            const rect = stage.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            
+            const rotateY = -15 + (x * 10);
+            const rotateX = 8 + (y * -8);
+            
+            shelf.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        stage.addEventListener('mouseleave', () => {
+            shelf.style.transform = 'rotateX(8deg) rotateY(-15deg)';
+        });
+    </script>
+</body>
+</html>
