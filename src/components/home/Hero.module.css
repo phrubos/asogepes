@@ -92,6 +92,9 @@
     animation-delay: 0.2s;
     color: var(--color-gold); /* Pure gold color */
     font-style: normal; /* Remove italic for more modern look */
+    display: inline-block;
+    min-width: 18ch; /* Reserve space for "végtelen erőforrás" */
+    white-space: nowrap;
 }
 
 .cursor {
