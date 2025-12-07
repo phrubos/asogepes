@@ -147,6 +147,42 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
+
+/* Large Laptop (1440px and below) */
+@media (max-width: 1440px) {
+  .statsGrid {
+    max-width: 800px;
+    gap: var(--space-md);
+  }
+
+  .statCard {
+    padding: var(--space-lg);
+  }
+
+  .statNumber {
+    font-size: 2.25rem;
+  }
+}
+
+/* Medium Laptop (1280px and below) */
+@media (max-width: 1280px) {
+  .hero {
+    padding: var(--space-4xl) 0 var(--space-3xl);
+  }
+
+  .heroTitle {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .statsGrid {
+    max-width: 750px;
+  }
+
+  .statNumber {
+    font-size: 2rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .statsGrid {
     grid-template-columns: repeat(3, 1fr);

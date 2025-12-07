@@ -34,6 +34,24 @@
   align-items: center;
 }
 
+/* Large Laptop (1440px and below) */
+@media (max-width: 1440px) {
+  .header {
+    grid-template-columns: 1fr 1.1fr;
+    gap: 2.5rem;
+    min-height: 80vh;
+  }
+}
+
+/* Medium Laptop (1280px and below) */
+@media (max-width: 1280px) {
+  .header {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    min-height: 75vh;
+  }
+}
+
 @media (max-width: 1200px) {
   .header {
     grid-template-columns: 1fr;

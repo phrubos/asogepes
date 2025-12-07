@@ -51,6 +51,24 @@
   z-index: 1;
 }
 
+/* Large Laptop (1440px and below) */
+@media (max-width: 1440px) {
+  .header {
+    grid-template-columns: 1fr 1.3fr;
+    gap: var(--space-3xl);
+    min-height: 80vh;
+  }
+}
+
+/* Medium Laptop (1280px and below) */
+@media (max-width: 1280px) {
+  .header {
+    grid-template-columns: 1fr 1.2fr;
+    gap: var(--space-2xl);
+    min-height: 75vh;
+  }
+}
+
 @media (max-width: 1200px) {
   .header {
     grid-template-columns: 1fr;
@@ -95,6 +113,40 @@
   perspective: 1500px;
   transform-style: preserve-3d;
   padding: 2rem;
+}
+
+/* Large Laptop - smaller folders */
+@media (max-width: 1440px) {
+  .folderNav {
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .folder {
+    width: 260px;
+    height: 360px;
+  }
+}
+
+/* Medium Laptop - even smaller folders */
+@media (max-width: 1280px) {
+  .folderNav {
+    gap: 1.25rem;
+    padding: 1rem;
+  }
+
+  .folder {
+    width: 240px;
+    height: 340px;
+  }
+
+  .folderLabel {
+    font-size: 1.1rem;
+  }
+
+  .folderImageContainer {
+    height: 160px;
+  }
 }
 
 @media (max-width: 1200px) {

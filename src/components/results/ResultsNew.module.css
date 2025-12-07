@@ -522,6 +522,54 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
+
+/* Large Laptop (1440px and below) */
+@media (max-width: 1440px) {
+  .findingCard {
+    padding: var(--space-xl);
+  }
+
+  .findingNumber {
+    font-size: 3rem;
+  }
+
+  .statNumber {
+    font-size: 2.5rem;
+  }
+}
+
+/* Medium Laptop (1280px and below) */
+@media (max-width: 1280px) {
+  .findingsGrid {
+    gap: var(--space-lg);
+  }
+
+  .findingCard {
+    padding: var(--space-lg);
+  }
+
+  .findingNumber {
+    font-size: 2.5rem;
+  }
+
+  .findingIcon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .statsGrid {
+    gap: var(--space-md);
+  }
+
+  .statNumber {
+    font-size: 2.25rem;
+  }
+
+  .recGrid {
+    gap: var(--space-md);
+  }
+}
+
 @media (max-width: 1024px) {
   .findingsGrid {
     grid-template-columns: 1fr;
