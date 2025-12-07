@@ -22,15 +22,14 @@ const modelData = [
 
 // Demo sequence - simulates user interaction
 const DEMO_SEQUENCE: { state: DemoState; duration: number }[] = [
-  { state: 'idle', duration: 2000 },
+  { state: 'idle', duration: 500 },
   { state: 'hub', duration: 1500 },
   { state: 'operation', duration: 2500 },
   { state: 'hub', duration: 1000 },
-  { state: 'idle', duration: 1500 },
   { state: 'hub', duration: 1200 },
   { state: 'models', duration: 3000 },
   { state: 'hub', duration: 800 },
-  { state: 'idle', duration: 2000 },
+  { state: 'idle', duration: 500 },
 ]
 
 export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubFolderProps) {
