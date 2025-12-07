@@ -705,18 +705,37 @@
    RESPONSIVE
    ============================================= */
 
-/* Large Laptop (1440px and below) */
+/* Large Laptop (1440px and below) - Switch to vertical layout */
 @media (max-width: 1440px) {
   .hubScene {
-    padding: 2rem 2rem;
+    min-height: auto;
+    flex-direction: column;
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .hubFolder {
+    width: 280px;
+    height: 400px;
   }
 
   .navLeft {
-    right: calc(50% + 180px);
+    position: relative;
+    right: auto;
+    left: auto;
+    top: auto;
+    transform: none;
+    order: -1;
   }
 
   .navRight {
-    left: calc(50% + 180px);
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    flex-direction: row;
+    gap: 0.75rem;
+    justify-content: center;
   }
 
   .miniFolder {
@@ -739,33 +758,22 @@
     height: 52px;
   }
 
-  /* Reduce stagger on large laptop */
-  .navRight .miniFolder:nth-child(1) {
+  /* Reset stagger on laptop */
+  .navRight .miniFolder:nth-child(1),
+  .navRight .miniFolder:nth-child(2),
+  .navRight .miniFolder:nth-child(3) {
     transform: translateX(0);
   }
 
-  .navRight .miniFolder:nth-child(2) {
-    transform: translateX(15px);
-  }
-
-  .navRight .miniFolder:nth-child(3) {
-    transform: translateX(30px);
-  }
-
-  .connectionSvgLeft {
-    right: calc(50% + 100px);
-  }
-
-  .connectionSvgRight {
-    left: calc(50% + 100px);
+  .connectionSvg {
+    display: none;
   }
 }
 
 /* Medium Laptop (1280px and below) */
 @media (max-width: 1280px) {
   .hubScene {
-    padding: 1.5rem;
-    min-height: 550px;
+    padding: 1.5rem 1rem;
   }
 
   .hubFolder {
@@ -775,15 +783,6 @@
 
   .hubTitle {
     font-size: 1.35rem;
-  }
-
-  .navLeft {
-    right: calc(50% + 160px);
-  }
-
-  .navRight {
-    left: calc(50% + 160px);
-    gap: 0.5rem;
   }
 
   .miniFolder {
@@ -807,125 +806,6 @@
 
   .miniFolderDesc {
     font-size: 0.55rem;
-  }
-
-  /* Reset stagger on medium laptop */
-  .navRight .miniFolder:nth-child(1),
-  .navRight .miniFolder:nth-child(2),
-  .navRight .miniFolder:nth-child(3) {
-    transform: translateX(0);
-  }
-
-  .connectionSvgLeft {
-    right: calc(50% + 90px);
-    width: 80px;
-  }
-
-  .connectionSvgRight {
-    left: calc(50% + 90px);
-    width: 80px;
-  }
-}
-
-/* Tablet / Small Laptop (1024px and below) - Switch to vertical layout */
-@media (max-width: 1024px) {
-  .hubScene {
-    min-height: auto;
-    flex-direction: column;
-    padding: 2rem 1rem;
-    gap: 1.5rem;
-  }
-
-  .hubFolder {
-    width: 280px;
-    height: 400px;
-  }
-
-  .hubTitle {
-    font-size: 1.5rem;
-  }
-
-  .navLeft {
-    position: relative;
-    right: auto;
-    left: auto;
-    top: auto;
-    transform: none;
-    order: -1;
-  }
-
-  .navRight {
-    position: relative;
-    left: auto;
-    top: auto;
-    transform: none;
-    flex-direction: row;
-    gap: 0.75rem;
-    justify-content: center;
-  }
-
-  .miniFolder {
-    width: 130px;
-    height: 170px;
-  }
-
-  .miniFolderTab {
-    font-size: 0.5rem;
-    padding: 4px 10px;
-    top: -16px;
-  }
-
-  .miniFolderLabel {
-    font-size: 0.85rem;
-  }
-
-  .miniFolderImageWrap {
-    width: 60px;
-    height: 48px;
-  }
-
-  .connectionSvg {
-    display: none;
-  }
-}
-
-/* Large Tablet (1200px and below) - Vertical layout */
-@media (max-width: 1200px) {
-  .hubScene {
-    min-height: auto;
-    flex-direction: column;
-    padding: 2rem 1rem;
-    gap: 1.5rem;
-  }
-
-  .navLeft {
-    position: relative;
-    right: auto;
-    left: auto;
-    top: auto;
-    transform: none;
-    order: -1;
-  }
-
-  .navRight {
-    position: relative;
-    left: auto;
-    top: auto;
-    transform: none;
-    flex-direction: row;
-    gap: 0.75rem;
-    justify-content: center;
-  }
-
-  /* Reset stagger on tablet */
-  .navRight .miniFolder:nth-child(1),
-  .navRight .miniFolder:nth-child(2),
-  .navRight .miniFolder:nth-child(3) {
-    transform: translateX(0);
-  }
-
-  .connectionSvg {
-    display: none;
   }
 }
 
