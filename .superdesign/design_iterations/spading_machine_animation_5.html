@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ásógép Működési Animáció - v5</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-gold: #D4A84B;
+      --color-earth-900: #1a1612;
+      --color-white: #F5F0E8;
+      --color-sky-top: #3a4a5a;
+      --color-sky-bottom: #2a3a4a;
+      --color-soil-surface: #5a4a3a;
+      --color-soil-dark: #4A3728;
+      --color-soil-deep: #3a2a1a;
+      --color-loosened: #6a5a4a;
+      
+      /* Animation speed - SLOWER */
+      --move-duration: 18s;
+      --spade-rotation: 0.8s;
+      --roller-rotation: 0.6s;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, var(--color-earth-900) 0%, #0d0a08 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: var(--color-white);
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--color-white);
+    }
+
+    h1 em {
+      color: var(--color-gold);
+      font-style: normal;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: rgba(245, 240, 232, 0.6);
+    }
+
+    /* Main animation container */
+    .animation-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .animation-container {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: linear-gradient(180deg, 
+        var(--color-sky-top) 0%, 
+        var(--color-sky-bottom) 50%, 
+        var(--color-soil-surface) 50%,
+        var(--color-soil-dark) 65%,
+        var(--color-soil-deep) 100%
+      );
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    /* Soil texture */
+    .soil-texture {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(90, 74, 58, 0.4) 2px, transparent 2px),
+        radial-gradient(circle at 60% 70%, rgba(74, 55, 40, 0.3) 3px, transparent 3px),
+        radial-gradient(circle at 80% 20%, rgba(58, 42, 26, 0.35) 2px, transparent 2px);
+      background-size: 35px 35px, 50px 50px, 45px 45px;
+      pointer-events: none;
+    }
+
+    /* Surface line */
+    .surface-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, 
+        var(--color-soil-surface) 0%,
+        #6a5a4a 50%,
+        var(--color-soil-surface) 100%
+      );
+    }
+
+    /* Grass layer */
+    .grass-layer {
+      position: absolute;
+      top: calc(50% - 18px);
+      left: 0;
+      right: 0;
+      height: 22px;
+      overflow: visible;
+    }
+
+    .grass-blade {
+      position: absolute;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to top, #3a5030, #5a7040);
+      border-radius: 1px;
+      transform-origin: bottom center;
+    }
+
+    /* === LOOSENED SOIL EFFECT - NEW DESIGN === */
+    .loosened-soil-container {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* Main loosened area - follows machine exactly */
+    .loosened-area {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      background: linear-gradient(180deg,
+        rgba(106, 90, 74, 0.0) 0%,
+        rgba(106, 90, 74, 0.6) 5%,
+        rgba(90, 74, 58, 0.5) 30%,
+        rgba(74, 55, 40, 0.4) 60%,
+        rgba(58, 42, 26, 0.3) 100%
+      );
+      animation: loosenedFollow var(--move-duration) linear infinite;
+    }
+
+    @keyframes loosenedFollow {
+      0% { 
+        left: calc(100% - 120px);
+        width: 0;
+      }
+      100% { 
+        left: -100px;
+        width: calc(100% + 20px);
+      }
+    }
+
+    /* Texture overlay for loosened soil */
+    .loosened-texture {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(ellipse 8px 4px at 10% 20%, rgba(139, 115, 85, 0.5) 0%, transparent 100%),
+        radial-gradient(ellipse 6px 3px at 30% 50%, rgba(120, 100, 75, 0.4) 0%, transparent 100%),
+        radial-gradient(ellipse 10px 5px at 50% 30%, rgba(100, 85, 65, 0.45) 0%, transparent 100%),
+        radial-gradient(ellipse 7px 4px at 70% 60%, rgba(130, 110, 85, 0.4) 0%, transparent 100%),
+        radial-gradient(ellipse 5px 3px at 90% 40%, rgba(110, 90, 70, 0.5) 0%, transparent 100%);
+      background-size: 80px 60px;
+      animation: textureShift 2s linear infinite;
+    }
+
+    @keyframes textureShift {
+      0% { background-position: 0 0; }
+      100% { background-position: -80px 0; }
+    }
+
+    /* Surface disturbance line */
+    .surface-disturbed {
+      position: absolute;
+      top: -2px;
+      height: 6px;
+      background: linear-gradient(180deg,
+        rgba(90, 74, 58, 0.8) 0%,
+        rgba(106, 90, 74, 0.6) 50%,
+        transparent 100%
+      );
+      animation: loosenedFollow var(--move-duration) linear infinite;
+    }
+
+    /* Cleared grass overlay */
+    .cleared-overlay {
+      position: absolute;
+      top: calc(50% - 22px);
+      height: 26px;
+      background: linear-gradient(180deg, 
+        var(--color-sky-bottom) 0%,
+        var(--color-soil-surface) 70%
+      );
+      pointer-events: none;
+      animation: loosenedFollow var(--move-duration) linear infinite;
+    }
+
+    /* Machine assembly */
+    .machine-assembly {
+      position: absolute;
+      top: calc(50% - 115px);
+      right: 120px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      animation: machineMove var(--move-duration) linear infinite;
+    }
+
+    @keyframes machineMove {
+      0% { transform: translateX(100px); }
+      100% { transform: translateX(-750px); }
+    }
+
+    /* Connection bar */
+    .connection-bar {
+      position: absolute;
+      top: 15px;
+      left: 70px;
+      width: 115px;
+      height: 12px;
+      background: linear-gradient(180deg, #5a5a5a 0%, #4a4a4a 100%);
+      border-radius: 4px;
+      z-index: 1;
+    }
+
+    /* === SPADE ROTOR === */
+    .spade-rotor {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      z-index: 10;
+    }
+
+    /* Rotor housing */
+    .rotor-housing {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 46px;
+      height: 40px;
+      background: linear-gradient(180deg, #5a5a5a 0%, #4a4a4a 100%);
+      border-radius: 8px 8px 4px 4px;
+      z-index: 20;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .rotor-housing::before {
+      content: 'IMANTS';
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.45rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--color-gold);
+    }
+
+    .rotor-housing::after {
+      content: '';
+      position: absolute;
+      bottom: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 26px;
+      height: 4px;
+      background: var(--color-gold);
+      border-radius: 2px;
+    }
+
+    /* Central rotor disc */
+    .rotor-disc {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48px;
+      height: 48px;
+      background: radial-gradient(circle at 35% 35%, #6a6a6a 0%, #4a4a4a 60%, #3a3a3a 100%);
+      border-radius: 50%;
+      border: 4px solid var(--color-gold);
+      z-index: 15;
+      box-shadow: 
+        0 4px 16px rgba(0,0,0,0.4),
+        inset 0 2px 4px rgba(255,255,255,0.1);
+    }
+
+    .rotor-disc::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      background: radial-gradient(circle at 40% 40%, #5a5a5a 0%, #2a2a2a 100%);
+      border-radius: 50%;
+      border: 2px solid #4a4a4a;
+    }
+
+    /* Spade arms container */
+    .spade-arms {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      width: 125px;
+      height: 125px;
+      transform: translateX(-50%);
+      z-index: 10;
+      animation: rotateArms var(--spade-rotation) linear infinite;
+    }
+
+    @keyframes rotateArms {
+      from { transform: translateX(-50%) rotate(0deg); }
+      to { transform: translateX(-50%) rotate(-360deg); }
+    }
+
+    /* Individual spade arm */
+    .spade-arm {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 62px;
+      height: 7px;
+      transform-origin: left center;
+      display: flex;
+      align-items: center;
+    }
+
+    .spade-arm:nth-child(1) { transform: rotate(0deg); }
+    .spade-arm:nth-child(2) { transform: rotate(51.4deg); }
+    .spade-arm:nth-child(3) { transform: rotate(102.8deg); }
+    .spade-arm:nth-child(4) { transform: rotate(154.3deg); }
+    .spade-arm:nth-child(5) { transform: rotate(205.7deg); }
+    .spade-arm:nth-child(6) { transform: rotate(257.1deg); }
+    .spade-arm:nth-child(7) { transform: rotate(308.6deg); }
+
+    .arm-shaft {
+      width: 38px;
+      height: 100%;
+      background: linear-gradient(180deg, #8a8a8a 0%, #6a6a6a 50%, #7a7a7a 100%);
+      border-radius: 2px;
+      margin-left: 12px;
+    }
+
+    .spade-blade {
+      position: relative;
+      width: 24px;
+      height: 30px;
+      margin-left: -2px;
+    }
+
+    .spade-blade::before {
+      content: '';
+      position: absolute;
+      top: -9px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #9a9a9a 0%, #7a7a7a 50%, #8a8a8a 100%);
+      border-radius: 4px 55% 35% 4px;
+      transform: rotate(-15deg);
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* Soil particles */
+    .particles {
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 90px;
+      height: 50px;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      background: var(--color-soil-surface);
+      border-radius: 50%;
+      animation: particleFly 0.6s ease-out infinite;
+    }
+
+    .particle:nth-child(1) { width: 5px; height: 5px; left: 15%; animation-delay: 0s; }
+    .particle:nth-child(2) { width: 6px; height: 6px; left: 30%; animation-delay: 0.1s; }
+    .particle:nth-child(3) { width: 4px; height: 4px; left: 45%; animation-delay: 0.2s; }
+    .particle:nth-child(4) { width: 5px; height: 5px; left: 60%; animation-delay: 0.15s; }
+    .particle:nth-child(5) { width: 4px; height: 4px; left: 75%; animation-delay: 0.25s; }
+
+    @keyframes particleFly {
+      0% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-35px) translateX(-20px) scale(0.3);
+        opacity: 0;
+      }
+    }
+
+    /* === SMOOTHING ROLLER - WHEEL SHAPE === */
+    .smoothing-roller {
+      position: relative;
+      width: 70px;
+      height: 70px;
+      margin-bottom: 45px; /* Sits on surface */
+      z-index: 5;
+    }
+
+    .roller-frame {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 25px;
+      background: linear-gradient(180deg, #5a5a5a 0%, #4a4a4a 100%);
+      border-radius: 5px;
+      z-index: 10;
+    }
+
+    .roller-support {
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 15px;
+      background: #4a4a4a;
+    }
+
+    /* Roller wheel - CIRCULAR like a wheel */
+    .roller-wheel {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, 
+        #7a7a7a 0%, 
+        #5a5a5a 40%, 
+        #4a4a4a 70%,
+        #3a3a3a 100%
+      );
+      border: 4px solid #5a5a5a;
+      box-shadow: 
+        0 4px 15px rgba(0,0,0,0.4),
+        inset 0 -4px 10px rgba(0,0,0,0.3),
+        inset 0 4px 8px rgba(255,255,255,0.08);
+      animation: rollWheel var(--roller-rotation) linear infinite;
+    }
+
+    @keyframes rollWheel {
+      from { transform: translateX(-50%) rotate(0deg); }
+      to { transform: translateX(-50%) rotate(-360deg); }
+    }
+
+    /* Wheel rim */
+    .roller-wheel::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      right: 6px;
+      bottom: 6px;
+      border-radius: 50%;
+      border: 3px solid rgba(90, 90, 90, 0.6);
+    }
+
+    /* Center hub */
+    .roller-hub {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 18px;
+      height: 18px;
+      background: radial-gradient(circle at 35% 35%, #6a6a6a 0%, #3a3a3a 100%);
+      border-radius: 50%;
+      border: 3px solid #5a5a5a;
+      z-index: 5;
+    }
+
+    /* Hub center dot */
+    .roller-hub::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 6px;
+      background: #3a3a3a;
+      border-radius: 50%;
+    }
+
+    /* Info labels */
+    .info-labels {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .info-label {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--color-gold);
+      background: rgba(26, 22, 18, 0.92);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(212, 168, 75, 0.3);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+    }
+
+    .animation-container:hover .info-label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .info-label.label-1 { top: 40px; left: 15%; transition-delay: 0s; }
+    .info-label.label-2 { top: 40px; right: 15%; transition-delay: 0.1s; }
+    .info-label.label-3 { bottom: 60px; left: 50%; transform: translateX(-50%) translateY(8px); transition-delay: 0.15s; }
+
+    .animation-container:hover .info-label.label-3 {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .label-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: var(--color-gold);
+      color: var(--color-earth-900);
+      border-radius: 50%;
+      font-size: 0.6rem;
+      font-weight: 700;
+    }
+
+    .direction-arrow .arrow-line {
+      width: 22px;
+      height: 2px;
+      background: var(--color-gold);
+      position: relative;
+    }
+
+    .direction-arrow .arrow-line::before {
+      content: '';
+      position: absolute;
+      left: -1px;
+      top: -4px;
+      border: 5px solid transparent;
+      border-right-color: var(--color-gold);
+    }
+
+    /* Feature cards */
+    .features-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+      max-width: 600px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(212, 168, 75, 0.2);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(212, 168, 75, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-gold);
+      margin-bottom: 0.85rem;
+    }
+
+    .feature-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-white);
+      margin-bottom: 0.3rem;
+    }
+
+    .feature-desc {
+      font-size: 0.8rem;
+      color: rgba(245, 240, 232, 0.55);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h1>Hogyan működik az <em>ásógép</em>?</h1>
+    <p class="subtitle">Lazítás forgatás nélkül — a talajrétegek megőrzése</p>
+  </div>
+
+  <div class="animation-wrapper">
+    <div class="animation-container">
+      <!-- Soil texture -->
+      <div class="soil-texture"></div>
+
+      <!-- Surface line -->
+      <div class="surface-line"></div>
+
+      <!-- Grass layer -->
+      <div class="grass-layer" id="grassLayer"></div>
+
+      <!-- Loosened soil effect - NEW DESIGN -->
+      <div class="loosened-soil-container">
+        <div class="loosened-area">
+          <div class="loosened-texture"></div>
+        </div>
+        <div class="surface-disturbed"></div>
+      </div>
+
+      <!-- Cleared grass overlay -->
+      <div class="cleared-overlay"></div>
+
+      <!-- Machine assembly -->
+      <div class="machine-assembly">
+        <!-- Connection bar -->
+        <div class="connection-bar"></div>
+
+        <!-- Spade Rotor -->
+        <div class="spade-rotor">
+          <div class="rotor-housing"></div>
+          <div class="rotor-disc"></div>
+          <div class="spade-arms">
+            <div class="spade-arm"><div class="arm-shaft"></div><div class="spade-blade"></div></div>
+            <div class="spade-arm"><div class="arm-shaft"></div><div class="spade-blade"></div></div>
+            <div class="spade-arm"><div class="arm-shaft"></div><div class="spade-blade"></div></div>
+            <div class="spade-arm"><div class="arm-shaft"></div><div class="spade-blade"></div></div>
+            <div class="spade-arm"><div class="arm-shaft"></div><div class="spade-blade"></div></div>
+            <div class="spade-arm"><div class="arm-shaft"></div><div class="spade-blade"></div></div>
+            <div class="spade-arm"><div class="arm-shaft"></div><div class="spade-blade"></div></div>
+          </div>
+          <!-- Particles -->
+          <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+
+        <!-- Smoothing Roller - WHEEL SHAPE -->
+        <div class="smoothing-roller">
+          <div class="roller-frame"></div>
+          <div class="roller-support"></div>
+          <div class="roller-wheel">
+            <div class="roller-hub"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info labels -->
+      <div class="info-labels">
+        <div class="info-label label-1">
+          <span class="label-number">1</span>
+          Lazító ásókanál
+        </div>
+        <div class="info-label label-2">
+          <span class="label-number">2</span>
+          Simító henger
+        </div>
+        <div class="info-label label-3">
+          <span class="direction-arrow">
+            <span class="arrow-line"></span>
+          </span>
+          Haladási irány
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="features-row">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2v20M2 12h20"></path>
+        </svg>
+      </div>
+      <div class="feature-title">Függőleges lazítás</div>
+      <div class="feature-desc">Az ásókanalak mélyen belemerülnek a talajba és fellazítják</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 14h16M4 10h16M4 18h16M4 6h16"></path>
+        </svg>
+      </div>
+      <div class="feature-title">Simított felszín</div>
+      <div class="feature-desc">A henger egyenletes, vetésre kész felületet hagy</div>
+    </div>
+  </div>
+
+  <script>
+    // Generate grass blades
+    const grassLayer = document.getElementById('grassLayer');
+    for (let i = 0; i < 70; i++) {
+      const blade = document.createElement('div');
+      blade.className = 'grass-blade';
+      blade.style.left = `${(i * 1.43) + Math.random() * 0.5}%`;
+      blade.style.height = `${7 + Math.random() * 10}px`;
+      blade.style.transform = `rotate(${-6 + Math.random() * 12}deg)`;
+      blade.style.opacity = 0.5 + Math.random() * 0.4;
+      grassLayer.appendChild(blade);
+    }
+  </script>
+</body>
+</html>

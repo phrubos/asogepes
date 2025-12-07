@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ásógép Működési Animáció - Design v1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-gold: #D4A84B;
+      --color-gold-light: #e4c078;
+      --color-earth-900: #1a1612;
+      --color-earth-800: #2a2218;
+      --color-earth-700: #3a3020;
+      --color-soil-dark: #4A3728;
+      --color-soil-mid: #6B5344;
+      --color-soil-light: #8B7355;
+      --color-sky: #2d3a4a;
+      --color-white: #F5F0E8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, var(--color-earth-900) 0%, #0d0a08 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: var(--color-white);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--color-gold);
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: rgba(245, 240, 232, 0.6);
+      margin-bottom: 2rem;
+    }
+
+    .animation-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      height: 400px;
+      background: linear-gradient(180deg, var(--color-sky) 0%, #1a2530 60%, var(--color-soil-dark) 60%);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Sky gradient */
+    .sky {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60%;
+      background: linear-gradient(180deg, #3d4a5a 0%, #2d3a4a 100%);
+    }
+
+    /* Soil layers */
+    .soil {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 45%;
+    }
+
+    .soil-surface {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 15%;
+      background: var(--color-soil-light);
+    }
+
+    .soil-mid {
+      position: absolute;
+      top: 15%;
+      left: 0;
+      right: 0;
+      height: 35%;
+      background: var(--color-soil-mid);
+    }
+
+    .soil-deep {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: var(--color-soil-dark);
+    }
+
+    /* Grass tufts */
+    .grass-container {
+      position: absolute;
+      bottom: 45%;
+      left: 0;
+      right: 0;
+      height: 30px;
+      overflow: visible;
+    }
+
+    .grass {
+      position: absolute;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to top, #4a6040, #6a8050);
+      border-radius: 2px 2px 0 0;
+      transform-origin: bottom center;
+    }
+
+    /* Machine group - moves left */
+    .machine-group {
+      position: absolute;
+      bottom: 45%;
+      right: 100px;
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      animation: moveLeft 8s linear infinite;
+      animation-play-state: paused;
+    }
+
+    .machine-group.playing {
+      animation-play-state: running;
+    }
+
+    @keyframes moveLeft {
+      0% { transform: translateX(100px); }
+      100% { transform: translateX(-600px); }
+    }
+
+    /* Spade rotor assembly */
+    .spade-assembly {
+      position: relative;
+      width: 140px;
+      height: 160px;
+    }
+
+    /* Main shaft housing */
+    .shaft-housing {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 50px;
+      background: linear-gradient(180deg, #5a5a5a 0%, #4a4a4a 100%);
+      border-radius: 8px 8px 4px 4px;
+      z-index: 10;
+    }
+
+    .shaft-housing::before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 8px;
+      background: var(--color-gold);
+      border-radius: 2px;
+    }
+
+    /* Rotor center */
+    .rotor-center {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      background: radial-gradient(circle at 40% 40%, #6a6a6a, #4a4a4a);
+      border-radius: 50%;
+      border: 3px solid var(--color-gold);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rotor-center::after {
+      content: '';
+      width: 15px;
+      height: 15px;
+      background: #3a3a3a;
+      border-radius: 50%;
+      border: 2px solid #5a5a5a;
+    }
+
+    /* Spade blades container */
+    .spade-blades {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      transform: translateX(-50%);
+      animation: rotateSpades 0.8s linear infinite;
+      animation-play-state: paused;
+    }
+
+    .spade-blades.playing {
+      animation-play-state: running;
+    }
+
+    @keyframes rotateSpades {
+      from { transform: translateX(-50%) rotate(0deg); }
+      to { transform: translateX(-50%) rotate(360deg); }
+    }
+
+    /* Individual spade blade */
+    .spade-blade {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 55px;
+      height: 12px;
+      transform-origin: left center;
+    }
+
+    .spade-blade::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      width: 45px;
+      height: 100%;
+      background: linear-gradient(90deg, #7a7a7a 0%, #9a9a9a 50%, #8a8a8a 100%);
+      border-radius: 0 4px 4px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Curved spade tip */
+    .spade-blade::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: -4px;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #8a8a8a 0%, #6a6a6a 100%);
+      border-radius: 0 60% 20% 0;
+      transform: rotate(-20deg);
+    }
+
+    .spade-blade:nth-child(1) { transform: rotate(0deg); }
+    .spade-blade:nth-child(2) { transform: rotate(60deg); }
+    .spade-blade:nth-child(3) { transform: rotate(120deg); }
+    .spade-blade:nth-child(4) { transform: rotate(180deg); }
+    .spade-blade:nth-child(5) { transform: rotate(240deg); }
+    .spade-blade:nth-child(6) { transform: rotate(300deg); }
+
+    /* Roller/Smoother assembly */
+    .roller-assembly {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin-bottom: 10px;
+    }
+
+    .roller-housing {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(180deg, #5a5a5a 0%, #4a4a4a 100%);
+      border-radius: 6px;
+      z-index: 10;
+    }
+
+    .roller-arm {
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 25px;
+      background: #4a4a4a;
+    }
+
+    .roller-drum {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 50px;
+      background: linear-gradient(180deg, #6a6a6a 0%, #4a4a4a 50%, #5a5a5a 100%);
+      border-radius: 10px;
+      border: 2px solid #3a3a3a;
+      overflow: hidden;
+      animation: rollDrum 0.5s linear infinite;
+      animation-play-state: paused;
+    }
+
+    .roller-drum.playing {
+      animation-play-state: running;
+    }
+
+    @keyframes rollDrum {
+      from { transform: translateX(-50%) rotate(0deg); }
+      to { transform: translateX(-50%) rotate(360deg); }
+    }
+
+    /* Roller ridges */
+    .roller-drum::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 8px,
+        rgba(0,0,0,0.2) 8px,
+        rgba(0,0,0,0.2) 10px
+      );
+    }
+
+    .roller-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(circle at 40% 40%, #5a5a5a, #3a3a3a);
+      border-radius: 50%;
+      border: 2px solid #4a4a4a;
+    }
+
+    /* Soil particles - flying effect */
+    .particles-container {
+      position: absolute;
+      bottom: 0;
+      left: 30px;
+      width: 80px;
+      height: 60px;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--color-soil-light);
+      border-radius: 50%;
+      opacity: 0;
+    }
+
+    .particle.playing {
+      animation: flyParticle 0.6s ease-out infinite;
+    }
+
+    .particle:nth-child(1) { left: 20%; animation-delay: 0s; }
+    .particle:nth-child(2) { left: 40%; animation-delay: 0.1s; }
+    .particle:nth-child(3) { left: 60%; animation-delay: 0.2s; }
+    .particle:nth-child(4) { left: 30%; animation-delay: 0.15s; }
+    .particle:nth-child(5) { left: 50%; animation-delay: 0.25s; }
+
+    @keyframes flyParticle {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-40px) translateX(-20px) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    /* Loosened soil effect */
+    .loosened-soil {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 5px,
+        rgba(139, 115, 85, 0.3) 5px,
+        rgba(139, 115, 85, 0.3) 10px
+      );
+      opacity: 0;
+      transform: scaleX(0);
+      transform-origin: right;
+    }
+
+    .loosened-soil.playing {
+      animation: loosenSoil 8s linear infinite;
+    }
+
+    @keyframes loosenSoil {
+      0% { transform: scaleX(0); opacity: 0; }
+      10% { opacity: 0.6; }
+      100% { transform: scaleX(1); opacity: 0.3; }
+    }
+
+    /* Labels */
+    .label {
+      position: absolute;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--color-gold);
+      background: rgba(26, 22, 18, 0.9);
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid rgba(212, 168, 75, 0.3);
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+    }
+
+    .animation-container:hover .label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .label-spade {
+      top: 20px;
+      left: 30%;
+    }
+
+    .label-roller {
+      top: 20px;
+      right: 25%;
+    }
+
+    .label-direction {
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .animation-container:hover .label-direction {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .arrow-left {
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: var(--color-gold);
+      position: relative;
+    }
+
+    .arrow-left::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -4px;
+      border: 5px solid transparent;
+      border-right-color: var(--color-gold);
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .control-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: rgba(212, 168, 75, 0.15);
+      border: 1px solid rgba(212, 168, 75, 0.4);
+      border-radius: 100px;
+      color: var(--color-gold);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+      background: rgba(212, 168, 75, 0.25);
+      border-color: var(--color-gold);
+      transform: translateY(-2px);
+    }
+
+    .control-btn.active {
+      background: var(--color-gold);
+      color: var(--color-earth-900);
+    }
+
+    .control-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Info panel */
+    .info-panel {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      max-width: 800px;
+    }
+
+    .info-item {
+      flex: 1;
+    }
+
+    .info-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(212, 168, 75, 0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .info-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-white);
+      margin-bottom: 0.25rem;
+    }
+
+    .info-desc {
+      font-size: 0.8rem;
+      color: rgba(245, 240, 232, 0.6);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ásógép Működési Animáció</h1>
+  <p class="subtitle">Lazítás forgatás nélkül — a talajrétegek megőrzése</p>
+
+  <div class="animation-container">
+    <!-- Sky -->
+    <div class="sky"></div>
+
+    <!-- Soil layers -->
+    <div class="soil">
+      <div class="soil-surface"></div>
+      <div class="soil-mid"></div>
+      <div class="soil-deep"></div>
+      <div class="loosened-soil" id="loosened"></div>
+    </div>
+
+    <!-- Grass -->
+    <div class="grass-container" id="grassContainer"></div>
+
+    <!-- Machine group -->
+    <div class="machine-group" id="machineGroup">
+      <!-- Spade assembly (front - loosens soil) -->
+      <div class="spade-assembly">
+        <div class="shaft-housing"></div>
+        <div class="rotor-center"></div>
+        <div class="spade-blades" id="spadeBlades">
+          <div class="spade-blade"></div>
+          <div class="spade-blade"></div>
+          <div class="spade-blade"></div>
+          <div class="spade-blade"></div>
+          <div class="spade-blade"></div>
+          <div class="spade-blade"></div>
+        </div>
+        <div class="particles-container">
+          <div class="particle" id="p1"></div>
+          <div class="particle" id="p2"></div>
+          <div class="particle" id="p3"></div>
+          <div class="particle" id="p4"></div>
+          <div class="particle" id="p5"></div>
+        </div>
+      </div>
+
+      <!-- Roller assembly (back - smooths soil) -->
+      <div class="roller-assembly">
+        <div class="roller-housing"></div>
+        <div class="roller-arm"></div>
+        <div class="roller-drum" id="rollerDrum">
+          <div class="roller-center"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Labels -->
+    <div class="label label-spade">1. Lazító ásókanalak</div>
+    <div class="label label-roller">2. Simító henger</div>
+    <div class="label label-direction">
+      <span class="arrow-left"></span>
+      Haladási irány
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="control-btn" id="playBtn" onclick="toggleAnimation()">
+      <svg id="playIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+      </svg>
+      <span id="playText">Lejátszás</span>
+    </button>
+    <button class="control-btn" onclick="resetAnimation()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+        <path d="M3 3v5h5"></path>
+      </svg>
+      Újraindítás
+    </button>
+  </div>
+
+  <div class="info-panel">
+    <div class="info-item">
+      <div class="info-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+        </svg>
+      </div>
+      <div class="info-title">Függőleges mozgás</div>
+      <div class="info-desc">Az ásókanalak felülről lefelé dolgoznak, nem forgatják körbe a talajt</div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+      </div>
+      <div class="info-title">Rétegek megőrzése</div>
+      <div class="info-desc">A talaj természetes rétegződése és mikrobiológiája megmarad</div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+      </div>
+      <div class="info-title">Simított felszín</div>
+      <div class="info-desc">A henger egyenletes, vetésre kész felületet hagy maga után</div>
+    </div>
+  </div>
+
+  <script>
+    let isPlaying = false;
+
+    // Generate grass
+    const grassContainer = document.getElementById('grassContainer');
+    for (let i = 0; i < 50; i++) {
+      const grass = document.createElement('div');
+      grass.className = 'grass';
+      grass.style.left = `${i * 2 + Math.random() * 10}%`;
+      grass.style.height = `${10 + Math.random() * 15}px`;
+      grass.style.transform = `rotate(${-5 + Math.random() * 10}deg)`;
+      grassContainer.appendChild(grass);
+    }
+
+    function toggleAnimation() {
+      isPlaying = !isPlaying;
+      
+      const machineGroup = document.getElementById('machineGroup');
+      const spadeBlades = document.getElementById('spadeBlades');
+      const rollerDrum = document.getElementById('rollerDrum');
+      const loosened = document.getElementById('loosened');
+      const particles = document.querySelectorAll('.particle');
+      const playBtn = document.getElementById('playBtn');
+      const playIcon = document.getElementById('playIcon');
+      const playText = document.getElementById('playText');
+
+      if (isPlaying) {
+        machineGroup.classList.add('playing');
+        spadeBlades.classList.add('playing');
+        rollerDrum.classList.add('playing');
+        loosened.classList.add('playing');
+        particles.forEach(p => p.classList.add('playing'));
+        playBtn.classList.add('active');
+        playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+        playText.textContent = 'Szünet';
+      } else {
+        machineGroup.classList.remove('playing');
+        spadeBlades.classList.remove('playing');
+        rollerDrum.classList.remove('playing');
+        loosened.classList.remove('playing');
+        particles.forEach(p => p.classList.remove('playing'));
+        playBtn.classList.remove('active');
+        playIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+        playText.textContent = 'Lejátszás';
+      }
+    }
+
+    function resetAnimation() {
+      isPlaying = false;
+      
+      const machineGroup = document.getElementById('machineGroup');
+      const spadeBlades = document.getElementById('spadeBlades');
+      const rollerDrum = document.getElementById('rollerDrum');
+      const loosened = document.getElementById('loosened');
+      const particles = document.querySelectorAll('.particle');
+      const playBtn = document.getElementById('playBtn');
+      const playIcon = document.getElementById('playIcon');
+      const playText = document.getElementById('playText');
+
+      // Remove all playing classes
+      machineGroup.classList.remove('playing');
+      spadeBlades.classList.remove('playing');
+      rollerDrum.classList.remove('playing');
+      loosened.classList.remove('playing');
+      particles.forEach(p => p.classList.remove('playing'));
+      playBtn.classList.remove('active');
+      playIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+      playText.textContent = 'Lejátszás';
+
+      // Reset animation by removing and re-adding element
+      machineGroup.style.animation = 'none';
+      loosened.style.animation = 'none';
+      
+      // Force reflow
+      machineGroup.offsetHeight;
+      loosened.offsetHeight;
+      
+      // Restore animation
+      machineGroup.style.animation = '';
+      loosened.style.animation = '';
+    }
+  </script>
+</body>
+</html>

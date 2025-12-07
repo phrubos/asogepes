@@ -730,6 +730,90 @@
   z-index: 1;
 }
 
+/* Quote Block - Kiemelt idézet */
+.quoteBlock {
+  max-width: 720px;
+  margin: 0 auto var(--space-4xl);
+  padding: var(--space-2xl) var(--space-3xl);
+  background: linear-gradient(135deg, rgba(212, 168, 75, 0.08) 0%, rgba(139, 115, 85, 0.05) 100%);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(212, 168, 75, 0.15);
+}
+
+.quoteIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--color-gold), #D4AF37);
+  border-radius: 50%;
+  color: white;
+  margin-bottom: var(--space-lg);
+  box-shadow: 0 8px 24px rgba(212, 168, 75, 0.3);
+}
+
+.quoteText {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--color-earth-800);
+  margin: 0 0 var(--space-md);
+}
+
+.quoteHighlight {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--color-gold), #D4AF37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  cursor: default;
+}
+
+.quoteSubtext {
+  font-size: 1.125rem;
+  color: var(--color-earth-600);
+  font-style: italic;
+  margin: 0;
+}
+
+.quoteLine {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  border-radius: 2px;
+  transform-origin: center;
+}
+
+@media (max-width: 768px) {
+  .quoteBlock {
+    padding: var(--space-xl) var(--space-lg);
+    margin-bottom: var(--space-3xl);
+  }
+  
+  .quoteIcon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .quoteIcon svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .quoteSubtext {
+    font-size: 1rem;
+  }
+}
+
 /* Comparison Wrapper */
 .comparisonWrapper {
   margin-top: var(--space-4xl);

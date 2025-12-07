@@ -46,24 +46,26 @@ export default function SoilComparison() {
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
-      <motion.h3 
-        className={styles.title}
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.1 }}
-      >
-        Talajszelvény Összehasonlítás
-      </motion.h3>
-      <motion.p 
-        className={styles.subtitle}
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.2 }}
-      >
-        Szántott vs. ásógépezett talaj szerkezete
-      </motion.p>
+      <div className={styles.titleBlock}>
+        <motion.h3 
+          className={styles.title}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+        >
+          Talajszelvény Összehasonlítás
+        </motion.h3>
+        <motion.p 
+          className={styles.subtitle}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+        >
+          Szántott vs. ásógépezett talaj szerkezete
+        </motion.p>
+      </div>
       
       <div className={styles.comparison}>
         {/* Szántott talaj */}
@@ -288,15 +290,6 @@ export default function SoilComparison() {
         </motion.div>
       </div>
       
-      <motion.div 
-        className={styles.caption}
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.6 }}
-      >
-        <strong>Forrás:</strong> Szakdolgozat 13. ábra, 32. oldal — Penetrométeres mérések alapján
-      </motion.div>
     </motion.div>
   )
 }

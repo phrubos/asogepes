@@ -19,7 +19,7 @@ const locations: { key: LocationKey; name: string; crop: string; number: string 
 ]
 
 export default function LocationSelector({ activeLocation, onLocationChange }: LocationSelectorProps) {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   // Lock body scroll when modal is open
   useEffect(() => {

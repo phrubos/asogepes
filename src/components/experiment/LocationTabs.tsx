@@ -9,12 +9,6 @@ import styles from './Experiment.module.css'
 
 type LocationKey = 'szentkiraly' | 'kecskemet' | 'lakitelek'
 
-const tabs: { key: LocationKey; number: string; name: string; crop: string }[] = [
-  { key: 'szentkiraly', number: '1', name: 'Szentkirály', crop: 'Vöröshagyma' },
-  { key: 'kecskemet', number: '2', name: 'Kecskemét-Borbás', crop: 'Ipari paradicsom' },
-  { key: 'lakitelek', number: '3', name: 'Lakitelek', crop: 'Ipari paradicsom' },
-]
-
 export default function LocationTabs() {
   const [activeLocation, setActiveLocation] = useState<LocationKey>('szentkiraly')
 

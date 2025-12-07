@@ -1,0 +1,591 @@
+/* ============================================
+   EREDMÉNYEK OLDAL - A Technológia stílusához igazítva
+   Háttér: color-earth-800, grid pattern, arany akcentusok
+   ============================================ */
+
+.sectionResults {
+  background: var(--color-earth-800);
+  color: var(--color-cream);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Grid háttérminta - mint a Technológia oldalon */
+.sectionResults::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+  pointer-events: none;
+}
+
+/* ============================================
+   HERO SZEKCIÓ
+   ============================================ */
+.hero {
+  padding: var(--space-5xl) 0 var(--space-3xl);
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  color: var(--color-cream);
+  margin: 0 0 var(--space-lg);
+  line-height: 1.1;
+}
+
+.heroTitle span {
+  display: inline-block;
+  margin-right: 0.3em;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: rgba(245, 240, 232, 0.7);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.heroSubtitle strong {
+  color: var(--color-gold);
+}
+
+/* ============================================
+   FŐ MEGÁLLAPÍTÁSOK - 2x2 Grid
+   ============================================ */
+.findingsSection {
+  padding: 0 0 var(--space-4xl);
+  position: relative;
+  z-index: 1;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-gold);
+  text-align: center;
+  margin: 0 0 var(--space-3xl);
+}
+
+.findingsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xl);
+}
+
+.findingCard {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: var(--space-2xl);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+
+.findingCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--color-gold);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.findingCard:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(212, 168, 75, 0.3);
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+.findingCard:hover::before {
+  transform: scaleY(1);
+}
+
+.findingHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+}
+
+.findingNumber {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.08);
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.findingCard:hover .findingNumber {
+  color: rgba(212, 168, 75, 0.25);
+}
+
+.findingIcon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 168, 75, 0.1);
+  border-radius: 12px;
+  color: var(--color-gold);
+  transition: all 0.3s ease;
+}
+
+.findingCard:hover .findingIcon {
+  background: var(--color-gold);
+  color: var(--color-earth-800);
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.findingTitle {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--color-cream);
+  margin: 0 0 var(--space-sm);
+}
+
+.findingDescription {
+  font-size: 0.9375rem;
+  color: rgba(245, 240, 232, 0.7);
+  line-height: 1.6;
+  margin: 0 0 var(--space-lg);
+}
+
+.findingDescription strong {
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.findingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  background: rgba(212, 168, 75, 0.15);
+  border: 1px solid rgba(212, 168, 75, 0.3);
+  border-radius: 100px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+
+/* ============================================
+   ÖSSZEHASONLÍTÓ TÁBLÁZAT
+   ============================================ */
+.tableSection {
+  padding: var(--space-4xl) 0;
+  position: relative;
+  z-index: 1;
+}
+
+.tableHeader {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.tableMainTitle {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-cream);
+  margin: 0 0 var(--space-xs);
+}
+
+.tableSubtitle {
+  font-size: 0.9375rem;
+  color: rgba(245, 240, 232, 0.6);
+  margin: 0;
+}
+
+.tableWrapper {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead tr {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.table th {
+  padding: var(--space-lg);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-gold);
+  text-align: left;
+}
+
+.table th:first-child {
+  padding-left: var(--space-xl);
+}
+
+.table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: rgba(212, 168, 75, 0.08);
+}
+
+.table td {
+  padding: var(--space-md) var(--space-lg);
+  font-size: 0.9375rem;
+  color: rgba(245, 240, 232, 0.9);
+  vertical-align: middle;
+}
+
+.table td:first-child {
+  padding-left: var(--space-xl);
+  font-weight: 500;
+}
+
+.treatmentCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.bestStar {
+  color: var(--color-gold);
+  font-size: 1rem;
+}
+
+.rowBest {
+  background: rgba(212, 168, 75, 0.06);
+}
+
+.rowBest td:first-child {
+  font-weight: 600;
+  color: var(--color-gold);
+}
+
+.changeGood {
+  color: #4ADE80;
+  font-weight: 600;
+}
+
+.changeBad {
+  color: #F87171;
+  font-weight: 600;
+}
+
+.iconGood {
+  color: #4ADE80;
+}
+
+.iconBad {
+  color: #F87171;
+}
+
+/* ============================================
+   STATISZTIKÁK
+   ============================================ */
+.statsSection {
+  padding: var(--space-4xl) 0;
+  position: relative;
+  z-index: 1;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+.statCard {
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.statCard:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(212, 168, 75, 0.3);
+  transform: translateY(-4px);
+}
+
+.statNumber {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  line-height: 1;
+  display: block;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: rgba(245, 240, 232, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: var(--space-sm);
+  display: block;
+}
+
+/* ============================================
+   AJÁNLÁSOK
+   ============================================ */
+.recommendationsSection {
+  padding: var(--space-4xl) 0;
+  position: relative;
+  z-index: 1;
+}
+
+.recHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+}
+
+.recHeaderIcon {
+  color: var(--color-gold);
+}
+
+.recTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-cream);
+  margin: 0;
+}
+
+.recGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+.recCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: var(--space-xl);
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.recCard:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(76, 175, 80, 0.3);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.recIcon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(76, 175, 80, 0.15);
+  border-radius: 16px;
+  color: #4ADE80;
+  transition: all 0.3s ease;
+}
+
+.recCard:hover .recIcon {
+  background: #4ADE80;
+  color: var(--color-earth-800);
+  transform: scale(1.1);
+}
+
+.recCardTitle {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-cream);
+  margin: 0 0 var(--space-sm);
+}
+
+.recCardText {
+  font-size: 0.875rem;
+  color: rgba(245, 240, 232, 0.7);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ============================================
+   VÉGSŐ KÖVETKEZTETÉS
+   ============================================ */
+.conclusionSection {
+  padding: var(--space-4xl) 0 var(--space-5xl);
+  position: relative;
+  z-index: 1;
+}
+
+.conclusionContent {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.conclusionQuote {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-style: italic;
+  color: var(--color-cream);
+  line-height: 1.5;
+  margin: 0 0 var(--space-xl);
+  padding: 0 var(--space-2xl);
+}
+
+.quoteMarkLeft,
+.quoteMarkRight {
+  position: absolute;
+  font-size: 4rem;
+  color: var(--color-gold);
+  opacity: 0.3;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+.quoteMarkLeft {
+  top: -10px;
+  left: 0;
+}
+
+.quoteMarkRight {
+  bottom: -30px;
+  right: 0;
+}
+
+.conclusionText {
+  font-size: 1.0625rem;
+  color: rgba(245, 240, 232, 0.8);
+  line-height: 1.7;
+  margin: 0 0 var(--space-xl);
+}
+
+.conclusionText strong {
+  color: var(--color-gold);
+}
+
+.finalBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  background: rgba(212, 168, 75, 0.15);
+  border: 1px solid rgba(212, 168, 75, 0.4);
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-gold);
+}
+
+.finalBadge svg {
+  opacity: 0.8;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .findingsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .recGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .table th,
+  .table td {
+    padding: var(--space-md);
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: var(--space-4xl) 0 var(--space-2xl);
+  }
+
+  .heroTitle {
+    font-size: 2.25rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.0625rem;
+  }
+
+  .findingCard {
+    padding: var(--space-xl);
+  }
+
+  .findingNumber {
+    font-size: 2.5rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .recGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 500px;
+  }
+
+  .conclusionQuote {
+    font-size: 1.25rem;
+    padding: 0;
+  }
+
+  .quoteMarkLeft,
+  .quoteMarkRight {
+    display: none;
+  }
+}

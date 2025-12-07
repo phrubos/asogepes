@@ -19,8 +19,8 @@ export default function Navigation() {
   const navItems = [
     { href: '/', label: 'Főoldal' },
     { href: '/problema', label: 'Probléma' },
-    { href: '/megoldas', label: 'Megoldás' },
-    { href: '/kiserlet', label: 'Kísérletek' },
+    { href: '/technologia', label: 'Technológia' },
+    { href: '/kutatas', label: 'Kutatás' },
     { href: '/eredmenyek', label: 'Eredmények' },
   ]
 
@@ -73,7 +73,7 @@ export default function Navigation() {
   }, [mobileMenuOpen])
 
   // Dark pages need light text
-  const isDarkPage = pathname === '/' || pathname === '/megoldas' || pathname === '/eredmenyek'
+  const isDarkPage = pathname === '/' || pathname === '/technologia' || pathname === '/eredmenyek'
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''} ${isDarkPage && !scrolled ? styles.onDark : ''}`}>

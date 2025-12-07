@@ -9,8 +9,10 @@ import {
   Layers,
   Droplets,
   Calendar,
-  Lightbulb
+  Lightbulb,
+  ArrowRight
 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import styles from './FieldDataModal.module.css'
 
 type ModelId = '38sx' | '38wx' | '40sx'
@@ -199,6 +201,12 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
   const prefersReducedMotion = useReducedMotion()
   const modalRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const router = useRouter()
+
+  const handleViewDetails = () => {
+    onClose()
+    router.push('/kutatas')
+  }
 
   // Handle ESC key and body scroll lock
   useEffect(() => {
@@ -455,6 +463,20 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                   </motion.div>
                   <p>{data.highlight}</p>
                 </motion.div>
+
+                {/* CTA to Research page */}
+                <motion.button
+                  className={styles.ctaButton}
+                  onClick={handleViewDetails}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span>Részletes módszertan a Kutatás oldalon</span>
+                  <ArrowRight size={18} />
+                </motion.button>
               </motion.div>
             </motion.div>
           </div>

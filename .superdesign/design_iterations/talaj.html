@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prémium Talajanalízis</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-bg: #F8FAFC;
+    --c-card-bg: #FFFFFF;
+    --c-soil-top: #8D6E63;
+    --c-soil-deep: #3E2723;
+    --c-sky: #F0F9FF;
+    --c-accent-bad: #EF4444;
+    --c-accent-good: #10B981;
+    --c-water: #38BDF8;
+    --ease-out: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  body {
+    background-color: var(--c-bg);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    margin: 0;
+    color: #1E293B;
+  }
+
+  .main-wrapper {
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #451a03, #78350f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+  }
+
+  .header p {
+    color: #64748B;
+    font-size: 1.1rem;
+  }
+
+  /* --- GRID SYSTEM --- */
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    align-items: center;
+  }
+
+  /* --- CARD STYLES --- */
+  .soil-card {
+    background: var(--c-card-bg);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+    border: 1px solid rgba(255,255,255,0.5);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  .soil-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px -12px rgba(0,0,0,0.12);
+    z-index: 10;
+  }
+
+  /* Header Badge */
+  .card-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .tech-badge {
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  }
+
+  .badge-plow { background: linear-gradient(135deg, #DC2626, #B91C1C); }
+  .badge-spade { background: linear-gradient(135deg, #059669, #047857); }
+
+  /* --- THE SOIL WINDOW (VISUAL) --- */
+  .viewport {
+    height: 380px;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    /* Noise texture overlay for realism */
+    background-color: #5D4037;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+  }
+
+  .viewport::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Layers */
+  .sky {
+    position: absolute;
+    top: 0; width: 100%; height: 60px;
+    background: linear-gradient(to bottom, #E0F2FE, #fff);
+    z-index: 1;
+  }
+
+  .soil-gradient {
+    position: absolute;
+    top: 60px; width: 100%; bottom: 0;
+    background: linear-gradient(to bottom, #8D6E63 0%, #5D4037 40%, #3E2723 100%);
+    z-index: 1;
+  }
+
+  /* THE EKETALP (Compacted Layer) */
+  .pan-layer {
+    position: absolute;
+    top: 160px; /* 100px down from soil surface */
+    left: 0; right: 0;
+    height: 30px;
+    background: repeating-linear-gradient(
+      45deg,
+      #7f1d1d,
+      #7f1d1d 10px,
+      #991b1b 10px,
+      #991b1b 20px
+    );
+    z-index: 3;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; /* Hidden by default */
+    transform: scaleX(1.1);
+  }
+
+  .soil-card.is-bad .pan-layer {
+    opacity: 1;
+  }
+
+  /* FLOATING LABELS (Glassmorphism) */
+  .float-info {
+    position: absolute;
+    right: 10px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: rgba(255,255,255,0.9);
+    font-size: 0.7rem;
+    font-weight: 600;
+    z-index: 20;
+    transform: translateX(10px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .soil-card:hover .float-info {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .info-depth-1 { top: 80px; }
+  .info-depth-2 { top: 165px; background: rgba(220, 38, 38, 0.8); border: none; }
+  .info-depth-3 { top: 250px; }
+
+  /* --- SVG ROOTS & PLANTS --- */
+  .plant-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .stem {
+    stroke: #65A30D;
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+
+  .root-path {
+    fill: none;
+    stroke: #FCD34D;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    transition: stroke-dashoffset 2s ease-out;
+  }
+
+  /* Animation trigger on load and hover */
+  .soil-card:hover .root-path {
+    stroke-dashoffset: 0 !important;
+    transition: stroke-dashoffset 2s ease-out;
+  }
+
+  /* --- RAIN / WATER ANIMATION --- */
+  .rain-drop {
+    position: absolute;
+    width: 2px;
+    height: 8px;
+    background: var(--c-water);
+    border-radius: 2px;
+    opacity: 0.6;
+    z-index: 4;
+    animation: rainFall 2s infinite linear;
+  }
+
+  /* Water behavior BAD side: Stops at pan */
+  @keyframes rainFallBlocked {
+    0% { transform: translateY(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    45% { transform: translateY(160px); opacity: 0.8; } /* Hits layer at 160px */
+    50% { transform: translateY(160px); opacity: 0; width: 10px; height: 2px; } /* Splashes */
+    100% { transform: translateY(160px); opacity: 0; }
+  }
+
+  /* Water behavior GOOD side: Goes through */
+  @keyframes rainFallThrough {
+    0% { transform: translateY(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { transform: translateY(350px); opacity: 0.4; }
+    100% { transform: translateY(380px); opacity: 0; }
+  }
+
+  /* Generate random rain drops via CSS :nth-child would be tedious, 
+     simplified here with a few manual classes */
+  
+  .drop-1 { left: 20%; animation-delay: 0.2s; }
+  .drop-2 { left: 40%; animation-delay: 0.8s; }
+  .drop-3 { left: 60%; animation-delay: 1.2s; }
+  .drop-4 { left: 80%; animation-delay: 0.5s; }
+
+  .is-bad .rain-drop { animation-name: rainFallBlocked; top: 0; }
+  .is-good .rain-drop { animation-name: rainFallThrough; top: 0; }
+
+  /* Water pooling effect (Bad side only) */
+  .water-pool {
+    position: absolute;
+    top: 158px;
+    left: 10%; width: 80%; height: 4px;
+    background: rgba(56, 189, 248, 0.5);
+    filter: blur(2px);
+    border-radius: 10px;
+    z-index: 4;
+    opacity: 0;
+    animation: poolPulse 3s infinite ease-in-out;
+  }
+  .is-bad .water-pool { opacity: 1; }
+
+  @keyframes poolPulse {
+    0%, 100% { opacity: 0.3; transform: scaleX(0.9); }
+    50% { opacity: 0.8; transform: scaleX(1); }
+  }
+
+  /* --- DIVIDER VS --- */
+  .divider {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 20;
+  }
+  .vs-badge {
+    width: 44px; height: 44px;
+    background: #0F172A;
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    font-size: 14px;
+    border: 4px solid #F8FAFC;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  /* --- STATS / LIST --- */
+  .stats-container {
+    margin-top: 24px;
+  }
+
+  .stat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    background: #F8FAFC;
+    transition: transform 0.2s;
+  }
+  
+  .stat-row:hover {
+    transform: translateX(4px);
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .icon-box {
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  
+  .is-bad .icon-box { background: #FEE2E2; color: #DC2626; }
+  .is-good .icon-box { background: #D1FAE5; color: #059669; }
+
+  .stat-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #334155;
+  }
+
+  @media (max-width: 900px) {
+    .comparison-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .divider { transform: rotate(90deg); margin: 10px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="main-wrapper">
+  
+  <div class="header">
+    <h1>Talajszelvény Összehasonlítás</h1>
+    <p>Hogyan befolyásolja a művelés módja a vízháztartást és a gyökérzónát?</p>
+  </div>
+
+  <div class="comparison-grid">
+
+    <!-- ROSSZ OLDAL (SZÁNTOTT) -->
+    <div class="soil-card is-bad" onmouseenter="playRootBad()">
+      <div class="card-header">
+        <span class="tech-badge badge-plow">Szántott Talaj</span>
+      </div>
+
+      <div class="viewport">
+        <!-- Atmoszféra -->
+        <div class="sky"></div>
+        <div class="soil-gradient"></div>
+        
+        <!-- Eső cseppek (CSS Animáció) -->
+        <div class="rain-drop drop-1"></div>
+        <div class="rain-drop drop-2"></div>
+        <div class="rain-drop drop-3"></div>
+        <div class="rain-drop drop-4"></div>
+        <div class="water-pool"></div>
+
+        <!-- Eketalp réteg -->
+        <div class="pan-layer"></div>
+
+        <!-- Lebegő infók (Glassmorphism) -->
+        <div class="float-info info-depth-1">Művelt: 0-25cm</div>
+        <div class="float-info info-depth-2">⚠️ EKETALP TÖMÖRÖDÉS</div>
+        <div class="float-info info-depth-3">Holttér</div>
+
+        <!-- Vizuális SVG -->
+        <svg class="plant-layer" viewBox="0 0 200 380" preserveAspectRatio="none">
+          <!-- Felszín vonal -->
+          <line x1="0" y1="60" x2="200" y2="60" stroke="#84cc16" stroke-width="4" stroke-opacity="0.5" />
+          
+          <!-- Növény -->
+          <path class="stem" d="M100 60 L100 20" />
+          <path fill="#84cc16" d="M100 20 Q80 0 70 30 Q100 40 100 20 Z" />
+          <path fill="#84cc16" d="M100 20 Q120 0 130 30 Q100 40 100 20 Z" />
+
+          <!-- Gyökér (Elakad) -->
+          <!-- A gyökér 60-nál indul. Eketalp 160-nál van. -->
+          <path id="rootBad" class="root-path" stroke="#EF4444" 
+            d="M100 60 L100 150 Q100 160 80 160 L50 160" />
+        </svg>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-row">
+          <div class="icon-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"></path></svg></div>
+          <span class="stat-text">Vízmegállás az eketalpon (Belvíz)</span>
+        </div>
+        <div class="stat-row">
+          <div class="icon-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"></path></svg></div>
+          <span class="stat-text">Gyökérzet "pipásodása"</span>
+        </div>
+        <div class="stat-row">
+          <div class="icon-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"></path></svg></div>
+          <span class="stat-text">Aszályérzékeny állomány</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ELVÁLASZTÓ -->
+    <div class="divider">
+      <div class="vs-badge">VS</div>
+    </div>
+
+    <!-- JÓ OLDAL (ÁSÓGÉPEZWTT) -->
+    <div class="soil-card is-good" onmouseenter="playRootGood()">
+      <div class="card-header">
+        <span class="tech-badge badge-spade">Ásógépezett Talaj</span>
+      </div>
+
+      <div class="viewport">
+        <div class="sky"></div>
+        <div class="soil-gradient"></div>
+
+        <!-- Eső cseppek (átfolynak) -->
+        <div class="rain-drop drop-1"></div>
+        <div class="rain-drop drop-2"></div>
+        <div class="rain-drop drop-3"></div>
+        <div class="rain-drop drop-4"></div>
+
+        <!-- Lebegő infók -->
+        <div class="float-info info-depth-1" style="top:100px">Lazított: 0-45cm</div>
+        <div class="float-info info-depth-3" style="top:300px">Aktív talajélet</div>
+
+        <svg class="plant-layer" viewBox="0 0 200 380" preserveAspectRatio="none">
+          <line x1="0" y1="60" x2="200" y2="60" stroke="#84cc16" stroke-width="4" stroke-opacity="0.5" />
+          
+          <!-- Növény (Nagyobb) -->
+          <path class="stem" d="M100 60 L100 10" />
+          <path fill="#4ade80" d="M100 10 Q70 -20 50 20 Q100 30 100 10 Z" />
+          <path fill="#4ade80" d="M100 10 Q130 -20 150 20 Q100 30 100 10 Z" />
+
+          <!-- Gyökér (Mélyre megy) -->
+          <path id="rootGood" class="root-path" 
+            d="M100 60 L100 320" />
+          
+          <!-- Hajszálgyökerek -->
+          <path class="root-path" stroke-width="1" d="M100 100 L70 110" style="transition-delay: 0.2s" />
+          <path class="root-path" stroke-width="1" d="M100 150 L140 170" style="transition-delay: 0.4s" />
+          <path class="root-path" stroke-width="1" d="M100 220 L60 240" style="transition-delay: 0.6s" />
+        </svg>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-row">
+          <div class="icon-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg></div>
+          <span class="stat-text">Nincs víztorlódás, jó beszivárgás</span>
+        </div>
+        <div class="stat-row">
+          <div class="icon-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg></div>
+          <span class="stat-text">Mélyre hatoló, erős gyökérzet</span>
+        </div>
+        <div class="stat-row">
+          <div class="icon-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg></div>
+          <span class="stat-text">Jobb tápanyagfelvétel</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Egyszerű script, hogy az animáció minden hover-nél újrainduljon elölről
+  function resetAnimation(el) {
+    el.style.animation = 'none';
+    el.offsetHeight; /* trigger reflow */
+    el.style.animation = null; 
+  }
+
+  function playRootBad() {
+    const root = document.getElementById('rootBad');
+    // Az SVG stroke-dashoffset-et reseteljük, hogy újra rajzolódjon
+    root.style.transition = 'none';
+    root.style.strokeDashoffset = '400';
+    setTimeout(() => {
+        root.style.transition = 'stroke-dashoffset 2s ease-out';
+        root.style.strokeDashoffset = '0';
+    }, 50);
+  }
+
+  function playRootGood() {
+    const root = document.getElementById('rootGood');
+    root.style.transition = 'none';
+    root.style.strokeDashoffset = '400';
+    setTimeout(() => {
+        root.style.transition = 'stroke-dashoffset 2s ease-out';
+        root.style.strokeDashoffset = '0';
+    }, 50);
+  }
+  
+  // Első betöltésnél induljanak
+  window.onload = () => {
+      setTimeout(() => {
+        playRootBad();
+        playRootGood();
+      }, 500);
+  };
+</script>
+
+</body>
+</html>

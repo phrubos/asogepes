@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technológia Nav - Concept 2 (Hover Modal)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-earth-800: #1a1714;
+            --color-earth-900: #0f0d0b;
+            --color-cream: #F5F0E8;
+            --color-gold: #D4A84B;
+            --color-gold-light: #E8C97B;
+            --color-green: #6A8B5E;
+            --color-brown: #8B7355;
+            --color-blue-steel: #6B7A8B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--color-earth-800);
+            color: var(--color-cream);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Subtle grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 4rem;
+            gap: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 550px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .badge::before {
+            content: '02';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: rgba(212, 168, 75, 0.15);
+            border: 1px solid rgba(212, 168, 75, 0.3);
+            border-radius: 50%;
+            font-size: 0.65rem;
+        }
+
+        .hero-title {
+            font-family: 'Fraunces', serif;
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: rgba(245, 240, 232, 0.8);
+            max-width: 480px;
+        }
+
+        .hero-subtitle em {
+            color: var(--color-gold);
+            font-style: normal;
+        }
+
+        /* =============================================
+           NAVIGATION HUB - HOVER MODAL STYLE
+           ============================================= */
+        .nav-hub {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 400px;
+        }
+
+        .hub-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .hub-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .hub-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.65rem;
+            color: var(--color-gold);
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Hub Items Container */
+        .hub-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Single Hub Item with Dropdown */
+        .hub-item {
+            position: relative;
+        }
+
+        .hub-trigger {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            width: 100%;
+        }
+
+        .hub-trigger:hover {
+            background: rgba(212, 168, 75, 0.08);
+            border-color: rgba(212, 168, 75, 0.25);
+            transform: translateX(6px);
+        }
+
+        .hub-item:hover .hub-trigger {
+            background: rgba(212, 168, 75, 0.1);
+            border-color: var(--color-gold);
+        }
+
+        .hub-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(212, 168, 75, 0.1);
+            border: 1px solid rgba(212, 168, 75, 0.2);
+            border-radius: 10px;
+            color: var(--color-gold);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .hub-item:hover .hub-icon {
+            background: var(--color-gold);
+            color: var(--color-earth-900);
+        }
+
+        .hub-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .hub-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--color-cream);
+            margin-bottom: 0.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .hub-item:hover .hub-label {
+            color: var(--color-gold);
+        }
+
+        .hub-desc {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .hub-arrow {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .hub-item:hover .hub-arrow {
+            color: var(--color-gold);
+            transform: translateX(4px);
+        }
+
+        /* =============================================
+           DROPDOWN MODAL - Appears on Hover
+           ============================================= */
+        .hub-dropdown {
+            position: absolute;
+            left: calc(100% + 20px);
+            top: 50%;
+            transform: translateY(-50%) translateX(-10px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 100;
+        }
+
+        .hub-item:hover .hub-dropdown {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* Connection Line SVG */
+        .connection-line {
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 2px;
+            overflow: visible;
+        }
+
+        .connection-line::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-gold), var(--color-gold));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease 0.1s;
+        }
+
+        .hub-item:hover .connection-line::before {
+            transform: scaleX(1);
+        }
+
+        .connection-line::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s ease 0.3s;
+        }
+
+        .hub-item:hover .connection-line::after {
+            opacity: 1;
+        }
+
+        /* Dropdown Card */
+        .dropdown-card {
+            background: linear-gradient(135deg, rgba(30, 27, 24, 0.98) 0%, rgba(20, 18, 16, 0.98) 100%);
+            border: 1px solid rgba(212, 168, 75, 0.25);
+            border-radius: 16px;
+            padding: 1.25rem;
+            min-width: 280px;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                0 0 40px rgba(212, 168, 75, 0.1);
+        }
+
+        .dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 1rem;
+        }
+
+        .dropdown-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .dropdown-icon.green { background: var(--color-green); }
+        .dropdown-icon.brown { background: var(--color-brown); }
+
+        .dropdown-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-cream);
+        }
+
+        .dropdown-subtitle {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* Nav Button inside Dropdown */
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 0.875rem 1rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-btn:hover {
+            background: rgba(212, 168, 75, 0.12);
+            border-color: var(--color-gold);
+            transform: translateX(4px);
+        }
+
+        .nav-btn-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(106, 139, 94, 0.2);
+            border-radius: 6px;
+            color: var(--color-green);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover .nav-btn-icon {
+            background: var(--color-green);
+            color: white;
+        }
+
+        .nav-btn-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .nav-btn-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-cream);
+        }
+
+        .nav-btn:hover .nav-btn-label {
+            color: var(--color-gold);
+        }
+
+        .nav-btn-arrow {
+            color: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover .nav-btn-arrow {
+            color: var(--color-gold);
+            transform: translateX(3px);
+        }
+
+        /* Multiple Nav Buttons (for Models) */
+        .nav-btn-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* Model-specific button styles */
+        .nav-btn.model-brown .nav-btn-icon {
+            background: rgba(139, 115, 85, 0.2);
+            color: var(--color-brown);
+        }
+        .nav-btn.model-brown:hover .nav-btn-icon {
+            background: var(--color-brown);
+            color: white;
+        }
+
+        .nav-btn.model-green .nav-btn-icon {
+            background: rgba(106, 139, 94, 0.2);
+            color: var(--color-green);
+        }
+        .nav-btn.model-green:hover .nav-btn-icon {
+            background: var(--color-green);
+            color: white;
+        }
+
+        .nav-btn.model-blue .nav-btn-icon {
+            background: rgba(107, 122, 139, 0.2);
+            color: var(--color-blue-steel);
+        }
+        .nav-btn.model-blue:hover .nav-btn-icon {
+            background: var(--color-blue-steel);
+            color: white;
+        }
+
+        .model-tag {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .model-tag.brown {
+            background: rgba(139, 115, 85, 0.15);
+            color: var(--color-brown);
+        }
+
+        .model-tag.green {
+            background: rgba(106, 139, 94, 0.15);
+            color: var(--color-green);
+        }
+
+        .model-tag.blue {
+            background: rgba(107, 122, 139, 0.15);
+            color: var(--color-blue-steel);
+        }
+
+        /* =============================================
+           DECORATIVE ELEMENTS
+           ============================================= */
+        .floating-particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .floating-particle:nth-child(1) { top: 15%; left: 8%; animation: floatUp 12s ease-in-out infinite; }
+        .floating-particle:nth-child(2) { top: 45%; left: 5%; animation: floatUp 10s ease-in-out infinite 2s; }
+        .floating-particle:nth-child(3) { top: 75%; left: 12%; animation: floatUp 14s ease-in-out infinite 4s; }
+
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.2; }
+            50% { transform: translateY(-30px) scale(1.5); opacity: 0.5; }
+        }
+
+        /* =============================================
+           RESPONSIVE
+           ============================================= */
+        @media (max-width: 1200px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 4rem 2rem;
+                gap: 3rem;
+            }
+
+            .hero-content {
+                margin: 0 auto;
+            }
+
+            .nav-hub {
+                margin: 0 auto;
+                max-width: 100%;
+            }
+
+            .hub-dropdown {
+                position: fixed;
+                left: 50% !important;
+                top: auto;
+                bottom: 100px;
+                transform: translateX(-50%) translateY(10px);
+            }
+
+            .hub-item:hover .hub-dropdown {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .connection-line {
+                display: none;
+            }
+        }
+
+        /* Smooth appear animation for dropdown items */
+        .nav-btn-list .nav-btn {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .hub-item:hover .nav-btn-list .nav-btn {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .hub-item:hover .nav-btn-list .nav-btn:nth-child(1) { transition-delay: 0.1s; }
+        .hub-item:hover .nav-btn-list .nav-btn:nth-child(2) { transition-delay: 0.15s; }
+        .hub-item:hover .nav-btn-list .nav-btn:nth-child(3) { transition-delay: 0.2s; }
+    </style>
+</head>
+<body>
+    <!-- Decorative particles -->
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+
+    <section class="hero-section">
+        <!-- Left: Hero Content -->
+        <div class="hero-content">
+            <div class="badge">A Technológia</div>
+            <h1 class="hero-title">Lazítás<br>forgatás nélkül</h1>
+            <p class="hero-subtitle">
+                Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
+                miközben megszünteti a tömörödést. Ismerje meg a gép működését.
+            </p>
+        </div>
+
+        <!-- Right: Navigation Hub -->
+        <div class="nav-hub">
+            <div class="hub-header">
+                <span class="hub-title">Tartalomjegyzék</span>
+                <span class="hub-status">
+                    <span class="status-dot"></span>
+                    Hover to explore
+                </span>
+            </div>
+
+            <div class="hub-items">
+                <!-- 1. Működési Elv -->
+                <div class="hub-item">
+                    <div class="hub-trigger">
+                        <div class="hub-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                            </svg>
+                        </div>
+                        <div class="hub-text">
+                            <div class="hub-label">Működési elv</div>
+                            <div class="hub-desc">Hogyan működik az ásógép?</div>
+                        </div>
+                        <div class="hub-arrow">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown for Működési Elv -->
+                    <div class="hub-dropdown">
+                        <div class="connection-line"></div>
+                        <div class="dropdown-card">
+                            <div class="dropdown-header">
+                                <div class="dropdown-icon green">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="5 3 19 12 5 21 5 3"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="dropdown-title">Működési elv</div>
+                                    <div class="dropdown-subtitle">Animációs bemutató</div>
+                                </div>
+                            </div>
+                            
+                            <a href="#operation" class="nav-btn">
+                                <div class="nav-btn-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="5 3 19 12 5 21 5 3"/>
+                                    </svg>
+                                </div>
+                                <div class="nav-btn-text">
+                                    <div class="nav-btn-label">Animáció megtekintése</div>
+                                </div>
+                                <div class="nav-btn-arrow">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6"/>
+                                    </svg>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Modellek -->
+                <div class="hub-item">
+                    <div class="hub-trigger">
+                        <div class="hub-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="hub-text">
+                            <div class="hub-label">Kísérletben használt modellek</div>
+                            <div class="hub-desc">3 különböző Imants modell</div>
+                        </div>
+                        <div class="hub-arrow">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown for Models - 3 buttons -->
+                    <div class="hub-dropdown">
+                        <div class="connection-line"></div>
+                        <div class="dropdown-card">
+                            <div class="dropdown-header">
+                                <div class="dropdown-icon brown">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="dropdown-title">Imants Modellek</div>
+                                    <div class="dropdown-subtitle">Válasszon a típusok közül</div>
+                                </div>
+                            </div>
+                            
+                            <div class="nav-btn-list">
+                                <!-- 38SX -->
+                                <a href="#38sx" class="nav-btn model-brown">
+                                    <div class="nav-btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <rect x="4" y="8" width="16" height="10" rx="2"/>
+                                            <path d="M8 8V5M12 8V5M16 8V5"/>
+                                        </svg>
+                                    </div>
+                                    <div class="nav-btn-text">
+                                        <div class="nav-btn-label">38SX</div>
+                                    </div>
+                                    <span class="model-tag brown">Standard</span>
+                                    <div class="nav-btn-arrow">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 18 15 12 9 6"/>
+                                        </svg>
+                                    </div>
+                                </a>
+
+                                <!-- 38WX -->
+                                <a href="#38wx" class="nav-btn model-green">
+                                    <div class="nav-btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <rect x="4" y="8" width="16" height="10" rx="2"/>
+                                            <path d="M8 8V4M12 8V4M16 8V4M8 18v2M12 18v2M16 18v2"/>
+                                        </svg>
+                                    </div>
+                                    <div class="nav-btn-text">
+                                        <div class="nav-btn-label">38WX</div>
+                                    </div>
+                                    <span class="model-tag green">Hybrid</span>
+                                    <div class="nav-btn-arrow">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 18 15 12 9 6"/>
+                                        </svg>
+                                    </div>
+                                </a>
+
+                                <!-- 40SX -->
+                                <a href="#40sx" class="nav-btn model-blue">
+                                    <div class="nav-btn-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <rect x="4" y="6" width="16" height="12" rx="2"/>
+                                            <path d="M8 6V3M12 6V3M16 6V3"/>
+                                        </svg>
+                                    </div>
+                                    <div class="nav-btn-text">
+                                        <div class="nav-btn-label">40SX</div>
+                                    </div>
+                                    <span class="model-tag blue">Deep</span>
+                                    <div class="nav-btn-arrow">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 18 15 12 9 6"/>
+                                        </svg>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

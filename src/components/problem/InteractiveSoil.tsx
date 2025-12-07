@@ -1,13 +1,28 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
-import { ArrowLeftRight, Droplets, Wind } from 'lucide-react'
+import { ArrowLeftRight, Droplets, Wind, Calendar } from 'lucide-react'
+import Lottie from 'lottie-react'
+import waterDropAnimation from '@/animations/water-drop.json'
 import styles from './InteractiveSoil.module.css'
 
+// Napok és a hozzájuk tartozó tömörödési szintek
+const timelineData = [
+  { day: 0, compaction: 0, label: 'Kezdet', penetrometer: 8 },
+  { day: 30, compaction: 25, label: '30 nap', penetrometer: 12 },
+  { day: 60, compaction: 50, label: '60 nap', penetrometer: 16 },
+  { day: 90, compaction: 75, label: '90 nap', penetrometer: 20 },
+  { day: 120, compaction: 100, label: '120 nap', penetrometer: 25 },
+]
+
 export default function InteractiveSoil() {
-  const [isPloughed, setIsPloughed] = useState(true)
+  const [dayIndex, setDayIndex] = useState(4) // Alapból a legrosszabb állapot
   const [isHovered, setIsHovered] = useState(false)
+  
+  // Számított értékek
+  const currentData = timelineData[dayIndex]
+  const isPloughed = dayIndex > 0 // 0 nap = egészséges
 
   // Root paths
   const rootPathHealthy = "M100,50 L100,150 C100,200 80,250 60,300 M100,150 C110,200 140,250 150,320 M100,100 C90,120 80,140 70,160"
@@ -33,7 +48,13 @@ export default function InteractiveSoil() {
   const handleToggle = () => {
     buttonScale.set(0.95)
     setTimeout(() => buttonScale.set(1), 100)
-    setIsPloughed(!isPloughed)
+    // Toggle between healthy (0) and worst (4)
+    setDayIndex(dayIndex === 0 ? 4 : 0)
+  }
+  
+  // Slider change handler
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDayIndex(parseInt(e.target.value))
   }
 
   return (
@@ -52,44 +73,113 @@ export default function InteractiveSoil() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <motion.h3 
-          className={styles.title}
-          key={isPloughed ? 'damaged' : 'healthy'}
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {isPloughed ? 'Tömörödött talaj (Eketalp)' : 'Egészséges szerkezet'}
-        </motion.h3>
-        <motion.button 
-          className={`${styles.toggle} ${!isPloughed ? styles.toggleActive : ''}`}
-          onClick={handleToggle}
-          style={{ scale: buttonScale }}
-          whileHover={{ 
-            scale: 1.05,
-            boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
-          }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <motion.span
-            animate={{ rotate: isPloughed ? 0 : 180 }}
+        <div className={styles.headerTop}>
+          <motion.h3 
+            className={styles.title}
+            key={dayIndex}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
-            style={{ display: 'flex' }}
           >
-            <ArrowLeftRight size={16} />
-          </motion.span>
-          <AnimatePresence mode="wait">
+            {dayIndex === 0 ? 'Egészséges szerkezet' : `Tömörödés: ${currentData.day} nap után`}
+          </motion.h3>
+          <motion.button 
+            className={`${styles.toggle} ${!isPloughed ? styles.toggleActive : ''}`}
+            onClick={handleToggle}
+            style={{ scale: buttonScale }}
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
+            }}
+            whileTap={{ scale: 0.95 }}
+          >
             <motion.span
-              key={isPloughed ? 'fix' : 'break'}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
-              transition={{ duration: 0.15 }}
+              animate={{ rotate: isPloughed ? 0 : 180 }}
+              transition={{ duration: 0.3 }}
+              style={{ display: 'flex' }}
             >
-              {isPloughed ? 'Javítás' : 'Rontás'}
+              <ArrowLeftRight size={16} />
             </motion.span>
-          </AnimatePresence>
-        </motion.button>
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={isPloughed ? 'fix' : 'break'}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                transition={{ duration: 0.15 }}
+              >
+                {isPloughed ? 'Javítás' : 'Rontás'}
+              </motion.span>
+            </AnimatePresence>
+          </motion.button>
+        </div>
+        
+        {/* Idővonal csúszka */}
+        <div className={styles.timeline}>
+          <div className={styles.timelineLabels}>
+            {timelineData.map((data, i) => (
+              <motion.span 
+                key={data.day}
+                className={`${styles.timelineLabel} ${i === dayIndex ? styles.timelineLabelActive : ''}`}
+                animate={{ 
+                  color: i === dayIndex ? 'var(--color-green-dark)' : 'var(--color-earth-400)',
+                  fontWeight: i === dayIndex ? 600 : 400
+                }}
+              >
+                {data.label}
+              </motion.span>
+            ))}
+          </div>
+          <div className={styles.sliderWrapper}>
+            <Calendar size={16} className={styles.sliderIcon} />
+            <input
+              type="range"
+              min="0"
+              max="4"
+              value={dayIndex}
+              onChange={handleSliderChange}
+              className={styles.slider}
+            />
+            <motion.div 
+              className={styles.sliderProgress}
+              style={{ width: `${(dayIndex / 4) * 100}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+          
+          {/* Penetrométer érték */}
+          <motion.div 
+            className={styles.penetrometer}
+            key={dayIndex}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <span className={styles.penetrometerLabel}>Penetrométer:</span>
+            <motion.span 
+              className={styles.penetrometerValue}
+              animate={{ 
+                color: currentData.penetrometer > 18 ? '#C62828' : currentData.penetrometer > 12 ? '#F57C00' : '#4CAF50'
+              }}
+            >
+              {currentData.penetrometer} bar
+            </motion.span>
+            <motion.div 
+              className={styles.penetrometerBar}
+              style={{ 
+                background: currentData.penetrometer > 18 
+                  ? 'linear-gradient(90deg, #4CAF50, #F57C00, #C62828)' 
+                  : 'linear-gradient(90deg, #4CAF50, #F57C00)'
+              }}
+            >
+              <motion.div 
+                className={styles.penetrometerIndicator}
+                animate={{ left: `${(currentData.penetrometer / 30) * 100}%` }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              />
+            </motion.div>
+          </motion.div>
+        </div>
       </motion.div>
 
       <motion.div 
@@ -227,6 +317,43 @@ export default function InteractiveSoil() {
             />
           </svg>
         </div>
+
+        {/* Lottie Water Animation - csak egészséges állapotban */}
+        <AnimatePresence>
+          {!isPloughed && (
+            <motion.div 
+              className={styles.lottieContainer}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Lottie 
+                animationData={waterDropAnimation}
+                loop
+                style={{ 
+                  width: 100, 
+                  height: 200,
+                  position: 'absolute',
+                  top: '15%',
+                  left: '15%',
+                }}
+              />
+              <Lottie 
+                animationData={waterDropAnimation}
+                loop
+                style={{ 
+                  width: 80, 
+                  height: 160,
+                  position: 'absolute',
+                  top: '20%',
+                  right: '20%',
+                  opacity: 0.7,
+                }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Particles with improved animation */}
         <div className={styles.particleContainer}>

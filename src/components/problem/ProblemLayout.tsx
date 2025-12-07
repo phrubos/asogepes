@@ -293,8 +293,8 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
            <p className={styles.footerText}>
              Van kiút a tömörödésből?
            </p>
-           <a href="/megoldas" className={styles.nextButton}>
-             Megnézem a megoldást <ArrowRight size={20} />
+           <a href="/technologia" className={styles.nextButton}>
+             Ismerje meg a technológiát <ArrowRight size={20} />
            </a>
         </motion.div>
       </div>

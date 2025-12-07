@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technológia - Folder Hub Navigation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-earth-800: #1a1714;
+            --color-cream: #F5F0E8;
+            --color-gold: #D4A84B;
+            --color-green: #6A8B5E;
+            --color-brown: #8B7355;
+            --color-blue: #6B7A8B;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--color-earth-800);
+            color: var(--color-cream);
+            min-height: 100vh;
+        }
+
+        /* Grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+            pointer-events: none;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            align-items: center;
+            padding: 4rem;
+            gap: 4rem;
+        }
+
+        .hero-content { max-width: 500px; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .badge::before {
+            content: '02';
+            width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(212, 168, 75, 0.12);
+            border: 1px solid rgba(212, 168, 75, 0.25);
+            border-radius: 50%;
+            font-size: 0.65rem;
+        }
+
+        .hero-title {
+            font-family: 'Fraunces', serif;
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: rgba(245, 240, 232, 0.75);
+        }
+
+        .hero-subtitle em {
+            color: var(--color-gold);
+            font-style: normal;
+        }
+
+        /* =============================================
+           FOLDER NAV SCENE
+           ============================================= */
+        .folder-scene {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+            position: relative;
+            min-height: 500px;
+        }
+
+        /* =============================================
+           HUB FOLDER - The main navigation folder
+           ============================================= */
+        .hub-folder {
+            position: relative;
+            width: 280px;
+            height: 400px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 20;
+        }
+
+        .hub-folder:hover {
+            transform: translateY(-15px) scale(1.05);
+        }
+
+        /* Folder Tab */
+        .hub-tab {
+            position: absolute;
+            top: -28px;
+            right: 30px;
+            padding: 8px 20px;
+            background: linear-gradient(180deg, var(--color-gold) 0%, #C49A3D 100%);
+            border-radius: 8px 8px 0 0;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-earth-800);
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 5;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .hub-folder:hover .hub-tab {
+            transform: translateY(-4px);
+        }
+
+        /* Folder Back */
+        .hub-back {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #3D3428 0%, #2A2318 100%);
+            border-radius: 10px;
+            transform: translateZ(-25px);
+            box-shadow: -15px 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Folder Front */
+        .hub-front {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(165deg, #1f1b17 0%, #151310 100%);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            transform: translateZ(0);
+            transform-origin: left center;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.4);
+        }
+
+        .hub-folder:hover .hub-front {
+            transform: translateZ(20px) rotateY(-12deg) translateX(20px);
+            border-color: var(--color-gold);
+        }
+
+        /* Grid pattern */
+        .hub-front::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+
+        /* Top glow */
+        .hub-front::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+            opacity: 0.6;
+        }
+
+        /* Hub Content */
+        .hub-content {
+            padding: 1.5rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hub-header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 1.25rem;
+        }
+
+        .hub-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-cream);
+            margin-bottom: 0.25rem;
+        }
+
+        .hub-subtitle {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Hub Options - 2 clickable areas */
+        .hub-options {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .hub-option {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.35s ease;
+        }
+
+        .hub-option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: var(--color-gold);
+            border-radius: 0 2px 2px 0;
+            transform: scaleY(0);
+            transition: transform 0.25s ease;
+        }
+
+        .hub-option:hover::before,
+        .hub-option.active::before {
+            transform: scaleY(1);
+        }
+
+        .hub-option:hover,
+        .hub-option.active {
+            background: rgba(212, 168, 75, 0.08);
+            border-color: rgba(212, 168, 75, 0.25);
+            transform: translateX(4px);
+        }
+
+        .option-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(212, 168, 75, 0.1);
+            border: 1px solid rgba(212, 168, 75, 0.2);
+            border-radius: 8px;
+            color: var(--color-gold);
+            transition: all 0.3s ease;
+        }
+
+        .hub-option:hover .option-icon,
+        .hub-option.active .option-icon {
+            background: var(--color-gold);
+            color: var(--color-earth-800);
+        }
+
+        .option-text { flex: 1; }
+
+        .option-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-cream);
+            margin-bottom: 0.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .hub-option:hover .option-title,
+        .hub-option.active .option-title {
+            color: var(--color-gold);
+        }
+
+        .option-desc {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .option-count {
+            padding: 0.25rem 0.5rem;
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .hub-option:hover .option-count,
+        .hub-option.active .option-count {
+            background: rgba(212, 168, 75, 0.15);
+            color: var(--color-gold);
+        }
+
+        /* Hub Footer */
+        .hub-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hub-meta {
+            font-size: 0.5rem;
+            color: rgba(255,255,255,0.25);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .hub-version {
+            padding: 0.2rem 0.4rem;
+            background: rgba(106, 139, 94, 0.15);
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            color: var(--color-green);
+        }
+
+        /* Paper sheets behind */
+        .hub-sheets {
+            position: absolute;
+            top: 8px;
+            left: 4px;
+            right: 4px;
+            bottom: 8px;
+            transform: translateZ(-12px);
+            pointer-events: none;
+        }
+
+        .hub-sheet {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #2a2520 0%, #1f1b17 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hub-sheet:nth-child(1) { transform: translateX(-8px) translateY(-5px); }
+        .hub-sheet:nth-child(2) { transform: translateX(-4px) translateY(-2px); }
+
+        .hub-folder:hover .hub-sheet:nth-child(1) {
+            transform: translateX(-25px) translateY(-15px) rotate(-2deg);
+        }
+        .hub-folder:hover .hub-sheet:nth-child(2) {
+            transform: translateX(-15px) translateY(-8px) rotate(-1deg);
+        }
+
+        /* =============================================
+           NAV BUTTONS - Slide out from hub
+           ============================================= */
+        .nav-buttons {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 15;
+        }
+
+        .nav-buttons.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Operation nav - slides left */
+        .nav-operation {
+            right: calc(50% + 160px);
+            top: 50%;
+            transform: translateY(-50%) translateX(30px);
+        }
+
+        .nav-operation.visible {
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* Model navs - slide right */
+        .nav-models {
+            left: calc(50% + 160px);
+            top: 50%;
+            transform: translateY(-50%) translateX(-30px);
+        }
+
+        .nav-models.visible {
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* Individual nav button */
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            background: linear-gradient(165deg, #262220 0%, #1a1816 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            text-decoration: none;
+            color: inherit;
+            min-width: 200px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        .nav-operation .nav-btn {
+            transform: translateX(-20px);
+        }
+
+        .nav-buttons.visible .nav-btn {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .nav-buttons.visible .nav-btn:nth-child(1) { transition-delay: 0.05s; }
+        .nav-buttons.visible .nav-btn:nth-child(2) { transition-delay: 0.1s; }
+        .nav-buttons.visible .nav-btn:nth-child(3) { transition-delay: 0.15s; }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 15%;
+            right: 15%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+            opacity: 0.4;
+        }
+
+        .nav-btn:hover {
+            background: rgba(212, 168, 75, 0.1);
+            border-color: var(--color-gold);
+            transform: translateX(6px) !important;
+        }
+
+        .nav-operation .nav-btn:hover {
+            transform: translateX(-6px) !important;
+        }
+
+        .nav-btn-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn-icon.green { background: rgba(106, 139, 94, 0.2); color: var(--color-green); }
+        .nav-btn-icon.brown { background: rgba(139, 115, 85, 0.2); color: var(--color-brown); }
+        .nav-btn-icon.blue { background: rgba(107, 122, 139, 0.2); color: var(--color-blue); }
+
+        .nav-btn:hover .nav-btn-icon.green { background: var(--color-green); color: white; }
+        .nav-btn:hover .nav-btn-icon.brown { background: var(--color-brown); color: white; }
+        .nav-btn:hover .nav-btn-icon.blue { background: var(--color-blue); color: white; }
+
+        .nav-btn-text { flex: 1; }
+
+        .nav-btn-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-cream);
+            transition: color 0.3s ease;
+        }
+
+        .nav-btn:hover .nav-btn-title { color: var(--color-gold); }
+
+        .nav-btn-desc {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .nav-btn-tag {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .nav-btn-tag.brown { background: rgba(139,115,85,0.2); color: var(--color-brown); }
+        .nav-btn-tag.green { background: rgba(106,139,94,0.2); color: var(--color-green); }
+        .nav-btn-tag.blue { background: rgba(107,122,139,0.2); color: var(--color-blue); }
+
+        .nav-btn-arrow {
+            color: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover .nav-btn-arrow {
+            color: var(--color-gold);
+            transform: translateX(3px);
+        }
+
+        .nav-operation .nav-btn:hover .nav-btn-arrow {
+            transform: translateX(-3px) rotate(180deg);
+        }
+
+        /* =============================================
+           CONNECTION LINES
+           ============================================= */
+        .connection {
+            position: absolute;
+            height: 2px;
+            background: var(--color-gold);
+            transform-origin: right center;
+            transform: scaleX(0);
+            transition: transform 0.35s ease;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        .connection.visible {
+            transform: scaleX(1);
+        }
+
+        .connection::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: -3px;
+            width: 8px;
+            height: 8px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s ease 0.3s;
+        }
+
+        .connection.visible::after {
+            opacity: 1;
+        }
+
+        .conn-operation {
+            width: 40px;
+            right: calc(50% + 120px);
+            top: calc(50% - 30px);
+            transform-origin: right center;
+        }
+
+        .conn-models {
+            width: 40px;
+            left: calc(50% + 120px);
+            top: calc(50% + 30px);
+            transform-origin: left center;
+        }
+
+        .conn-models::after {
+            left: auto;
+            right: -4px;
+        }
+
+        /* =============================================
+           RESPONSIVE
+           ============================================= */
+        @media (max-width: 1100px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 3rem 2rem;
+            }
+
+            .hero-content { margin: 0 auto; }
+
+            .folder-scene { min-height: 650px; }
+
+            .nav-operation {
+                right: auto;
+                left: 50%;
+                top: calc(50% - 250px);
+                transform: translateX(-50%) translateY(20px);
+            }
+
+            .nav-operation.visible {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .nav-models {
+                left: 50%;
+                top: calc(50% + 230px);
+                transform: translateX(-50%) translateY(-20px);
+                flex-direction: row;
+                gap: 0.5rem;
+            }
+
+            .nav-models.visible {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .nav-models .nav-btn {
+                min-width: 160px;
+                padding: 0.875rem 1rem;
+            }
+
+            .connection { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">A Technológia</div>
+            <h1 class="hero-title">Lazítás<br>forgatás nélkül</h1>
+            <p class="hero-subtitle">
+                Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
+                miközben megszünteti a tömörödést.
+            </p>
+        </div>
+
+        <div class="folder-scene">
+            <!-- Connection Lines -->
+            <div class="connection conn-operation" id="conn-op"></div>
+            <div class="connection conn-models" id="conn-mod"></div>
+
+            <!-- Nav Buttons: Operation (left) -->
+            <div class="nav-buttons nav-operation" id="nav-operation">
+                <a href="#operation" class="nav-btn">
+                    <div class="nav-btn-icon green">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                    </div>
+                    <div class="nav-btn-text">
+                        <div class="nav-btn-title">Animáció</div>
+                        <div class="nav-btn-desc">Működési elv</div>
+                    </div>
+                    <div class="nav-btn-arrow">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Nav Buttons: Models (right) -->
+            <div class="nav-buttons nav-models" id="nav-models">
+                <a href="#38sx" class="nav-btn">
+                    <div class="nav-btn-icon brown">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <rect x="4" y="8" width="16" height="10" rx="2"/>
+                            <path d="M8 8V5M12 8V5M16 8V5"/>
+                        </svg>
+                    </div>
+                    <div class="nav-btn-text">
+                        <div class="nav-btn-title">38SX</div>
+                        <div class="nav-btn-desc">Nagy szériás</div>
+                    </div>
+                    <span class="nav-btn-tag brown">Standard</span>
+                </a>
+
+                <a href="#38wx" class="nav-btn">
+                    <div class="nav-btn-icon green">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <rect x="4" y="8" width="16" height="10" rx="2"/>
+                            <path d="M8 8V4M12 8V4M16 8V4"/>
+                        </svg>
+                    </div>
+                    <div class="nav-btn-text">
+                        <div class="nav-btn-title">38WX</div>
+                        <div class="nav-btn-desc">Lazítókéses</div>
+                    </div>
+                    <span class="nav-btn-tag green">Hybrid</span>
+                </a>
+
+                <a href="#40sx" class="nav-btn">
+                    <div class="nav-btn-icon blue">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <rect x="4" y="6" width="16" height="12" rx="2"/>
+                            <path d="M8 6V3M12 6V3M16 6V3"/>
+                        </svg>
+                    </div>
+                    <div class="nav-btn-text">
+                        <div class="nav-btn-title">40SX</div>
+                        <div class="nav-btn-desc">Mélyásógép</div>
+                    </div>
+                    <span class="nav-btn-tag blue">Deep</span>
+                </a>
+            </div>
+
+            <!-- HUB FOLDER -->
+            <div class="hub-folder">
+                <div class="hub-tab">Navigáció</div>
+                <div class="hub-back"></div>
+                <div class="hub-sheets">
+                    <div class="hub-sheet"></div>
+                    <div class="hub-sheet"></div>
+                </div>
+                <div class="hub-front">
+                    <div class="hub-content">
+                        <div class="hub-header">
+                            <div class="hub-title">Technológia</div>
+                            <div class="hub-subtitle">Válasszon témát</div>
+                        </div>
+
+                        <div class="hub-options">
+                            <!-- Option 1: Működési elv -->
+                            <div class="hub-option" id="opt-operation"
+                                 onmouseenter="showNav('operation')"
+                                 onmouseleave="hideNav('operation')">
+                                <div class="option-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="3"/>
+                                        <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6"/>
+                                    </svg>
+                                </div>
+                                <div class="option-text">
+                                    <div class="option-title">Működési elv</div>
+                                    <div class="option-desc">Hogyan működik?</div>
+                                </div>
+                                <span class="option-count">1</span>
+                            </div>
+
+                            <!-- Option 2: Modellek -->
+                            <div class="hub-option" id="opt-models"
+                                 onmouseenter="showNav('models')"
+                                 onmouseleave="hideNav('models')">
+                                <div class="option-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </div>
+                                <div class="option-text">
+                                    <div class="option-title">Modellek</div>
+                                    <div class="option-desc">Imants típusok</div>
+                                </div>
+                                <span class="option-count">3</span>
+                            </div>
+                        </div>
+
+                        <div class="hub-footer">
+                            <span class="hub-meta">IMANTS Tech</span>
+                            <span class="hub-version">v2.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function showNav(type) {
+            const nav = document.getElementById('nav-' + type);
+            const conn = document.getElementById('conn-' + (type === 'operation' ? 'op' : 'mod'));
+            const opt = document.getElementById('opt-' + type);
+            
+            nav.classList.add('visible');
+            conn.classList.add('visible');
+            opt.classList.add('active');
+        }
+
+        function hideNav(type) {
+            const nav = document.getElementById('nav-' + type);
+            const conn = document.getElementById('conn-' + (type === 'operation' ? 'op' : 'mod'));
+            const opt = document.getElementById('opt-' + type);
+            
+            nav.classList.remove('visible');
+            conn.classList.remove('visible');
+            opt.classList.remove('active');
+        }
+
+        // Keep nav visible when hovering over the nav buttons
+        document.querySelectorAll('.nav-buttons').forEach(navGroup => {
+            const type = navGroup.id.replace('nav-', '');
+            
+            navGroup.addEventListener('mouseenter', () => showNav(type));
+            navGroup.addEventListener('mouseleave', () => hideNav(type));
+        });
+    </script>
+</body>
+</html>

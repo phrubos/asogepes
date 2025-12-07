@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Összecsukható Folder Navigáció - Design v1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-gold: #D4A84B;
+      --color-gold-light: #e4c078;
+      --color-earth-900: #1a1612;
+      --color-earth-800: #2a2218;
+      --color-earth-700: #3a3020;
+      --color-white: #F5F0E8;
+
+      /* Folder colors */
+      --folder-brown: #8B6914;
+      --folder-green: #4A7A4A;
+      --folder-blue: #4A6A8A;
+      --folder-gold: #9A7A2A;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, var(--color-earth-900) 0%, #0d0a08 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: var(--color-white);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--color-gold);
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: rgba(245, 240, 232, 0.6);
+      margin-bottom: 3rem;
+    }
+
+    /* Navigation Container */
+    .nav-container {
+      position: relative;
+      perspective: 1000px;
+    }
+
+    /* Trigger Button */
+    .nav-trigger {
+      position: relative;
+      width: 80px;
+      height: 100px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      z-index: 100;
+    }
+
+    .nav-trigger:hover {
+      transform: scale(1.05);
+    }
+
+    /* Stacked folders preview */
+    .folder-stack {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .stack-folder {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 70px;
+      height: 55px;
+      border-radius: 0 8px 8px 8px;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+    }
+
+    .stack-folder::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 0;
+      width: 25px;
+      height: 12px;
+      border-radius: 4px 4px 0 0;
+      background: inherit;
+      filter: brightness(1.1);
+    }
+
+    .stack-folder:nth-child(1) {
+      background: var(--folder-brown);
+      transform: translateX(-50%) translateY(0) rotate(-5deg);
+      z-index: 4;
+    }
+
+    .stack-folder:nth-child(2) {
+      background: var(--folder-green);
+      transform: translateX(-50%) translateY(-8px) rotate(-2deg);
+      z-index: 3;
+    }
+
+    .stack-folder:nth-child(3) {
+      background: var(--folder-blue);
+      transform: translateX(-50%) translateY(-16px) rotate(2deg);
+      z-index: 2;
+    }
+
+    .stack-folder:nth-child(4) {
+      background: var(--folder-gold);
+      transform: translateX(-50%) translateY(-24px) rotate(5deg);
+      z-index: 1;
+    }
+
+    /* Hover effect on trigger - folders peek up */
+    .nav-trigger:hover .stack-folder:nth-child(1) {
+      transform: translateX(-50%) translateY(-5px) rotate(-8deg);
+    }
+
+    .nav-trigger:hover .stack-folder:nth-child(2) {
+      transform: translateX(-50%) translateY(-18px) rotate(-4deg);
+    }
+
+    .nav-trigger:hover .stack-folder:nth-child(3) {
+      transform: translateX(-50%) translateY(-31px) rotate(0deg);
+    }
+
+    .nav-trigger:hover .stack-folder:nth-child(4) {
+      transform: translateX(-50%) translateY(-44px) rotate(4deg);
+    }
+
+    /* Trigger label */
+    .trigger-label {
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: rgba(245, 240, 232, 0.5);
+      white-space: nowrap;
+      transition: color 0.3s ease;
+    }
+
+    .nav-trigger:hover .trigger-label {
+      color: var(--color-gold);
+    }
+
+    /* Plus icon overlay */
+    .plus-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 24px;
+      height: 24px;
+      background: rgba(212, 168, 75, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-earth-900);
+      font-weight: 700;
+      font-size: 1rem;
+      z-index: 10;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .nav-trigger:hover .plus-icon {
+      transform: translate(-50%, -50%) rotate(45deg);
+      background: var(--color-gold);
+    }
+
+    /* Expanded folders panel */
+    .folders-panel {
+      position: absolute;
+      top: 50%;
+      left: calc(100% + 40px);
+      transform: translateY(-50%);
+      display: flex;
+      gap: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .nav-container.expanded .folders-panel {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Individual folder */
+    .folder {
+      position: relative;
+      width: 140px;
+      height: 170px;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .folder:nth-child(1) { transition-delay: 0.05s; }
+    .folder:nth-child(2) { transition-delay: 0.1s; }
+    .folder:nth-child(3) { transition-delay: 0.15s; }
+    .folder:nth-child(4) { transition-delay: 0.2s; }
+
+    .nav-container:not(.expanded) .folder {
+      transform: translateX(-50px) scale(0.8);
+      opacity: 0;
+    }
+
+    .folder:hover {
+      transform: translateY(-15px) scale(1.08);
+    }
+
+    /* Folder tab */
+    .folder-tab {
+      position: absolute;
+      top: -12px;
+      left: 8px;
+      padding: 4px 12px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      border-radius: 6px 6px 0 0;
+      z-index: 5;
+      transition: all 0.3s ease;
+    }
+
+    .folder:hover .folder-tab {
+      transform: translateY(-4px);
+    }
+
+    /* Folder back */
+    .folder-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 0 12px 12px 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    /* Folder sheets (paper inside) */
+    .folder-sheets {
+      position: absolute;
+      top: 15px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      pointer-events: none;
+    }
+
+    .sheet {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 4px;
+      transition: all 0.35s ease;
+    }
+
+    .sheet:nth-child(1) {
+      transform: translateX(-6px) translateY(-4px);
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .sheet:nth-child(2) {
+      transform: translateX(-3px) translateY(-2px);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .folder:hover .sheet:nth-child(1) {
+      transform: translateX(-20px) translateY(-12px) rotate(-2deg);
+    }
+
+    .folder:hover .sheet:nth-child(2) {
+      transform: translateX(-12px) translateY(-6px) rotate(-1deg);
+    }
+
+    /* Folder front */
+    .folder-front {
+      position: absolute;
+      inset: 0;
+      border-radius: 0 12px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 15px;
+      transition: all 0.35s ease;
+      transform-origin: left center;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.1);
+    }
+
+    .folder:hover .folder-front {
+      transform: rotateY(-15deg) translateX(15px);
+    }
+
+    /* Model type badge */
+    .model-type {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 0.55rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      background: rgba(0,0,0,0.2);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    /* Folder image */
+    .folder-image {
+      width: 80px;
+      height: 50px;
+      object-fit: contain;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+      transition: all 0.4s ease;
+    }
+
+    .folder:hover .folder-image {
+      transform: scale(1.15);
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4)) brightness(1.1);
+    }
+
+    /* Folder label */
+    .folder-label {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      transition: color 0.3s ease;
+    }
+
+    .folder:hover .folder-label {
+      color: var(--color-gold);
+    }
+
+    .folder-desc {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      line-height: 1.3;
+      margin-top: 4px;
+    }
+
+    /* Folder colors */
+    .folder-brown .folder-tab { background: #9A7924; }
+    .folder-brown .folder-back { background: linear-gradient(180deg, #6A5210 0%, #4A3A0A 100%); }
+    .folder-brown .folder-front { background: linear-gradient(180deg, #8B6914 0%, #6A5210 100%); }
+
+    .folder-green .folder-tab { background: #5A8A5A; }
+    .folder-green .folder-back { background: linear-gradient(180deg, #3A5A3A 0%, #2A4A2A 100%); }
+    .folder-green .folder-front { background: linear-gradient(180deg, #4A7A4A 0%, #3A5A3A 100%); }
+
+    .folder-blue .folder-tab { background: #5A7A9A; }
+    .folder-blue .folder-back { background: linear-gradient(180deg, #3A5A7A 0%, #2A4A6A 100%); }
+    .folder-blue .folder-front { background: linear-gradient(180deg, #4A6A8A 0%, #3A5A7A 100%); }
+
+    .folder-gold .folder-tab { background: #AA8A3A; }
+    .folder-gold .folder-back { background: linear-gradient(180deg, #7A5A1A 0%, #5A4A0A 100%); }
+    .folder-gold .folder-front { background: linear-gradient(180deg, #9A7A2A 0%, #7A5A1A 100%); }
+
+    /* Active indicator dots */
+    .indicator {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(5px);
+      transition: all 0.3s ease 0.1s;
+    }
+
+    .folder:hover .indicator {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .indicator-dot {
+      width: 6px;
+      height: 6px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+    }
+
+    .indicator-dot.active {
+      background: var(--color-gold);
+    }
+
+    /* Connection line from trigger to panel */
+    .connection-line {
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-gold), transparent);
+      transform: translateY(-50%) scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-container.expanded .connection-line {
+      transform: translateY(-50%) scaleX(1);
+    }
+
+    /* Instructions */
+    .instructions {
+      margin-top: 4rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: rgba(245, 240, 232, 0.4);
+    }
+
+    .instructions code {
+      background: rgba(255,255,255,0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Összecsukható Folder Navigáció</h1>
+  <p class="subtitle">Kattints a mappákra vagy vidd rá az egeret</p>
+
+  <div class="nav-container" id="navContainer">
+    <!-- Trigger button (collapsed state) -->
+    <button class="nav-trigger" onclick="toggleNav()" aria-label="Modellek megtekintése">
+      <div class="folder-stack">
+        <div class="stack-folder"></div>
+        <div class="stack-folder"></div>
+        <div class="stack-folder"></div>
+        <div class="stack-folder"></div>
+      </div>
+      <div class="plus-icon">+</div>
+      <span class="trigger-label">Modellek</span>
+    </button>
+
+    <!-- Connection line -->
+    <div class="connection-line"></div>
+
+    <!-- Expanded folders panel -->
+    <div class="folders-panel">
+      <!-- Folder 1: Működés -->
+      <div class="folder folder-gold" onclick="selectFolder('mukodes')">
+        <div class="folder-tab">Működés</div>
+        <div class="folder-back"></div>
+        <div class="folder-sheets">
+          <div class="sheet"></div>
+          <div class="sheet"></div>
+        </div>
+        <div class="folder-front">
+          <span class="model-type">Animáció</span>
+          <svg class="folder-image" width="80" height="50" viewBox="0 0 80 50">
+            <circle cx="25" cy="25" r="15" fill="#5a5a5a" stroke="#D4A84B" stroke-width="2"/>
+            <path d="M 25 10 L 28 25 L 25 40" stroke="#8a8a8a" stroke-width="3" fill="none"/>
+            <path d="M 25 10 L 22 25 L 25 40" stroke="#8a8a8a" stroke-width="3" fill="none" transform="rotate(60 25 25)"/>
+            <path d="M 25 10 L 22 25 L 25 40" stroke="#8a8a8a" stroke-width="3" fill="none" transform="rotate(120 25 25)"/>
+            <rect x="50" y="15" width="25" height="20" rx="4" fill="#6a6a6a"/>
+          </svg>
+          <span class="folder-label">Működési Elv</span>
+          <span class="folder-desc">Hogyan lazít az ásógép?</span>
+          <div class="indicator">
+            <span class="indicator-dot active"></span>
+            <span class="indicator-dot"></span>
+            <span class="indicator-dot"></span>
+            <span class="indicator-dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Folder 2: 38SX -->
+      <div class="folder folder-brown" onclick="selectFolder('38sx')">
+        <div class="folder-tab">Model</div>
+        <div class="folder-back"></div>
+        <div class="folder-sheets">
+          <div class="sheet"></div>
+          <div class="sheet"></div>
+        </div>
+        <div class="folder-front">
+          <span class="model-type">Nagy szériás</span>
+          <img src="/images/38SX.png" alt="38SX" class="folder-image" onerror="this.style.display='none'">
+          <span class="folder-label">38SX</span>
+          <span class="folder-desc">Univerzális ásógép</span>
+          <div class="indicator">
+            <span class="indicator-dot"></span>
+            <span class="indicator-dot active"></span>
+            <span class="indicator-dot"></span>
+            <span class="indicator-dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Folder 3: 38WX -->
+      <div class="folder folder-green" onclick="selectFolder('38wx')">
+        <div class="folder-tab">Model</div>
+        <div class="folder-back"></div>
+        <div class="folder-sheets">
+          <div class="sheet"></div>
+          <div class="sheet"></div>
+        </div>
+        <div class="folder-front">
+          <span class="model-type">Lazítókéses</span>
+          <img src="/images/38WX.png" alt="38WX" class="folder-image" onerror="this.style.display='none'">
+          <span class="folder-label">38WX</span>
+          <span class="folder-desc">Kombinált lazítás</span>
+          <div class="indicator">
+            <span class="indicator-dot"></span>
+            <span class="indicator-dot"></span>
+            <span class="indicator-dot active"></span>
+            <span class="indicator-dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Folder 4: 40SX -->
+      <div class="folder folder-blue" onclick="selectFolder('40sx')">
+        <div class="folder-tab">Model</div>
+        <div class="folder-back"></div>
+        <div class="folder-sheets">
+          <div class="sheet"></div>
+          <div class="sheet"></div>
+        </div>
+        <div class="folder-front">
+          <span class="model-type">Mélyásógép</span>
+          <img src="/images/40SX.png" alt="40SX" class="folder-image" onerror="this.style.display='none'">
+          <span class="folder-label">40SX</span>
+          <span class="folder-desc">Mély művelés 60cm-ig</span>
+          <div class="indicator">
+            <span class="indicator-dot"></span>
+            <span class="indicator-dot"></span>
+            <span class="indicator-dot"></span>
+            <span class="indicator-dot active"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <p>Kattints a <code>Modellek</code> gombra a navigáció kinyitásához</p>
+    <p>Majd válassz egy mappát a részletek megtekintéséhez</p>
+  </div>
+
+  <script>
+    const navContainer = document.getElementById('navContainer');
+    let isExpanded = false;
+
+    function toggleNav() {
+      isExpanded = !isExpanded;
+      if (isExpanded) {
+        navContainer.classList.add('expanded');
+      } else {
+        navContainer.classList.remove('expanded');
+      }
+    }
+
+    function selectFolder(id) {
+      console.log('Selected folder:', id);
+      // Here you would navigate to the section or trigger an action
+      alert(`Kiválasztva: ${id.toUpperCase()}`);
+    }
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (!navContainer.contains(e.target) && isExpanded) {
+        isExpanded = false;
+        navContainer.classList.remove('expanded');
+      }
+    });
+
+    // Keyboard accessibility
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isExpanded) {
+        isExpanded = false;
+        navContainer.classList.remove('expanded');
+      }
+    });
+  </script>
+</body>
+</html>

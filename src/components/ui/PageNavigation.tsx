@@ -8,9 +8,9 @@ import styles from './PageNavigation.module.css'
 
 const pages = [
   { path: '/', label: 'Főoldal' },
-  { path: '/problema', label: 'A Probléma' },
-  { path: '/megoldas', label: 'Megoldás' },
-  { path: '/kiserlet', label: 'Kísérletek' },
+  { path: '/problema', label: 'Probléma' },
+  { path: '/technologia', label: 'Technológia' },
+  { path: '/kutatas', label: 'Kutatás' },
   { path: '/eredmenyek', label: 'Eredmények' },
 ]
 
@@ -46,7 +46,7 @@ export default function PageNavigation() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [prevPage, nextPage, handleNavigate])
 
-  const isLightPage = pathname === '/problema' || pathname === '/kiserlet'
+  const isLightPage = pathname === '/problema' || pathname === '/kutatas'
 
   return (
     <>

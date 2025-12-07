@@ -80,27 +80,43 @@ export default function PloughingView() {
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
     >
+      {/* Kiemelt idézet blokk */}
       <motion.div 
-        className={styles.centeredTextBlock}
+        className={styles.quoteBlock}
         variants={textRevealVariants}
       >
-        <motion.p className={styles.subTitle}>
-          A hagyományos szántás rövid távon megoldásnak tűnik, de valójában egy{' '}
+        <motion.div 
+          className={styles.quoteIcon}
+          initial={{ scale: 0, rotate: -180 }}
+          whileInView={{ scale: 1, rotate: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
+        >
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 8C10 10.21 8.21 12 6 12C5.27 12 4.59 11.8 4 11.46V16C4 17.1 4.9 18 6 18H10V8ZM20 8C20 10.21 18.21 12 16 12C15.27 12 14.59 11.8 14 11.46V16C14 17.1 14.9 18 16 18H20V8Z" fill="currentColor"/>
+          </svg>
+        </motion.div>
+        <motion.blockquote className={styles.quoteText}>
+          <span>A hagyományos szántás rövid távon megoldásnak tűnik, de valójában egy </span>
           <motion.strong
-            style={{ 
-              display: 'inline-block',
-              background: 'linear-gradient(135deg, var(--color-gold), #D4AF37)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
+            className={styles.quoteHighlight}
             whileHover={{ scale: 1.05 }}
             transition={{ type: 'spring', stiffness: 400 }}
           >
             ördögi kört
-          </motion.strong>{' '}
-          tart fenn. A forgatás tönkreteszi azt, amit védeni kellene.
+          </motion.strong>
+          <span> tart fenn.</span>
+        </motion.blockquote>
+        <motion.p className={styles.quoteSubtext}>
+          A forgatás tönkreteszi azt, amit védeni kellene.
         </motion.p>
+        <motion.div 
+          className={styles.quoteLine}
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        />
       </motion.div>
 
       <div className={styles.ploughGrid}>

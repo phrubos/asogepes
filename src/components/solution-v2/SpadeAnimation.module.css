@@ -1,0 +1,528 @@
+/* === SPADE ANIMATION COMPONENT === */
+/* Based on spading_machine_animation_7.html */
+
+.animationContainer {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background: linear-gradient(180deg, 
+    #3a4a5a 0%, 
+    #2a3a4a 50%, 
+    #5a4a3a 50%,
+    #4A3728 65%,
+    #3a2a1a 100%
+  );
+  border-radius: var(--radius-lg, 20px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+/* Soil texture */
+.soilTexture {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(90, 74, 58, 0.4) 2px, transparent 2px),
+    radial-gradient(circle at 60% 70%, rgba(74, 55, 40, 0.3) 3px, transparent 3px),
+    radial-gradient(circle at 80% 20%, rgba(58, 42, 26, 0.35) 2px, transparent 2px);
+  background-size: 35px 35px, 50px 50px, 45px 45px;
+  pointer-events: none;
+}
+
+/* Surface line */
+.surfaceLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #6a5a4a;
+}
+
+/* Grass layer */
+.grassLayer {
+  position: absolute;
+  top: calc(50% - 18px);
+  left: 0;
+  right: 0;
+  height: 20px;
+  overflow: visible;
+}
+
+.grassBlade {
+  position: absolute;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to top, #3a5030, #5a7040);
+  border-radius: 1px;
+  transform-origin: bottom center;
+}
+
+/* Loosened soil effect */
+.loosenedSoilContainer {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.loosenedArea {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(180deg,
+    #6a5848 0%,
+    #5e4c3c 25%,
+    #524030 50%,
+    #463424 75%,
+    #3a2a1a 100%
+  );
+  animation: loosenedFollow 18s linear infinite;
+}
+
+@keyframes loosenedFollow {
+  0% { 
+    left: calc(100% - 100px);
+    width: 0;
+  }
+  100% { 
+    left: -100px;
+    width: calc(100% + 100px);
+  }
+}
+
+.loosenedLines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 8px,
+    rgba(80, 65, 50, 0.15) 8px,
+    rgba(80, 65, 50, 0.15) 9px
+  );
+}
+
+/* Cleared grass overlay */
+.clearedOverlay {
+  position: absolute;
+  top: calc(50% - 20px);
+  height: 22px;
+  background: linear-gradient(180deg, 
+    #2a3a4a 0%,
+    #6a5848 100%
+  );
+  pointer-events: none;
+  animation: loosenedFollow 18s linear infinite;
+}
+
+/* === MACHINE ASSEMBLY === */
+.machineAssembly {
+  position: absolute;
+  bottom: 50%;
+  right: 100px;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  animation: machineMove 18s linear infinite;
+}
+
+@keyframes machineMove {
+  0% { transform: translateX(100px); }
+  100% { transform: translateX(-750px); }
+}
+
+/* Connection bar */
+.connectionBar {
+  position: absolute;
+  bottom: 95px;
+  left: 70px;
+  width: 90px;
+  height: 12px;
+  background: linear-gradient(180deg, #5a5a5a 0%, #4a4a4a 100%);
+  border-radius: 4px;
+  z-index: 1;
+}
+
+/* === SPADE ROTOR === */
+.spadeRotor {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  z-index: 10;
+}
+
+.rotorHousing {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46px;
+  height: 40px;
+  background: linear-gradient(180deg, #5a5a5a 0%, #4a4a4a 100%);
+  border-radius: 8px 8px 4px 4px;
+  z-index: 20;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding-top: 4px;
+}
+
+.brandLabel {
+  font-size: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-gold, #D4A84B);
+}
+
+.brandAccent {
+  width: 26px;
+  height: 4px;
+  background: var(--color-gold, #D4A84B);
+  border-radius: 2px;
+}
+
+.rotorDisc {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 48px;
+  background: radial-gradient(circle at 35% 35%, #6a6a6a 0%, #4a4a4a 60%, #3a3a3a 100%);
+  border-radius: 50%;
+  border: 4px solid var(--color-gold, #D4A84B);
+  z-index: 15;
+  box-shadow: 
+    0 4px 16px rgba(0,0,0,0.4),
+    inset 0 2px 4px rgba(255,255,255,0.1);
+}
+
+.rotorCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 40% 40%, #5a5a5a 0%, #2a2a2a 100%);
+  border-radius: 50%;
+  border: 2px solid #4a4a4a;
+}
+
+.spadeArms {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  width: 125px;
+  height: 125px;
+  transform: translateX(-50%);
+  z-index: 10;
+  animation: rotateArms 0.8s linear infinite;
+}
+
+@keyframes rotateArms {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to { transform: translateX(-50%) rotate(-360deg); }
+}
+
+.spadeArm {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 62px;
+  height: 7px;
+  transform-origin: left center;
+  display: flex;
+  align-items: center;
+  transform: rotate(calc(var(--arm-index) * 51.4deg));
+}
+
+.armShaft {
+  width: 38px;
+  height: 100%;
+  background: linear-gradient(180deg, #8a8a8a 0%, #6a6a6a 50%, #7a7a7a 100%);
+  border-radius: 2px;
+  margin-left: 12px;
+}
+
+.spadeBlade {
+  position: relative;
+  width: 24px;
+  height: 30px;
+  margin-left: -2px;
+}
+
+.spadeBlade::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #9a9a9a 0%, #7a7a7a 50%, #8a8a8a 100%);
+  border-radius: 4px 55% 35% 4px;
+  transform: rotate(-15deg);
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Particles */
+.particles {
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  width: 90px;
+  height: 50px;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  background: #5a4a3a;
+  border-radius: 50%;
+  animation: particleFly 0.6s ease-out infinite;
+  animation-delay: calc(var(--particle-index) * 0.05s);
+}
+
+.particle:nth-child(1) { width: 5px; height: 5px; left: 15%; }
+.particle:nth-child(2) { width: 6px; height: 6px; left: 30%; }
+.particle:nth-child(3) { width: 4px; height: 4px; left: 45%; }
+.particle:nth-child(4) { width: 5px; height: 5px; left: 60%; }
+.particle:nth-child(5) { width: 4px; height: 4px; left: 75%; }
+
+@keyframes particleFly {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-35px) translateX(-20px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* === SMOOTHING ROLLER === */
+.smoothingRoller {
+  position: relative;
+  width: 50px;
+  height: 80px;
+  z-index: 5;
+}
+
+.rollerFrame {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 22px;
+  background: linear-gradient(180deg, #5a5a5a 0%, #4a4a4a 100%);
+  border-radius: 5px;
+  z-index: 10;
+}
+
+.rollerSupport {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 14px;
+  background: #4a4a4a;
+}
+
+.rollerWheel {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, 
+    #7a7a7a 0%, 
+    #5a5a5a 40%, 
+    #4a4a4a 70%,
+    #3a3a3a 100%
+  );
+  border: 4px solid #5a5a5a;
+  box-shadow: 
+    0 4px 15px rgba(0,0,0,0.4),
+    inset 0 -4px 10px rgba(0,0,0,0.3),
+    inset 0 4px 8px rgba(255,255,255,0.08);
+  animation: rollWheel 0.6s linear infinite;
+}
+
+@keyframes rollWheel {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to { transform: translateX(-50%) rotate(-360deg); }
+}
+
+.rollerWheel::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border-radius: 50%;
+  border: 2px solid rgba(90, 90, 90, 0.5);
+}
+
+.rollerHub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 35% 35%, #6a6a6a 0%, #3a3a3a 100%);
+  border-radius: 50%;
+  border: 2px solid #5a5a5a;
+  z-index: 5;
+}
+
+.rollerHub::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  background: #3a3a3a;
+  border-radius: 50%;
+}
+
+/* === INFO LABELS === */
+.infoLabels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.infoLabel {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-gold, #D4A84B);
+  background: rgba(26, 22, 18, 0.92);
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 168, 75, 0.3);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+}
+
+.animationContainer:hover .infoLabel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.label1 { 
+  top: 40px; 
+  left: 15%; 
+  transition-delay: 0s; 
+}
+
+.label2 { 
+  top: 40px; 
+  right: 15%; 
+  transition-delay: 0.1s; 
+}
+
+.label3 { 
+  bottom: 60px; 
+  left: 50%; 
+  transform: translateX(-50%) translateY(8px); 
+  transition-delay: 0.15s; 
+}
+
+.animationContainer:hover .label3 {
+  transform: translateX(-50%) translateY(0);
+}
+
+.labelNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: var(--color-gold, #D4A84B);
+  color: #1a1612;
+  border-radius: 50%;
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+
+.directionArrow {
+  display: flex;
+  align-items: center;
+}
+
+.arrowLine {
+  width: 22px;
+  height: 2px;
+  background: var(--color-gold, #D4A84B);
+  position: relative;
+}
+
+.arrowLine::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: -4px;
+  border: 5px solid transparent;
+  border-right-color: var(--color-gold, #D4A84B);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .animationContainer {
+    height: 300px;
+  }
+
+  .spadeRotor {
+    width: 110px;
+    height: 110px;
+  }
+
+  .spadeArms {
+    width: 100px;
+    height: 100px;
+  }
+
+  .smoothingRoller {
+    width: 40px;
+    height: 65px;
+  }
+
+  .rollerWheel {
+    width: 40px;
+    height: 40px;
+  }
+
+  .infoLabel {
+    font-size: 0.6rem;
+    padding: 4px 8px;
+  }
+
+  .label1 { left: 5%; }
+  .label2 { right: 5%; }
+}

@@ -356,4 +356,46 @@
   .bar {
     width: 28px;
   }
+
+  .ctaButton {
+    font-size: 0.875rem;
+    padding: var(--space-md) var(--space-lg);
+  }
+}
+
+/* CTA Button */
+.ctaButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-md) var(--space-xl);
+  margin-top: var(--space-lg);
+  background: rgba(212, 168, 75, 0.15);
+  border: 1px solid rgba(212, 168, 75, 0.4);
+  border-radius: var(--radius-md);
+  color: var(--color-gold);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ctaButton:hover {
+  background: rgba(212, 168, 75, 0.25);
+  border-color: var(--color-gold);
+}
+
+.ctaButton:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.ctaButton svg {
+  transition: transform 0.3s ease;
+}
+
+.ctaButton:hover svg {
+  transform: translateX(4px);
 }

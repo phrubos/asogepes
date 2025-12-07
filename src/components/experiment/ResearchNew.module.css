@@ -1,0 +1,213 @@
+/* ============================================
+   KUTATÁS OLDAL
+   Háttér: világos (cream), zöld akcentusok
+   ============================================ */
+
+.sectionResearch {
+  background: var(--color-cream);
+  min-height: 100vh;
+}
+
+/* ============================================
+   HERO SZEKCIÓ
+   ============================================ */
+.hero {
+  padding: var(--space-5xl) 0 var(--space-4xl);
+  text-align: center;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 700;
+  color: var(--color-earth-900);
+  margin: 0 0 var(--space-lg);
+  line-height: 1.2;
+}
+
+.heroAccent {
+  color: var(--color-green-dark);
+}
+
+.heroSubtitle {
+  font-size: 1.125rem;
+  color: var(--color-earth-600);
+  max-width: 650px;
+  margin: 0 auto var(--space-3xl);
+  line-height: 1.7;
+}
+
+/* Statisztika kártyák */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.statCard {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+  background: var(--color-white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.statCard:hover {
+  border-color: var(--color-green);
+}
+
+.statIcon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(74, 103, 65, 0.1);
+  border-radius: 12px;
+  color: var(--color-green-dark);
+  flex-shrink: 0;
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.statNumber {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-green-dark);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-earth-800);
+  margin-top: var(--space-xs);
+}
+
+.statSublabel {
+  font-size: 0.8125rem;
+  color: var(--color-earth-500);
+  margin-top: 2px;
+}
+
+/* ============================================
+   HELYSZÍNEK SZEKCIÓ
+   ============================================ */
+.locationsSectionHeader {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+  padding-top: var(--space-2xl);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.sectionLabel {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-green-dark);
+  margin-bottom: var(--space-sm);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-earth-800);
+  margin: 0;
+}
+
+/* ============================================
+   CTA SZEKCIÓ
+   ============================================ */
+.ctaSection {
+  text-align: center;
+  padding: var(--space-4xl) 0;
+  margin-top: var(--space-3xl);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.ctaText {
+  font-size: 1.25rem;
+  color: var(--color-earth-600);
+  margin: 0 0 var(--space-xl);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .statCard {
+    padding: var(--space-lg);
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .statIcon {
+    margin: 0 auto;
+  }
+
+  .statContent {
+    align-items: center;
+  }
+
+  .statNumber {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: var(--space-4xl) 0 var(--space-3xl);
+  }
+
+  .heroTitle {
+    font-size: 1.75rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+
+  .statCard {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .statIcon {
+    margin: 0;
+  }
+
+  .statContent {
+    align-items: flex-start;
+  }
+
+  .ctaSection {
+    padding: var(--space-3xl) 0;
+  }
+
+  .ctaText {
+    font-size: 1.0625rem;
+  }
+}

@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technológia Oldal - Navigáció Concept</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-earth-800: #1a1714;
+            --color-earth-900: #0f0d0b;
+            --color-cream: #F5F0E8;
+            --color-gold: #D4A84B;
+            --color-gold-light: #E8C97B;
+            --color-green: #6A8B5E;
+            --color-brown: #8B7355;
+            --color-blue-steel: #6B7A8B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--color-earth-800);
+            color: var(--color-cream);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Subtle grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 4rem;
+            gap: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 550px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .badge::before {
+            content: '02';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: rgba(212, 168, 75, 0.15);
+            border: 1px solid rgba(212, 168, 75, 0.3);
+            border-radius: 50%;
+            font-size: 0.65rem;
+        }
+
+        .hero-title {
+            font-family: 'Fraunces', serif;
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: rgba(245, 240, 232, 0.8);
+            max-width: 480px;
+        }
+
+        .hero-subtitle em {
+            color: var(--color-gold);
+            font-style: normal;
+        }
+
+        /* =============================================
+           NAVIGATION CONTROL PANEL
+           ============================================= */
+        .nav-panel {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Command Station - Main Container */
+        .command-station {
+            position: relative;
+            background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            overflow: visible;
+        }
+
+        .command-station::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 30px;
+            right: 30px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+            opacity: 0.5;
+        }
+
+        .station-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .station-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.65rem;
+            color: var(--color-gold);
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* Navigation Items */
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--color-gold);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover::before,
+        .nav-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(212, 168, 75, 0.08);
+            border-color: rgba(212, 168, 75, 0.2);
+            transform: translateX(8px);
+        }
+
+        .nav-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            color: var(--color-gold);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-icon,
+        .nav-item.active .nav-icon {
+            background: var(--color-gold);
+            color: var(--color-earth-900);
+            border-color: var(--color-gold);
+        }
+
+        .nav-text {
+            flex: 1;
+        }
+
+        .nav-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-cream);
+            margin-bottom: 0.25rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover .nav-label,
+        .nav-item.active .nav-label {
+            color: var(--color-gold);
+        }
+
+        .nav-description {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .nav-arrow {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+            color: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-arrow,
+        .nav-item.active .nav-arrow {
+            background: rgba(212, 168, 75, 0.2);
+            color: var(--color-gold);
+            transform: translateX(4px);
+        }
+
+        /* =============================================
+           SVG CONNECTION LINES
+           ============================================= */
+        .connection-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            overflow: visible;
+        }
+
+        .connection-line {
+            fill: none;
+            stroke: var(--color-gold);
+            stroke-width: 2;
+            stroke-dasharray: 300;
+            stroke-dashoffset: 300;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .connection-line.active {
+            opacity: 1;
+            animation: drawLine 0.8s ease forwards;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .connection-dot {
+            fill: var(--color-gold);
+            opacity: 0;
+            transform-origin: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .connection-dot.active {
+            opacity: 1;
+            animation: dotPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { r: 6; opacity: 1; }
+            50% { r: 10; opacity: 0.6; }
+        }
+
+        /* =============================================
+           EXPANDED CONTENT PANELS
+           ============================================= */
+        .expanded-panel {
+            position: absolute;
+            right: -420px;
+            top: 0;
+            width: 400px;
+            opacity: 0;
+            transform: translateX(-20px);
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .expanded-panel.visible {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        /* Működési Elv Panel */
+        .operation-panel {
+            background: linear-gradient(135deg, rgba(106, 139, 94, 0.1) 0%, rgba(106, 139, 94, 0.02) 100%);
+            border: 1px solid rgba(106, 139, 94, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-green);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--color-cream);
+        }
+
+        .panel-subtitle {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .operation-visual {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Spade Animation Preview */
+        .spade-preview {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .soil-layer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(180deg, #5D4E37 0%, #4A3F2E 50%, #3D3426 100%);
+        }
+
+        .spade-blade {
+            position: absolute;
+            left: 50%;
+            top: 20%;
+            width: 40px;
+            height: 80px;
+            background: linear-gradient(180deg, #8B8B8B 0%, #6B6B6B 100%);
+            border-radius: 4px 4px 20px 20px;
+            transform: translateX(-50%);
+            animation: spadeMove 2s ease-in-out infinite;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+
+        .spade-blade::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 30px;
+            background: #654321;
+            border-radius: 2px;
+        }
+
+        @keyframes spadeMove {
+            0%, 100% { top: 20%; }
+            50% { top: 45%; }
+        }
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            background: var(--color-green);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .nav-button:hover {
+            background: #7A9B6E;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(106, 139, 94, 0.3);
+        }
+
+        /* =============================================
+           MODELS PANEL - 3 FOLDER CARDS
+           ============================================= */
+        .models-panel {
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.1) 0%, rgba(139, 115, 85, 0.02) 100%);
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            top: 0;
+        }
+
+        .model-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .model-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .models-panel.visible .model-card {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .models-panel.visible .model-card:nth-child(1) { transition-delay: 0.1s; }
+        .models-panel.visible .model-card:nth-child(2) { transition-delay: 0.2s; }
+        .models-panel.visible .model-card:nth-child(3) { transition-delay: 0.3s; }
+
+        .model-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 12px;
+            padding: 1px;
+            background: linear-gradient(135deg, transparent, transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .model-card.brown::before { background: linear-gradient(135deg, var(--color-brown), var(--color-gold)); }
+        .model-card.green::before { background: linear-gradient(135deg, var(--color-green), var(--color-gold)); }
+        .model-card.blue::before { background: linear-gradient(135deg, var(--color-blue-steel), var(--color-gold)); }
+
+        .model-card:hover::before {
+            opacity: 1;
+        }
+
+        .model-card:hover {
+            background: rgba(0,0,0,0.35);
+            transform: translateX(8px) scale(1.02);
+        }
+
+        .model-thumb {
+            width: 60px;
+            height: 50px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.08);
+            overflow: hidden;
+        }
+
+        .model-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .model-info {
+            flex: 1;
+        }
+
+        .model-name {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-cream);
+            margin-bottom: 0.125rem;
+            transition: color 0.3s ease;
+        }
+
+        .model-card:hover .model-name {
+            color: var(--color-gold);
+        }
+
+        .model-type {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .model-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .model-card.brown .model-badge {
+            background: rgba(139, 115, 85, 0.2);
+            color: var(--color-brown);
+        }
+
+        .model-card.green .model-badge {
+            background: rgba(106, 139, 94, 0.2);
+            color: var(--color-green);
+        }
+
+        .model-card.blue .model-badge {
+            background: rgba(107, 122, 139, 0.2);
+            color: var(--color-blue-steel);
+        }
+
+        /* =============================================
+           DECORATIVE ELEMENTS
+           ============================================= */
+        .orbit-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            border: 1px dashed rgba(212, 168, 75, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: rotateOrbit 60s linear infinite;
+        }
+
+        @keyframes rotateOrbit {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .floating-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .floating-particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .floating-particle:nth-child(2) { top: 60%; left: 5%; animation-delay: 2s; }
+        .floating-particle:nth-child(3) { top: 80%; left: 15%; animation-delay: 4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+            50% { transform: translateY(-20px) scale(1.5); opacity: 0.6; }
+        }
+
+        /* =============================================
+           INTERACTIVE DEMO CONTROLS
+           ============================================= */
+        .demo-controls {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+            background: rgba(0,0,0,0.6);
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: var(--color-cream);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn:hover {
+            background: var(--color-gold);
+            border-color: var(--color-gold);
+            color: var(--color-earth-900);
+        }
+
+        .demo-btn.active {
+            background: var(--color-gold);
+            border-color: var(--color-gold);
+            color: var(--color-earth-900);
+        }
+
+        /* =============================================
+           RESPONSIVE
+           ============================================= */
+        @media (max-width: 1400px) {
+            .expanded-panel {
+                right: -380px;
+                width: 360px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 6rem 2rem;
+            }
+
+            .hero-content {
+                margin: 0 auto;
+            }
+
+            .nav-panel {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .expanded-panel {
+                position: relative;
+                right: auto;
+                top: auto;
+                width: 100%;
+                margin-top: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative particles -->
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+
+    <section class="hero-section">
+        <!-- Left: Hero Content -->
+        <div class="hero-content">
+            <div class="badge">A Technológia</div>
+            <h1 class="hero-title">Lazítás<br>forgatás nélkül</h1>
+            <p class="hero-subtitle">
+                Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
+                miközben megszünteti a tömörödést. Ismerje meg a gép működését.
+            </p>
+        </div>
+
+        <!-- Right: Navigation Control Panel -->
+        <div class="nav-panel">
+            <div class="orbit-ring"></div>
+            
+            <div class="command-station">
+                <div class="station-header">
+                    <span class="station-title">Navigáció</span>
+                    <span class="status-indicator">
+                        <span class="status-dot"></span>
+                        Interaktív
+                    </span>
+                </div>
+
+                <div class="nav-items">
+                    <!-- Működési Elv -->
+                    <div class="nav-item" id="nav-operation" onclick="togglePanel('operation')">
+                        <div class="nav-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </div>
+                        <div class="nav-text">
+                            <div class="nav-label">Működési elv</div>
+                            <div class="nav-description">Hogyan működik az ásógép?</div>
+                        </div>
+                        <div class="nav-arrow">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Modellek -->
+                    <div class="nav-item" id="nav-models" onclick="togglePanel('models')">
+                        <div class="nav-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="nav-text">
+                            <div class="nav-label">Kísérletben használt modellek</div>
+                            <div class="nav-description">3 különböző Imants modell</div>
+                        </div>
+                        <div class="nav-arrow">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SVG Connection Lines -->
+                <svg class="connection-svg" viewBox="0 0 500 300" preserveAspectRatio="xMidYMid meet">
+                    <!-- Operation connection line -->
+                    <path id="line-operation" class="connection-line" d="M 380 60 Q 420 60, 440 40 L 500 40"/>
+                    <circle id="dot-operation" class="connection-dot" cx="500" cy="40" r="6"/>
+                    
+                    <!-- Models connection line -->
+                    <path id="line-models" class="connection-line" d="M 380 140 Q 420 140, 440 160 L 500 160"/>
+                    <circle id="dot-models" class="connection-dot" cx="500" cy="160" r="6"/>
+                </svg>
+            </div>
+
+            <!-- Expanded Panel: Működési Elv -->
+            <div class="expanded-panel operation-panel" id="panel-operation">
+                <div class="panel-header">
+                    <div class="panel-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="panel-title">Működési elv</div>
+                        <div class="panel-subtitle">Függőleges lazítás & simított felszín</div>
+                    </div>
+                </div>
+
+                <div class="operation-visual">
+                    <div class="spade-preview">
+                        <div class="soil-layer"></div>
+                        <div class="spade-blade"></div>
+                    </div>
+                </div>
+
+                <button class="nav-button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                    Animáció megtekintése
+                </button>
+            </div>
+
+            <!-- Expanded Panel: Models -->
+            <div class="expanded-panel models-panel" id="panel-models">
+                <div class="panel-header">
+                    <div class="panel-icon" style="background: var(--color-brown);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="panel-title">Imants Modellek</div>
+                        <div class="panel-subtitle">Válasszon a 3 típus közül</div>
+                    </div>
+                </div>
+
+                <div class="model-cards">
+                    <!-- 38SX -->
+                    <div class="model-card brown">
+                        <div class="model-thumb">
+                            <svg width="40" height="30" viewBox="0 0 40 30" fill="none">
+                                <rect x="5" y="15" width="30" height="10" rx="2" fill="rgba(139,115,85,0.4)"/>
+                                <rect x="8" y="8" width="6" height="12" rx="1" fill="rgba(139,115,85,0.6)"/>
+                                <rect x="17" y="8" width="6" height="12" rx="1" fill="rgba(139,115,85,0.6)"/>
+                                <rect x="26" y="8" width="6" height="12" rx="1" fill="rgba(139,115,85,0.6)"/>
+                            </svg>
+                        </div>
+                        <div class="model-info">
+                            <div class="model-name">38SX</div>
+                            <div class="model-type">Nagy szériás • Univerzális</div>
+                        </div>
+                        <div class="model-badge">Standard</div>
+                    </div>
+
+                    <!-- 38WX -->
+                    <div class="model-card green">
+                        <div class="model-thumb">
+                            <svg width="40" height="30" viewBox="0 0 40 30" fill="none">
+                                <rect x="5" y="15" width="30" height="10" rx="2" fill="rgba(106,139,94,0.4)"/>
+                                <rect x="8" y="6" width="6" height="14" rx="1" fill="rgba(106,139,94,0.6)"/>
+                                <rect x="17" y="6" width="6" height="14" rx="1" fill="rgba(106,139,94,0.6)"/>
+                                <rect x="26" y="6" width="6" height="14" rx="1" fill="rgba(106,139,94,0.6)"/>
+                                <path d="M10 25 L10 28" stroke="rgba(106,139,94,0.8)" stroke-width="2"/>
+                                <path d="M20 25 L20 28" stroke="rgba(106,139,94,0.8)" stroke-width="2"/>
+                                <path d="M30 25 L30 28" stroke="rgba(106,139,94,0.8)" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="model-info">
+                            <div class="model-name">38WX</div>
+                            <div class="model-type">Lazítókéses • Kombinált</div>
+                        </div>
+                        <div class="model-badge">Hybrid</div>
+                    </div>
+
+                    <!-- 40SX -->
+                    <div class="model-card blue">
+                        <div class="model-thumb">
+                            <svg width="40" height="30" viewBox="0 0 40 30" fill="none">
+                                <rect x="5" y="12" width="30" height="13" rx="2" fill="rgba(107,122,139,0.4)"/>
+                                <rect x="8" y="4" width="6" height="16" rx="1" fill="rgba(107,122,139,0.6)"/>
+                                <rect x="17" y="4" width="6" height="16" rx="1" fill="rgba(107,122,139,0.6)"/>
+                                <rect x="26" y="4" width="6" height="16" rx="1" fill="rgba(107,122,139,0.6)"/>
+                            </svg>
+                        </div>
+                        <div class="model-info">
+                            <div class="model-name">40SX</div>
+                            <div class="model-type">Mélyásógép • 60cm</div>
+                        </div>
+                        <div class="model-badge">Deep</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+        <button class="demo-btn" onclick="togglePanel('none')">Reset</button>
+        <button class="demo-btn" onclick="togglePanel('operation')">Működési elv</button>
+        <button class="demo-btn" onclick="togglePanel('models')">Modellek</button>
+    </div>
+
+    <script>
+        let activePanel = null;
+
+        function togglePanel(panel) {
+            const operationNav = document.getElementById('nav-operation');
+            const modelsNav = document.getElementById('nav-models');
+            const operationPanel = document.getElementById('panel-operation');
+            const modelsPanel = document.getElementById('panel-models');
+            const lineOperation = document.getElementById('line-operation');
+            const dotOperation = document.getElementById('dot-operation');
+            const lineModels = document.getElementById('line-models');
+            const dotModels = document.getElementById('dot-models');
+            const demoBtns = document.querySelectorAll('.demo-btn');
+
+            // Reset all
+            operationNav.classList.remove('active');
+            modelsNav.classList.remove('active');
+            operationPanel.classList.remove('visible');
+            modelsPanel.classList.remove('visible');
+            lineOperation.classList.remove('active');
+            dotOperation.classList.remove('active');
+            lineModels.classList.remove('active');
+            dotModels.classList.remove('active');
+            demoBtns.forEach(btn => btn.classList.remove('active'));
+
+            if (panel === activePanel) {
+                activePanel = null;
+                return;
+            }
+
+            activePanel = panel;
+
+            if (panel === 'operation') {
+                operationNav.classList.add('active');
+                operationPanel.classList.add('visible');
+                lineOperation.classList.add('active');
+                dotOperation.classList.add('active');
+                demoBtns[1].classList.add('active');
+            } else if (panel === 'models') {
+                modelsNav.classList.add('active');
+                modelsPanel.classList.add('visible');
+                lineModels.classList.add('active');
+                dotModels.classList.add('active');
+                demoBtns[2].classList.add('active');
+            }
+        }
+
+        // Add hover effects for model cards
+        document.querySelectorAll('.model-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.background = 'rgba(0,0,0,0.35)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.background = 'rgba(0,0,0,0.2)';
+            });
+        });
+    </script>
+</body>
+</html>

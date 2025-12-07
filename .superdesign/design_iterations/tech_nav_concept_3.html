@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technológia Nav - Concept 3 (Folder Hub)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-earth-800: #1a1714;
+            --color-earth-900: #0f0d0b;
+            --color-cream: #F5F0E8;
+            --color-gold: #D4A84B;
+            --color-gold-light: #E8C97B;
+            --color-green: #6A8B5E;
+            --color-green-dark: #4A6B3E;
+            --color-brown: #8B7355;
+            --color-brown-dark: #6B5344;
+            --color-blue-steel: #6B7A8B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--color-earth-800);
+            color: var(--color-cream);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Subtle grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(ellipse 80% 60% at 70% 50%, black 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            align-items: center;
+            padding: 4rem 5rem;
+            gap: 5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 520px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .badge::before {
+            content: '02';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: rgba(212, 168, 75, 0.12);
+            border: 1px solid rgba(212, 168, 75, 0.25);
+            border-radius: 50%;
+            font-size: 0.65rem;
+        }
+
+        .hero-title {
+            font-family: 'Fraunces', serif;
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: rgba(245, 240, 232, 0.75);
+            max-width: 440px;
+        }
+
+        .hero-subtitle em {
+            color: var(--color-gold);
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        /* =============================================
+           FOLDER HUB - Central Navigation System
+           ============================================= */
+        .folder-hub {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 2000px;
+            min-height: 500px;
+        }
+
+        /* Main Folder Container */
+        .folder-main {
+            position: relative;
+            width: 380px;
+            height: 480px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .folder-main:hover {
+            transform: rotateY(-3deg) rotateX(2deg);
+        }
+
+        /* Folder Back Panel */
+        .folder-back {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(145deg, #252019 0%, #1a1714 100%);
+            border-radius: 12px;
+            transform: translateZ(-30px);
+            box-shadow: 
+                -20px 25px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255,255,255,0.03);
+        }
+
+        /* Folder Spine - Left edge detail */
+        .folder-spine {
+            position: absolute;
+            left: 0;
+            top: 20px;
+            bottom: 20px;
+            width: 8px;
+            background: linear-gradient(180deg, var(--color-gold) 0%, var(--color-brown) 100%);
+            border-radius: 4px 0 0 4px;
+            transform: translateZ(-15px) translateX(-4px);
+            box-shadow: -3px 0 15px rgba(212, 168, 75, 0.2);
+        }
+
+        /* Folder Front Panel */
+        .folder-front {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(165deg, #1f1b17 0%, #161310 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            overflow: hidden;
+            transform: translateZ(0);
+            box-shadow: 
+                0 30px 60px -10px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255,255,255,0.04) inset;
+        }
+
+        /* Subtle texture on front */
+        .folder-front::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 100% 50% at 50% 0%, rgba(212, 168, 75, 0.04) 0%, transparent 60%),
+                linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
+            pointer-events: none;
+        }
+
+        /* Top decorative bar */
+        .folder-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(90deg, rgba(212, 168, 75, 0.08) 0%, transparent 50%, rgba(212, 168, 75, 0.08) 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+        }
+
+        .folder-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.35);
+        }
+
+        .folder-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-light {
+            width: 6px;
+            height: 6px;
+            background: var(--color-gold);
+            border-radius: 50%;
+            animation: statusPulse 2.5s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(212, 168, 75, 0.5);
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .status-text {
+            font-size: 0.6rem;
+            color: var(--color-gold);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        /* =============================================
+           FOLDER TABS - Two Options
+           ============================================= */
+        .folder-tabs {
+            position: absolute;
+            top: 65px;
+            left: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+        }
+
+        .folder-tab {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            overflow: visible;
+        }
+
+        .folder-tab::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: var(--color-gold);
+            border-radius: 0 2px 2px 0;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .folder-tab:hover::before,
+        .folder-tab.active::before {
+            transform: scaleY(1);
+        }
+
+        .folder-tab:hover {
+            background: rgba(212, 168, 75, 0.06);
+            border-color: rgba(212, 168, 75, 0.2);
+            transform: translateX(6px);
+        }
+
+        .tab-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(212, 168, 75, 0.08);
+            border: 1px solid rgba(212, 168, 75, 0.15);
+            border-radius: 8px;
+            color: var(--color-gold);
+            transition: all 0.35s ease;
+            flex-shrink: 0;
+        }
+
+        .folder-tab:hover .tab-icon {
+            background: var(--color-gold);
+            color: var(--color-earth-900);
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(212, 168, 75, 0.3);
+        }
+
+        .tab-content {
+            flex: 1;
+        }
+
+        .tab-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--color-cream);
+            margin-bottom: 0.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .folder-tab:hover .tab-title {
+            color: var(--color-gold);
+        }
+
+        .tab-desc {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .tab-badge {
+            padding: 0.35rem 0.75rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .folder-tab:hover .tab-badge {
+            background: rgba(212, 168, 75, 0.15);
+            border-color: rgba(212, 168, 75, 0.3);
+            color: var(--color-gold);
+        }
+
+        /* =============================================
+           PAPER SHEETS - Sliding Out Options
+           ============================================= */
+        .papers-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+
+        /* Individual Paper */
+        .paper {
+            position: absolute;
+            background: linear-gradient(165deg, #2a2520 0%, #1f1b17 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255,255,255,0.03) inset;
+            transform-style: preserve-3d;
+        }
+
+        .paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+            opacity: 0.4;
+        }
+
+        /* Paper 1: Operation - slides up-left */
+        .paper-operation {
+            width: 260px;
+            top: 20px;
+            left: -40px;
+            transform: translateX(-180px) translateY(-60px) translateZ(40px) rotateZ(-3deg);
+        }
+
+        .folder-tab.tab-operation:hover ~ .papers-container .paper-operation,
+        .folder-tab.tab-operation.active ~ .papers-container .paper-operation {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-280px) translateY(-30px) translateZ(50px) rotateZ(-2deg);
+        }
+
+        /* Papers for Models - slide up-right, staggered */
+        .paper-model {
+            width: 240px;
+            right: -40px;
+        }
+
+        .paper-model-1 {
+            top: 60px;
+            transform: translateX(180px) translateY(-40px) translateZ(30px) rotateZ(2deg);
+        }
+
+        .paper-model-2 {
+            top: 120px;
+            transform: translateX(180px) translateY(0px) translateZ(20px) rotateZ(3deg);
+        }
+
+        .paper-model-3 {
+            top: 180px;
+            transform: translateX(180px) translateY(40px) translateZ(10px) rotateZ(4deg);
+        }
+
+        .folder-tab.tab-models:hover ~ .papers-container .paper-model-1,
+        .folder-tab.tab-models.active ~ .papers-container .paper-model-1 {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(290px) translateY(-80px) translateZ(60px) rotateZ(1deg);
+            transition-delay: 0s;
+        }
+
+        .folder-tab.tab-models:hover ~ .papers-container .paper-model-2,
+        .folder-tab.tab-models.active ~ .papers-container .paper-model-2 {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(300px) translateY(20px) translateZ(40px) rotateZ(2deg);
+            transition-delay: 0.08s;
+        }
+
+        .folder-tab.tab-models:hover ~ .papers-container .paper-model-3,
+        .folder-tab.tab-models.active ~ .papers-container .paper-model-3 {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(290px) translateY(120px) translateZ(20px) rotateZ(3deg);
+            transition-delay: 0.16s;
+        }
+
+        /* Paper Content Styles */
+        .paper-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.875rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .paper-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .paper-icon.green { background: var(--color-green); }
+        .paper-icon.brown { background: var(--color-brown); }
+        .paper-icon.blue { background: var(--color-blue-steel); }
+
+        .paper-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--color-cream);
+        }
+
+        .paper-subtitle {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* Paper Button */
+        .paper-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            width: 100%;
+        }
+
+        .paper-btn:hover {
+            background: rgba(212, 168, 75, 0.1);
+            border-color: var(--color-gold);
+            transform: translateX(4px);
+        }
+
+        .paper-btn-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .paper-btn-icon.green {
+            background: rgba(106, 139, 94, 0.15);
+            color: var(--color-green);
+        }
+
+        .paper-btn:hover .paper-btn-icon.green {
+            background: var(--color-green);
+            color: white;
+        }
+
+        .paper-btn-icon.brown {
+            background: rgba(139, 115, 85, 0.15);
+            color: var(--color-brown);
+        }
+
+        .paper-btn:hover .paper-btn-icon.brown {
+            background: var(--color-brown);
+            color: white;
+        }
+
+        .paper-btn-icon.blue {
+            background: rgba(107, 122, 139, 0.15);
+            color: var(--color-blue-steel);
+        }
+
+        .paper-btn:hover .paper-btn-icon.blue {
+            background: var(--color-blue-steel);
+            color: white;
+        }
+
+        .paper-btn-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .paper-btn-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--color-cream);
+            transition: color 0.3s ease;
+        }
+
+        .paper-btn:hover .paper-btn-label {
+            color: var(--color-gold);
+        }
+
+        .paper-btn-tag {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .paper-btn-tag.brown {
+            background: rgba(139, 115, 85, 0.2);
+            color: var(--color-brown);
+        }
+
+        .paper-btn-tag.green {
+            background: rgba(106, 139, 94, 0.2);
+            color: var(--color-green);
+        }
+
+        .paper-btn-tag.blue {
+            background: rgba(107, 122, 139, 0.2);
+            color: var(--color-blue-steel);
+        }
+
+        .paper-btn-arrow {
+            color: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .paper-btn:hover .paper-btn-arrow {
+            color: var(--color-gold);
+            transform: translateX(3px);
+        }
+
+        /* =============================================
+           CONNECTION LINES - SVG Animated
+           ============================================= */
+        .connections-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            overflow: visible;
+        }
+
+        .connection-path {
+            fill: none;
+            stroke: var(--color-gold);
+            stroke-width: 1.5;
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .folder-tab.tab-operation:hover ~ .connections-svg .connection-operation,
+        .folder-tab.tab-operation.active ~ .connections-svg .connection-operation {
+            opacity: 0.6;
+            animation: drawPath 0.6s ease forwards;
+        }
+
+        .folder-tab.tab-models:hover ~ .connections-svg .connection-models,
+        .folder-tab.tab-models.active ~ .connections-svg .connection-models {
+            opacity: 0.6;
+            animation: drawPath 0.6s ease forwards;
+        }
+
+        @keyframes drawPath {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .connection-dot {
+            fill: var(--color-gold);
+            opacity: 0;
+            transition: opacity 0.3s ease 0.4s;
+        }
+
+        .folder-tab:hover ~ .connections-svg .connection-dot {
+            opacity: 1;
+        }
+
+        /* =============================================
+           DECORATIVE FOLDER DETAILS
+           ============================================= */
+        /* Bottom info panel */
+        .folder-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 1.5rem;
+            background: rgba(0,0,0,0.2);
+            border-top: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .folder-meta {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.3);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .folder-version {
+            padding: 0.25rem 0.5rem;
+            background: rgba(106, 139, 94, 0.15);
+            border-radius: 4px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: var(--color-green);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Floating Accents */
+        .accent-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.15;
+            pointer-events: none;
+            animation: orbFloat 15s ease-in-out infinite;
+        }
+
+        .accent-orb-1 {
+            width: 200px;
+            height: 200px;
+            background: var(--color-gold);
+            top: -50px;
+            right: -80px;
+            animation-delay: 0s;
+        }
+
+        .accent-orb-2 {
+            width: 150px;
+            height: 150px;
+            background: var(--color-green);
+            bottom: -30px;
+            left: -60px;
+            animation-delay: 5s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(10px, -15px) scale(1.05); }
+            66% { transform: translate(-10px, 10px) scale(0.95); }
+        }
+
+        /* =============================================
+           RESPONSIVE
+           ============================================= */
+        @media (max-width: 1400px) {
+            .hero-section {
+                padding: 3rem;
+                gap: 3rem;
+            }
+
+            .folder-main {
+                width: 340px;
+                height: 440px;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 4rem 2rem;
+            }
+
+            .hero-content {
+                margin: 0 auto;
+            }
+
+            .folder-hub {
+                min-height: 600px;
+            }
+
+            .paper-operation {
+                left: 50%;
+                top: -80px;
+                transform: translateX(-50%) translateY(-100px) rotateZ(0);
+            }
+
+            .folder-tab.tab-operation:hover ~ .papers-container .paper-operation {
+                transform: translateX(-50%) translateY(-20px) rotateZ(0);
+            }
+
+            .paper-model {
+                right: auto;
+                left: 50%;
+            }
+
+            .paper-model-1 {
+                top: auto;
+                bottom: -60px;
+                transform: translateX(-130%) translateY(100px) rotateZ(0);
+            }
+
+            .paper-model-2 {
+                top: auto;
+                bottom: -60px;
+                transform: translateX(-50%) translateY(100px) rotateZ(0);
+            }
+
+            .paper-model-3 {
+                top: auto;
+                bottom: -60px;
+                transform: translateX(30%) translateY(100px) rotateZ(0);
+            }
+
+            .folder-tab.tab-models:hover ~ .papers-container .paper-model-1 {
+                transform: translateX(-130%) translateY(20px) rotateZ(-2deg);
+            }
+
+            .folder-tab.tab-models:hover ~ .papers-container .paper-model-2 {
+                transform: translateX(-50%) translateY(20px) rotateZ(0);
+            }
+
+            .folder-tab.tab-models:hover ~ .papers-container .paper-model-3 {
+                transform: translateX(30%) translateY(20px) rotateZ(2deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero-section">
+        <!-- Left: Hero Content -->
+        <div class="hero-content">
+            <div class="badge">A Technológia</div>
+            <h1 class="hero-title">Lazítás<br>forgatás nélkül</h1>
+            <p class="hero-subtitle">
+                Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
+                miközben megszünteti a tömörödést.
+            </p>
+        </div>
+
+        <!-- Right: Folder Hub Navigation -->
+        <div class="folder-hub">
+            <!-- Decorative Orbs -->
+            <div class="accent-orb accent-orb-1"></div>
+            <div class="accent-orb accent-orb-2"></div>
+
+            <div class="folder-main">
+                <!-- Folder Structure -->
+                <div class="folder-back"></div>
+                <div class="folder-spine"></div>
+                
+                <div class="folder-front">
+                    <!-- Header -->
+                    <div class="folder-header">
+                        <span class="folder-label">Technológia / Navigáció</span>
+                        <div class="folder-status">
+                            <span class="status-light"></span>
+                            <span class="status-text">AKTÍV</span>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="folder-tabs">
+                        <!-- Tab 1: Működési Elv -->
+                        <div class="folder-tab tab-operation">
+                            <div class="tab-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                                </svg>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-title">Működési elv</div>
+                                <div class="tab-desc">Hogyan működik az ásógép?</div>
+                            </div>
+                            <span class="tab-badge">1 elem</span>
+                        </div>
+
+                        <!-- Tab 2: Modellek -->
+                        <div class="folder-tab tab-models">
+                            <div class="tab-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                </svg>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-title">Kísérletben használt modellek</div>
+                                <div class="tab-desc">Imants ásógép típusok</div>
+                            </div>
+                            <span class="tab-badge">3 elem</span>
+                        </div>
+
+                        <!-- Papers Container - Slides out on hover -->
+                        <div class="papers-container">
+                            <!-- Paper: Operation -->
+                            <div class="paper paper-operation">
+                                <div class="paper-header">
+                                    <div class="paper-icon green">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polygon points="5 3 19 12 5 21 5 3"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="paper-title">Működési elv</div>
+                                        <div class="paper-subtitle">Interaktív animáció</div>
+                                    </div>
+                                </div>
+                                <a href="#operation" class="paper-btn">
+                                    <div class="paper-btn-icon green">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polygon points="5 3 19 12 5 21 5 3"/>
+                                        </svg>
+                                    </div>
+                                    <div class="paper-btn-text">
+                                        <div class="paper-btn-label">Megtekintés</div>
+                                    </div>
+                                    <div class="paper-btn-arrow">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 18 15 12 9 6"/>
+                                        </svg>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <!-- Paper: Model 38SX -->
+                            <div class="paper paper-model paper-model-1">
+                                <div class="paper-header">
+                                    <div class="paper-icon brown">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <rect x="4" y="8" width="16" height="10" rx="2"/>
+                                            <path d="M8 8V5M12 8V5M16 8V5"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="paper-title">38SX</div>
+                                        <div class="paper-subtitle">Nagy szériás</div>
+                                    </div>
+                                </div>
+                                <a href="#38sx" class="paper-btn">
+                                    <div class="paper-btn-icon brown">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <rect x="4" y="8" width="16" height="10" rx="2"/>
+                                        </svg>
+                                    </div>
+                                    <div class="paper-btn-text">
+                                        <div class="paper-btn-label">Részletek</div>
+                                    </div>
+                                    <span class="paper-btn-tag brown">Standard</span>
+                                    <div class="paper-btn-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 18 15 12 9 6"/>
+                                        </svg>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <!-- Paper: Model 38WX -->
+                            <div class="paper paper-model paper-model-2">
+                                <div class="paper-header">
+                                    <div class="paper-icon green">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <rect x="4" y="8" width="16" height="10" rx="2"/>
+                                            <path d="M8 8V4M12 8V4M16 8V4M8 18v2M12 18v2M16 18v2"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="paper-title">38WX</div>
+                                        <div class="paper-subtitle">Lazítókéses</div>
+                                    </div>
+                                </div>
+                                <a href="#38wx" class="paper-btn">
+                                    <div class="paper-btn-icon green">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <rect x="4" y="8" width="16" height="10" rx="2"/>
+                                        </svg>
+                                    </div>
+                                    <div class="paper-btn-text">
+                                        <div class="paper-btn-label">Részletek</div>
+                                    </div>
+                                    <span class="paper-btn-tag green">Hybrid</span>
+                                    <div class="paper-btn-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 18 15 12 9 6"/>
+                                        </svg>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <!-- Paper: Model 40SX -->
+                            <div class="paper paper-model paper-model-3">
+                                <div class="paper-header">
+                                    <div class="paper-icon blue">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <rect x="4" y="6" width="16" height="12" rx="2"/>
+                                            <path d="M8 6V3M12 6V3M16 6V3"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="paper-title">40SX</div>
+                                        <div class="paper-subtitle">Mélyásógép</div>
+                                    </div>
+                                </div>
+                                <a href="#40sx" class="paper-btn">
+                                    <div class="paper-btn-icon blue">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <rect x="4" y="6" width="16" height="12" rx="2"/>
+                                        </svg>
+                                    </div>
+                                    <div class="paper-btn-text">
+                                        <div class="paper-btn-label">Részletek</div>
+                                    </div>
+                                    <span class="paper-btn-tag blue">Deep</span>
+                                    <div class="paper-btn-arrow">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 18 15 12 9 6"/>
+                                        </svg>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- SVG Connection Lines -->
+                        <svg class="connections-svg" viewBox="0 0 400 300" preserveAspectRatio="none">
+                            <!-- Operation connection -->
+                            <path class="connection-path connection-operation" d="M 0 40 Q -60 40, -100 20 L -180 -20"/>
+                            <circle class="connection-dot" cx="-180" cy="-20" r="4"/>
+                            
+                            <!-- Models connections -->
+                            <path class="connection-path connection-models" d="M 340 80 Q 400 80, 440 40"/>
+                            <path class="connection-path connection-models" d="M 340 100 Q 420 100, 460 100"/>
+                            <path class="connection-path connection-models" d="M 340 120 Q 400 120, 440 160"/>
+                        </svg>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="folder-footer">
+                        <span class="folder-meta">IMANTS Technology Suite</span>
+                        <span class="folder-version">v2.0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

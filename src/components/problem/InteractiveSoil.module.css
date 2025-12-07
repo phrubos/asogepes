@@ -12,10 +12,17 @@
 .header {
   padding: 20px 24px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 16px;
   border-bottom: 1px solid rgba(61, 41, 20, 0.1);
   background: #FAF9F6;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
 .title {
@@ -23,6 +30,134 @@
   font-size: 1.125rem;
   color: var(--color-earth-800);
   margin: 0;
+}
+
+/* Timeline Slider */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.timelineLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6875rem;
+  color: var(--color-earth-400);
+}
+
+.timelineLabel {
+  transition: all 0.2s ease;
+}
+
+.timelineLabelActive {
+  color: var(--color-green-dark);
+  font-weight: 600;
+}
+
+.sliderWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sliderIcon {
+  color: var(--color-earth-400);
+  flex-shrink: 0;
+}
+
+.slider {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--color-earth-100);
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--color-green);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--color-green);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.sliderProgress {
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6px;
+  background: var(--color-green);
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Penetrometer */
+.penetrometer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.penetrometerLabel {
+  font-size: 0.75rem;
+  color: var(--color-earth-500);
+  font-weight: 500;
+}
+
+.penetrometerValue {
+  font-size: 0.875rem;
+  font-weight: 700;
+  min-width: 50px;
+}
+
+.penetrometerBar {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  position: relative;
+  overflow: visible;
+}
+
+.penetrometerIndicator {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: white;
+  border: 3px solid currentColor;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .toggle {
@@ -176,3 +311,11 @@
 
 .statGood { color: var(--color-green); }
 .statBad { color: #D32F2F; }
+
+/* Lottie Animation Container */
+.lottieContainer {
+  position: absolute;
+  inset: 60px 0 0 0;
+  z-index: 6;
+  pointer-events: none;
+}
