@@ -706,8 +706,8 @@
    RESPONSIVE
    ============================================= */
 
-/* Large Laptop (1440px and below) - Switch to vertical layout */
-@media (max-width: 1440px) {
+/* Large Laptop (1600px and below) - Switch to vertical layout */
+@media (max-width: 1600px) {
   .hubScene {
     min-height: auto;
     flex-direction: column;
