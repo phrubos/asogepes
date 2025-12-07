@@ -11,6 +11,7 @@
   min-height: 580px;
   padding: 2rem 4rem;
   transition: all 0.4s ease;
+  z-index: 115; /* Above header navigation (z-index: 110) */
 }
 
 .hubSceneActive .hubFolder {
