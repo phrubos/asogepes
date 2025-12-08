@@ -31,7 +31,6 @@ const DEMO_SEQUENCE: { state: DemoState; duration: number }[] = [
   { state: 'hub', duration: 700 },
   { state: 'guide', duration: 1600 },
   { state: 'hub', duration: 600 },
-  { state: 'idle', duration: 400 },
 ]
 
 export default function HubFolder({ onScrollToOperation, onScrollToModel, onScrollToGuide }: HubFolderProps) {
