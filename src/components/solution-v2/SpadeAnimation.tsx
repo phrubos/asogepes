@@ -38,6 +38,14 @@ export default function SpadeAnimation() {
         <div className={styles.loosenedArea}>
           <div className={styles.loosenedLines} />
         </div>
+        {/* Wave ripple effects */}
+        <div className={styles.soilWaves}>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div key={i} className={styles.soilWave} style={{ '--wave-index': i } as React.CSSProperties} />
+          ))}
+        </div>
+        {/* Processing energy glow */}
+        <div className={styles.processingGlow} />
       </div>
 
       {/* Cleared grass overlay */}
@@ -65,9 +73,9 @@ export default function SpadeAnimation() {
               </div>
             ))}
           </div>
-          {/* Particles */}
+          {/* Particles - enhanced visibility */}
           <div className={styles.particles}>
-            {[0, 1, 2, 3, 4].map((i) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
               <div key={i} className={styles.particle} style={{ '--particle-index': i } as React.CSSProperties} />
             ))}
           </div>

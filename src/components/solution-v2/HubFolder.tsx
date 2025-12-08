@@ -2,16 +2,17 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Settings, Folder, Play, ChevronRight } from 'lucide-react'
+import { Settings, Folder, Play, HelpCircle, Sparkles } from 'lucide-react'
 import styles from './HubFolder.module.css'
 
-type HoveredOption = 'operation' | 'models' | null
+type HoveredOption = 'operation' | 'models' | 'guide' | null
 type ModelId = '38sx' | '38wx' | '40sx'
-type DemoState = 'idle' | 'hub' | 'operation' | 'models'
+type DemoState = 'idle' | 'hub' | 'operation' | 'models' | 'guide'
 
 interface HubFolderProps {
   onScrollToOperation: () => void
   onScrollToModel: (modelId: ModelId) => void
+  onScrollToGuide: () => void
 }
 
 const modelData = [
@@ -20,19 +21,20 @@ const modelData = [
   { id: '40sx' as ModelId, name: '40SX', type: 'Mélyásógép', tag: 'Deep', color: 'blue' },
 ]
 
-// Demo sequence - simulates user interaction
+// Demo sequence - simulates user interaction with dynamic, snappy timing
 const DEMO_SEQUENCE: { state: DemoState; duration: number }[] = [
-  { state: 'idle', duration: 500 },
-  { state: 'hub', duration: 1500 },
-  { state: 'operation', duration: 2500 },
-  { state: 'hub', duration: 1000 },
-  { state: 'hub', duration: 1200 },
-  { state: 'models', duration: 3000 },
-  { state: 'hub', duration: 800 },
-  { state: 'idle', duration: 500 },
+  { state: 'idle', duration: 400 },
+  { state: 'hub', duration: 900 },
+  { state: 'operation', duration: 1600 },
+  { state: 'hub', duration: 700 },
+  { state: 'models', duration: 1800 },
+  { state: 'hub', duration: 700 },
+  { state: 'guide', duration: 1600 },
+  { state: 'hub', duration: 600 },
+  { state: 'idle', duration: 400 },
 ]
 
-export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubFolderProps) {
+export default function HubFolder({ onScrollToOperation, onScrollToModel, onScrollToGuide }: HubFolderProps) {
   const [hoveredOption, setHoveredOption] = useState<HoveredOption>(null)
   const [isHubHovered, setIsHubHovered] = useState(false)
   const [hoveredMiniFolder, setHoveredMiniFolder] = useState<string | null>(null)
@@ -91,50 +93,50 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubF
     setHoveredOption(null)
   }, [])
 
-  // Animation variants
+  // Animation variants - snappier for dynamic demo
   const hubVariants = {
     initial: { scale: 1, y: 0 },
-    hover: { 
-      scale: 1.05, 
+    hover: {
+      scale: 1.05,
       y: -15,
-      transition: { duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }
+      transition: { duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }
     }
   }
 
   const frontVariants = {
     initial: { rotateY: 0, x: 0 },
-    hover: { 
+    hover: {
       rotateY: -12,
       x: 20,
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
   const sheetVariants = {
     initial: { x: -8, y: -5 },
-    hover: { 
+    hover: {
       x: -25,
       y: -15,
       rotate: -2,
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
   const sheet2Variants = {
     initial: { x: -4, y: -2 },
-    hover: { 
+    hover: {
       x: -15,
       y: -8,
       rotate: -1,
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
   const tabVariants = {
     initial: { y: 0 },
-    hover: { 
+    hover: {
       y: -5,
-      transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.25, ease: [0.4, 0, 0.2, 1] }
     }
   }
 
@@ -145,16 +147,16 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubF
       x: 0,
       scale: 1,
       transition: {
-        delay: i * 0.08,
-        duration: 0.45,
+        delay: i * 0.05,
+        duration: 0.35,
         ease: [0.34, 1.56, 0.64, 1]
       }
     }),
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       x: 30,
       scale: 0.8,
-      transition: { duration: 0.25 }
+      transition: { duration: 0.2 }
     }
   }
 
@@ -165,35 +167,56 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubF
       x: 0,
       scale: 1,
       transition: {
-        duration: 0.45,
+        duration: 0.4,
         ease: [0.34, 1.56, 0.64, 1]
       }
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       x: -30,
       scale: 0.8,
+      transition: { duration: 0.2 }
+    }
+  }
+
+  const navButtonBottomVariants = {
+    hidden: { opacity: 0, y: 40, scale: 0.85, rotateX: -15 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      rotateX: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.34, 1.56, 0.64, 1]
+      }
+    },
+    exit: {
+      opacity: 0,
+      y: 40,
+      scale: 0.85,
+      rotateX: -15,
       transition: { duration: 0.25 }
     }
   }
 
   const connectionVariants = {
     hidden: { scaleX: 0, opacity: 0 },
-    visible: { 
-      scaleX: 1, 
+    visible: {
+      scaleX: 1,
       opacity: 1,
-      transition: { duration: 0.3, ease: 'easeOut' }
+      transition: { duration: 0.25, ease: 'easeOut' }
     },
-    exit: { 
-      scaleX: 0, 
+    exit: {
+      scaleX: 0,
       opacity: 0,
-      transition: { duration: 0.2 }
+      transition: { duration: 0.15 }
     }
   }
 
   // Compute effective states (user interaction overrides demo)
-  const effectiveHubHovered = isUserInteracting ? isHubHovered : (demoState === 'hub' || demoState === 'operation' || demoState === 'models')
-  const effectiveHoveredOption = isUserInteracting ? hoveredOption : (demoState === 'operation' ? 'operation' : demoState === 'models' ? 'models' : null)
+  const effectiveHubHovered = isUserInteracting ? isHubHovered : (demoState === 'hub' || demoState === 'operation' || demoState === 'models' || demoState === 'guide')
+  const effectiveHoveredOption = isUserInteracting ? hoveredOption : (demoState === 'operation' ? 'operation' : demoState === 'models' ? 'models' : demoState === 'guide' ? 'guide' : null)
 
   return (
     <div 
@@ -243,7 +266,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubF
           </motion.svg>
         )}
         {effectiveHoveredOption === 'models' && (
-          <motion.svg 
+          <motion.svg
             className={`${styles.connectionSvg} ${styles.connectionSvgRight}`}
             viewBox="0 0 100 60"
             initial={{ opacity: 0 }}
@@ -261,6 +284,35 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubF
             />
             <motion.circle
               cx="100"
+              cy="30"
+              r="4"
+              className={styles.connectionDot}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              transition={{ delay: 0.35, duration: 0.2 }}
+            />
+          </motion.svg>
+        )}
+        {effectiveHoveredOption === 'guide' && (
+          <motion.svg
+            className={`${styles.connectionSvg} ${styles.connectionSvgLeftLower}`}
+            viewBox="0 0 100 60"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <motion.path
+              d="M100,30 Q60,30 50,45 Q40,60 0,30"
+              className={styles.connectionPath}
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              exit={{ pathLength: 0 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+            />
+            <motion.circle
+              cx="0"
               cy="30"
               r="4"
               className={styles.connectionDot}
@@ -359,6 +411,60 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubF
         )}
       </AnimatePresence>
 
+      {/* Nav Folder: Guide (left side, lower) */}
+      <AnimatePresence>
+        {effectiveHoveredOption === 'guide' && (
+          <motion.div
+            className={`${styles.navGroup} ${styles.navLeftLower}`}
+            onMouseEnter={() => handleNavMouseEnter('guide')}
+            onMouseLeave={handleNavMouseLeave}
+          >
+            <motion.button
+              className={`${styles.miniFolder} ${styles.miniFolderPurple} ${hoveredMiniFolder && hoveredMiniFolder !== 'guide' ? styles.miniFolderDimmed : ''}`}
+              variants={navButtonLeftVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onClick={onScrollToGuide}
+              onMouseEnter={() => setHoveredMiniFolder('guide')}
+              onMouseLeave={() => setHoveredMiniFolder(null)}
+              whileHover={{ scale: 1.08, y: -10 }}
+            >
+              <div className={`${styles.miniFolderTab} ${styles.miniFolderTabPurple}`}>
+                Guide
+              </div>
+              <div className={styles.miniFolderBack} />
+              <div className={styles.miniFolderSheets}>
+                <div className={styles.miniSheet} />
+              </div>
+              <div className={styles.miniFolderFront}>
+                <div className={styles.miniFolderIcon}>
+                  <Sparkles size={24} />
+                </div>
+                <span className={styles.miniFolderLabel}>Módszer választó</span>
+                <span className={styles.miniFolderDesc}>Melyik a legjobb?</span>
+              </div>
+              <div className={styles.miniFolderGlowPurple} />
+              {/* Floating sparkles */}
+              <motion.div
+                className={styles.floatingSparkles}
+                animate={{
+                  y: [0, -8, 0],
+                  opacity: [0.4, 1, 0.4],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                <Sparkles size={12} />
+              </motion.div>
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main Hub Folder */}
       <motion.div
         className={`${styles.hubFolder} ${effectiveHoveredOption ? styles.hubFolderActive : ''}`}
@@ -396,11 +502,13 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubF
         </div>
 
         {/* Front */}
-        <motion.div 
+        <motion.div
           className={styles.hubFront}
           variants={frontVariants}
           animate={effectiveHubHovered ? "hover" : "initial"}
         >
+          {/* Shine sweep effect */}
+          <div className={styles.shine} />
           <div className={styles.hubContent}>
             {/* Header */}
             <div className={styles.hubHeader}>
@@ -427,7 +535,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubF
               </div>
 
               {/* Option 2: Modellek */}
-              <div 
+              <div
                 className={`${styles.hubOption} ${effectiveHoveredOption === 'models' ? styles.hubOptionActive : ''}`}
                 onMouseEnter={() => handleNavMouseEnter('models')}
                 onMouseLeave={handleNavMouseLeave}
@@ -440,6 +548,22 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel }: HubF
                   <span className={styles.optionDesc}>Imants típusok</span>
                 </div>
                 <span className={styles.optionCount}>3</span>
+              </div>
+
+              {/* Option 3: Módszer választó */}
+              <div
+                className={`${styles.hubOption} ${effectiveHoveredOption === 'guide' ? styles.hubOptionActive : ''}`}
+                onMouseEnter={() => handleNavMouseEnter('guide')}
+                onMouseLeave={handleNavMouseLeave}
+              >
+                <div className={styles.optionIcon}>
+                  <HelpCircle size={18} />
+                </div>
+                <div className={styles.optionText}>
+                  <span className={styles.optionTitle}>Útmutató</span>
+                  <span className={styles.optionDesc}>Melyik módszert?</span>
+                </div>
+                <span className={styles.optionCount}>1</span>
               </div>
             </div>
 

@@ -4,10 +4,12 @@
 .animationContainer {
   position: relative;
   width: 100%;
-  height: 380px;
-  background: linear-gradient(180deg, 
-    #3a4a5a 0%, 
-    #2a3a4a 50%, 
+  max-width: 900px;
+  margin: 0 auto;
+  height: 280px;
+  background: linear-gradient(180deg,
+    #3a4a5a 0%,
+    #2a3a4a 50%,
     #5a4a3a 50%,
     #4A3728 65%,
     #3a2a1a 100%
@@ -15,7 +17,9 @@
   border-radius: var(--radius-lg, 20px);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 /* Soil texture */
@@ -62,7 +66,7 @@
   transform-origin: bottom center;
 }
 
-/* Loosened soil effect */
+/* Loosened soil effect - static area where spade digs */
 .loosenedSoilContainer {
   position: absolute;
   top: 50%;
@@ -76,7 +80,9 @@
 .loosenedArea {
   position: absolute;
   top: 0;
-  height: 100%;
+  right: 0;
+  left: calc(50% - 25px);
+  height: 65%;
   background: linear-gradient(180deg,
     #6a5848 0%,
     #5e4c3c 25%,
@@ -84,18 +90,6 @@
     #463424 75%,
     #3a2a1a 100%
   );
-  animation: loosenedFollow 18s linear infinite;
-}
-
-@keyframes loosenedFollow {
-  0% { 
-    left: calc(100% - 100px);
-    width: 0;
-  }
-  100% { 
-    left: -100px;
-    width: calc(100% + 100px);
-  }
 }
 
 .loosenedLines {
@@ -110,33 +104,116 @@
   );
 }
 
-/* Cleared grass overlay */
+/* Beautiful wave ripple effects */
+.soilWaves {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 4px;
+  pointer-events: none;
+}
+
+.soilWave {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  background: radial-gradient(ellipse at center,
+    rgba(106, 88, 72, 0.6) 0%,
+    rgba(94, 76, 60, 0.4) 50%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  animation: waveRipple 2s ease-out infinite;
+  animation-delay: calc(var(--wave-index) * 0.3s);
+}
+
+@keyframes waveRipple {
+  0% {
+    width: 40px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  100% {
+    width: 200px;
+    opacity: 0;
+  }
+}
+
+/* Processing energy glow at the spade point */
+.processingGlow {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 30px;
+  background: radial-gradient(ellipse at center,
+    rgba(212, 168, 75, 0.4) 0%,
+    rgba(212, 168, 75, 0.2) 40%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  animation: energyPulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes energyPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.2);
+  }
+}
+
+/* Cleared grass overlay - matches processed soil width */
 .clearedOverlay {
   position: absolute;
   top: calc(50% - 20px);
+  right: 0;
+  left: calc(50% - 25px);
   height: 22px;
-  background: linear-gradient(180deg, 
+  background: linear-gradient(180deg,
     #2a3a4a 0%,
     #6a5848 100%
   );
   pointer-events: none;
-  animation: loosenedFollow 18s linear infinite;
 }
 
 /* === MACHINE ASSEMBLY === */
 .machineAssembly {
   position: absolute;
   bottom: 50%;
-  right: 100px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  animation: machineMove 18s linear infinite;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+  z-index: 30;
 }
 
-@keyframes machineMove {
-  0% { transform: translateX(100px); }
-  100% { transform: translateX(-750px); }
+/* Smooth machine shadow on soil */
+.machineAssembly::before {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 10%;
+  right: 10%;
+  height: 12px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.35) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(4px);
+  z-index: -1;
 }
 
 /* Connection bar */
@@ -203,9 +280,32 @@
   border-radius: 50%;
   border: 4px solid var(--color-gold, #D4A84B);
   z-index: 15;
-  box-shadow: 
+  box-shadow:
     0 4px 16px rgba(0,0,0,0.4),
-    inset 0 2px 4px rgba(255,255,255,0.1);
+    inset 0 2px 4px rgba(255,255,255,0.1),
+    0 0 20px rgba(212, 168, 75, 0.3);
+  overflow: hidden;
+}
+
+.rotorDisc::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 70%
+  );
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(0deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(360deg); }
 }
 
 .rotorCenter {
@@ -276,37 +376,48 @@
   box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
 }
 
-/* Particles */
+/* Particles - flying soil chunks (enhanced visibility) */
 .particles {
   position: absolute;
   bottom: -12px;
-  left: 0;
-  width: 90px;
-  height: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 80px;
   pointer-events: none;
+  z-index: 25;
 }
 
 .particle {
   position: absolute;
-  background: #5a4a3a;
+  background: radial-gradient(circle, #8a7058 0%, #6a5848 50%, #5a4a3a 100%);
   border-radius: 50%;
-  animation: particleFly 0.6s ease-out infinite;
-  animation-delay: calc(var(--particle-index) * 0.05s);
+  box-shadow:
+    0 3px 8px rgba(0,0,0,0.5),
+    inset 0 1px 2px rgba(255,255,255,0.2);
+  animation: particleSpray 1s ease-out infinite;
+  animation-delay: calc(var(--particle-index) * 0.12s);
 }
 
-.particle:nth-child(1) { width: 5px; height: 5px; left: 15%; }
-.particle:nth-child(2) { width: 6px; height: 6px; left: 30%; }
-.particle:nth-child(3) { width: 4px; height: 4px; left: 45%; }
-.particle:nth-child(4) { width: 5px; height: 5px; left: 60%; }
-.particle:nth-child(5) { width: 4px; height: 4px; left: 75%; }
+.particle:nth-child(1) { width: 8px; height: 8px; left: 15%; }
+.particle:nth-child(2) { width: 10px; height: 10px; left: 25%; }
+.particle:nth-child(3) { width: 7px; height: 7px; left: 35%; }
+.particle:nth-child(4) { width: 9px; height: 9px; left: 45%; }
+.particle:nth-child(5) { width: 8px; height: 8px; left: 55%; }
+.particle:nth-child(6) { width: 9px; height: 9px; left: 65%; }
+.particle:nth-child(7) { width: 7px; height: 7px; left: 75%; }
+.particle:nth-child(8) { width: 8px; height: 8px; left: 85%; }
 
-@keyframes particleFly {
+@keyframes particleSpray {
   0% {
-    transform: translateY(0) translateX(0) scale(1);
-    opacity: 0.8;
+    transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
   }
   100% {
-    transform: translateY(-35px) translateX(-20px) scale(0.3);
+    transform: translateY(-55px) translateX(calc((var(--particle-index) - 2) * 8px)) rotate(360deg) scale(0.3);
     opacity: 0;
   }
 }
@@ -495,34 +606,55 @@
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
   .animationContainer {
-    height: 300px;
+    height: 220px;
   }
 
   .spadeRotor {
-    width: 110px;
-    height: 110px;
-  }
-
-  .spadeArms {
     width: 100px;
     height: 100px;
   }
 
+  .spadeArms {
+    width: 90px;
+    height: 90px;
+  }
+
   .smoothingRoller {
-    width: 40px;
-    height: 65px;
+    width: 36px;
+    height: 60px;
   }
 
   .rollerWheel {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
 
   .infoLabel {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     padding: 4px 8px;
   }
 
-  .label1 { left: 5%; }
-  .label2 { right: 5%; }
+  .label1 { left: 5%; top: 30px; }
+  .label2 { right: 5%; top: 30px; }
+  .label3 { bottom: 40px; }
+}
+
+@media (max-width: 480px) {
+  .animationContainer {
+    height: 200px;
+  }
+
+  .machineAssembly {
+    right: 60px;
+  }
+
+  .spadeRotor {
+    width: 85px;
+    height: 85px;
+  }
+
+  .infoLabel {
+    font-size: 0.5rem;
+    padding: 3px 6px;
+  }
 }

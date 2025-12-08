@@ -40,6 +40,15 @@ export default function SolutionLayout() {
     }
   }, [])
 
+  const scrollToGuide = useCallback(() => {
+    const element = document.getElementById('application-guide')
+    if (element) {
+      const yOffset = -100
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
+  }, [])
+
   const openFieldModal = (modelId: ModelId) => {
     setModalModelId(modelId)
     setModalOpen(true)
@@ -72,9 +81,10 @@ export default function SolutionLayout() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            <HubFolder 
+            <HubFolder
               onScrollToOperation={scrollToOperation}
               onScrollToModel={scrollToModel}
+              onScrollToGuide={scrollToGuide}
             />
           </motion.div>
         </header>

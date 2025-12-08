@@ -73,19 +73,68 @@
 .particle:nth-child(6) { left: 40%; top: 80%; }
 
 @keyframes particleFloat {
-  0%, 100% { 
-    opacity: 0; 
-    transform: translateY(0) scale(0.5); 
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
   }
-  20% { 
-    opacity: 0.6; 
+  20% {
+    opacity: 0.6;
   }
-  50% { 
-    opacity: 0.8; 
-    transform: translateY(-30px) scale(1); 
+  50% {
+    opacity: 0.8;
+    transform: translateY(-30px) scale(1);
   }
-  80% { 
-    opacity: 0.4; 
+  80% {
+    opacity: 0.4;
+  }
+}
+
+/* Orbit ring animation */
+.hubScene::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 420px;
+  height: 420px;
+  border: 1px solid rgba(212, 168, 75, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: orbitPulse 6s ease-in-out infinite;
+}
+
+.hubScene::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 520px;
+  height: 520px;
+  border: 1px dashed rgba(212, 168, 75, 0.06);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: orbitSpin 30s linear infinite;
+}
+
+@keyframes orbitPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes orbitSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
@@ -178,6 +227,38 @@
 
 .hubFolder:hover .hubFront {
   border-color: var(--color-gold);
+}
+
+/* Shine sweep effect on hover */
+.hubFront .shine {
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(212, 168, 75, 0.08) 40%,
+    rgba(212, 168, 75, 0.15) 50%,
+    rgba(212, 168, 75, 0.08) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+.hubFolder:hover .hubFront .shine {
+  animation: shineSweep 1.5s ease-out forwards;
+}
+
+@keyframes shineSweep {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 150%;
+  }
 }
 
 /* Grid pattern */
@@ -379,15 +460,21 @@
 
 .navLeft {
   right: calc(50% + 220px);
-  top: 50%;
+  top: calc(50% - 55px);
   transform: translateY(-50%);
 }
 
 .navRight {
   left: calc(50% + 220px);
-  top: 50%;
+  top: calc(50% - 5px);
   transform: translateY(-50%);
   gap: 0.75rem;
+}
+
+.navLeftLower {
+  right: calc(50% + 220px);
+  top: calc(50% + 60px);
+  transform: translateY(-50%);
 }
 
 /* Staggered layout for model folders */
@@ -459,6 +546,16 @@
 .miniFolderTabBlue {
   background: linear-gradient(180deg, #6B7A8B 0%, #4a5a6b 100%);
   color: #fff;
+}
+
+.miniFolderTabPurple {
+  background: linear-gradient(180deg, #9B7AC9 0%, #7B5AA9 100%);
+  color: #fff;
+}
+
+.miniFolderTabGold {
+  background: linear-gradient(180deg, var(--color-gold) 0%, #C49A3D 100%);
+  color: var(--color-earth-900);
 }
 
 /* Mini Folder Back */
@@ -629,6 +726,42 @@
   border-color: #6B7A8B;
 }
 
+.miniFolderPurple:hover .miniFolderFront {
+  border-color: #9B7AC9;
+}
+
+.miniFolderGold:hover .miniFolderFront {
+  border-color: var(--color-gold);
+}
+
+/* Purple folder icon styling */
+.miniFolderPurple .miniFolderIcon {
+  background: rgba(155, 122, 201, 0.15);
+  border: 1px solid rgba(155, 122, 201, 0.3);
+  color: #9B7AC9;
+}
+
+.miniFolderPurple:hover .miniFolderIcon {
+  background: linear-gradient(135deg, #9B7AC9 0%, #7B5AA9 100%);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(155, 122, 201, 0.5);
+}
+
+/* Gold folder icon styling */
+.miniFolderIconGold {
+  background: rgba(212, 168, 75, 0.15) !important;
+  border: 1px solid rgba(212, 168, 75, 0.3) !important;
+  color: var(--color-gold) !important;
+}
+
+.miniFolderGold:hover .miniFolderIconGold {
+  background: linear-gradient(135deg, var(--color-gold) 0%, #C49A3D 100%) !important;
+  color: var(--color-earth-900) !important;
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(212, 168, 75, 0.5);
+}
+
 /* =============================================
    SVG CONNECTION LINES
    ============================================= */
@@ -642,13 +775,19 @@
 
 .connectionSvgLeft {
   right: calc(50% + 140px);
-  top: calc(50% - 25px);
+  top: calc(50% - 55px);
   width: 100px;
 }
 
 .connectionSvgRight {
   left: calc(50% + 140px);
-  top: calc(50% + 25px);
+  top: calc(50% - 5px);
+  width: 100px;
+}
+
+.connectionSvgLeftLower {
+  right: calc(50% + 140px);
+  top: calc(50% + 60px);
   width: 100px;
 }
 
@@ -663,6 +802,16 @@
 .connectionDot {
   fill: var(--color-gold);
   filter: drop-shadow(0 0 8px rgba(212, 168, 75, 0.8));
+}
+
+.connectionPathPurple {
+  stroke: #9B7AC9;
+  filter: drop-shadow(0 0 8px rgba(155, 122, 201, 0.6));
+}
+
+.connectionDotPurple {
+  fill: #9B7AC9;
+  filter: drop-shadow(0 0 10px rgba(155, 122, 201, 0.9));
 }
 
 /* =============================================
@@ -694,6 +843,56 @@
   background: radial-gradient(circle, rgba(107, 122, 139, 0.3) 0%, transparent 70%);
 }
 
+.miniFolderGlowPurple {
+  position: absolute;
+  inset: -25px;
+  border-radius: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(155, 122, 201, 0.4) 0%, transparent 70%);
+}
+
+.miniFolderPurple:hover .miniFolderGlowPurple {
+  opacity: 1;
+}
+
+/* Floating sparkles effect */
+.floatingSparkles {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #9B7AC9;
+  filter: drop-shadow(0 0 4px rgba(155, 122, 201, 0.8));
+  pointer-events: none;
+}
+
+.floatingSparklesGold {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: var(--color-gold);
+  filter: drop-shadow(0 0 4px rgba(212, 168, 75, 0.8));
+  pointer-events: none;
+}
+
+/* Gold glow effect */
+.miniFolderGlowGold {
+  position: absolute;
+  inset: -25px;
+  border-radius: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(212, 168, 75, 0.35) 0%, transparent 70%);
+}
+
+.miniFolderGold:hover .miniFolderGlowGold {
+  opacity: 1;
+}
+
 /* Dimmed state for non-hovered folders */
 .miniFolderDimmed {
   opacity: 0.4;
@@ -706,7 +905,7 @@
    ============================================= */
 @media (max-width: 1200px) {
   .hubScene {
-    min-height: 650px;
+    min-height: 750px;
     flex-direction: column;
   }
 
@@ -720,10 +919,18 @@
   .navRight {
     left: 50%;
     top: auto;
-    bottom: 30px;
+    bottom: 100px;
     transform: translateX(-50%);
     flex-direction: row;
     gap: 0.75rem;
+  }
+
+  .navLeftLower {
+    right: auto;
+    left: 50%;
+    top: auto;
+    bottom: 20px;
+    transform: translateX(-50%);
   }
 
   /* Reset stagger on tablet */
