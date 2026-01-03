@@ -11,6 +11,7 @@ import { useParallax } from '@/hooks/useParallax'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 import { TextReveal } from '@/components/ui/TextReveal'
+import PageBadge from '@/components/ui/PageBadge'
 
 export default function Hero() {
   const { style: parallaxStyle } = useParallax({ speed: 0.3, maxOffset: 150 })
@@ -66,7 +67,7 @@ export default function Hero() {
     <header className={styles.hero}>
       <div className={styles.heroBg} style={parallaxStyle}>
         <Image
-          src="/images/hero-bg-final.png"
+          src="/images/hero-bg-final_new.png"
           alt="Ásógép munkában - kontrasztos mezőgazdasági tájkép"
           fill
           priority
@@ -77,13 +78,11 @@ export default function Hero() {
       </div>
       <div className={styles.heroContent}>
         <motion.div
-          className={styles.heroBadge}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <span>Neumann János Egyetem × Agroskill Kft.</span>
-          <span className={styles.badgeYear}>2025</span>
+          <PageBadge number="01" label="FŐOLDAL" />
         </motion.div>
 
         <h1 className={styles.heroTitle}>

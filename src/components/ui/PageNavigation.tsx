@@ -2,7 +2,6 @@
 
 import { useEffect, useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import styles from './PageNavigation.module.css'
 
@@ -11,10 +10,7 @@ const pages = [
   { path: '/problema', label: 'Probléma' },
   { path: '/technologia', label: 'Technológia' },
   { path: '/kutatas', label: 'Kutatás' },
-  { path: '/eredmenyek', label: 'Eredmények' },
 ]
-
-const lineWidths = [24, 40, 32, 20]
 
 export default function PageNavigation() {
   const pathname = usePathname()
@@ -46,111 +42,31 @@ export default function PageNavigation() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [prevPage, nextPage, handleNavigate])
 
-  const isLightPage = pathname === '/problema' || pathname === '/kutatas'
-
   return (
     <>
-      {/* Left Navigation Zone */}
-      <AnimatePresence>
-        {prevPage && (
-          <motion.div
-            key="prev-zone"
-            className={`${styles.navZone} ${styles.leftZone} ${isLightPage ? styles.lightMode : ''}`}
-            onClick={() => handleNavigate(prevPage.path)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {/* Glow Effect */}
-            <div className={styles.navGlow} />
-            
-            {/* Decorative Lines */}
-            <div className={styles.navLines}>
-              {lineWidths.map((width, i) => (
-                <div
-                  key={i}
-                  className={styles.navLine}
-                  style={{ width, transitionDelay: `${i * 0.05}s` }}
-                />
-              ))}
-            </div>
+      {/* Left Arrow */}
+      {prevPage && (
+        <div
+          className={`${styles.navZone} ${styles.leftZone}`}
+          onClick={() => handleNavigate(prevPage.path)}
+        >
+          <div className={styles.navArrow}>
+            <ChevronLeft size={28} strokeWidth={2} />
+          </div>
+        </div>
+      )}
 
-            {/* Expanding Ring */}
-            <div className={styles.navRing} />
-
-            {/* Button */}
-            <div className={styles.navButton}>
-              <ChevronLeft strokeWidth={1.5} />
-            </div>
-
-            {/* Tooltip */}
-            <span className={styles.tooltip}>{prevPage.label}</span>
-
-            {/* Progress Dots */}
-            <div className={styles.navProgress}>
-              {pages.map((_, i) => (
-                <div
-                  key={i}
-                  className={`${styles.progressDot} ${i === currentIndex ? styles.active : ''}`}
-                  style={{ transitionDelay: `${i * 0.05}s` }}
-                />
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Right Navigation Zone */}
-      <AnimatePresence>
-        {nextPage && (
-          <motion.div
-            key="next-zone"
-            className={`${styles.navZone} ${styles.rightZone} ${isLightPage ? styles.lightMode : ''}`}
-            onClick={() => handleNavigate(nextPage.path)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {/* Glow Effect */}
-            <div className={styles.navGlow} />
-            
-            {/* Decorative Lines */}
-            <div className={styles.navLines}>
-              {lineWidths.map((width, i) => (
-                <div
-                  key={i}
-                  className={styles.navLine}
-                  style={{ width, transitionDelay: `${i * 0.05}s` }}
-                />
-              ))}
-            </div>
-
-            {/* Expanding Ring */}
-            <div className={styles.navRing} />
-
-            {/* Button */}
-            <div className={styles.navButton}>
-              <ChevronRight strokeWidth={1.5} />
-            </div>
-
-            {/* Tooltip */}
-            <span className={styles.tooltip}>{nextPage.label}</span>
-
-            {/* Progress Dots */}
-            <div className={styles.navProgress}>
-              {pages.map((_, i) => (
-                <div
-                  key={i}
-                  className={`${styles.progressDot} ${i === currentIndex ? styles.active : ''}`}
-                  style={{ transitionDelay: `${i * 0.05}s` }}
-                />
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Right Arrow */}
+      {nextPage && (
+        <div
+          className={`${styles.navZone} ${styles.rightZone}`}
+          onClick={() => handleNavigate(nextPage.path)}
+        >
+          <div className={styles.navArrow}>
+            <ChevronRight size={28} strokeWidth={2} />
+          </div>
+        </div>
+      )}
     </>
   )
 }

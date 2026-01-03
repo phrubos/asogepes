@@ -29,7 +29,7 @@ function WaterDropAnimation() {
             left: `${20 + i * 25}%`,
             width: 8,
             height: 12,
-            background: 'linear-gradient(180deg, rgba(107, 139, 94, 0.6), rgba(107, 139, 94, 0.2))',
+            background: 'linear-gradient(180deg, rgba(212, 168, 75, 0.6), rgba(212, 168, 75, 0.2))',
             borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
           }}
           animate={{
@@ -94,12 +94,24 @@ export default function CompactionView() {
 
   return (
     <motion.div 
-      className={styles.gridContainer}
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
     >
+      {/* Section Badge */}
+      <motion.div 
+        className={styles.sectionBadge}
+        initial={{ opacity: 0, x: -10 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        style={{ marginBottom: 'var(--space-2xl)' }}
+      >
+        <span className={styles.badgeNumber}>01</span>
+        <span className={styles.badgeText}>Tömörödés hatásai</span>
+      </motion.div>
+
+      <div className={styles.gridContainer}>
       <div className={styles.leftColumn}>
         <motion.div 
           className={styles.statCard}
@@ -121,7 +133,7 @@ export default function CompactionView() {
               left: 0,
               right: 0,
               height: 6,
-              background: 'linear-gradient(90deg, var(--color-green-light), var(--color-green))',
+              background: 'linear-gradient(90deg, var(--color-gold), var(--color-gold-light, #E8C872))',
               transformOrigin: 'left',
               borderRadius: '6px 6px 0 0',
             }}
@@ -161,7 +173,7 @@ export default function CompactionView() {
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
           >
-            {problemStatistics.irrigation.label} évente. Ennyi vizet kell a talajnak elnyelnie és megtartania szerkezetromlás nélkül.
+            {problemStatistics.irrigation.label}. Ennyi öntözővizet kell a talajfelszínnek elnyelnie és mélyebbre szivárogtatnia.
           </motion.div>
         </motion.div>
 
@@ -188,9 +200,9 @@ export default function CompactionView() {
                     animate={hoveredIndex === index ? 'hover' : 'idle'}
                     style={{ 
                       background: hoveredIndex === index 
-                        ? 'linear-gradient(135deg, var(--color-green-light), var(--color-green))' 
-                        : 'var(--color-cream)',
-                      color: hoveredIndex === index ? '#ffffff' : 'var(--color-green)',
+                        ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-light))' 
+                        : 'rgba(212, 168, 75, 0.15)',
+                      color: hoveredIndex === index ? 'var(--color-earth-900)' : 'var(--color-gold)',
                     }}
                     transition={{ duration: 0.3 }}
                   >
@@ -199,37 +211,13 @@ export default function CompactionView() {
                   <div className={styles.itemContent}>
                     <motion.h3
                       animate={{ 
-                        color: hoveredIndex === index ? 'var(--color-green-dark)' : 'var(--color-earth-900)' 
+                        color: 'var(--color-white)'
                       }}
                       transition={{ duration: 0.2 }}
                     >
                       {challenge.title}
                     </motion.h3>
                     <p>{challenge.description}</p>
-                    
-                    {/* Data badge with micro-animation */}
-                    {challenge.data && (
-                      <motion.span
-                        style={{
-                          display: 'inline-block',
-                          marginTop: '0.75rem',
-                          padding: '0.25rem 0.75rem',
-                          background: 'var(--color-earth-50)',
-                          borderRadius: '100px',
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          color: 'var(--color-earth-600)',
-                        }}
-                        whileHover={{ 
-                          background: 'var(--color-green-light)',
-                          color: 'var(--color-green-dark)',
-                          scale: 1.05,
-                        }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        {challenge.data}
-                      </motion.span>
-                    )}
                   </div>
                 </div>
               </TiltCard>
@@ -268,6 +256,7 @@ export default function CompactionView() {
             </motion.p>
           </motion.div>
         </motion.div>
+      </div>
       </div>
     </motion.div>
   )

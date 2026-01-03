@@ -1,0 +1,242 @@
+/* Temperature Chart Container */
+.container {
+  background: linear-gradient(
+    135deg,
+    rgba(26, 23, 20, 0.95) 0%,
+    rgba(35, 30, 25, 0.98) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: var(--space-xl);
+  margin: var(--space-xl) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Warm gradient overlay */
+.container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 70%, rgba(239, 108, 0, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 70% 30%, rgba(255, 87, 34, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  position: relative;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.titleIcon {
+  color: #FF7043;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-white);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.titleLine {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #FF7043, transparent);
+  margin: 0 auto;
+  transform-origin: center;
+}
+
+/* Chart Area */
+.chartArea {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3xl);
+  padding: var(--space-lg) 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Depth Section */
+.depthSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.depthLabel {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: var(--space-xs) var(--space-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 100px;
+}
+
+/* Bars Row */
+.barsRow {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-md);
+  position: relative;
+}
+
+/* Bar Group */
+.barGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 60px;
+}
+
+.barContainer {
+  width: 52px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  overflow: visible;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 6px 6px 3px 3px;
+  position: relative;
+  transform-origin: bottom;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 6px;
+  min-height: 40px;
+}
+
+.barSpade {
+  background: linear-gradient(
+    180deg,
+    #FF7043 0%,
+    #E64A19 50%,
+    #BF360C 100%
+  );
+  box-shadow:
+    0 4px 15px rgba(255, 112, 67, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.barControl {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.barValue {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-white);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+.barLabel {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  white-space: nowrap;
+  margin-top: var(--space-xs);
+}
+
+/* Difference Badge */
+.diffBadge {
+  position: absolute;
+  right: -40px;
+  top: 20px;
+  padding: var(--space-xs) var(--space-sm);
+  background: rgba(255, 112, 67, 0.15);
+  border: 1px solid rgba(255, 112, 67, 0.3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #FF7043;
+}
+
+/* Explanation */
+.explanation {
+  margin-top: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(255, 112, 67, 0.06);
+  border: 1px solid rgba(255, 112, 67, 0.12);
+  border-radius: var(--radius-md);
+}
+
+.explanation p {
+  margin: 0 auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  max-width: 100%;
+}
+
+.explanation strong {
+  color: #FF7043;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--space-lg);
+  }
+
+  .chartArea {
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .barsRow {
+    justify-content: center;
+  }
+
+  .diffBadge {
+    position: static;
+    margin-left: var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .barContainer {
+    width: 40px;
+    height: 100px;
+  }
+
+  .barValue {
+    font-size: 0.625rem;
+  }
+}

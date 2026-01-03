@@ -1,16 +1,61 @@
 /* ============================================
-   KUTATÁS OLDAL
-   Háttér: világos (cream), zöld akcentusok
+   KUTATÁS OLDAL - Dark Theme
+   Háttér: sötét earth, arany akcentusok
+   Matching Technologia page design
    ============================================ */
 
 .sectionResearch {
-  background: var(--color-cream);
+  background: var(--color-earth-800);
+  color: var(--color-cream);
   min-height: 100vh;
+  position: relative;
+  padding: 0;
+  padding-bottom: var(--space-5xl);
+}
+
+/* Subtle grid background */
+.sectionResearch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* ============================================
-   HERO SZEKCIÓ
+   CTA SZEKCIÓ
    ============================================ */
+.ctaSection {
+  text-align: center;
+  padding: var(--space-4xl) 0 var(--space-5xl);
+  margin-top: var(--space-xl);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  z-index: 1;
+}
+
+.ctaText {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 auto var(--space-xl);
+  max-width: 100%;
+}
+
+/* ============================================
+   LEGACY STYLES (for backward compatibility)
+   ============================================ */
+
+/* Hero - now handled by ResearchHero component */
 .hero {
   padding: var(--space-5xl) 0 var(--space-4xl);
   text-align: center;
@@ -18,26 +63,26 @@
 
 .heroTitle {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
   font-weight: 700;
-  color: var(--color-earth-900);
+  color: var(--color-white);
   margin: 0 0 var(--space-lg);
   line-height: 1.2;
 }
 
 .heroAccent {
-  color: var(--color-green-dark);
+  color: var(--color-gold);
 }
 
 .heroSubtitle {
   font-size: 1.125rem;
-  color: var(--color-earth-600);
+  color: rgba(255, 255, 255, 0.7);
   max-width: 650px;
   margin: 0 auto var(--space-3xl);
   line-height: 1.7;
 }
 
-/* Statisztika kártyák */
+/* Stats - now handled by ResearchHero component */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -51,15 +96,15 @@
   align-items: flex-start;
   gap: var(--space-md);
   padding: var(--space-xl);
-  background: var(--color-white);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(135deg, rgba(26, 23, 20, 0.8) 0%, rgba(35, 30, 25, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   text-align: left;
   transition: all 0.3s ease;
 }
 
 .statCard:hover {
-  border-color: var(--color-green);
+  border-color: rgba(212, 168, 75, 0.3);
 }
 
 .statIcon {
@@ -68,9 +113,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(74, 103, 65, 0.1);
+  background: rgba(212, 168, 75, 0.1);
+  border: 1px solid rgba(212, 168, 75, 0.2);
   border-radius: 12px;
-  color: var(--color-green-dark);
+  color: var(--color-gold);
   flex-shrink: 0;
 }
 
@@ -83,31 +129,29 @@
   font-family: var(--font-display);
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--color-green-dark);
+  color: var(--color-white);
   line-height: 1;
 }
 
 .statLabel {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-earth-800);
+  color: rgba(255, 255, 255, 0.8);
   margin-top: var(--space-xs);
 }
 
 .statSublabel {
   font-size: 0.8125rem;
-  color: var(--color-earth-500);
+  color: rgba(255, 255, 255, 0.5);
   margin-top: 2px;
 }
 
-/* ============================================
-   HELYSZÍNEK SZEKCIÓ
-   ============================================ */
+/* Locations Section Header */
 .locationsSectionHeader {
   text-align: center;
   margin-bottom: var(--space-2xl);
   padding-top: var(--space-2xl);
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .sectionLabel {
@@ -116,7 +160,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--color-green-dark);
+  color: var(--color-gold);
   margin-bottom: var(--space-sm);
 }
 
@@ -124,24 +168,8 @@
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-earth-800);
+  color: var(--color-white);
   margin: 0;
-}
-
-/* ============================================
-   CTA SZEKCIÓ
-   ============================================ */
-.ctaSection {
-  text-align: center;
-  padding: var(--space-4xl) 0;
-  margin-top: var(--space-3xl);
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.ctaText {
-  font-size: 1.25rem;
-  color: var(--color-earth-600);
-  margin: 0 0 var(--space-xl);
 }
 
 /* ============================================
@@ -204,9 +232,15 @@
   }
 
   .ctaSection {
-    padding: var(--space-3xl) 0;
+    padding: var(--space-3xl) 0 var(--space-4xl);
   }
 
+  .ctaText {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
   .ctaText {
     font-size: 1.0625rem;
   }

@@ -1,6 +1,6 @@
 .hero {
     min-height: 100vh;
-    min-height: 100svh; /* Use small viewport height for better mobile support */
+    min-height: 100svh; /* Full viewport height - header overlays */
     display: flex;
     align-items: center;
     justify-content: flex-start;

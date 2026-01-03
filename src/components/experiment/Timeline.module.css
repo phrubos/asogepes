@@ -1,26 +1,90 @@
+/* Modern dark theme chart container */
 .container {
-  background: var(--color-cream);
-  border-radius: var(--radius-xl);
+  background: linear-gradient(
+    135deg,
+    rgba(26, 23, 20, 0.95) 0%,
+    rgba(35, 30, 25, 0.98) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
   padding: var(--space-2xl);
   margin: var(--space-2xl) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle background pattern */
+.container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(212, 168, 75, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(212, 168, 75, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  position: relative;
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-earth-900);
-  text-align: center;
-  margin: 0 0 var(--space-xl);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-white);
+  margin: 0 0 var(--space-sm);
+  letter-spacing: 0.02em;
 }
 
+.titleLine {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  margin: 0 auto;
+  transform-origin: center;
+}
+
+/* Chart area */
+.chartArea {
+  position: relative;
+  padding: var(--space-lg) 0;
+}
+
+/* Grid lines */
+.gridLines {
+  position: absolute;
+  inset: var(--space-lg) 0;
+  pointer-events: none;
+}
+
+.gridLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.06),
+    transparent
+  );
+  transform-origin: left;
+}
+
+/* Timeline */
 .timeline {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: flex-end;
-  gap: var(--space-md);
-  padding: var(--space-xl) 0;
+  gap: var(--space-lg);
+  padding: var(--space-md) 0;
   overflow-x: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .timepoint {
@@ -33,22 +97,24 @@
 }
 
 .month {
-  font-family: var(--font-display);
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--color-earth-700);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
   padding: var(--space-xs) var(--space-md);
-  background: var(--color-white);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 100px;
   margin-bottom: var(--space-md);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  transition: all 0.3s ease;
 }
 
 .bars {
   display: flex;
   gap: var(--space-sm);
-  height: 150px;
+  height: 160px;
   align-items: flex-end;
 }
 
@@ -57,157 +123,280 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-xs);
+  position: relative;
 }
 
 .barLabel {
   font-size: 0.625rem;
-  color: var(--color-earth-500);
+  color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
 }
 
 .barContainer {
-  width: 32px;
-  height: 120px;
-  background: var(--color-earth-200);
-  border-radius: var(--radius-sm);
+  width: 36px;
+  height: 130px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
   position: relative;
   display: flex;
   align-items: flex-end;
+  overflow: hidden;
+}
+
+/* Bar glow effect */
+.barGlow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 80px;
+  border-radius: 50%;
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .bar {
   width: 100%;
-  border-radius: var(--radius-sm);
+  border-radius: 6px 6px 3px 3px;
   position: relative;
+  z-index: 1;
+  transform-origin: bottom;
+  cursor: pointer;
+  transition: filter 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
 }
 
 .barSpade {
-  background: linear-gradient(180deg, var(--color-green), var(--color-green-dark));
+  background: linear-gradient(180deg, var(--color-gold) 0%, #b8943d 100%);
+  box-shadow: 
+    0 4px 15px rgba(212, 168, 75, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .barControl {
-  background: linear-gradient(180deg, var(--color-earth-400), var(--color-earth-600));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.12) 100%);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Value inside bar */
+.barValueInside {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-white);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Shimmer effect */
+.barShimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  pointer-events: none;
 }
 
 .barValue {
+  font-family: var(--font-mono, monospace);
   font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--color-earth-700);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.3s ease;
 }
 
 .connector {
   position: absolute;
-  right: -30px;
+  right: -20px;
   top: 50%;
-  color: var(--color-earth-300);
+  transform: translateY(-50%);
+  color: rgba(212, 168, 75, 0.4);
+  transform-origin: left;
 }
 
+/* Summary */
 .summary {
   display: flex;
   justify-content: center;
-  gap: var(--space-2xl);
+  gap: var(--space-xl);
   margin-top: var(--space-xl);
-  padding-top: var(--space-xl);
-  border-top: 1px solid var(--color-earth-200);
+  padding-top: var(--space-lg);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .summaryItem {
   display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.summaryHeader {
+  display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-lg);
-  border-radius: var(--radius-md);
+}
+
+.summaryDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  position: relative;
+}
+
+.summaryDot::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 5px;
+  background: inherit;
+  opacity: 0.3;
+  filter: blur(3px);
+}
+
+.summarySpade .summaryDot {
+  background: var(--color-gold);
+}
+
+.summaryControl .summaryDot {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .summarySpade {
-  background: rgba(76, 175, 80, 0.1);
-}
-
-.summaryControl {
-  background: rgba(121, 85, 72, 0.1);
+  border-color: rgba(212, 168, 75, 0.2);
 }
 
 .summaryLabel {
-  font-size: 0.875rem;
-  color: var(--color-earth-600);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .summaryValue {
-  font-family: var(--font-display);
-  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-mono, monospace);
+  font-size: 1rem;
   font-weight: 700;
 }
 
 .summaryValue.good {
-  color: var(--color-green-dark);
+  color: #81C784;
 }
 
 .summaryValue.bad {
-  color: #C62828;
+  color: #E57373;
 }
 
+/* Evaluation text in summary */
+.summaryText {
+  margin: var(--space-xs) 0 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 280px;
+}
+
+/* Summary note */
+.summaryNote {
+  text-align: center;
+  margin-top: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(212, 168, 75, 0.08);
+  border: 1px solid rgba(212, 168, 75, 0.15);
+  border-radius: var(--radius-md);
+}
+
+.summaryNote p {
+  margin: 0 auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  text-align: center;
+  max-width: 100%;
+}
+
+/* Explanation */
 .explanation {
-  margin-top: var(--space-xl);
-  padding: var(--space-lg);
-  background: var(--color-cream-light);
+  margin-top: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(255, 255, 255, 0.02);
   border-radius: var(--radius-md);
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-md);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  text-align: center;
 }
 
 .explanationIcon {
-  font-size: 1.25rem;
+  font-size: 1rem;
   flex-shrink: 0;
 }
 
 .explanation p {
-  margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--color-earth-600);
+  margin: 0 auto;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  max-width: 100%;
 }
 
 .explanation strong {
-  color: var(--color-earth-800);
+  color: rgba(255, 255, 255, 0.8);
 }
 
+/* Responsive */
 @media (max-width: 768px) {
-  .timeline {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-lg);
+  .container {
+    padding: var(--space-lg);
   }
 
-  .timepoint {
-    flex-direction: row;
-    justify-content: space-between;
-    min-width: auto;
+  .timeline {
+    gap: var(--space-md);
   }
 
   .bars {
-    height: auto;
-    flex-direction: row;
+    height: 130px;
+    gap: var(--space-xs);
   }
 
   .barContainer {
-    width: 80px;
-    height: 24px;
+    width: 28px;
+    height: 110px;
   }
 
-  .bar {
-    height: 100% !important;
+  .barValueInside {
+    font-size: 0.625rem;
   }
 
-  .barSpade,
-  .barControl {
-    background: linear-gradient(90deg, var(--color-green), var(--color-green-dark));
-  }
-
-  .barControl {
-    background: linear-gradient(90deg, var(--color-earth-400), var(--color-earth-600));
+  .month {
+    font-size: 0.625rem;
+    padding: 4px 8px;
   }
 
   .connector {
@@ -217,5 +406,22 @@
   .summary {
     flex-direction: column;
     gap: var(--space-md);
+  }
+
+  .summaryItem {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .timepoint {
+    flex: 0 0 45%;
   }
 }

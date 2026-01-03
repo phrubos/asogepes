@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Probléma Oldal - V3 Immersive Scroll Design</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-cream: #F8F7F4;
+      --color-earth-900: #2D1F14;
+      --color-earth-800: #4A3728;
+      --color-earth-600: #6B5344;
+      --color-earth-100: #E8E4DE;
+      --color-green: #6B8B5E;
+      --color-green-dark: #4A6B3E;
+      --color-green-light: #8FAF7E;
+      --color-gold: #D4A84B;
+      --color-warning: #E57373;
+      --color-danger: #8B0000;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body) !important;
+      background: var(--color-cream) !important;
+      color: var(--color-earth-900) !important;
+      overflow-x: hidden;
+      line-height: 1.6 !important;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display) !important;
+      line-height: 1.2 !important;
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-green), var(--color-gold));
+      z-index: 1000;
+      box-shadow: 0 0 10px rgba(107, 139, 94, 0.5);
+    }
+
+    /* Section Indicator */
+    .section-indicator {
+      position: fixed;
+      right: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .indicator-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-earth-100);
+      border: 2px solid var(--color-earth-600);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .indicator-dot::after {
+      content: attr(data-label);
+      position: absolute;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-earth-600);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .indicator-dot:hover::after {
+      opacity: 1;
+    }
+
+    .indicator-dot.active {
+      background: var(--color-green);
+      border-color: var(--color-green);
+      transform: scale(1.3);
+    }
+
+    /* Hero Section - Full Screen */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, var(--color-cream) 0%, #EDE9E3 100%);
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .hero-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(107, 139, 94, 0.1) 0%, transparent 70%);
+    }
+
+    .hero-circle-1 {
+      width: 800px;
+      height: 800px;
+      top: -200px;
+      right: -200px;
+    }
+
+    .hero-circle-2 {
+      width: 600px;
+      height: 600px;
+      bottom: -150px;
+      left: -150px;
+      background: radial-gradient(circle, rgba(212, 168, 75, 0.1) 0%, transparent 70%);
+    }
+
+    .hero-content {
+      text-align: center;
+      z-index: 2;
+      max-width: 900px;
+      padding: 2rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 100px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge-number {
+      width: 32px;
+      height: 32px;
+      background: var(--color-green);
+      color: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .hero-badge-text {
+      font-weight: 600;
+      color: var(--color-earth-800);
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 6rem) !important;
+      font-weight: 800 !important;
+      margin-bottom: 1.5rem;
+      line-height: 1 !important;
+    }
+
+    .hero-title .highlight {
+      background: linear-gradient(135deg, var(--color-green) 0%, var(--color-green-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--color-earth-600);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-earth-600);
+      font-size: 0.875rem;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(10px); }
+    }
+
+    .scroll-indicator svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Pinned Section Container */
+    .pinned-container {
+      position: relative;
+      height: 400vh;
+    }
+
+    .pinned-content {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Horizontal Panels */
+    .panels-wrapper {
+      display: flex;
+      width: 400vw;
+      height: 100%;
+    }
+
+    .panel {
+      width: 100vw;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+      position: relative;
+    }
+
+    /* Panel 1: Öntözés */
+    .panel-1 {
+      background: linear-gradient(135deg, #E8F5E3 0%, #D4E8CD 100%);
+    }
+
+    /* Panel 2: Nehézkultivátor */
+    .panel-2 {
+      background: linear-gradient(135deg, #FFF8E7 0%, #F5E6C8 100%);
+    }
+
+    /* Panel 3: Szántás */
+    .panel-3 {
+      background: linear-gradient(135deg, #FFE8E8 0%, #F5D4D4 100%);
+    }
+
+    /* Panel 4: Összehasonlítás */
+    .panel-4 {
+      background: var(--color-earth-900);
+      color: white;
+    }
+
+    .panel-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      max-width: 1200px;
+      width: 100%;
+      align-items: center;
+    }
+
+    .panel-text h2 {
+      font-size: 3rem !important;
+      font-weight: 800 !important;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-text p {
+      font-size: 1.125rem;
+      color: var(--color-earth-600);
+      margin-bottom: 2rem;
+    }
+
+    .panel-4 .panel-text p {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .panel-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: var(--color-green);
+      color: white;
+      border-radius: 12px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-2 .panel-number {
+      background: var(--color-gold);
+      color: var(--color-earth-900);
+    }
+
+    .panel-3 .panel-number {
+      background: var(--color-danger);
+    }
+
+    .panel-4 .panel-number {
+      background: white;
+      color: var(--color-earth-900);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-green);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--color-earth-600);
+    }
+
+    /* Interactive Soil */
+    .soil-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 400px;
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+    }
+
+    .soil-layer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .soil-1 { top: 0; height: 20%; background: linear-gradient(180deg, #8B7355, #7A6548); }
+    .soil-2 { top: 20%; height: 20%; background: linear-gradient(180deg, #6B5344, #5A4538); }
+    .soil-3 { top: 40%; height: 25%; background: linear-gradient(180deg, #4A3728, #3D2D20); }
+    .soil-4 { top: 65%; height: 35%; background: linear-gradient(180deg, #2D1F14, #1A1008); }
+
+    .soil-container.compacted .soil-1 { height: 12%; }
+    .soil-container.compacted .soil-2 { 
+      top: 12%; 
+      height: 35%; 
+      background: linear-gradient(180deg, #3D2D20, #2D1F14);
+    }
+    .soil-container.compacted .soil-3 { top: 47%; height: 20%; }
+    .soil-container.compacted .soil-4 { top: 67%; height: 33%; }
+
+    .depth-scale {
+      position: absolute;
+      right: 15px;
+      top: 0;
+      bottom: 0;
+      width: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1rem 0;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .pressure-indicator {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 25px;
+      height: 180px;
+      background: linear-gradient(180deg, var(--color-green) 0%, var(--color-gold) 50%, var(--color-danger) 100%);
+      border-radius: 12px;
+    }
+
+    .pressure-labels {
+      position: absolute;
+      left: 50px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .water-animation {
+      position: absolute;
+      top: -30px;
+      left: 0;
+      right: 0;
+      height: 80px;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .water-drop {
+      position: absolute;
+      width: 10px;
+      height: 14px;
+      background: linear-gradient(180deg, rgba(107, 139, 94, 0.9), rgba(107, 139, 94, 0.4));
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    }
+
+    .soil-toggle {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 100px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--color-earth-900);
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .soil-toggle:hover {
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    /* Cultivator Visual */
+    .cultivator-visual {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .cultivator-image {
+      width: 100%;
+      border-radius: 24px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+    }
+
+    .cultivator-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+      border-radius: 24px;
+    }
+
+    .cultivator-labels {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .cultivator-label {
+      background: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-earth-900);
+    }
+
+    /* Problems List */
+    .problems-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .problem-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: white;
+      border-radius: 16px;
+      border-left: 4px solid var(--color-warning);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .problem-item:hover {
+      transform: translateX(10px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .problem-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(229, 115, 115, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-warning);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .problem-text {
+      font-weight: 500;
+      color: var(--color-earth-800);
+    }
+
+    /* Ploughing Visual */
+    .ploughing-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .ploughing-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      border-left: 4px solid var(--color-danger);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .ploughing-card:hover {
+      transform: translateX(10px);
+    }
+
+    .ploughing-card h4 {
+      font-size: 1.125rem !important;
+      font-weight: 700 !important;
+      margin-bottom: 0.5rem;
+      color: var(--color-earth-900);
+    }
+
+    .ploughing-card p {
+      font-size: 0.875rem;
+      color: var(--color-earth-600);
+      margin: 0;
+    }
+
+    .ploughing-badge {
+      display: inline-block;
+      background: rgba(139, 0, 0, 0.1);
+      color: var(--color-danger);
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 0.75rem;
+    }
+
+    /* Comparison Grid */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .compare-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .compare-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-5px);
+    }
+
+    .compare-card.negative {
+      border-top: 4px solid var(--color-warning);
+    }
+
+    .compare-card.positive {
+      border-top: 4px solid var(--color-green);
+    }
+
+    .compare-card h3 {
+      font-size: 1.5rem !important;
+      font-weight: 700 !important;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .compare-card.negative h3 {
+      color: var(--color-warning);
+    }
+
+    .compare-card.positive h3 {
+      color: var(--color-green-light);
+    }
+
+    .compare-list {
+      list-style: none;
+    }
+
+    .compare-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.95rem;
+    }
+
+    .compare-list li:last-child {
+      border-bottom: none;
+    }
+
+    .icon-check { color: var(--color-green-light); }
+    .icon-x { color: var(--color-warning); }
+
+    /* CTA Section */
+    .cta-section {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem;
+      background: linear-gradient(180deg, var(--color-cream) 0%, #E8E4DE 100%);
+    }
+
+    .cta-card {
+      background: white;
+      border-radius: 32px;
+      padding: 4rem;
+      text-align: center;
+      max-width: 700px;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--color-green), var(--color-gold));
+    }
+
+    .cta-card h2 {
+      font-size: 2.5rem !important;
+      font-weight: 800 !important;
+      margin-bottom: 1rem;
+    }
+
+    .cta-card p {
+      font-size: 1.125rem;
+      color: var(--color-earth-600);
+      margin-bottom: 2rem;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.25rem 2.5rem;
+      background: var(--color-green);
+      color: white;
+      border: none;
+      border-radius: 100px;
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .cta-btn:hover {
+      background: var(--color-green-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(107, 139, 94, 0.3);
+    }
+
+    .cta-btn svg {
+      transition: transform 0.3s ease;
+    }
+
+    .cta-btn:hover svg {
+      transform: translateX(5px);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .panel-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+      }
+
+      .panel-text {
+        order: 1;
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-indicator {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem !important;
+      }
+
+      .panel-text h2 {
+        font-size: 2rem !important;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .soil-container {
+        height: 300px;
+      }
+
+      .cta-card {
+        padding: 2.5rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Section Indicator -->
+  <nav class="section-indicator">
+    <div class="indicator-dot active" data-section="hero" data-label="Bevezető"></div>
+    <div class="indicator-dot" data-section="panel-1" data-label="Öntözés"></div>
+    <div class="indicator-dot" data-section="panel-2" data-label="Nehézkultivátor"></div>
+    <div class="indicator-dot" data-section="panel-3" data-label="Szántás"></div>
+    <div class="indicator-dot" data-section="panel-4" data-label="Összehasonlítás"></div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="hero">
+    <div class="hero-bg">
+      <div class="hero-circle hero-circle-1"></div>
+      <div class="hero-circle hero-circle-2"></div>
+    </div>
+    
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="hero-badge-number">01</div>
+        <span class="hero-badge-text">A Probléma</span>
+      </div>
+      
+      <h1 class="hero-title">
+        Miért veszítjük el<br>a <span class="highlight">gyökértömeget</span>?
+      </h1>
+      
+      <p class="hero-subtitle">
+        Az intenzív öntözés és a nehéz gépek taposása láthatatlanul teszi tönkre a talajszerkezetet. Három fő ellenséggel küzdünk.
+      </p>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>Görgess le</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Horizontal Scroll Panels -->
+  <div class="pinned-container" id="pinnedContainer">
+    <div class="pinned-content">
+      <div class="panels-wrapper" id="panelsWrapper">
+        
+        <!-- Panel 1: Öntözés -->
+        <div class="panel panel-1" id="panel-1">
+          <div class="panel-content">
+            <div class="panel-text">
+              <div class="panel-number">01</div>
+              <h2>Az öntözés okozta tömörödés</h2>
+              <p>Ennyi öntözővizet kell a talajfelszínnek elnyelnie és mélyebbre szivárogtatnia egy átlagos kertészeti szezonban.</p>
+              
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-value">20-40 mm</div>
+                  <div class="stat-label">Gyakori öntözés hatása</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value" style="color: var(--color-gold);">20 bar</div>
+                  <div class="stat-label">Kritikus tömörödési szint</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value" style="color: var(--color-warning);">30 nap</div>
+                  <div class="stat-label">alatt kritikus</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-value">5-15 cm</div>
+                  <div class="stat-label">Tömörödött réteg mélysége</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="soil-container" id="soilContainer">
+              <div class="water-animation" id="waterAnimation"></div>
+              <div class="soil-layer soil-1"></div>
+              <div class="soil-layer soil-2"></div>
+              <div class="soil-layer soil-3"></div>
+              <div class="soil-layer soil-4"></div>
+              
+              <div class="depth-scale">
+                <span>0 cm</span>
+                <span>5 cm</span>
+                <span>15 cm</span>
+                <span>25 cm</span>
+                <span>40 cm</span>
+              </div>
+
+              <div class="pressure-indicator"></div>
+              <div class="pressure-labels">
+                <span>0 bar</span>
+                <span>8 bar</span>
+                <span>20 bar</span>
+                <span>50+ bar</span>
+              </div>
+
+              <button class="soil-toggle" id="soilToggle">
+                <span>🔄</span>
+                <span>Optimális ↔ Tömörödött</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Nehézkultivátor -->
+        <div class="panel panel-2" id="panel-2">
+          <div class="panel-content">
+            <div class="panel-text">
+              <div class="panel-number">02</div>
+              <h2>A nehézkultivátor korlátai</h2>
+              <p>A nehézkultivátor jól lazít, de nem tudja bedolgozni a szármaradványokat és sok esetben rögösít.</p>
+              
+              <div class="problems-list">
+                <div class="problem-item">
+                  <div class="problem-icon">✗</div>
+                  <span class="problem-text">Szármaradványok a felszínen maradnak</span>
+                </div>
+                <div class="problem-item">
+                  <div class="problem-icon">✗</div>
+                  <span class="problem-text">Lassú és részleges csírázás tarlóhántás után</span>
+                </div>
+                <div class="problem-item">
+                  <div class="problem-icon">✗</div>
+                  <span class="problem-text">Egyenetlen lazítás, főként a kapák nyomában</span>
+                </div>
+                <div class="problem-item">
+                  <div class="problem-icon">✗</div>
+                  <span class="problem-text">Ültetésre csak kombinátoros után alkalmas</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="cultivator-visual">
+              <img src="/inputs/problema/kép1_retusalt.png" alt="Nehézkultivátor" class="cultivator-image" onerror="this.src='https://placehold.co/500x350/8B7355/ffffff?text=Nehézkultivátor'">
+              <div class="cultivator-overlay"></div>
+              <div class="cultivator-labels">
+                <span class="cultivator-label">Mélységjelölő</span>
+                <span class="cultivator-label">Nyomás színskála</span>
+                <span class="cultivator-label">25-30 cm árkok</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 3: Szántás -->
+        <div class="panel panel-3" id="panel-3">
+          <div class="panel-content">
+            <div class="panel-text">
+              <div class="panel-number">03</div>
+              <h2>A szántás korlátai</h2>
+              <p>A rendszeres szántás ma már közismerten inkább károsnak tekintett. Fent optimálisan forgat, viszont a művelt réteg alatt túl erősen tömörít.</p>
+            </div>
+            
+            <div class="ploughing-visual">
+              <div class="ploughing-card">
+                <h4>Eketalp képződés</h4>
+                <p>A művelt réteg alatt tömör, áthatolhatatlan réteg alakul ki</p>
+                <span class="ploughing-badge">20+ bar nyomás</span>
+              </div>
+              <div class="ploughing-card">
+                <h4>Rétegek felcserélése</h4>
+                <p>A talajélet és a humusz károsodik a forgatás miatt</p>
+                <span class="ploughing-badge">Talajélet károsodás</span>
+              </div>
+              <div class="ploughing-card">
+                <h4>Rögösebb talajfelszín</h4>
+                <p>Nehezebben elmunkálható, lassabban melegszik fel</p>
+                <span class="ploughing-badge">2-4°C különbség</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 4: Összehasonlítás -->
+        <div class="panel panel-4" id="panel-4">
+          <div class="comparison-grid">
+            <div class="compare-card negative">
+              <h3>
+                <span class="icon-x">✗</span>
+                Szántott talaj
+              </h3>
+              <ul class="compare-list">
+                <li><span class="icon-x">✗</span> Eketalp képződik</li>
+                <li><span class="icon-x">✗</span> A gyökérzet fejlődése korlátozott</li>
+                <li><span class="icon-x">✗</span> A víz mélyebbre jutása korlátozott</li>
+                <li><span class="icon-x">✗</span> A talajélet károsodik</li>
+                <li><span class="icon-x">✗</span> Rögösebb talajfelszín</li>
+                <li><span class="icon-x">✗</span> Lassabb felmelegedés</li>
+              </ul>
+            </div>
+
+            <div class="compare-card positive">
+              <h3>
+                <span class="icon-check">✓</span>
+                Ásógépezett talaj
+              </h3>
+              <ul class="compare-list">
+                <li><span class="icon-check">✓</span> Egyenletesen laza szerkezet</li>
+                <li><span class="icon-check">✓</span> A gyökerek szabadon fejlődnek</li>
+                <li><span class="icon-check">✓</span> A víz mozgása nem korlátozott</li>
+                <li><span class="icon-check">✓</span> A talajélet aktívabb</li>
+                <li><span class="icon-check">✓</span> Szármaradványok a felszín alatt</li>
+                <li><span class="icon-check">✓</span> Vetés és ültetés rögtön kezdődhet</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-card">
+      <h2>Van kiút a tömörödésből?</h2>
+      <p>Van-e olyan módszer, amely lazít anélkül, hogy forgatna?</p>
+      <a href="/technologia" class="cta-btn">
+        Ismerje meg a technológiát
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Progress bar
+    gsap.to('.progress-bar', {
+      width: '100%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: 'body',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.3
+      }
+    });
+
+    // Horizontal scroll
+    const panels = gsap.utils.toArray('.panel');
+    const panelsWrapper = document.getElementById('panelsWrapper');
+
+    gsap.to(panelsWrapper, {
+      x: () => -(panelsWrapper.scrollWidth - window.innerWidth),
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.pinned-container',
+        start: 'top top',
+        end: () => '+=' + (panelsWrapper.scrollWidth - window.innerWidth),
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
+        onUpdate: (self) => {
+          // Update section indicators
+          const progress = self.progress;
+          const dots = document.querySelectorAll('.indicator-dot');
+          
+          dots.forEach((dot, i) => {
+            if (i === 0) {
+              dot.classList.toggle('active', progress < 0.05);
+            } else {
+              const panelProgress = (i - 1) / (panels.length - 1);
+              const nextPanelProgress = i / (panels.length - 1);
+              dot.classList.toggle('active', progress >= panelProgress && progress < nextPanelProgress);
+            }
+          });
+          
+          // Last dot
+          if (progress >= 0.95) {
+            dots.forEach(d => d.classList.remove('active'));
+            dots[dots.length - 1].classList.add('active');
+          }
+        }
+      }
+    });
+
+    // Hero parallax
+    gsap.to('.hero-circle-1', {
+      y: -100,
+      scrollTrigger: {
+        trigger: '.hero-section',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    gsap.to('.hero-circle-2', {
+      y: -50,
+      scrollTrigger: {
+        trigger: '.hero-section',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    // Water drops animation
+    const waterAnimation = document.getElementById('waterAnimation');
+    function createDrop() {
+      const drop = document.createElement('div');
+      drop.className = 'water-drop';
+      drop.style.left = (10 + Math.random() * 80) + '%';
+      drop.style.top = '-20px';
+      waterAnimation.appendChild(drop);
+
+      gsap.to(drop, {
+        y: 100,
+        opacity: 0,
+        duration: 1 + Math.random() * 0.5,
+        ease: 'power1.in',
+        onComplete: () => drop.remove()
+      });
+    }
+    setInterval(createDrop, 200);
+
+    // Soil toggle
+    const soilContainer = document.getElementById('soilContainer');
+    const soilToggle = document.getElementById('soilToggle');
+    let isCompacted = false;
+
+    soilToggle.addEventListener('click', () => {
+      isCompacted = !isCompacted;
+      soilContainer.classList.toggle('compacted', isCompacted);
+      
+      gsap.to(soilToggle, {
+        scale: 0.95,
+        duration: 0.1,
+        yoyo: true,
+        repeat: 1
+      });
+    });
+
+    // Panel content animations
+    panels.forEach((panel, i) => {
+      const content = panel.querySelector('.panel-content');
+      if (content) {
+        gsap.from(content.children, {
+          y: 50,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: panel,
+            containerAnimation: gsap.getById ? undefined : undefined,
+            start: 'left center',
+            toggleActions: 'play none none reverse',
+            horizontal: true
+          }
+        });
+      }
+    });
+
+    // Stat cards hover
+    document.querySelectorAll('.stat-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+          y: -8,
+          boxShadow: '0 15px 50px rgba(0, 0, 0, 0.15)',
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          y: 0,
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
+          duration: 0.3
+        });
+      });
+    });
+
+    // Problem items animation
+    document.querySelectorAll('.problem-item').forEach((item, i) => {
+      item.addEventListener('mouseenter', () => {
+        gsap.to(item, {
+          x: 15,
+          boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+
+      item.addEventListener('mouseleave', () => {
+        gsap.to(item, {
+          x: 0,
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
+          duration: 0.3
+        });
+      });
+    });
+
+    // Section indicator click
+    document.querySelectorAll('.indicator-dot').forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        if (i === 0) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const containerTop = document.getElementById('pinnedContainer').offsetTop;
+          const panelWidth = window.innerWidth;
+          const scrollTo = containerTop + (i - 1) * panelWidth;
+          window.scrollTo({ top: scrollTo, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // CTA animation
+    gsap.from('.cta-card', {
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.cta-section',
+        start: 'top 80%'
+      }
+    });
+  </script>
+</body>
+</html>

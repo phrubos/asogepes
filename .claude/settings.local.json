@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "WebSearch",
+      "WebFetch(domain:cartographyvectors.com)",
+      "WebFetch(domain:simplemaps.com)",
+      "WebFetch(domain:d-maps.com)",
+      "WebFetch(domain:d-maps.eu)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

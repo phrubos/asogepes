@@ -106,8 +106,29 @@
   border-radius: 100px;
 }
 
+/* Icon container for glow effect */
+.iconContainer {
+  position: relative;
+  margin-bottom: var(--space-lg);
+}
+
+.iconGlow {
+  position: absolute;
+  top: 50%;
+  left: 36px;
+  transform: translate(-50%, -50%);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* Icon */
 .iconWrapper {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,8 +136,24 @@
   height: 72px;
   border: 1px solid;
   border-radius: var(--radius-md);
-  margin-bottom: var(--space-lg);
   transition: all 0.3s ease;
+}
+
+/* Shimmer effect */
+.shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Title */
@@ -260,6 +297,12 @@
   }
 
   .iconWrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .iconGlow {
+    left: 30px;
     width: 60px;
     height: 60px;
   }

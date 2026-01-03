@@ -1,6 +1,18 @@
 .footer {
-    background: var(--color-earth-900);
+    background: linear-gradient(180deg, rgba(20, 17, 14, 0.95) 0%, rgba(10, 8, 6, 1) 100%);
     padding: var(--space-4xl) 0;
+    border-top: 1px solid rgba(212, 168, 75, 0.15);
+    position: relative;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.3), transparent);
 }
 
 .footerContent {

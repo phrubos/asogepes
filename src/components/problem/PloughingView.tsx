@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Layers, Activity, Leaf, Thermometer, AlertTriangle } from 'lucide-react'
-import SoilComparison from '@/components/problem/SoilComparison'
+import PloughingSoilComparison from '@/components/problem/PloughingSoilComparison'
 import TiltCard from '@/components/ui/TiltCard'
 import { ploughingProblems } from '@/lib/data'
 import styles from './ProblemNew.module.css'
@@ -80,6 +80,18 @@ export default function PloughingView() {
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
     >
+      {/* Section Badge */}
+      <motion.div 
+        className={styles.sectionBadge}
+        initial={{ opacity: 0, x: -10 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        style={{ marginBottom: 'var(--space-2xl)' }}
+      >
+        <span className={styles.badgeNumber}>03</span>
+        <span className={styles.badgeText}>Szántás korlátai</span>
+      </motion.div>
+
       {/* Kiemelt idézet blokk */}
       <motion.div 
         className={styles.quoteBlock}
@@ -193,7 +205,7 @@ export default function PloughingView() {
                 <motion.h3 
                   className={styles.cardTitle}
                   animate={{ 
-                    color: hoveredCard === index ? 'var(--color-earth-900)' : 'var(--color-earth-800)' 
+                    color: 'var(--color-white)'
                   }}
                 >
                   {problem.title}
@@ -206,7 +218,7 @@ export default function PloughingView() {
                   style={{
                     marginTop: '1.25rem',
                     height: 4,
-                    background: 'var(--color-earth-100)',
+                    background: 'rgba(255, 255, 255, 0.1)',
                     borderRadius: 2,
                     overflow: 'hidden',
                   }}
@@ -229,19 +241,41 @@ export default function PloughingView() {
         ))}
       </div>
 
+      {/* Eke bevezető szekció */}
       <motion.div 
-        className={styles.comparisonWrapper}
+        className={styles.ploughIntroSection}
         variants={itemVariants}
       >
-        <motion.div 
-          className={styles.comparisonCard}
-          whileHover={{ 
-            boxShadow: '0 30px 60px -20px rgba(0,0,0,0.12)',
-          }}
-          transition={{ duration: 0.4 }}
-        >
-          <SoilComparison />
-        </motion.div>
+        <div className={styles.ploughIntroGrid}>
+          <motion.div 
+            className={styles.ploughImageWrapper}
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          >
+            <img 
+              src="/images/eke.jpg" 
+              alt="American mouldboard eke" 
+              className={styles.ploughImage}
+            />
+            <div className={styles.ploughImageOverlay}>
+              <span className={styles.ploughImageLabel}>American mouldboard</span>
+            </div>
+          </motion.div>
+          
+          <div className={styles.ploughIntroText}>
+            <p className={styles.ploughIntroDesc}>
+              A rögösebb és nehezebben elmunkálható talajfelszín megnehezíti a precíz magvetést és 
+              palántaültetést, ezen felül tavasszal lassabban és egyenetlenül melegszik fel az ilyen 
+              talajfelszín, lassítva a tavasszal vetett vagy ültetett kultúrnövények csírázását, kezdeti 
+              vegetatív fejlődését.
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Új prémium talajszelvény összehasonlítás */}
+      <motion.div variants={itemVariants}>
+        <PloughingSoilComparison />
       </motion.div>
     </motion.div>
   )

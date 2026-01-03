@@ -1,0 +1,6 @@
+export { default } from './SoilHeroAlt'
+export { default as SoilHeroAlt } from './SoilHeroAlt'
+export { default as XRayVisualization } from './XRayVisualization'
+export { default as HeroContentAlt } from './HeroContentAlt'
+export { default as NavButtonAlt } from './NavButtonAlt'
+export * from './types'

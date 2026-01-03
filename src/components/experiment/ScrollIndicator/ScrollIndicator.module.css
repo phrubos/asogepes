@@ -1,0 +1,147 @@
+/* ============================================
+   SCROLL INDICATOR - Fixed Right Side Navigation
+   ============================================ */
+
+.indicator {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  padding: var(--space-md);
+}
+
+.track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+  position: relative;
+}
+
+/* Progress Track */
+.progressTrack {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.progressFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(180deg, var(--color-gold), rgba(212, 168, 75, 0.6));
+  transform-origin: top;
+  border-radius: 1px;
+}
+
+/* Dot Button */
+.dot {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.dotInner {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.dot:hover .dotInner {
+  background: rgba(212, 168, 75, 0.8);
+  transform: scale(1.2);
+}
+
+.dotActive .dotInner {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 12px rgba(212, 168, 75, 0.5);
+}
+
+/* Pulse Effect - CSS Animation */
+.dotPulse {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  z-index: 1;
+  animation: pulse 1.5s ease-out infinite;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Label */
+.label {
+  position: absolute;
+  right: 100%;
+  margin-right: var(--space-md);
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  padding: var(--space-xs) var(--space-sm);
+  background: rgba(26, 23, 20, 0.95);
+  border: 1px solid rgba(212, 168, 75, 0.3);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.label::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-left-color: rgba(212, 168, 75, 0.3);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1200px) {
+  .indicator {
+    right: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .indicator {
+    display: none;
+  }
+}

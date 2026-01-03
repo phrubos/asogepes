@@ -12,8 +12,8 @@ const questions = [
     number: '01',
     question: 'Milyen hatással van az ásógép a talajra?',
     answer: 'Tartósabb lazaság, jobb víz- és hőgazdálkodás',
-    link: '/eredmenyek',
-    linkText: 'Eredmények'
+    link: '/kutatas',
+    linkText: 'Kutatás'
   },
   {
     number: '02',
@@ -33,8 +33,8 @@ const questions = [
     number: '04',
     question: 'Melyik művelési módszer a leghatékonyabb?',
     answer: 'Az ásógépes kezelések egyértelműen jobbak',
-    link: '/eredmenyek',
-    linkText: 'Eredmények'
+    link: '/kutatas',
+    linkText: 'Kutatás'
   },
 ]
 

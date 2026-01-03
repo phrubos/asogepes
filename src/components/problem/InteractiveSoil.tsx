@@ -1,421 +1,382 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
-import { ArrowLeftRight, Droplets, Wind, Calendar } from 'lucide-react'
-import Lottie from 'lottie-react'
-import waterDropAnimation from '@/animations/water-drop.json'
-import styles from './InteractiveSoil.module.css'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowLeftRight, Droplets, ArrowDownToLine, Sprout } from 'lucide-react'
 
-// Napok és a hozzájuk tartozó tömörödési szintek
+// --- KONFIGURÁCIÓ & ADATOK ---
+const GROUND_Y = 120 // Talajszint Y koordinátája (pixel)
+const CM_TO_PX = 7   // 1 cm hány pixelnek felel meg
+// Tömörödött réteg: 5cm - 15cm
+const PAN_START_Y = GROUND_Y + (5 * CM_TO_PX)  // 155px
+const PAN_END_Y = GROUND_Y + (15 * CM_TO_PX)   // 225px
+
 const timelineData = [
-  { day: 0, compaction: 0, label: 'Kezdet', penetrometer: 8 },
-  { day: 30, compaction: 25, label: '30 nap', penetrometer: 12 },
-  { day: 60, compaction: 50, label: '60 nap', penetrometer: 16 },
-  { day: 90, compaction: 75, label: '90 nap', penetrometer: 20 },
-  { day: 120, compaction: 100, label: '120 nap', penetrometer: 25 },
+  { day: 0, label: 'Optimális', penetrometer: 8, color: '#4CAF50' },
+  { day: 30, label: '30 nap', penetrometer: 11, color: '#8BC34A' },
+  { day: 60, label: '60 nap', penetrometer: 14, color: '#FFC107' },
+  { day: 90, label: '90 nap', penetrometer: 17, color: '#FF9800' },
+  { day: 120, label: '120 nap után', penetrometer: 20, color: '#D32F2F' },
 ]
 
 export default function InteractiveSoil() {
-  const [dayIndex, setDayIndex] = useState(4) // Alapból a legrosszabb állapot
+  const [dayIndex, setDayIndex] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
+  const [isUserInteracting, setIsUserInteracting] = useState(false)
   
-  // Számított értékek
+  const isCompacted = dayIndex === 4 
   const currentData = timelineData[dayIndex]
-  const isPloughed = dayIndex > 0 // 0 nap = egészséges
 
-  // Root paths
-  const rootPathHealthy = "M100,50 L100,150 C100,200 80,250 60,300 M100,150 C110,200 140,250 150,320 M100,100 C90,120 80,140 70,160"
-  const rootPathDamaged = "M100,50 L100,120 C100,125 110,128 140,125 M100,110 C90,115 60,118 40,115"
-
-  // Particles
-  const particleCount = 8
-  const [particles, setParticles] = useState<Array<{id: number, x: number, type: 'water' | 'air', delay: number}>>([])
-
+  // --- AUTOMATIKUS LOOP ---
   useEffect(() => {
-    const newParticles = Array.from({ length: particleCount * 2 }).map((_, i) => ({
-      id: i,
-      x: 20 + Math.random() * 160,
-      type: i < particleCount ? 'water' : 'air' as 'water' | 'air',
-      delay: Math.random() * 2
-    }))
-    setParticles(newParticles)
-  }, [])
+    let interval: NodeJS.Timeout
+    if (!isHovered && !isUserInteracting) {
+      interval = setInterval(() => {
+        setDayIndex((prev) => (prev === 0 ? 4 : 0))
+      }, 5000)
+    }
+    return () => clearInterval(interval)
+  }, [isHovered, isUserInteracting])
 
-  // Button spring animation
-  const buttonScale = useSpring(1, { stiffness: 400, damping: 20 })
-
+  const handleInteractionStart = () => setIsUserInteracting(true)
+  
   const handleToggle = () => {
-    buttonScale.set(0.95)
-    setTimeout(() => buttonScale.set(1), 100)
-    // Toggle between healthy (0) and worst (4)
+    handleInteractionStart()
     setDayIndex(dayIndex === 0 ? 4 : 0)
   }
-  
-  // Slider change handler
+
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInteractionStart()
     setDayIndex(parseInt(e.target.value))
   }
 
+  // --- PATH DEFINÍCIÓK (A Lényeg) ---
+  // Minden path a (150, 120) pontból indul ki.
+  
+  // 1. SZÁR (Stem) - A földfelszín FELETT (0-120 tartomány)
+  // A szár a talajszinttől (120) indul és felfelé megy
+  const stemPathHealthy = "M150,120 L150,50"
+  const stemPathCompacted = "M150,120 L152,60" // Kicsit ferde, sorvadtabb
+
+  // 2. LEVELEK (Leaves) - A földfelszín felett (0-120 tartomány)
+  const leavesPathHealthy = "M150,75 Q100,45 85,80 M150,85 Q200,55 215,90"
+  const leavesPathCompacted = "M151,80 Q115,100 105,115 M151,90 Q185,110 195,115" // Lekonyulnak
+
+  // 3. GYÖKÉRZET (Roots) - A földfelszín ALATT (120+ tartomány)
+  // Healthy: Mélyre megy, elágazó
+  const rootPathHealthy = `
+    M150,120 
+    C150,180 145,280 140,380 
+    C135,400 125,430 110,460 
+    M150,160 C175,200 190,300 200,380 
+    M150,140 C125,180 110,260 95,340
+    M150,150 C165,190 180,270 190,350
+  `
+  
+  // Compacted: Megakad a rétegnél (PAN_START_Y = 155), szétterül
+  const rootPathCompacted = `
+    M150,120 
+    C150,135 150,145 150,155 
+    C125,158 100,155 70,150 
+    M150,155 C175,158 200,155 230,150 
+    M150,155 L151,210 
+  ` 
+  // Magyarázat a Compacted Path-hoz:
+  // 1. szakasz: Lemegy 120-tól 155-ig (réteg teteje).
+  // 2. szakasz: 155-nél balra kanyarodik (vízszintesen terül).
+  // 3. szakasz: 155-nél jobbra kanyarodik.
+  // 4. szakasz: Egy vékony szál megpróbál lemenni 250-ig.
+
+  // --- RÉSZECSKÉK (VÍZ) ---
+  const [particles, setParticles] = useState<any[]>([])
+  useEffect(() => {
+    setParticles(Array.from({ length: 25 }).map((_, i) => ({
+      id: i,
+      xStart: 40 + Math.random() * 220,
+      delay: Math.random() * 2,
+      duration: 1.2 + Math.random(),
+    })))
+  }, [])
+
   return (
     <motion.div 
-      className={styles.container}
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      style={{ 
+        width: '100%', maxWidth: '500px', margin: '0 auto',
+        background: 'rgba(26, 22, 18, 0.95)', borderRadius: '24px',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+        fontFamily: '"Inter", sans-serif', overflow: 'hidden',
+        border: '1px solid rgba(255, 255, 255, 0.08)'
+      }}
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
-      <motion.div 
-        className={styles.header}
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <div className={styles.headerTop}>
-          <motion.h3 
-            className={styles.title}
-            key={dayIndex}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {dayIndex === 0 ? 'Egészséges szerkezet' : `Tömörödés: ${currentData.day} nap után`}
-          </motion.h3>
-          <motion.button 
-            className={`${styles.toggle} ${!isPloughed ? styles.toggleActive : ''}`}
+      {/* TEXTÚRA SVG (Rejtett) */}
+      <svg width="0" height="0">
+        <filter id="soilNoise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+          <feComponentTransfer><feFuncA type="linear" slope="0.1" /></feComponentTransfer>
+        </filter>
+      </svg>
+
+      {/* --- FEJLÉC --- */}
+      <div style={{ padding: '24px 24px 10px', background: 'transparent', zIndex: 10, position: 'relative' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+            {dayIndex === 0 ? 'Optimális talajszerkezet' : 'Tömörödés hatása'}
+          </h2>
+          <motion.button
             onClick={handleToggle}
-            style={{ scale: buttonScale }}
-            whileHover={{ 
-              scale: 1.05,
-              boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
-            }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            style={{
+              background: isCompacted ? '#2E7D32' : '#C62828',
+              color: 'white', border: 'none', borderRadius: '8px',
+              padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '6px',
+              cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem'
+            }}
           >
-            <motion.span
-              animate={{ rotate: isPloughed ? 0 : 180 }}
-              transition={{ duration: 0.3 }}
-              style={{ display: 'flex' }}
-            >
-              <ArrowLeftRight size={16} />
-            </motion.span>
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={isPloughed ? 'fix' : 'break'}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                transition={{ duration: 0.15 }}
-              >
-                {isPloughed ? 'Javítás' : 'Rontás'}
-              </motion.span>
-            </AnimatePresence>
+            <ArrowLeftRight size={14} />
+            {isCompacted ? 'Javítás' : 'Rontás'}
           </motion.button>
         </div>
-        
-        {/* Idővonal csúszka */}
-        <div className={styles.timeline}>
-          <div className={styles.timelineLabels}>
-            {timelineData.map((data, i) => (
-              <motion.span 
-                key={data.day}
-                className={`${styles.timelineLabel} ${i === dayIndex ? styles.timelineLabelActive : ''}`}
-                animate={{ 
-                  color: i === dayIndex ? 'var(--color-green-dark)' : 'var(--color-earth-400)',
-                  fontWeight: i === dayIndex ? 600 : 400
-                }}
-              >
-                {data.label}
-              </motion.span>
-            ))}
+
+        {/* VEZÉRLŐPULT */}
+        <div style={{ background: 'rgba(255, 255, 255, 0.05)', borderRadius: '16px', padding: '16px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '0.7rem', fontWeight: 600 }}>
+             {timelineData.map((d, i) => (
+               <motion.span 
+                  key={i} 
+                  animate={{ color: i === dayIndex ? d.color : 'rgba(255, 255, 255, 0.5)', scale: i === dayIndex ? 1.1 : 1 }}
+               >
+                 {d.label}
+               </motion.span>
+             ))}
           </div>
-          <div className={styles.sliderWrapper}>
-            <Calendar size={16} className={styles.sliderIcon} />
-            <input
-              type="range"
-              min="0"
-              max="4"
-              value={dayIndex}
-              onChange={handleSliderChange}
-              className={styles.slider}
-            />
-            <motion.div 
-              className={styles.sliderProgress}
-              style={{ width: `${(dayIndex / 4) * 100}%` }}
-              transition={{ duration: 0.3 }}
-            />
+          <input
+            type="range" min="0" max="4" step="1"
+            value={dayIndex} onChange={handleSliderChange}
+            style={{ width: '100%', cursor: 'pointer', accentColor: currentData.color, display: 'block' }}
+          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
+             <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'rgba(255, 255, 255, 0.7)' }}>Penetrométer:</span>
+             <div style={{ flex: 1, height: '8px', background: 'rgba(255, 255, 255, 0.15)', borderRadius: '4px', overflow: 'hidden', position: 'relative' }}>
+                <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, #4CAF50 0%, #FFC107 40%, #D32F2F 100%)' }} />
+                <motion.div 
+                  style={{ position: 'absolute', top: 0, bottom: 0, width: '2px', background: '#000', boxShadow: '0 0 4px rgba(0,0,0,0.5)' }}
+                  animate={{ left: `${(currentData.penetrometer / 25) * 100}%` }}
+                />
+             </div>
+             <motion.span 
+               key={currentData.penetrometer}
+               initial={{ scale: 1.2 }} animate={{ scale: 1 }}
+               style={{ fontSize: '0.9rem', fontWeight: 800, color: currentData.color, width: '55px', textAlign: 'right' }}
+             >
+               {currentData.penetrometer} bar
+             </motion.span>
           </div>
-          
-          {/* Penetrométer érték */}
-          <motion.div 
-            className={styles.penetrometer}
-            key={dayIndex}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <span className={styles.penetrometerLabel}>Penetrométer:</span>
-            <motion.span 
-              className={styles.penetrometerValue}
-              animate={{ 
-                color: currentData.penetrometer > 18 ? '#C62828' : currentData.penetrometer > 12 ? '#F57C00' : '#4CAF50'
-              }}
-            >
-              {currentData.penetrometer} bar
-            </motion.span>
-            <motion.div 
-              className={styles.penetrometerBar}
-              style={{ 
-                background: currentData.penetrometer > 18 
-                  ? 'linear-gradient(90deg, #4CAF50, #F57C00, #C62828)' 
-                  : 'linear-gradient(90deg, #4CAF50, #F57C00)'
-              }}
-            >
-              <motion.div 
-                className={styles.penetrometerIndicator}
-                animate={{ left: `${(currentData.penetrometer / 30) * 100}%` }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              />
-            </motion.div>
-          </motion.div>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div 
-        className={styles.soilSection}
-        animate={{ 
-          boxShadow: isHovered 
-            ? 'inset 0 0 30px rgba(0,0,0,0.2)' 
-            : 'inset 0 0 0px rgba(0,0,0,0)'
-        }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* Sky - always blue, but brighter when healthy */}
+      {/* --- VIZUALIZÁCIÓ (350px Magas) --- */}
+      <div style={{ position: 'relative', height: '350px', width: '100%', overflow: 'hidden', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+        
+        {/* 1. RÉTEG: ÉG (0 - 120px) */}
         <motion.div 
-          className={styles.sky}
-          animate={{ 
-            background: isPloughed 
-              ? 'linear-gradient(180deg, #B3E5FC 0%, #81D4FA 100%)'
-              : 'linear-gradient(180deg, #81D4FA 0%, #4FC3F7 100%)'
-          }}
-          transition={{ duration: 0.5 }}
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, height: `${GROUND_Y}px`, zIndex: 1 }}
+          animate={{ background: isCompacted ? 'linear-gradient(180deg, #5C6B8A 0%, #4A5568 100%)' : 'linear-gradient(180deg, #7B8FAD 0%, #5C6B8A 100%)' }}
         />
-        
-        {/* Sun effect - only visible in healthy state (no rays) */}
-        <motion.div
-          style={{
-            position: 'absolute',
-            top: 6,
-            right: 15,
-            width: 32,
-            height: 32,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, #FFD54F 0%, #FFCA28 60%, transparent 100%)',
-            zIndex: 3,
-            pointerEvents: 'none',
-            boxShadow: '0 0 20px rgba(255, 213, 79, 0.5)',
-          }}
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ 
-            opacity: isPloughed ? 0 : 1, 
-            scale: isPloughed ? 0.5 : 1,
-          }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        />
-        
-        {/* Cloud overlay for damaged state */}
-        <motion.div
-          style={{
-            position: 'absolute',
-            top: 5,
-            left: 15,
-            width: 50,
-            height: 25,
-            background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.8) 0%, transparent 70%)',
-            borderRadius: '50%',
-            zIndex: 3,
-            pointerEvents: 'none',
-          }}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ 
-            opacity: isPloughed ? 0.7 : 0, 
-            x: isPloughed ? 0 : -20,
-          }}
-          transition={{ duration: 0.5 }}
-        />
-        
-        <div className={styles.texture} />
 
-        {/* Plough Pan Overlay */}
+        {/* 2. RÉTEG: TALAJ HÁTTÉR (120px - 500px) */}
+        <div style={{ position: 'absolute', top: `${GROUND_Y}px`, left: 0, right: 0, bottom: 0, background: 'linear-gradient(180deg, #5D4E37 0%, #3D3226 30%, #2A231C 100%)', zIndex: 2 }}>
+            <div style={{ position: 'absolute', inset: 0, opacity: 0.2, filter: 'url(#soilNoise)' }} />
+            {/* Talajfelszín vonal */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, transparent, rgba(139, 115, 85, 0.6), transparent)' }} />
+        </div>
+
+        {/* 3. RÉTEG: TÖMÖRÖDÖTT SÁV (Csak ha compacted) */}
+        {/* Pozíció: 5-15 cm => 155px - 225px */}
         <AnimatePresence>
-          {isPloughed && (
-            <motion.div 
-              className={styles.ploughPan}
-              initial={{ opacity: 0, scaleY: 0, scaleX: 0.8 }}
-              animate={{ opacity: 1, scaleY: 1, scaleX: 1 }}
-              exit={{ opacity: 0, scaleY: 0, scaleX: 0.8 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          {isCompacted && (
+            <motion.div
+              initial={{ opacity: 0, scaleY: 0.8 }}
+              animate={{ opacity: 1, scaleY: 1 }}
+              exit={{ opacity: 0, scaleY: 0.8 }}
+              transition={{ duration: 0.6 }}
+              style={{
+                position: 'absolute',
+                top: `${PAN_START_Y}px`,
+                height: `${PAN_END_Y - PAN_START_Y}px`,
+                left: 0, right: 0,
+                background: 'rgba(120, 20, 20, 0.35)', // Sötétvörös sáv
+                borderTop: '2px dashed rgba(200, 50, 50, 0.6)',
+                borderBottom: '2px dashed rgba(200, 50, 50, 0.6)',
+                zIndex: 3,
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}
             >
-              <motion.span 
-                className={styles.panLabel}
-                animate={{ 
-                  scale: [1, 1.05, 1],
-                  boxShadow: ['0 2px 10px rgba(0,0,0,0.3)', '0 4px 20px rgba(183,28,28,0.5)', '0 2px 10px rgba(0,0,0,0.3)']
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                Eketalp (20 bar+)
-              </motion.span>
+              <div style={{ 
+                background: 'rgba(0,0,0,0.4)', color: '#FFEBEE', padding: '4px 12px', 
+                borderRadius: '12px', fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.5px',
+                backdropFilter: 'blur(4px)'
+              }}>
+                TÖMÖRÖDÖTT RÉTEG (5-15 CM)
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Plant & Roots SVG */}
-        <div className={styles.plantContainer}>
-          <svg width="200" height="390" viewBox="0 0 200 390" fill="none" xmlns="http://www.w3.org/2000/svg">
-            {/* Stem with animation */}
+        {/* 4. RÉTEG: NAP */}
+        <motion.div
+          style={{
+            position: 'absolute', top: 20, right: 20, width: 48, height: 48, borderRadius: '50%',
+            background: 'radial-gradient(circle, #FDD835 0%, #FBC02D 100%)', zIndex: 4,
+            boxShadow: '0 0 25px rgba(253, 216, 53, 0.5)'
+          }}
+          animate={{ opacity: isCompacted ? 0.4 : 1, scale: isCompacted ? 0.8 : 1 }}
+        />
+
+        {/* 5. RÉTEG: SVG NÖVÉNY (Közös koordináta-rendszerben) */}
+        <svg 
+            width="100%" height="100%" viewBox="0 0 300 500" 
+            style={{ position: 'absolute', inset: 0, zIndex: 10, pointerEvents: 'none' }}
+        >
+            {/* SZÁR (Stem) */}
             <motion.path 
-              d="M100,50 L100,0" 
-              stroke="#81C784" 
-              strokeWidth="4"
-              animate={{ 
-                stroke: isPloughed ? '#81C784' : '#4CAF50',
-                strokeWidth: isPloughed ? 4 : 5
-              }}
-              transition={{ duration: 0.5 }}
-            />
-            {/* Leaves with sway animation */}
-            <motion.path 
-              d="M100,20 Q60,0 50,30 M100,30 Q140,10 150,40" 
-              stroke="#81C784" 
-              strokeWidth="4" 
+              d={isCompacted ? stemPathCompacted : stemPathHealthy}
+              stroke={isCompacted ? "#AED581" : "#66BB6A"} 
+              strokeWidth={isCompacted ? 4 : 6} 
+              strokeLinecap="round"
               fill="none"
-              animate={{ 
-                stroke: isPloughed ? '#81C784' : '#4CAF50',
-                d: isHovered 
-                  ? "M100,20 Q55,0 45,30 M100,30 Q145,10 155,40"
-                  : "M100,20 Q60,0 50,30 M100,30 Q140,10 150,40"
-              }}
+              animate={{ d: isCompacted ? stemPathCompacted : stemPathHealthy }}
               transition={{ duration: 0.8, ease: "easeInOut" }}
             />
+            {/* LEVELEK (Leaves) */}
+            <motion.path 
+               d={isCompacted ? leavesPathCompacted : leavesPathHealthy}
+               stroke={isCompacted ? "#AED581" : "#43A047"}
+               strokeWidth={4}
+               fill="none"
+               strokeLinecap="round"
+               animate={{ d: isCompacted ? leavesPathCompacted : leavesPathHealthy }}
+               transition={{ duration: 0.8, ease: "easeInOut" }}
+            />
             
-            {/* Roots with smooth morphing */}
+            {/* GYÖKÉRZET (Roots) */}
             <motion.path
-              d={isPloughed ? rootPathDamaged : rootPathHealthy}
-              stroke="#D7CCC8"
-              strokeWidth="3"
+              d={isCompacted ? rootPathCompacted : rootPathHealthy}
+              stroke={isCompacted ? "#8D6E63" : "#D7CCC8"} // Kicsit sötétebb ha beteg
+              strokeWidth={isCompacted ? 3 : 4}
               fill="none"
               strokeLinecap="round"
+              strokeLinejoin="round"
               initial={false}
-              animate={{ 
-                d: isPloughed ? rootPathDamaged : rootPathHealthy,
-                stroke: isPloughed ? '#BCAAA4' : '#A1887F',
-                strokeWidth: isPloughed ? 3 : 4
-              }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              animate={{ d: isCompacted ? rootPathCompacted : rootPathHealthy }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
             />
-          </svg>
+        </svg>
+
+        {/* 6. RÉTEG: VÍZ (Részecskék) */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none' }}>
+           {particles.map((p) => (
+             <motion.div
+               key={p.id}
+               style={{ 
+                 position: 'absolute', left: 0, top: 0, width: 6, height: 8, 
+                 background: '#4FC3F7', borderRadius: '50%', boxShadow: '0 0 4px #29B6F6'
+               }}
+               initial={{ x: p.xStart, y: -20, opacity: 0 }}
+               animate={isCompacted ? {
+                 // TÖMÖRÖDÖTT: Koppan a rétegen (155px) VAGY a felszínen (120px) és elfolyik
+                 y: [0, PAN_START_Y, PAN_START_Y + 5],
+                 x: [p.xStart, p.xStart, p.xStart + (p.id % 2 === 0 ? 100 : -100)], // Oldalra úszik
+                 opacity: [0, 1, 0],
+                 scale: [1, 1, 0]
+               } : {
+                 // EGÉSZSÉGES: Lemegy mélyre
+                 y: [0, 480],
+                 x: p.xStart,
+                 opacity: [0, 1, 0],
+                 scale: [1, 1, 0.5]
+               }}
+               transition={{
+                 duration: isCompacted ? 1.5 : 2.5,
+                 repeat: Infinity,
+                 delay: p.delay,
+                 ease: isCompacted ? "easeOut" : "linear"
+               }}
+             />
+           ))}
         </div>
 
-        {/* Lottie Water Animation - csak egészséges állapotban */}
-        <AnimatePresence>
-          {!isPloughed && (
-            <motion.div 
-              className={styles.lottieContainer}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Lottie 
-                animationData={waterDropAnimation}
-                loop
-                style={{ 
-                  width: 100, 
-                  height: 200,
-                  position: 'absolute',
-                  top: '15%',
-                  left: '15%',
-                }}
-              />
-              <Lottie 
-                animationData={waterDropAnimation}
-                loop
-                style={{ 
-                  width: 80, 
-                  height: 160,
-                  position: 'absolute',
-                  top: '20%',
-                  right: '20%',
-                  opacity: 0.7,
-                }}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Particles with improved animation */}
-        <div className={styles.particleContainer}>
-          {particles.map((p) => (
-            <motion.div
-              key={p.id}
-              className={`${styles.particle} ${p.type === 'water' ? styles.water : styles.air}`}
-              style={{ left: `${(p.x / 200) * 100}%` }}
-              animate={{
-                y: [0, isPloughed ? (p.type === 'water' ? 120 : 100) : 340],
-                opacity: [0, 1, 1, 0],
-                scale: [0.5, 1, 1, 0.5],
-              }}
-              transition={{
-                duration: isPloughed ? 2 : 4,
-                repeat: Infinity,
-                delay: p.delay,
-                ease: isPloughed ? "easeOut" : "linear"
-              }}
-            />
-          ))}
+        {/* 7. RÉTEG: UI OVERLAY (Skálák) */}
+        
+        {/* Jobb oldali Mélység Skála */}
+        <div style={{ position: 'absolute', right: 10, top: GROUND_Y, bottom: 0, width: 40, zIndex: 20 }}>
+           {[0, 10, 20, 30, 40, 50].map((cm) => (
+             <div key={cm} style={{ position: 'absolute', top: cm * CM_TO_PX, right: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+               <div style={{ width: 8, height: 1, background: 'rgba(255,255,255,0.5)' }} />
+               <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>{cm} cm</span>
+             </div>
+           ))}
         </div>
-      </motion.div>
 
-      <div className={styles.stats}>
-        <motion.div 
-          className={styles.statItem}
-          whileHover={{ background: 'rgba(250, 249, 246, 1)' }}
-        >
-          <span className={styles.statLabel}>Gyökérzóna</span>
-          <AnimatePresence mode="wait">
-            <motion.div 
-              className={`${styles.statValue} ${isPloughed ? styles.statBad : styles.statGood}`}
-              key={isPloughed ? 'shallow' : 'deep'}
-              initial={{ opacity: 0, y: 10, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.9 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {isPloughed ? 'Sekély (25cm)' : 'Mély (60cm+)'}
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
-        <motion.div 
-          className={styles.statItem}
-          whileHover={{ background: 'rgba(250, 249, 246, 1)' }}
-        >
-          <span className={styles.statLabel}>Vízgazdálkodás</span>
-          <AnimatePresence mode="wait">
-            <motion.div 
-              className={`${styles.statValue} ${isPloughed ? styles.statBad : styles.statGood}`}
-              key={isPloughed ? 'bad' : 'good'}
-              initial={{ opacity: 0, y: 10, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.9 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {isPloughed ? 'Pangóvíz' : 'Kiegyensúlyozott'}
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
+        {/* Bal oldali Penetrométer színskála (Függőleges) */}
+        <div style={{ 
+          position: 'absolute', left: 16, top: GROUND_Y + 10, height: '300px', width: 6, borderRadius: '3px',
+          background: 'linear-gradient(180deg, #4CAF50 0%, #FFC107 40%, #D32F2F 100%)',
+          zIndex: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+        }} />
+
+      </div>
+
+      {/* --- LÁBLÉC STATISZTIKA --- */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', padding: '24px', background: 'rgba(26, 22, 18, 0.8)', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+        <StatBox 
+          icon={<Sprout size={18} />} 
+          label="Gyökérzóna"
+          value={isCompacted ? 'Sekély (20 cm)' : 'Mély (50 cm+)'}
+          isGood={!isCompacted}
+        />
+        <StatBox 
+          icon={<Droplets size={18} />} 
+          label="Vízgazdálkodás"
+          value={isCompacted ? 'Gyenge, felszíni elfolyás' : 'Kiegyensúlyozott'}
+          isGood={!isCompacted}
+        />
       </div>
     </motion.div>
+  )
+}
+
+// Segédkomponens
+function StatBox({ icon, label, value, isGood }: any) {
+  return (
+    <div style={{ 
+      background: isGood ? 'rgba(76, 175, 80, 0.15)' : 'rgba(211, 47, 47, 0.15)', 
+      border: `1px solid ${isGood ? 'rgba(76, 175, 80, 0.3)' : 'rgba(211, 47, 47, 0.3)'}`,
+      borderRadius: '12px', padding: '16px',
+      display: 'flex', flexDirection: 'column', gap: '6px'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.6)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' }}>
+        {icon} {label}
+      </div>
+      <AnimatePresence mode="wait">
+        <motion.div 
+          key={value}
+          initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
+          style={{ 
+            color: isGood ? '#81C784' : '#EF5350', 
+            fontWeight: 800, 
+            fontSize: 'clamp(0.7rem, 2.5vw, 0.95rem)',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          {value}
+        </motion.div>
+      </AnimatePresence>
+    </div>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Shovel, Layers, Combine, Star, ChevronRight } from 'lucide-react'
 import styles from './ApplicationGuide.module.css'
 
@@ -53,6 +53,236 @@ const applicationModes: ApplicationMode[] = [
   }
 ]
 
+// Separate card component with hover state for micro-interactions
+function CardWithHover({ 
+  mode, 
+  cardVariants, 
+  isInView 
+}: { 
+  mode: ApplicationMode
+  cardVariants: any
+  isInView: boolean 
+}) {
+  const [isHovered, setIsHovered] = useState(false)
+
+  const iconVariants = {
+    idle: { scale: 1, rotate: 0 },
+    hover: { 
+      scale: 1.15,
+      rotate: [0, -8, 8, -4, 4, 0],
+      transition: { 
+        scale: { duration: 0.3, ease: 'easeOut' },
+        rotate: { duration: 0.6, ease: 'easeInOut' }
+      }
+    }
+  }
+
+  const glowVariants = {
+    idle: { opacity: 0, scale: 0.8 },
+    hover: { 
+      opacity: [0, 0.6, 0.3],
+      scale: [0.8, 1.4, 1.2],
+      transition: { duration: 0.5 }
+    }
+  }
+
+  const infoItemVariants = {
+    idle: { x: 0, opacity: 1 },
+    hover: (i: number) => ({
+      x: 4,
+      opacity: 1,
+      transition: { delay: i * 0.05, duration: 0.2 }
+    })
+  }
+
+  const starHoverVariants = {
+    idle: { scale: 1, y: 0 },
+    hover: (i: number) => ({
+      scale: [1, 1.3, 1],
+      y: [0, -3, 0],
+      transition: { 
+        delay: i * 0.08,
+        duration: 0.3,
+        ease: 'easeOut'
+      }
+    })
+  }
+
+  const shimmerVariants = {
+    idle: { x: '-100%', opacity: 0 },
+    hover: { 
+      x: '200%',
+      opacity: [0, 0.3, 0],
+      transition: { duration: 0.8, ease: 'easeInOut' }
+    }
+  }
+
+  const ctaVariants = {
+    idle: { opacity: 0, y: 20 },
+    hover: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.3, ease: 'easeOut' }
+    }
+  }
+
+  return (
+    <motion.article
+      className={`${styles.card} ${mode.isBest ? styles.bestCard : ''}`}
+      variants={cardVariants}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      whileHover={{ 
+        y: -12, 
+        boxShadow: `0 25px 50px rgba(0,0,0,0.25), 0 0 0 1px ${mode.isBest ? 'var(--color-gold)' : 'rgba(255,255,255,0.15)'}`,
+      }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
+      {/* Shimmer effect on hover */}
+      <motion.div
+        className={styles.shimmer}
+        variants={shimmerVariants}
+        initial="idle"
+        animate={isHovered ? "hover" : "idle"}
+      />
+
+      {/* Best badge */}
+      {mode.isBest && (
+        <motion.div
+          className={styles.bestBadge}
+          initial={{ scale: 0, rotate: -10 }}
+          animate={isInView ? { scale: 1, rotate: 0 } : {}}
+          transition={{ delay: 0.8, type: 'spring', stiffness: 400 }}
+          whileHover={{ scale: 1.1 }}
+        >
+          <motion.span
+            animate={isHovered ? { rotate: [0, 15, -15, 0] } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            <Star size={14} fill="currentColor" />
+          </motion.span>
+          <span>LEGJOBB</span>
+        </motion.div>
+      )}
+
+      {/* Icon with glow effect */}
+      <div className={styles.iconContainer}>
+        {/* Glow behind icon */}
+        <motion.div
+          className={styles.iconGlow}
+          style={{ backgroundColor: mode.color }}
+          variants={glowVariants}
+          initial="idle"
+          animate={isHovered ? "hover" : "idle"}
+        />
+        <motion.div 
+          className={styles.iconWrapper}
+          style={{ backgroundColor: `${mode.color}20`, borderColor: `${mode.color}40` }}
+          variants={iconVariants}
+          initial="idle"
+          animate={isHovered ? "hover" : "idle"}
+        >
+          <motion.span 
+            style={{ color: mode.color }}
+            animate={isHovered ? { 
+              filter: ['brightness(1)', 'brightness(1.3)', 'brightness(1)']
+            } : {}}
+            transition={{ duration: 0.4 }}
+          >
+            {mode.icon}
+          </motion.span>
+        </motion.div>
+      </div>
+
+      {/* Title with subtle animation */}
+      <motion.h3 
+        className={styles.cardTitle}
+        animate={isHovered ? { x: 2 } : { x: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        {mode.title}
+      </motion.h3>
+      <motion.p 
+        className={styles.cardSubtitle}
+        animate={isHovered ? { opacity: 0.8 } : { opacity: 0.5 }}
+        transition={{ duration: 0.2 }}
+      >
+        {mode.subtitle}
+      </motion.p>
+
+      {/* Info rows with staggered animation */}
+      <div className={styles.infoGrid}>
+        {[
+          { label: 'Mikor ajánlott?', value: mode.when },
+          { label: 'Ideális talaj', value: mode.soilType }
+        ].map((info, i) => (
+          <motion.div 
+            key={info.label}
+            className={styles.infoItem}
+            variants={infoItemVariants}
+            custom={i}
+            initial="idle"
+            animate={isHovered ? "hover" : "idle"}
+          >
+            <span className={styles.infoLabel}>{info.label}</span>
+            <motion.span 
+              className={styles.infoValue}
+              animate={isHovered ? { color: 'rgba(255, 255, 255, 1)' } : { color: 'rgba(255, 255, 255, 0.85)' }}
+            >
+              {info.value}
+            </motion.span>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Rating with bouncing stars on hover */}
+      <div className={styles.ratingRow}>
+        <span className={styles.ratingLabel}>Stabilitás</span>
+        <div className={styles.stars}>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <motion.span
+              key={star}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 0.5 + star * 0.1 }}
+            >
+              <motion.span
+                variants={starHoverVariants}
+                custom={star}
+                initial="idle"
+                animate={isHovered && star <= mode.rating ? "hover" : "idle"}
+                style={{ display: 'inline-block' }}
+              >
+                <Star
+                  size={16}
+                  className={star <= mode.rating ? styles.starFilled : styles.starEmpty}
+                  fill={star <= mode.rating ? 'currentColor' : 'none'}
+                />
+              </motion.span>
+            </motion.span>
+          ))}
+        </div>
+      </div>
+
+      {/* Hover CTA sliding up */}
+      <motion.div 
+        className={styles.hoverCta}
+        variants={ctaVariants}
+        initial="idle"
+        animate={isHovered ? "hover" : "idle"}
+      >
+        <span>Lásd a kísérletben</span>
+        <motion.span
+          animate={isHovered ? { x: [0, 4, 0] } : {}}
+          transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 0.5 }}
+        >
+          <ChevronRight size={16} />
+        </motion.span>
+      </motion.div>
+    </motion.article>
+  )
+}
+
 export default function ApplicationGuide() {
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
@@ -103,85 +333,7 @@ export default function ApplicationGuide() {
         animate={isInView ? "visible" : "hidden"}
       >
         {applicationModes.map((mode) => (
-          <motion.article
-            key={mode.id}
-            className={`${styles.card} ${mode.isBest ? styles.bestCard : ''}`}
-            variants={cardVariants}
-            whileHover={{ 
-              y: -12, 
-              boxShadow: `0 25px 50px rgba(0,0,0,0.25), 0 0 0 1px ${mode.isBest ? 'var(--color-gold)' : 'rgba(255,255,255,0.1)'}`,
-            }}
-          >
-            {/* Best badge */}
-            {mode.isBest && (
-              <motion.div
-                className={styles.bestBadge}
-                initial={{ scale: 0, rotate: -10 }}
-                animate={isInView ? { scale: 1, rotate: 0 } : {}}
-                transition={{ delay: 0.8, type: 'spring', stiffness: 400 }}
-              >
-                <Star size={14} fill="currentColor" />
-                <span>LEGJOBB</span>
-              </motion.div>
-            )}
-
-            {/* Icon */}
-            <motion.div 
-              className={styles.iconWrapper}
-              style={{ backgroundColor: `${mode.color}20`, borderColor: `${mode.color}40` }}
-              whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
-              transition={{ duration: 0.4 }}
-            >
-              <span style={{ color: mode.color }}>{mode.icon}</span>
-            </motion.div>
-
-            {/* Title */}
-            <h3 className={styles.cardTitle}>{mode.title}</h3>
-            <p className={styles.cardSubtitle}>{mode.subtitle}</p>
-
-            {/* Info rows */}
-            <div className={styles.infoGrid}>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>Mikor ajánlott?</span>
-                <span className={styles.infoValue}>{mode.when}</span>
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>Ideális talaj</span>
-                <span className={styles.infoValue}>{mode.soilType}</span>
-              </div>
-            </div>
-
-            {/* Rating */}
-            <div className={styles.ratingRow}>
-              <span className={styles.ratingLabel}>Stabilitás</span>
-              <div className={styles.stars}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <motion.span
-                    key={star}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 0.5 + star * 0.1 }}
-                  >
-                    <Star
-                      size={16}
-                      className={star <= mode.rating ? styles.starFilled : styles.starEmpty}
-                      fill={star <= mode.rating ? 'currentColor' : 'none'}
-                    />
-                  </motion.span>
-                ))}
-              </div>
-            </div>
-
-            {/* Hover CTA */}
-            <motion.div 
-              className={styles.hoverCta}
-              initial={{ opacity: 0, y: 10 }}
-              whileHover={{ opacity: 1, y: 0 }}
-            >
-              <span>Lásd a kísérletben</span>
-              <ChevronRight size={16} />
-            </motion.div>
-          </motion.article>
+          <CardWithHover key={mode.id} mode={mode} cardVariants={cardVariants} isInView={isInView} />
         ))}
       </motion.div>
 

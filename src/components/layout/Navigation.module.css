@@ -17,45 +17,53 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(245, 240, 232, 0.98) 0%,
-        rgba(245, 240, 232, 0.9) 70%,
-        rgba(245, 240, 232, 0) 100%
-    );
+    background: var(--color-earth-900);
     opacity: 0;
     transition: opacity 0.5s ease;
     pointer-events: none;
 }
 
 .header.scrolled::before {
-    opacity: 1;
+    opacity: 0.98;
 }
 
-/* ===== Dark Page Mode (Light Text) ===== */
-.header.onDark .logo {
-    color: var(--color-cream);
+/* Solid nav pill background when scrolled */
+.header.scrolled .nav {
+    background: rgba(26, 22, 18, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 100px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.header.onDark .logoMark {
-    color: var(--color-gold-light);
-}
+/* ===== Dark Theme Navigation (Default) ===== */
+/* All pages are dark themed, so navigation is always light text */
 
-.header.onDark .navLink {
+.navLink {
     color: rgba(255, 255, 255, 0.7);
 }
 
-.header.onDark .navLink:hover,
-.header.onDark .navLink.active {
+.navLink:hover,
+.navLink.active {
     color: var(--color-white);
 }
 
-.header.onDark .indicator {
+.indicator {
     background: var(--color-gold);
 }
 
-.header.onDark .menuIcon span {
+.menuIcon span {
     background: var(--color-cream);
+}
+
+/* Scrolled state - ensure good contrast */
+.header.scrolled .navLink {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.header.scrolled .navLink:hover,
+.header.scrolled .navLink.active {
+    color: var(--color-white);
 }
 
 .headerInner {
@@ -72,7 +80,7 @@
 
 .header.scrolled .headerInner {
     padding: var(--space-md) 0;
-    border-bottom-color: rgba(61, 41, 20, 0.08);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Logo */
@@ -122,14 +130,8 @@
     font-family: var(--font-body);
     font-size: 0.9rem;
     font-weight: 500;
-    color: var(--color-earth-600);
     text-decoration: none;
     transition: color 0.3s ease;
-}
-
-.navLink:hover,
-.navLink.active {
-    color: var(--color-soil);
 }
 
 /* Sliding Indicator - The magic underline */
@@ -137,7 +139,6 @@
     position: absolute;
     bottom: -2px;
     height: 2px;
-    background: var(--color-green);
     border-radius: 1px;
     pointer-events: none;
 }
@@ -172,7 +173,6 @@
     display: block;
     width: 22px;
     height: 2px;
-    background: var(--color-soil);
     border-radius: 1px;
     transform-origin: center;
 }
@@ -192,11 +192,11 @@
     top: 0;
     left: 0;
     right: 0;
-    background: var(--color-cream);
+    background: var(--color-earth-800);
     z-index: 105;
     padding-top: 100px;
     padding-bottom: var(--space-3xl);
-    border-bottom: 1px solid rgba(61, 41, 20, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .mobileNavInner {
@@ -214,14 +214,14 @@
     gap: var(--space-lg);
     padding: var(--space-md) 0;
     text-decoration: none;
-    color: var(--color-earth-600);
-    border-bottom: 1px solid rgba(61, 41, 20, 0.06);
+    color: rgba(255, 255, 255, 0.7);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     transition: all 0.3s ease;
     position: relative;
 }
 
 .mobileLink:hover {
-    color: var(--color-soil);
+    color: var(--color-white);
     padding-left: var(--space-sm);
 }
 
@@ -229,7 +229,7 @@
     font-family: var(--font-body);
     font-size: 0.75rem;
     font-weight: 500;
-    color: var(--color-earth-500);
+    color: rgba(255, 255, 255, 0.5);
     opacity: 0.5;
     min-width: 1.5rem;
 }
@@ -242,11 +242,11 @@
 }
 
 .mobileActive {
-    color: var(--color-soil);
+    color: var(--color-white);
 }
 
 .mobileActive .mobileLinkNumber {
-    color: var(--color-green);
+    color: var(--color-gold);
     opacity: 1;
 }
 
@@ -257,7 +257,7 @@
     transform: translateY(-50%);
     width: 8px;
     height: 8px;
-    background: var(--color-green);
+    background: var(--color-gold);
     border-radius: 50%;
 }
 

@@ -21,7 +21,6 @@ export default function Navigation() {
     { href: '/problema', label: 'Probléma' },
     { href: '/technologia', label: 'Technológia' },
     { href: '/kutatas', label: 'Kutatás' },
-    { href: '/eredmenyek', label: 'Eredmények' },
   ]
 
   // Find active index based on pathname
@@ -72,11 +71,8 @@ export default function Navigation() {
     return () => { document.body.style.overflow = '' }
   }, [mobileMenuOpen])
 
-  // Dark pages need light text
-  const isDarkPage = pathname === '/' || pathname === '/technologia' || pathname === '/eredmenyek'
-
   return (
-    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''} ${isDarkPage && !scrolled ? styles.onDark : ''}`}>
+    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.headerInner}>
         {/* Desktop Navigation */}
         <nav className={styles.nav} ref={navRef} aria-label="Fő navigáció">

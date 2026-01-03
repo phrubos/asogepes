@@ -3,8 +3,9 @@
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import SectionHeader from '@/components/ui/SectionHeader'
+import PageBadge from '@/components/ui/PageBadge'
 import MagneticButton from '@/components/ui/MagneticButton'
+import SectionScrollIndicator from '@/components/ui/SectionScrollIndicator'
 import ModelSection from './ModelSection'
 import FieldDataModal from './FieldDataModal'
 import OperationPrinciple from './OperationPrinciple'
@@ -12,6 +13,12 @@ import ApplicationGuide from './ApplicationGuide'
 import HubFolder from './HubFolder'
 import styles from './SolutionNew.module.css'
 import { ArrowRight } from 'lucide-react'
+
+const TECHNOLOGY_SECTIONS = [
+  { id: 'operation-principle', name: 'Működési elv' },
+  { id: 'content-area', name: 'Modellek' },
+  { id: 'application-guide', name: 'Alkalmazás' },
+]
 
 type ModelId = '38sx' | '38wx' | '40sx'
 
@@ -65,10 +72,10 @@ export default function SolutionLayout() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className={styles.headerContent}
           >
-            <SectionHeader number="02" title="A Technológia" light />
+            <PageBadge number="03" label="A TECHNOLÓGIA" />
             <h1 className={styles.mainTitle}>
-              Lazítás<br />
-              forgatás nélkül
+              Lazítás és forgatás,<br />
+              optimális arányban
             </h1>
             <p className={styles.subTitle}>
               Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
@@ -104,8 +111,8 @@ export default function SolutionLayout() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className={styles.modelsBadge}>IMANTS MODELLEK</span>
-            <h2 className={styles.modelsTitle}>Válassza ki a megfelelő gépet</h2>
+            <span className={styles.modelsBadge}>IMANTS DUPLAROTOROS ÁSÓGÉP MODELLEK</span>
+            <h2 className={styles.modelsTitle}>Homok és vályog talajokra</h2>
           </motion.div>
           {/* Sticky Model Tabs with Animated Indicator */}
           <nav className={styles.modelTabs}>
@@ -196,6 +203,9 @@ export default function SolutionLayout() {
         onClose={() => setModalOpen(false)}
         modelId={modalModelId}
       />
+
+      {/* Section Scroll Indicator */}
+      <SectionScrollIndicator sections={TECHNOLOGY_SECTIONS} />
     </section>
   )
 }

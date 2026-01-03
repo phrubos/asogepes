@@ -1,0 +1,309 @@
+.container {
+  background: linear-gradient(135deg, rgba(26, 23, 20, 0.8) 0%, rgba(35, 30, 25, 0.9) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3xl);
+  margin: var(--space-3xl) 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--color-white);
+  margin: 0 0 var(--space-sm);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* Comparison Grid */
+.comparisonGrid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .comparisonGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+/* Soil Cards */
+.soilCard {
+  background: linear-gradient(135deg, rgba(40, 35, 30, 0.9) 0%, rgba(30, 26, 22, 0.95) 100%);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0 10px 20px -5px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.soilCardBad {
+  border-top: 4px solid #E57373;
+}
+
+.soilCardBad:hover {
+  box-shadow: 
+    0 8px 16px -4px rgba(229, 115, 115, 0.2),
+    0 20px 40px -10px rgba(0, 0, 0, 0.12);
+}
+
+.soilCardGood {
+  border-top: 4px solid var(--color-green);
+}
+
+.soilCardGood:hover {
+  box-shadow: 
+    0 8px 16px -4px rgba(76, 175, 80, 0.2),
+    0 20px 40px -10px rgba(0, 0, 0, 0.12);
+}
+
+/* Card Header */
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg);
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.labelBad,
+.labelGood {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.labelBad {
+  background: linear-gradient(135deg, #EF5350, #E53935);
+  color: white;
+}
+
+.labelGood {
+  background: linear-gradient(135deg, var(--color-green), var(--color-green-dark));
+  color: white;
+}
+
+.badge,
+.badgeGood {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge {
+  background: rgba(229, 115, 115, 0.2);
+  color: #EF9A9A;
+}
+
+.badgeGood {
+  background: rgba(76, 175, 80, 0.2);
+  color: #81C784;
+}
+
+/* Visual Container */
+.visualContainer {
+  padding: var(--space-md);
+  background: linear-gradient(180deg, rgba(50, 45, 40, 0.5) 0%, rgba(40, 35, 30, 0.6) 100%);
+}
+
+.soilSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* Caption */
+.caption {
+  padding: var(--space-md) var(--space-lg);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-style: italic;
+}
+
+/* Problem & Benefit Lists */
+.problemList,
+.benefitList {
+  list-style: none;
+  padding: var(--space-lg);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.problemItem,
+.benefitItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.problemItem {
+  background: rgba(244, 67, 54, 0.04);
+}
+
+.benefitItem {
+  background: rgba(76, 175, 80, 0.04);
+}
+
+.iconBad {
+  color: #E53935;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.iconGood {
+  color: var(--color-green);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.itemText {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-white);
+  line-height: 1.4;
+}
+
+.itemDetail {
+  display: block;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+}
+
+/* VS Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) 0;
+}
+
+.vsCircle {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--color-earth-800), var(--color-earth-900));
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 0 0 4px rgba(139, 115, 85, 0.1);
+}
+
+@media (max-width: 1024px) {
+  .divider {
+    padding: var(--space-md) 0;
+  }
+  
+  .vsCircle {
+    width: 48px;
+    height: 48px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Footer Legend */
+.footer {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2xl);
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.legendColor {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--space-xl);
+    margin: var(--space-2xl) 0;
+  }
+  
+  .footer {
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: center;
+  }
+  
+  .cardHeader {
+    flex-direction: column;
+    gap: var(--space-sm);
+    align-items: flex-start;
+  }
+}
+
+/* Depth Scale styling */
+.depthScale text {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}
+
+.penetrometerScale text {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}

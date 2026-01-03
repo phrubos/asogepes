@@ -16,12 +16,12 @@ const features: FeatureItem[] = [
   {
     icon: <ArrowDown size={28} />,
     title: 'Függőleges lazítás',
-    description: 'Az ásókanalak mélyen belemerülnek a talajba és fellazítják'
+    description: 'Az ásókanalak mélyen belemerülnek a talajba, fellazítják és sekélyen átkeverik a talajfelszínt'
   },
   {
     icon: <Layers size={28} />,
-    title: 'Simított felszín',
-    description: 'A henger egyenletes, vetésre kész felületet hagy'
+    title: 'Optimális magágy',
+    description: 'Az elmunkáló henger egyenletes, vetésre ültetésre kész felületet hagy'
   }
 ]
 
@@ -74,9 +74,9 @@ export default function OperationPrinciple() {
         transition={{ duration: 0.6 }}
       >
         <span className={styles.badge}>MŰKÖDÉSI ELV</span>
-        <h2 className={styles.title}>Hogyan működik az ásógép?</h2>
+        <h2 className={styles.title}>Hogyan működik a duplarotoros ásógép?</h2>
         <p className={styles.subtitle}>
-          Lazítás forgatás nélkül — a talajrétegek megőrzése
+          Az ásórotor lazít és átkever, a meghajtott elmunkáló henger aprómorzsás magágyat készít.
         </p>
       </motion.div>
 

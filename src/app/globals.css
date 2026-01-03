@@ -53,6 +53,7 @@
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 16px;
+    --radius-xl: 24px;
 
     /* Transitions */
     --transition-fast: 150ms ease;
@@ -175,15 +176,15 @@ em {
 /* Layout */
 .container {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 0 var(--space-lg);
+    padding: 0 var(--space-xl);
 }
 
 /* Wide container for hero sections */
 .containerWide {
     width: 100%;
-    max-width: 1600px;
+    max-width: 1800px;
     margin: 0 auto;
     padding: 0 var(--space-xl);
 }

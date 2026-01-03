@@ -1,0 +1,862 @@
+/* ============================================
+   SoilHeroIsometric - "Museum Exhibition" Design
+   Isometric 3D Soil Block Visualization
+   ============================================ */
+
+/* ============================================
+   Hero Section Container
+   ============================================ */
+.heroSection {
+  /* CSS Custom Properties scoped to this component */
+  --iso-gold: #C9A227;
+  --iso-gold-light: #E5C34A;
+  --iso-gold-glow: rgba(201, 162, 39, 0.4);
+  --iso-bg-primary: #0D0B09;
+  --iso-bg-secondary: #1A1614;
+  --iso-text-primary: #F5F0E8;
+  --iso-text-secondary: rgba(245, 240, 232, 0.7);
+  --iso-text-muted: rgba(245, 240, 232, 0.4);
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--iso-bg-primary);
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ============================================
+   Background - Atmospheric Gradient Mesh
+   ============================================ */
+.backgroundMesh {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 100% 100% at 70% 60%, rgba(201, 162, 39, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 60% at 20% 90%, rgba(139, 115, 85, 0.1) 0%, transparent 40%),
+    radial-gradient(ellipse 60% 80% at 90% 20%, rgba(92, 77, 61, 0.08) 0%, transparent 35%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Grain overlay for texture */
+.grainOverlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Grid pattern background */
+.gridPattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201, 162, 39, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 162, 39, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ============================================
+   Main Content Layout
+   ============================================ */
+.contentLayout {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(400px, 1.4fr) minmax(280px, 1fr);
+  gap: 60px;
+  height: 100%;
+  padding: 80px 6%;
+  z-index: 10;
+  align-items: center;
+}
+
+/* ============================================
+   Left Column - Hero Content
+   ============================================ */
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 20;
+}
+
+.heroContent {
+  max-width: 420px;
+}
+
+/* Section Badge */
+.sectionBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: rgba(201, 162, 39, 0.08);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 100px;
+  margin-bottom: 28px;
+  width: fit-content;
+}
+
+.badgeNumber {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--iso-gold);
+  letter-spacing: 0.05em;
+}
+
+.badgeDivider {
+  width: 1px;
+  height: 12px;
+  background: rgba(201, 162, 39, 0.3);
+}
+
+.badgeLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--iso-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* Headline */
+.heroHeadline {
+  font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-weight: 800;
+  font-optical-sizing: auto;
+  color: var(--iso-text-primary);
+  line-height: 1.1;
+  margin: 0 0 24px 0;
+  letter-spacing: -0.03em;
+}
+
+.headlineWord {
+  display: inline-block;
+  margin-right: 0.2em;
+}
+
+.headlineAccent {
+  color: var(--iso-gold);
+  position: relative;
+}
+
+.headlineAccent::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--iso-gold), transparent);
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+/* Description */
+.heroDescription {
+  font-size: 1.05rem;
+  color: var(--iso-text-secondary);
+  line-height: 1.75;
+  margin: 0 0 36px 0;
+}
+
+.heroDescription strong {
+  color: var(--iso-gold-light);
+  font-weight: 600;
+}
+
+/* Instruction Hint */
+.instructionHint {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  background: rgba(201, 162, 39, 0.06);
+  border: 1px dashed rgba(201, 162, 39, 0.25);
+  border-radius: 12px;
+  margin-bottom: 40px;
+}
+
+.hintIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(201, 162, 39, 0.1);
+  border-radius: 10px;
+  color: var(--iso-gold);
+  flex-shrink: 0;
+}
+
+.hintText {
+  font-size: 0.85rem;
+  color: var(--iso-text-secondary);
+  line-height: 1.5;
+}
+
+.hintText strong {
+  color: var(--iso-text-primary);
+  font-weight: 600;
+}
+
+/* Stats Row */
+.statsRow {
+  display: flex;
+  gap: 40px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(201, 162, 39, 0.1);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statValue {
+  font-family: 'Fraunces', serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--iso-gold);
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  color: var(--iso-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.statDivider {
+  width: 1px;
+  background: rgba(201, 162, 39, 0.15);
+  align-self: stretch;
+}
+
+/* ============================================
+   Center Column - Isometric Block
+   ============================================ */
+.centerColumn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  perspective: 1200px;
+}
+
+/* Isometric Container */
+.isometricContainer {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+}
+
+/* The 3D Scene */
+.isometricScene {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+}
+
+/* Isometric Cube Container */
+.isometricCube {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 280px;
+  height: 340px;
+  transform-style: preserve-3d;
+  transform: translate(-50%, -50%) rotateX(-20deg) rotateY(-35deg);
+}
+
+/* Individual Soil Layer (Drawer) */
+.soilDrawer {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.soilDrawer:hover {
+  z-index: 10;
+}
+
+/* Drawer Faces */
+.drawerFace {
+  position: absolute;
+  backface-visibility: visible;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+/* Top face of drawer */
+.drawerTop {
+  width: 100%;
+  height: 80px;
+  transform: rotateX(90deg) translateZ(0);
+  transform-origin: bottom center;
+}
+
+/* Front face of drawer */
+.drawerFront {
+  width: 100%;
+  transform-origin: top center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 20px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Right side face */
+.drawerRight {
+  width: 80px;
+  right: 0;
+  transform: rotateY(90deg) translateZ(0);
+  transform-origin: left center;
+}
+
+/* Left side face (visible when pulled) */
+.drawerLeft {
+  width: 80px;
+  left: 0;
+  transform: rotateY(-90deg) translateZ(0);
+  transform-origin: right center;
+}
+
+/* Bottom face */
+.drawerBottom {
+  width: 100%;
+  height: 80px;
+  transform: rotateX(-90deg) translateZ(0);
+  transform-origin: top center;
+}
+
+/* Layer Label on Front Face */
+.layerLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.layerDepth {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 3px 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.layerName {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Problem indicator on open drawer */
+.drawerProblem {
+  position: absolute;
+  top: 50%;
+  right: -100%;
+  transform: translateY(-50%);
+  padding: 8px 14px;
+  background: rgba(201, 162, 39, 0.95);
+  color: #1a1614;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease 0.2s;
+}
+
+.soilDrawer.open .drawerProblem {
+  opacity: 1;
+}
+
+/* Pull handle */
+.drawerHandle {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.soilDrawer:hover .drawerHandle {
+  background: rgba(201, 162, 39, 0.6);
+}
+
+/* Open state glow */
+.drawerGlow {
+  position: absolute;
+  inset: -10px;
+  background: radial-gradient(ellipse at center, rgba(201, 162, 39, 0.3), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.soilDrawer.open .drawerGlow,
+.soilDrawer.active .drawerGlow {
+  opacity: 1;
+}
+
+/* Platform/Base */
+.isometricBase {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%) rotateX(90deg);
+  width: 320px;
+  height: 100px;
+  background:
+    linear-gradient(135deg, rgba(201, 162, 39, 0.1) 0%, transparent 50%),
+    rgba(26, 22, 20, 0.8);
+  border: 1px solid rgba(201, 162, 39, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Depth Scale */
+.depthScale {
+  position: absolute;
+  left: -80px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 340px;
+  z-index: 5;
+}
+
+.depthMark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.depthLine {
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.4));
+}
+
+.depthValue {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--iso-text-muted);
+  white-space: nowrap;
+}
+
+/* Floating Labels */
+.floatingLabel {
+  position: absolute;
+  padding: 6px 12px;
+  background: rgba(26, 22, 20, 0.9);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 6px;
+  font-size: 0.7rem;
+  color: var(--iso-text-secondary);
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+  z-index: 20;
+}
+
+.floatingLabel::before {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 1px;
+  background: rgba(201, 162, 39, 0.3);
+}
+
+/* ============================================
+   Right Column - Navigation
+   ============================================ */
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  z-index: 20;
+}
+
+/* Navigation Card */
+.navCard {
+  position: relative;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 162, 39, 0.1);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+
+.navCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--nav-color);
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.navCard:hover::before,
+.navCard.active::before {
+  opacity: 1;
+}
+
+.navCard:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(201, 162, 39, 0.25);
+  transform: translateX(8px);
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(201, 162, 39, 0.1);
+}
+
+.navCard.active {
+  background: rgba(201, 162, 39, 0.06);
+  border-color: rgba(201, 162, 39, 0.3);
+}
+
+.navCard.open {
+  border-color: var(--iso-gold);
+}
+
+.navCard.open::after {
+  content: '✓';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--iso-gold);
+  color: #1a1614;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+/* Nav Header */
+.navHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.navNumber {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--iso-gold);
+  letter-spacing: 0.05em;
+}
+
+.navDepthBadge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--iso-text-muted);
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 100px;
+}
+
+/* Nav Content */
+.navTitle {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--iso-text-primary);
+  margin: 0 0 6px 0;
+}
+
+.navDescription {
+  font-size: 0.8rem;
+  color: var(--iso-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Nav Icon */
+.navIcon {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(201, 162, 39, 0.08);
+  border-radius: 10px;
+  color: var(--iso-gold);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.navCard:hover .navIcon {
+  opacity: 1;
+  transform: translateY(-50%) translateX(4px);
+}
+
+/* ============================================
+   Active Layer Info Panel
+   ============================================ */
+.layerInfoPanel {
+  position: absolute;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 20px 28px;
+  background: rgba(26, 22, 20, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 162, 39, 0.25);
+  border-radius: 16px;
+  min-width: 320px;
+  z-index: 30;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(201, 162, 39, 0.1);
+}
+
+.layerInfoHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+}
+
+.layerInfoIcon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--layer-color);
+  border-radius: 8px;
+}
+
+.layerInfoTitle {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--iso-text-primary);
+  margin: 0;
+}
+
+.layerInfoDepth {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--iso-text-muted);
+}
+
+.layerInfoProblems {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.problemItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--iso-text-secondary);
+}
+
+.problemDot {
+  width: 6px;
+  height: 6px;
+  background: var(--iso-gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   Scroll Indicator
+   ============================================ */
+.scrollIndicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 30;
+}
+
+.scrollText {
+  font-size: 0.7rem;
+  color: var(--iso-text-muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(180deg, var(--iso-gold), transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.scrollDot {
+  position: absolute;
+  top: 0;
+  left: -2px;
+  width: 5px;
+  height: 5px;
+  background: var(--iso-gold);
+  border-radius: 50%;
+}
+
+/* ============================================
+   Floating Dust Particles
+   ============================================ */
+.dustParticles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.dustParticle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(201, 162, 39, 0.4);
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+@media (max-width: 1400px) {
+  .contentLayout {
+    grid-template-columns: minmax(280px, 1fr) minmax(350px, 1.2fr) minmax(260px, 1fr);
+    gap: 40px;
+    padding: 60px 4%;
+  }
+
+  .isometricCube {
+    width: 240px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .contentLayout {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .centerColumn {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 400px;
+  }
+
+  .leftColumn {
+    grid-row: 2;
+  }
+
+  .rightColumn {
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .contentLayout {
+    grid-template-columns: 1fr;
+    padding: 100px 20px 80px;
+    gap: 40px;
+  }
+
+  .centerColumn {
+    min-height: 350px;
+  }
+
+  .isometricCube {
+    width: 200px;
+    height: 260px;
+  }
+
+  .heroHeadline {
+    font-size: 1.8rem;
+  }
+
+  .depthScale {
+    display: none;
+  }
+
+  .rightColumn {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .navCard {
+    flex: 1;
+    min-width: 260px;
+  }
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .soilDrawer,
+  .navCard,
+  .isometricScene {
+    transition: none !important;
+  }
+
+  .dustParticle {
+    animation: none !important;
+  }
+}

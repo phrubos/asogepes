@@ -5,7 +5,7 @@
 
 .section {
   background: var(--color-earth-800);
-  padding: var(--space-5xl) 0;
+  padding: var(--space-4xl) 0 var(--space-5xl);
   position: relative;
 }
 

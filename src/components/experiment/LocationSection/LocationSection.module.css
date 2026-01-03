@@ -1,0 +1,424 @@
+/* ============================================
+   LOCATION SECTION - Dark Theme
+   ============================================ */
+
+.section {
+  position: relative;
+  padding: var(--space-4xl) 0;
+  scroll-margin-top: 80px;
+}
+
+/* Alternating subtle background */
+.section[data-location="kecskemet"] {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(180deg, transparent, rgba(212, 168, 75, 0.3), transparent);
+}
+
+.sectionInner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+}
+
+/* Section Header */
+.header {
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+}
+
+.headerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  background: rgba(212, 168, 75, 0.1);
+  border: 1px solid rgba(212, 168, 75, 0.2);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-md);
+}
+
+.headerTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--color-white);
+  margin: 0 0 var(--space-md);
+  letter-spacing: -0.02em;
+}
+
+.headerLine {
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+/* Info Grid */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-3xl);
+}
+
+/* For 7 items (Lakitelek), center the last row */
+.infoGrid:has(.infoCard:nth-child(7)) {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.infoGrid:has(.infoCard:nth-child(7)) .infoCard:last-child {
+  grid-column: 3 / 5;
+}
+
+.infoCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: linear-gradient(135deg, rgba(26, 23, 20, 0.7) 0%, rgba(35, 30, 25, 0.8) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.infoCard:hover {
+  border-color: rgba(212, 168, 75, 0.2);
+  background: linear-gradient(135deg, rgba(30, 27, 24, 0.8) 0%, rgba(40, 35, 30, 0.9) 100%);
+}
+
+.infoIcon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 168, 75, 0.08);
+  border: 1px solid rgba(212, 168, 75, 0.15);
+  border-radius: 8px;
+  color: var(--color-gold);
+  flex-shrink: 0;
+}
+
+.infoContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.infoLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.infoValue {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-white);
+  line-height: 1.3;
+}
+
+/* Treatment Comparison */
+.treatmentComparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-lg);
+  align-items: stretch;
+  margin-bottom: var(--space-3xl);
+}
+
+.treatment {
+  background: linear-gradient(135deg, rgba(26, 23, 20, 0.8) 0%, rgba(35, 30, 25, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: var(--space-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.treatment::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 16px 16px 0 0;
+}
+
+.treatmentControl::before {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.treatmentSpade::before {
+  background: var(--color-gold);
+}
+
+.treatmentSpade {
+  border-color: rgba(212, 168, 75, 0.15);
+}
+
+.treatmentHeader {
+  margin-bottom: var(--space-md);
+}
+
+.treatmentBadge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.treatmentControl .treatmentBadge {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.treatmentSpade .treatmentBadge {
+  background: rgba(212, 168, 75, 0.15);
+  color: var(--color-gold);
+}
+
+.treatmentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.treatmentList li {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  padding-left: var(--space-md);
+  position: relative;
+}
+
+.treatmentList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.treatmentSpade .treatmentList li::before {
+  background: var(--color-gold);
+}
+
+.treatmentList li strong {
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.treatmentVs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.treatmentVs span {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 168, 75, 0.1);
+  border: 2px solid rgba(212, 168, 75, 0.3);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-gold);
+  letter-spacing: 0.05em;
+}
+
+/* Highlight Section */
+.highlight {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+  background: linear-gradient(135deg, rgba(212, 168, 75, 0.05) 0%, rgba(26, 23, 20, 0.8) 100%);
+  border: 1px solid rgba(212, 168, 75, 0.15);
+  border-radius: 20px;
+  padding: var(--space-2xl);
+  margin-top: var(--space-2xl);
+}
+
+.highlightImage {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.imagePlaceholder {
+  aspect-ratio: 16/10;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.imagePlaceholder span {
+  font-size: 0.875rem;
+}
+
+.placeholderSub {
+  font-size: 0.75rem !important;
+  opacity: 0.6;
+}
+
+.highlightContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.highlightTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin: 0;
+}
+
+.highlightText {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.highlightText strong {
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 900px) {
+  .section {
+    padding: var(--space-3xl) 0;
+  }
+
+  .treatmentComparison {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .treatmentVs {
+    padding: var(--space-sm) 0;
+  }
+
+  .treatmentVs span {
+    width: 40px;
+    height: 40px;
+    font-size: 0.7rem;
+  }
+
+  .highlight {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+  }
+
+  .highlightImage {
+    order: -1;
+  }
+}
+
+@media (max-width: 1100px) {
+  .infoGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .infoGrid:has(.infoCard:nth-child(7)) .infoCard:last-child {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    padding: var(--space-2xl) 0;
+  }
+
+  .sectionInner {
+    padding: 0 var(--space-md);
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+  }
+
+  .infoGrid:has(.infoCard:nth-child(7)) .infoCard:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .infoCard {
+    padding: var(--space-sm);
+  }
+
+  .infoIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .infoLabel {
+    font-size: 0.7rem;
+  }
+
+  .infoValue {
+    font-size: 0.8125rem;
+  }
+
+  .treatment {
+    padding: var(--space-lg);
+  }
+
+  .highlight {
+    padding: var(--space-lg);
+  }
+
+  .highlightTitle {
+    font-size: 1.25rem;
+  }
+
+  .highlightText {
+    font-size: 0.9375rem;
+  }
+}

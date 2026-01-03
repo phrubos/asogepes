@@ -372,78 +372,160 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                   </motion.div>
                 </motion.div>
 
-                {/* Chart - Animated Bars */}
+                {/* Chart - Animated Bars with micro-interactions */}
                 <motion.div className={styles.chartSection} variants={itemVariants}>
-                  <h4 className={styles.chartTitle}>Penetrométeres mérések (cm)</h4>
+                  <motion.h4 
+                    className={styles.chartTitle}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    Penetrométeres mérések (cm)
+                  </motion.h4>
+                  
+                  {/* Animated title underline */}
+                  <motion.div 
+                    className={styles.chartTitleLine}
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                  
                   <div className={styles.chartGrid}>
                     {data.chartData.map((d, i) => (
-                      <div key={i} className={styles.chartItem}>
-                        <span className={styles.chartMonth}>{d.month}</span>
+                      <motion.div 
+                        key={i} 
+                        className={styles.chartItem}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 + i * 0.08 }}
+                        whileHover={{ scale: 1.02 }}
+                      >
+                        <motion.span 
+                          className={styles.chartMonth}
+                          whileHover={{ color: 'var(--color-gold)' }}
+                        >
+                          {d.month}
+                        </motion.span>
                         <div className={styles.chartBars}>
                           <div className={styles.barGroup}>
+                            {/* Glow effect */}
+                            <motion.div
+                              className={styles.barGlow}
+                              style={{ background: 'var(--color-gold)' }}
+                              initial={{ opacity: 0 }}
+                              whileHover={{ opacity: 0.5 }}
+                            />
                             <motion.div
                               className={`${styles.bar} ${styles.spadeBar}`}
-                              initial={{ height: 0 }}
-                              animate={{ height: `${Math.max(20, d.spade * 2.5)}px` }}
-                              transition={{ 
-                                duration: 0.6, 
-                                delay: 0.35 + i * 0.1,
-                                ease: [0.22, 1, 0.36, 1]
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ 
+                                height: `${Math.max(20, d.spade * 2.5)}px`,
+                                opacity: 1
                               }}
-                              whileHover={{ filter: 'brightness(1.2)', y: -2 }}
+                              transition={{ 
+                                height: { duration: 0.8, delay: 0.35 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
+                                opacity: { duration: 0.3, delay: 0.35 + i * 0.1 }
+                              }}
+                              whileHover={{ 
+                                filter: 'brightness(1.25)', 
+                                y: -3,
+                                boxShadow: '0 8px 25px rgba(212, 168, 75, 0.4)'
+                              }}
                             >
                               <motion.span 
                                 className={styles.barValue}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.5 + i * 0.1 }}
+                                initial={{ opacity: 0, y: -5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.6 + i * 0.1 }}
                               >
                                 {d.spade}
                               </motion.span>
+                              
+                              {/* Shimmer effect */}
+                              <motion.div
+                                className={styles.barShimmer}
+                                initial={{ x: '-100%' }}
+                                animate={{ x: '200%' }}
+                                transition={{ 
+                                  duration: 1.2, 
+                                  delay: 0.8 + i * 0.15,
+                                  ease: 'easeInOut'
+                                }}
+                              />
                             </motion.div>
                             <span className={styles.barLabel}>Ásógép</span>
                           </div>
                           <div className={styles.barGroup}>
                             <motion.div
+                              className={styles.barGlow}
+                              style={{ background: 'rgba(255,255,255,0.5)' }}
+                              initial={{ opacity: 0 }}
+                              whileHover={{ opacity: 0.3 }}
+                            />
+                            <motion.div
                               className={`${styles.bar} ${styles.controlBar}`}
-                              initial={{ height: 0 }}
-                              animate={{ height: `${Math.max(15, d.control * 2.5)}px` }}
-                              transition={{ 
-                                duration: 0.6, 
-                                delay: 0.4 + i * 0.1,
-                                ease: [0.22, 1, 0.36, 1]
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ 
+                                height: `${Math.max(15, d.control * 2.5)}px`,
+                                opacity: 1
                               }}
-                              whileHover={{ filter: 'brightness(1.2)', y: -2 }}
+                              transition={{ 
+                                height: { duration: 0.8, delay: 0.4 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
+                                opacity: { duration: 0.3, delay: 0.4 + i * 0.1 }
+                              }}
+                              whileHover={{ 
+                                filter: 'brightness(1.4)', 
+                                y: -3,
+                                boxShadow: '0 8px 20px rgba(255, 255, 255, 0.15)'
+                              }}
                             >
                               <motion.span 
                                 className={styles.barValue}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.55 + i * 0.1 }}
+                                initial={{ opacity: 0, y: -5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.65 + i * 0.1 }}
                               >
                                 {d.control}
                               </motion.span>
+                              
+                              <motion.div
+                                className={styles.barShimmer}
+                                initial={{ x: '-100%' }}
+                                animate={{ x: '200%' }}
+                                transition={{ 
+                                  duration: 1.2, 
+                                  delay: 0.9 + i * 0.15,
+                                  ease: 'easeInOut'
+                                }}
+                              />
                             </motion.div>
                             <span className={styles.barLabel}>Kontroll</span>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                   <motion.div 
                     className={styles.chartLegend}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
                   >
-                    <div className={styles.legendItem}>
+                    <motion.div 
+                      className={styles.legendItem}
+                      whileHover={{ scale: 1.05, x: 2 }}
+                    >
                       <span className={`${styles.legendDot} ${styles.spadeDot}`} />
                       <span>Ásógépes kezelés</span>
-                    </div>
-                    <div className={styles.legendItem}>
+                    </motion.div>
+                    <motion.div 
+                      className={styles.legendItem}
+                      whileHover={{ scale: 1.05, x: 2 }}
+                    >
                       <span className={`${styles.legendDot} ${styles.controlDot}`} />
                       <span>Kontroll</span>
-                    </div>
+                    </motion.div>
                   </motion.div>
                 </motion.div>
 

@@ -4,15 +4,16 @@ export const locations = {
     name: 'Szentkirály',
     crop: 'Vöröshagyma',
     soil: 'Réti csernozjom',
-    ka: '28,5',
-    irrigation: '350 mm',
+    ka: '28',
+    irrigation: '350 mm (150 nap)',
     period: 'Március – Június',
     measurements: '4 alkalom',
+    measurementLabel: 'Penetrométeres mérések száma',
     spade: {
       treatments: [
         'Őszi nehézkultivátor',
         'Tavaszi nehézkultivátor',
-        '38WX ásógép (30 cm + 55 cm lazítókés)',
+        '38WX ásógép (30 cm + 55 cm mélylazítás)',
       ],
     },
     control: {
@@ -23,11 +24,20 @@ export const locations = {
       ],
     },
     chartData: [
-      { month: 'Március', spade: 35, control: 8 },
-      { month: 'Április', spade: 30, control: 25 },
-      { month: 'Május', spade: 22, control: 23 },
-      { month: 'Június', spade: 17, control: 5 },
+      { month: 'Március', spade: 37, control: 20 },
+      { month: 'Április', spade: 33, control: 34 },
+      { month: 'Május', spade: 34, control: 33 },
+      { month: 'Június', spade: 11, control: 6 },
     ],
+    temperatureData: {
+      depth1cm: { spade: 17.3, control: 14.3 },
+      depth5cm: { spade: 12.1, control: 9.8 },
+    },
+    evaluations: {
+      control: 'A szerkezet egyenletlen, a kultivátorkapák között sekély a laza réteg, a 4. hónapra már 6 cm-től tömörödött a talaj.',
+      spade: 'A laza talajszerkezet 3 hónapig stabil maradt, a 4. hónapra 11 cm alatt már tömörödött.',
+      summary: 'A tenyészidő során az öntözés hatására erőteljesen tömörödik a talaj.',
+    },
     highlight: {
       title: 'Látható különbség',
       text: 'A júniusi helyszíni bejáráson szemmel látható volt: az ásógépezett parcellán jelentősen kevesebb gyom fejlődött, mint a hagyományos művelésű területen.',
@@ -38,9 +48,10 @@ export const locations = {
     crop: 'Ipari paradicsom',
     soil: 'Réti csernozjom',
     ka: '28',
-    irrigation: '400 mm',
+    irrigation: '400 mm (120 nap)',
     period: 'Május – Június',
     measurements: '2 alkalom',
+    measurementLabel: 'Penetrométeres mérések száma',
     spade: {
       treatments: [
         'Őszi szántás (28 cm)',
@@ -57,16 +68,17 @@ export const locations = {
       ],
     },
     chartData: [
-      { month: 'Május', spade: 40, control: 35 },
-      { month: 'Június', spade: 37, control: 27 },
+      { month: 'Május', spade: 40, control: 33 },
+      { month: 'Június', spade: 35, control: 29 },
     ],
-    callout: {
-      number: '10 cm',
-      text: 'különbség júniusban az ásógépezett parcella javára',
+    evaluations: {
+      control: 'Az ásóborona hatása kedvező, de az optimálisan laza talajszerkezet mélysége mindkét hónapban elmaradt az ásógéppel elért eredménytől.',
+      spade: 'Az optimálisan laza talajszerkezet 2 hónap után is 30 cm-t meghaladó mélységig maradt fent.',
+      summary: 'A tenyészidő során az öntözés hatására erőteljesen tömörödik a talaj.',
     },
     highlight: {
       title: 'Szembetűnő növekedési különbség',
-      text: 'A júniusi fotón jól látható: az ásógépezett sorok paradicsomjai nagyobbak és fejlettebbek, mint a hagyományos művelésű terület növényei.',
+      text: 'A júniusi fotón jól látható: a kép bal oldalára eső sorok a kontroll, a középső és a tőle jobbra eső sorok az ásógépezett parcellán fejlődtek. A lombtömeg és a hajtáshossz átlagosan 20%-kal nagyobb az ásógépezett területen.',
     },
   },
   lakitelek: {
@@ -74,27 +86,94 @@ export const locations = {
     crop: 'Ipari paradicsom',
     soil: 'Humuszos homok',
     ka: '27',
-    irrigation: '450 mm',
+    irrigation: '450 mm (120 nap)',
     period: 'Május – Augusztus',
-    measurements: '7 különböző',
+    measurements: '3 alkalom',
+    measurementLabel: 'Penetrométeres mérések száma',
+    treatmentCount: '7 különböző kombináció',
     parcels: [
-      { num: 'I.', treatment: 'Mélyásógép (40 cm)', may: 33, aug: 31, change: -2, good: true },
-      { num: 'II.', treatment: 'Lazítás + Ásógép (30 cm)', may: 35, aug: 28, change: -7, good: false },
-      { num: 'III.', treatment: 'Ásógép (30 cm)', may: 22, aug: 20, change: -2, good: true },
-      { num: 'IV.', treatment: 'Lazítás + Szántás + Kombinátor', may: 35, aug: 28, change: -7, good: false },
-      { num: 'V.', treatment: 'Szántás + Kombinátor', may: 28, aug: 32, change: 4, good: true },
-      { num: 'VI.', treatment: 'Lazítás + Szántás + Ásógép', may: 36, aug: 29, change: -7, good: false },
-      { num: 'VII.', treatment: 'Szántás + Ásógép (25 cm)', may: 32, aug: 31, change: -1, good: true },
+      {
+        num: 'I.',
+        treatment: 'Mélyásógép',
+        shortName: 'mély.ág',
+        may: 31,
+        jun: 35,
+        aug: 32,
+        rating: 95,
+        description: 'A legmélyebben lazító és az egyik legtartósabb technológia.',
+        good: true
+      },
+      {
+        num: 'II.',
+        treatment: 'Lazítás + Ásógép',
+        shortName: 'laz+ág',
+        may: 35,
+        jun: 36,
+        aug: 19,
+        rating: 80,
+        description: 'Kevésbé egyenletes és kevésbé tartós.',
+        good: false
+      },
+      {
+        num: 'III.',
+        treatment: 'Ásógép',
+        shortName: 'ág',
+        may: 23,
+        jun: 20,
+        aug: 19,
+        rating: 80,
+        description: 'Egyenletes és tartós, de itt nem elég mély a lazított réteg.',
+        good: true
+      },
+      {
+        num: 'IV.',
+        treatment: 'Lazítás + Szántás + Kombinátor',
+        shortName: 'laz+sz+komb',
+        may: 31,
+        jun: 29,
+        aug: 28,
+        rating: 90,
+        description: 'Egyenletes és tartós, a tömörödés üteme folyamatos.',
+        good: true
+      },
+      {
+        num: 'V.',
+        treatment: 'Szántás + Kombinátor',
+        shortName: 'sz+komb',
+        may: 32,
+        jun: 32,
+        aug: 19,
+        rating: 80,
+        description: 'Egyenletes és megfelelően mély, de nem tartós.',
+        good: false
+      },
+      {
+        num: 'VI.',
+        treatment: 'Lazítás + Szántás + Ásógép',
+        shortName: 'laz+sz+ág',
+        may: 36,
+        jun: 30,
+        aug: 30,
+        rating: 95,
+        description: 'Egyenletes, megfelelően mély és tartós.',
+        good: true
+      },
+      {
+        num: 'VII.',
+        treatment: 'Szántás + Ásógép',
+        shortName: 'sz+ág',
+        may: 31,
+        jun: 31,
+        aug: 31,
+        rating: 95,
+        description: 'Egyenletes, megfelelően mély és tartós.',
+        good: true
+      },
     ],
-    multiChartData: [
-      { label: 'I. Mélyásógép', may: 33, aug: 31 },
-      { label: 'II. Lazítás+Ásógép', may: 35, aug: 28 },
-      { label: 'III. Ásógép', may: 22, aug: 20 },
-      { label: 'IV. Hagyományos+Lazítás', may: 35, aug: 28 },
-      { label: 'V. Hagyományos', may: 28, aug: 32 },
-      { label: 'VI. Mindent kombináció', may: 36, aug: 29 },
-      { label: 'VII. Szántás+Ásógép', may: 32, aug: 31 },
-    ],
+    conclusions: {
+      summary: 'Ezen a talajon önmagában csak a mélyásógép javasolható. A kombinációk közül a szántott és normál mélységben ásógépezett variációk bizonyultak a legtartósabbnak.',
+      bestResults: ['I.', 'VI.', 'VII.'],
+    },
   },
 }
 
@@ -125,28 +204,21 @@ export const findings = [
 // Hero statistics
 export const heroStats = [
   { number: '3', label: 'Helyszín', sublabel: 'Szentkirály · Kecskemét · Lakitelek' },
-  { number: '4', label: 'Hónap', sublabel: 'Március – Június' },
+  { number: '9', label: 'Kezelés kombináció', sublabel: 'Különböző művelési módok' },
+  { number: '4', label: 'Hónap', sublabel: 'Március – Augusztus' },
 ]
 
 // Tab 1: A Tömörödés Problémája
 export const compactionChallenges = [
   {
     title: 'Gyakori öntözés hatása',
-    description: 'Intenzív öntözéses kertészeti kultúrákban 4-7 naponként 30-50 mm víz kijuttatása történik, ami fokozatosan tömöríti a talajt.',
+    description: 'Ennyi öntözővizet kell a talajfelszínnek elnyelnie és mélyebbre szivárogtatnia egy öntözési szezonban, bármely átlagos kertészeti kultúrában.',
     icon: 'droplet',
-    data: '350-450 mm/szezon',
-  },
-  {
-    title: 'Gépek taposása',
-    description: 'Nehéz öntözőberendezések, traktorok és betakarító gépek rendszeres áthaladása tömöríti a felső talajréteget.',
-    icon: 'weight',
-    data: 'Folyamatos terhelés',
   },
   {
     title: 'Szerkezetromlás üteme',
-    description: 'A szántott talajon már 30 nap alatt 20-50%-os szerkezetromlás mérhető intenzív öntözés mellett.',
+    description: 'A tárcsázott vagy kombinátorozott talajon már 30 nap alatt jelentős szerkezetromlás mérhető intenzív öntözés mellett.',
     icon: 'layers',
-    data: '30 nap alatt kritikus',
   },
 ]
 
@@ -188,10 +260,10 @@ export const irrigationChallenges = compactionChallenges
 // Problem statistics
 export const problemStatistics = {
   irrigation: {
-    min: 350,
-    max: 450,
+    min: 20,
+    max: 40,
     unit: 'mm',
-    label: 'Öntözővíz / szezon',
+    label: 'Gyakori öntözés hatása',
   },
   frequency: {
     min: 4,
@@ -305,7 +377,7 @@ export const modelDetails = {
     image: '/images/38SX.png',
     specs: {
       depth: '15-35 cm',
-      power: '80-150 LE',
+      power: '90-150 LE',
       features: ['Kompakt felépítés', 'Költséghatékony', 'Könnyű karbantartás']
     },
     fieldApplication: {
@@ -349,22 +421,22 @@ export const modelDetails = {
     typeEn: 'Spader with Subsoiler',
     image: '/images/38WX.png',
     specs: {
-      depth: '35 cm + 55 cm lazítás',
-      power: '100-180 LE',
-      features: ['Dupla működési mélység', 'Mélylazító kések', 'Tömör talajokra optimalizált']
+      depth: '15-35 cm + 55 cm mélylazítás',
+      power: '90-150 LE',
+      features: ['Altalaj lazítás és ásógépezés egy menetben', 'Duplarotoros kivitelben is elérhető', 'Hidraulikus akkumulátor a precízebb talajkövetés érdekében']
     },
     fieldApplication: {
       location: 'Szentkirály',
       crop: 'Vöröshagyma',
       soil: 'Réti csernozjom',
-      ka: '28,5',
-      irrigation: '350 mm',
+      ka: '28',
+      irrigation: '350 mm (150 nap)',
       period: 'Március – Június',
       measurements: '4 alkalom',
       spadeTreatments: [
         'Őszi nehézkultivátor',
         'Tavaszi nehézkultivátor',
-        '38WX ásógép (30 cm + 55 cm lazítókés)'
+        '38WX ásógép (30 cm + 55 cm mélylazítás)'
       ],
       controlTreatments: [
         'Őszi nehézkultivátor',
@@ -372,10 +444,10 @@ export const modelDetails = {
         'Kombinátor'
       ],
       chartData: [
-        { month: 'Március', spade: 35, control: 8 },
-        { month: 'Április', spade: 30, control: 25 },
-        { month: 'Május', spade: 22, control: 23 },
-        { month: 'Június', spade: 17, control: 5 }
+        { month: 'Március', spade: 37, control: 20 },
+        { month: 'Április', spade: 33, control: 34 },
+        { month: 'Május', spade: 34, control: 33 },
+        { month: 'Június', spade: 11, control: 6 }
       ],
       highlight: {
         title: 'Látható különbség',
@@ -391,8 +463,8 @@ export const modelDetails = {
     image: '/images/40SX.png',
     specs: {
       depth: '20-50 cm',
-      power: '100-250 LE',
-      features: ['Dupla rotor rendszer', 'Automata kenés', 'Beépített kővédelem']
+      power: '110-160 LE',
+      features: ['Egyenletes lazítás 50 cm mélységig', 'Duplarotoros kivitelben is elérhető', 'Kifejezetten kertészeti kultúrák számára fejlesztve (mély magágy)']
     },
     fieldApplication: {
       locations: [
@@ -401,7 +473,7 @@ export const modelDetails = {
           crop: 'Ipari paradicsom',
           soil: 'Réti csernozjom',
           ka: '28',
-          irrigation: '400 mm',
+          irrigation: '400 mm (120 nap)',
           period: 'Május – Június',
           spadeTreatments: [
             'Őszi szántás (28 cm)',
@@ -410,11 +482,11 @@ export const modelDetails = {
             '40SX mélyásógép (45 cm)'
           ],
           chartData: [
-            { month: 'Május', spade: 40, control: 35 },
-            { month: 'Június', spade: 37, control: 27 }
+            { month: 'Május', spade: 40, control: 33 },
+            { month: 'Június', spade: 35, control: 29 }
           ],
           callout: {
-            number: '10 cm',
+            number: '6 cm',
             text: 'különbség júniusban az ásógépezett parcella javára'
           }
         },
