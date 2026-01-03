@@ -109,8 +109,8 @@ export default function SoilHeroInteractive({ onNavigate }: SoilHeroInteractiveP
             <motion.div className={styles.ctaGroup} variants={itemVariants}>
               <span className={styles.ctaHint}>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2"/>
-                  <path d="M8 5V8L10 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2" />
+                  <path d="M8 5V8L10 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
                 Vidd az egeret a rétegekre
               </span>
@@ -135,52 +135,52 @@ export default function SoilHeroInteractive({ onNavigate }: SoilHeroInteractiveP
           initial="hidden"
           animate={isLoaded ? 'visible' : 'hidden'}
         >
-            <motion.div className={styles.navList} variants={containerVariants}>
-              {NAV_ITEMS.map((item, index) => {
-                const isActive = hoveredNav === item.id
+          <motion.div className={styles.navList} variants={containerVariants}>
+            {NAV_ITEMS.map((item, index) => {
+              const isActive = hoveredNav === item.id
 
-                return (
-                  <motion.button
-                    key={item.id}
-                    className={`${styles.navButton} ${isActive ? styles.navActive : ''}`}
-                    style={{
-                      '--nav-color': item.color,
-                    } as React.CSSProperties}
-                    variants={itemVariants}
-                    onMouseEnter={() => handleNavHover(item.id)}
-                    onMouseLeave={() => handleNavHover(null)}
-                    onClick={() => handleNavClick(item.id)}
-                    whileHover={{ x: 8 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className={styles.navIndicator}>
-                      <motion.div
-                        className={styles.navIndicatorFill}
-                        animate={{ scaleY: isActive ? 1 : 0 }}
-                        transition={{ duration: 0.2 }}
-                      />
-                    </div>
-
-                    <div className={styles.navContent}>
-                      <div className={styles.navHeader}>
-                        <span className={styles.navNumber}>{item.number}</span>
-                        <span className={styles.navDepth}>{item.depth}</span>
-                      </div>
-                      <h3 className={styles.navTitle}>{item.title}</h3>
-                      <p className={styles.navSubtitle}>{item.subtitle}</p>
-                    </div>
-
+              return (
+                <motion.button
+                  key={item.id}
+                  className={`${styles.navButton} ${isActive ? styles.navActive : ''}`}
+                  style={{
+                    '--nav-color': item.color,
+                  } as React.CSSProperties}
+                  variants={itemVariants}
+                  onMouseEnter={() => handleNavHover(item.id)}
+                  onMouseLeave={() => handleNavHover(null)}
+                  onClick={() => handleNavClick(item.id)}
+                  whileHover={{ x: 8 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className={styles.navIndicator}>
                     <motion.div
-                      className={styles.navArrow}
-                      animate={{ opacity: isActive ? 1 : 0, x: isActive ? 0 : -10 }}
+                      className={styles.navIndicatorFill}
+                      animate={{ scaleY: isActive ? 1 : 0 }}
                       transition={{ duration: 0.2 }}
-                    >
-                      <ArrowRight size={18} />
-                    </motion.div>
-                  </motion.button>
-                )
-              })}
-            </motion.div>
+                    />
+                  </div>
+
+                  <div className={styles.navContent}>
+                    <div className={styles.navHeader}>
+                      <span className={styles.navNumber}>{item.number}</span>
+                      <span className={styles.navDepth}>{item.depth}</span>
+                    </div>
+                    <h3 className={styles.navTitle}>{item.title}</h3>
+                    <p className={styles.navSubtitle}>{item.subtitle}</p>
+                  </div>
+
+                  <motion.div
+                    className={styles.navArrow}
+                    animate={{ opacity: isActive ? 1 : 0, x: isActive ? 0 : -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ArrowRight size={18} />
+                  </motion.div>
+                </motion.button>
+              )
+            })}
+          </motion.div>
         </motion.div>
       </div>
 

@@ -12,21 +12,34 @@ interface BackToTopProps {
 
 export default function BackToTop({ threshold = 400, variant = 'dark' }: BackToTopProps) {
   const [isVisible, setIsVisible] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
+    if (!mounted) return
+    
     const handleScroll = () => {
       setIsVisible(window.scrollY > threshold)
     }
 
+    handleScroll() // Check initial state
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [threshold])
+  }, [threshold, mounted])
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     })
+  }
+
+  if (!mounted) {
+    return null
   }
 
   return (

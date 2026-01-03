@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function ProblemaPage() {
   return (
-    <ProblemLayout 
+    <ProblemLayout
       compactionContent={<CompactionView />}
       ploughingContent={<PloughingView />}
     />

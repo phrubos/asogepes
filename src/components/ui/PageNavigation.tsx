@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import styles from './PageNavigation.module.css'
@@ -15,6 +15,12 @@ const pages = [
 export default function PageNavigation() {
   const pathname = usePathname()
   const router = useRouter()
+  const [mounted, setMounted] = useState(false)
+  
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   
   const currentIndex = pages.findIndex(p => p.path === pathname)
   const prevPage = currentIndex > 0 ? pages[currentIndex - 1] : null
@@ -26,6 +32,8 @@ export default function PageNavigation() {
 
   // Keyboard navigation
   useEffect(() => {
+    if (!mounted) return
+    
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
         return
@@ -40,7 +48,7 @@ export default function PageNavigation() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [prevPage, nextPage, handleNavigate])
+  }, [prevPage, nextPage, handleNavigate, mounted])
 
   return (
     <>

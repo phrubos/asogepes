@@ -1,8 +1,9 @@
 .sectionProblem {
   padding: 0;
-  padding-bottom: calc(var(--space-5xl) + 80px); /* Extra space for fixed toggle */
+  padding-bottom: calc(var(--space-5xl) + 80px);
+  /* Extra space for fixed toggle */
   min-height: 100vh;
-  background: var(--color-earth-900);
+  background: linear-gradient(180deg, #252019 0%, #1E1A15 50%, #1A1612 100%);
   color: var(--color-cream);
   overflow: hidden;
   position: relative;
@@ -14,10 +15,10 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
   background-size: 50px 50px;
-  mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+  mask-image: radial-gradient(circle at center, black 40%, transparent 75%);
   pointer-events: none;
   z-index: 0;
 }
@@ -96,6 +97,345 @@
   background: linear-gradient(135deg, #E8C872, var(--color-gold));
 }
 
+/* ========================================
+   NEW HERO STYLES (Monitor Layout v2)
+   ======================================== */
+
+.heroWrapper {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  padding-top: 80px;
+  /* Header space */
+}
+
+.heroContainer {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  /* Match Research alignment (Text | Visual) */
+  gap: 4rem;
+  /* Match Research gap */
+  align-items: center;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.heroLeft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 600px;
+}
+
+/* Force left alignment for badge */
+.heroLeft :global(.page-badge) {
+  align-self: flex-start;
+  margin-bottom: 0;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  line-height: 1.15;
+  font-weight: 800;
+  color: var(--color-white);
+  letter-spacing: -0.02em;
+  margin: var(--space-sm) 0;
+  max-width: 480px;
+}
+
+.titleHighlight {
+  color: var(--color-gold);
+}
+
+.heroSubtitle {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 55ch;
+  margin-top: var(--space-xs);
+}
+
+.heroSubtitle em {
+  display: block;
+  font-style: italic;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: var(--space-sm);
+}
+
+/* ========================================
+   SOIL THREAT MONITOR (Hero Right)
+   ======================================== */
+
+.heroRight {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.monitorFrame {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  background: linear-gradient(165deg, rgba(26, 23, 20, 0.95) 0%, rgba(15, 14, 12, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: var(--space-xl);
+  box-shadow:
+    0 25px 60px -10px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  overflow: hidden;
+}
+
+/* Background Grid Effect */
+.monitorGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(212, 168, 75, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212, 168, 75, 0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Scanline Animation */
+.monitorScanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.5), transparent);
+  opacity: 0.3;
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(600px);
+  }
+}
+
+.monitorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+  position: relative;
+  z-index: 2;
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.monitorStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: var(--color-gold);
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.pulseIcon {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 8px var(--color-gold);
+  }
+}
+
+.monitorId {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.monitorContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  position: relative;
+  z-index: 2;
+}
+
+/* Threat Cards */
+.threatCard {
+  position: relative;
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+}
+
+.threatCard:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: scale(1.02);
+  border-color: rgba(212, 168, 75, 0.3);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+}
+
+.threatCardInner {
+  display: flex;
+  align-items: center;
+  padding: var(--space-lg);
+  gap: var(--space-lg);
+  position: relative;
+  z-index: 2;
+}
+
+.threatIconBox {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.threatCard:hover .threatIconBox {
+  background: rgba(212, 168, 75, 0.1);
+  border-color: rgba(212, 168, 75, 0.3);
+  color: var(--color-gold);
+  transform: rotate(-5deg);
+}
+
+.threatInfo {
+  flex: 1;
+}
+
+.threatMeta {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.threatNumber {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: var(--color-gold);
+  opacity: 0.8;
+}
+
+.threatDepth {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.threatTitle {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-white);
+  line-height: 1.3;
+}
+
+.threatAction {
+  opacity: 0;
+  transform: translateX(-10px);
+  color: var(--color-gold);
+  transition: all 0.3s ease;
+}
+
+.threatCard:hover .threatAction {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Alert Tag */
+.alertTag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(229, 115, 115, 0.15);
+  border: 1px solid rgba(229, 115, 115, 0.3);
+  color: #E57373;
+  font-size: 0.65rem;
+  padding: 4px 8px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+  z-index: 3;
+}
+
+.alertTagVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Scan Effect (Gold overlay) */
+.threatScanEffect {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(212, 168, 75, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (max-width: 1024px) {
+  .heroContainer {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: var(--space-xl);
+  }
+
+  .heroLeft {
+    margin: 0 auto;
+    align-items: center;
+  }
+
+  .heroLeft :global(.page-badge) {
+    align-self: center;
+  }
+}
+
 /* Compaction View Styles */
 .gridContainer {
   display: grid;
@@ -110,7 +450,7 @@
   background: linear-gradient(135deg, rgba(26, 23, 20, 0.8) 0%, rgba(35, 30, 25, 0.9) 100%);
   border-radius: var(--radius-lg);
   padding: var(--space-2xl);
-  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
@@ -305,7 +645,7 @@
   .mainTitle {
     font-size: clamp(1.75rem, 8vw, 2.5rem);
   }
-  
+
   .statUnit {
     font-size: 1.5rem;
   }
@@ -348,7 +688,7 @@
   text-align: center;
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
@@ -410,17 +750,17 @@
     padding: var(--space-xl) var(--space-lg);
     margin-bottom: var(--space-3xl);
   }
-  
+
   .quoteIcon {
     width: 48px;
     height: 48px;
   }
-  
+
   .quoteIcon svg {
     width: 24px;
     height: 24px;
   }
-  
+
   .quoteSubtext {
     font-size: 1rem;
   }
@@ -784,7 +1124,7 @@
   position: relative;
   border-radius: var(--radius-xl);
   overflow: hidden;
-  box-shadow: 
+  box-shadow:
     0 20px 40px -15px rgba(0, 0, 0, 0.2),
     0 0 0 1px rgba(0, 0, 0, 0.05);
 }
@@ -859,11 +1199,11 @@
     padding: var(--space-3xl) 0;
     padding-bottom: calc(var(--space-3xl) + 60px);
   }
-  
+
   .challengeItem {
     padding: var(--space-md);
   }
-  
+
   .iconBox {
     width: 40px;
     height: 40px;
@@ -1004,7 +1344,7 @@
     flex-wrap: wrap;
     justify-content: center;
   }
-  
+
   .horizontalScrollItem {
     flex: 0 0 100%;
     min-width: auto;
@@ -1145,6 +1485,7 @@
 
 /* Mobile Animation Optimizations */
 @media (prefers-reduced-motion: reduce) {
+
   .scrollProgress,
   .heroBlobs,
   .heroParticles,
@@ -1152,12 +1493,12 @@
   .spacerLine {
     display: none;
   }
-  
+
   .staggerItem {
     opacity: 1;
     transform: none;
   }
-  
+
   .severityFill {
     transform: scaleX(1);
   }
@@ -1272,8 +1613,16 @@
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 
@@ -1293,13 +1642,11 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(107, 139, 94, 0.03) 30%,
-    rgba(139, 115, 85, 0.03) 70%,
-    transparent 100%
-  );
+  background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(107, 139, 94, 0.03) 30%,
+      rgba(139, 115, 85, 0.03) 70%,
+      transparent 100%);
 }
 
 .sectionTransition::after {
@@ -1316,8 +1663,17 @@
 }
 
 @keyframes pulseGlow {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-  50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.8; }
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.8;
+  }
 }
 
 /* ============================================
@@ -1325,54 +1681,55 @@
    ============================================ */
 
 @media (max-width: 768px) {
+
   /* Disable heavy animations */
   .heroBlobs,
   .heroParticles,
   .sectionBlobs {
     display: none;
   }
-  
+
   /* Simplify scroll progress */
   .scrollProgress {
     height: 3px;
   }
-  
+
   /* Reduce section padding */
   .sectionBlock {
     padding-left: 0;
   }
-  
+
   /* Hide section indicators on mobile */
   .sectionIndicator {
     display: none;
   }
-  
+
   /* Reduce quote block padding */
   .quoteBlock {
     padding: var(--space-lg);
     margin: var(--space-xl) 0;
   }
-  
+
   .quoteText {
     font-size: 1rem;
     padding-left: 0;
   }
-  
+
   .quoteSubtext {
     padding-left: 0;
   }
-  
+
   /* Simplify card hover effects */
   .floatingCard:hover {
     transform: none;
     box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.1);
   }
-  
+
   /* Reduce section spacer */
   .sectionSpacer {
     height: 60px;
   }
-  
+
   /* Simplify transitions */
   .sectionTransition {
     height: 80px;
@@ -1385,26 +1742,26 @@
   .scrollProgress {
     height: 2px;
   }
-  
+
   .quoteBlock {
     padding: var(--space-md);
     border-left-width: 3px;
   }
-  
+
   .quoteIcon {
     display: none;
   }
-  
+
   .cardNumberBadge {
     width: 28px;
     height: 28px;
     font-size: 0.65rem;
   }
-  
+
   .sectionSpacer {
     height: 40px;
   }
-  
+
   .sectionTransition {
     height: 60px;
   }
@@ -1415,19 +1772,19 @@
   .scrollProgress {
     transition: none;
   }
-  
+
   .floatingCard {
     transition: none;
   }
-  
+
   .floatingCard:hover {
     transform: none;
   }
-  
+
   .sectionTransition::after {
     animation: none;
   }
-  
+
   .typewriterCursor {
     animation: none;
     opacity: 1;

@@ -13,8 +13,14 @@ export default function Navigation() {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
+  const [mounted, setMounted] = useState(false)
   const navRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const navItems = [
     { href: '/', label: 'Főoldal' },
@@ -32,7 +38,7 @@ export default function Navigation() {
   // Update indicator position
   useEffect(() => {
     const updateIndicator = () => {
-      if (!navRef.current) return
+      if (!navRef.current || !mounted) return
       const targetIndex = hoverIndex !== null ? hoverIndex : activeIndex
       const links = navRef.current.querySelectorAll('a')
       const activeLink = links[targetIndex] as HTMLElement
@@ -45,46 +51,59 @@ export default function Navigation() {
         })
       }
     }
-    updateIndicator()
-    window.addEventListener('resize', updateIndicator)
+    if (mounted) {
+      updateIndicator()
+      window.addEventListener('resize', updateIndicator)
+    }
     return () => window.removeEventListener('resize', updateIndicator)
-  }, [activeIndex, hoverIndex])
+  }, [activeIndex, hoverIndex, mounted])
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
     }
-    window.addEventListener('scroll', handleScroll)
+    if (mounted) {
+      handleScroll()
+      window.addEventListener('scroll', handleScroll)
+    }
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [mounted])
 
   useEffect(() => {
     setMobileMenuOpen(false)
   }, [pathname])
 
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
+    if (mounted) {
+      if (mobileMenuOpen) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
     }
-    return () => { document.body.style.overflow = '' }
-  }, [mobileMenuOpen])
+    return () => { 
+      if (mounted) {
+        document.body.style.overflow = '' 
+      }
+    }
+  }, [mobileMenuOpen, mounted])
 
   return (
-    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
+    <header className={`${styles.header} ${mounted && scrolled ? styles.scrolled : ''}`}>
       <div className={styles.headerInner}>
         {/* Desktop Navigation */}
         <nav className={styles.nav} ref={navRef} aria-label="Fő navigáció">
-          {/* Sliding Indicator */}
-          <motion.div
-            className={styles.indicator}
-            animate={{
-              left: indicatorStyle.left,
-              width: indicatorStyle.width,
-            }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-          />
+          {/* Sliding Indicator - only render after mount */}
+          {mounted && (
+            <motion.div
+              className={styles.indicator}
+              animate={{
+                left: indicatorStyle.left,
+                width: indicatorStyle.width,
+              }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            />
+          )}
           
           {navItems.map((item, index) => (
             <Link
@@ -133,58 +152,60 @@ export default function Navigation() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <>
-            <motion.div
-              className={styles.mobileOverlay}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
-            />
-            <motion.nav
-              className={styles.mobileNav}
-              initial={{ clipPath: 'inset(0 0 100% 0)' }}
-              animate={{ clipPath: 'inset(0 0 0% 0)' }}
-              exit={{ clipPath: 'inset(0 0 100% 0)' }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              aria-label="Mobil navigáció"
-            >
-              <div className={styles.mobileNavInner}>
-                {navItems.map((item, index) => (
-                  <motion.div
-                    key={item.href}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ delay: 0.1 + index * 0.05 }}
-                  >
-                    <Link
-                      href={item.href}
-                      className={`${styles.mobileLink} ${pathname === item.href ? styles.mobileActive : ''}`}
-                      onClick={() => setMobileMenuOpen(false)}
-                      aria-current={pathname === item.href ? 'page' : undefined}
+      {/* Mobile Menu - only render after mount */}
+      {mounted && (
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <>
+              <motion.div
+                className={styles.mobileOverlay}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <motion.nav
+                className={styles.mobileNav}
+                initial={{ clipPath: 'inset(0 0 100% 0)' }}
+                animate={{ clipPath: 'inset(0 0 0% 0)' }}
+                exit={{ clipPath: 'inset(0 0 100% 0)' }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                aria-label="Mobil navigáció"
+              >
+                <div className={styles.mobileNavInner}>
+                  {navItems.map((item, index) => (
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ delay: 0.1 + index * 0.05 }}
                     >
-                      <span className={styles.mobileLinkNumber}>
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
-                      <span className={styles.mobileLinkText}>{item.label}</span>
-                      {pathname === item.href && (
-                        <motion.span
-                          className={styles.mobileActiveMark}
-                          layoutId="mobileActive"
-                        />
-                      )}
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.nav>
-          </>
-        )}
-      </AnimatePresence>
+                      <Link
+                        href={item.href}
+                        className={`${styles.mobileLink} ${pathname === item.href ? styles.mobileActive : ''}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                        aria-current={pathname === item.href ? 'page' : undefined}
+                      >
+                        <span className={styles.mobileLinkNumber}>
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <span className={styles.mobileLinkText}>{item.label}</span>
+                        {pathname === item.href && (
+                          <motion.span
+                            className={styles.mobileActiveMark}
+                            layoutId="mobileActive"
+                          />
+                        )}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.nav>
+            </>
+          )}
+        </AnimatePresence>
+      )}
     </header>
   )
 }

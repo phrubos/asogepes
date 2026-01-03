@@ -9,12 +9,23 @@ interface ScrollProgressProps {
 }
 
 export default function ScrollProgress({ color = 'green' }: ScrollProgressProps) {
+  const [mounted, setMounted] = useState(false)
+  
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   })
+
+  if (!mounted) {
+    return null
+  }
 
   return (
     <motion.div 

@@ -23,8 +23,8 @@ export default function InteractiveSoil() {
   const [dayIndex, setDayIndex] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const [isUserInteracting, setIsUserInteracting] = useState(false)
-  
-  const isCompacted = dayIndex === 4 
+
+  const isCompacted = dayIndex === 4
   const currentData = timelineData[dayIndex]
 
   // --- AUTOMATIKUS LOOP ---
@@ -39,7 +39,7 @@ export default function InteractiveSoil() {
   }, [isHovered, isUserInteracting])
 
   const handleInteractionStart = () => setIsUserInteracting(true)
-  
+
   const handleToggle = () => {
     handleInteractionStart()
     setDayIndex(dayIndex === 0 ? 4 : 0)
@@ -52,7 +52,7 @@ export default function InteractiveSoil() {
 
   // --- PATH DEFINÍCIÓK (A Lényeg) ---
   // Minden path a (150, 120) pontból indul ki.
-  
+
   // 1. SZÁR (Stem) - A földfelszín FELETT (0-120 tartomány)
   // A szár a talajszinttől (120) indul és felfelé megy
   const stemPathHealthy = "M150,120 L150,50"
@@ -66,13 +66,13 @@ export default function InteractiveSoil() {
   // Healthy: Mélyre megy, elágazó
   const rootPathHealthy = `
     M150,120 
-    C150,180 145,280 140,380 
-    C135,400 125,430 110,460 
-    M150,160 C175,200 190,300 200,380 
-    M150,140 C125,180 110,260 95,340
-    M150,150 C165,190 180,270 190,350
+    C150,160 145,240 140,300 
+    C135,320 125,335 110,345 
+    M150,150 C170,180 185,250 195,310 
+    M150,135 C130,165 115,220 105,280
+    M150,140 C160,170 170,230 180,290
   `
-  
+
   // Compacted: Megakad a rétegnél (PAN_START_Y = 155), szétterül
   const rootPathCompacted = `
     M150,120 
@@ -80,7 +80,7 @@ export default function InteractiveSoil() {
     C125,158 100,155 70,150 
     M150,155 C175,158 200,155 230,150 
     M150,155 L151,210 
-  ` 
+  `
   // Magyarázat a Compacted Path-hoz:
   // 1. szakasz: Lemegy 120-tól 155-ig (réteg teteje).
   // 2. szakasz: 155-nél balra kanyarodik (vízszintesen terül).
@@ -99,8 +99,8 @@ export default function InteractiveSoil() {
   }, [])
 
   return (
-    <motion.div 
-      style={{ 
+    <motion.div
+      style={{
         width: '100%', maxWidth: '500px', margin: '0 auto',
         background: 'rgba(26, 22, 18, 0.95)', borderRadius: '24px',
         boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
@@ -146,14 +146,14 @@ export default function InteractiveSoil() {
         {/* VEZÉRLŐPULT */}
         <div style={{ background: 'rgba(255, 255, 255, 0.05)', borderRadius: '16px', padding: '16px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '0.7rem', fontWeight: 600 }}>
-             {timelineData.map((d, i) => (
-               <motion.span 
-                  key={i} 
-                  animate={{ color: i === dayIndex ? d.color : 'rgba(255, 255, 255, 0.5)', scale: i === dayIndex ? 1.1 : 1 }}
-               >
-                 {d.label}
-               </motion.span>
-             ))}
+            {timelineData.map((d, i) => (
+              <motion.span
+                key={i}
+                animate={{ color: i === dayIndex ? d.color : 'rgba(255, 255, 255, 0.5)', scale: i === dayIndex ? 1.1 : 1 }}
+              >
+                {d.label}
+              </motion.span>
+            ))}
           </div>
           <input
             type="range" min="0" max="4" step="1"
@@ -161,39 +161,39 @@ export default function InteractiveSoil() {
             style={{ width: '100%', cursor: 'pointer', accentColor: currentData.color, display: 'block' }}
           />
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
-             <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'rgba(255, 255, 255, 0.7)' }}>Penetrométer:</span>
-             <div style={{ flex: 1, height: '8px', background: 'rgba(255, 255, 255, 0.15)', borderRadius: '4px', overflow: 'hidden', position: 'relative' }}>
-                <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, #4CAF50 0%, #FFC107 40%, #D32F2F 100%)' }} />
-                <motion.div 
-                  style={{ position: 'absolute', top: 0, bottom: 0, width: '2px', background: '#000', boxShadow: '0 0 4px rgba(0,0,0,0.5)' }}
-                  animate={{ left: `${(currentData.penetrometer / 25) * 100}%` }}
-                />
-             </div>
-             <motion.span 
-               key={currentData.penetrometer}
-               initial={{ scale: 1.2 }} animate={{ scale: 1 }}
-               style={{ fontSize: '0.9rem', fontWeight: 800, color: currentData.color, width: '55px', textAlign: 'right' }}
-             >
-               {currentData.penetrometer} bar
-             </motion.span>
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'rgba(255, 255, 255, 0.7)' }}>Penetrométer:</span>
+            <div style={{ flex: 1, height: '8px', background: 'rgba(255, 255, 255, 0.15)', borderRadius: '4px', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, #4CAF50 0%, #FFC107 40%, #D32F2F 100%)' }} />
+              <motion.div
+                style={{ position: 'absolute', top: 0, bottom: 0, width: '2px', background: '#000', boxShadow: '0 0 4px rgba(0,0,0,0.5)' }}
+                animate={{ left: `${(currentData.penetrometer / 25) * 100}%` }}
+              />
+            </div>
+            <motion.span
+              key={currentData.penetrometer}
+              initial={{ scale: 1.2 }} animate={{ scale: 1 }}
+              style={{ fontSize: '0.9rem', fontWeight: 800, color: currentData.color, width: '55px', textAlign: 'right' }}
+            >
+              {currentData.penetrometer} bar
+            </motion.span>
           </div>
         </div>
       </div>
 
       {/* --- VIZUALIZÁCIÓ (350px Magas) --- */}
       <div style={{ position: 'relative', height: '350px', width: '100%', overflow: 'hidden', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-        
+
         {/* 1. RÉTEG: ÉG (0 - 120px) */}
-        <motion.div 
+        <motion.div
           style={{ position: 'absolute', top: 0, left: 0, right: 0, height: `${GROUND_Y}px`, zIndex: 1 }}
           animate={{ background: isCompacted ? 'linear-gradient(180deg, #5C6B8A 0%, #4A5568 100%)' : 'linear-gradient(180deg, #7B8FAD 0%, #5C6B8A 100%)' }}
         />
 
         {/* 2. RÉTEG: TALAJ HÁTTÉR (120px - 500px) */}
         <div style={{ position: 'absolute', top: `${GROUND_Y}px`, left: 0, right: 0, bottom: 0, background: 'linear-gradient(180deg, #5D4E37 0%, #3D3226 30%, #2A231C 100%)', zIndex: 2 }}>
-            <div style={{ position: 'absolute', inset: 0, opacity: 0.2, filter: 'url(#soilNoise)' }} />
-            {/* Talajfelszín vonal */}
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, transparent, rgba(139, 115, 85, 0.6), transparent)' }} />
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, filter: 'url(#soilNoise)' }} />
+          {/* Talajfelszín vonal */}
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, transparent, rgba(139, 115, 85, 0.6), transparent)' }} />
         </div>
 
         {/* 3. RÉTEG: TÖMÖRÖDÖTT SÁV (Csak ha compacted) */}
@@ -217,8 +217,8 @@ export default function InteractiveSoil() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center'
               }}
             >
-              <div style={{ 
-                background: 'rgba(0,0,0,0.4)', color: '#FFEBEE', padding: '4px 12px', 
+              <div style={{
+                background: 'rgba(0,0,0,0.4)', color: '#FFEBEE', padding: '4px 12px',
                 borderRadius: '12px', fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.5px',
                 backdropFilter: 'blur(4px)'
               }}>
@@ -239,92 +239,92 @@ export default function InteractiveSoil() {
         />
 
         {/* 5. RÉTEG: SVG NÖVÉNY (Közös koordináta-rendszerben) */}
-        <svg 
-            width="100%" height="100%" viewBox="0 0 300 500" 
-            style={{ position: 'absolute', inset: 0, zIndex: 10, pointerEvents: 'none' }}
+        <svg
+          width="100%" height="100%" viewBox="0 0 300 350"
+          style={{ position: 'absolute', inset: 0, zIndex: 10, pointerEvents: 'none' }}
         >
-            {/* SZÁR (Stem) */}
-            <motion.path 
-              d={isCompacted ? stemPathCompacted : stemPathHealthy}
-              stroke={isCompacted ? "#AED581" : "#66BB6A"} 
-              strokeWidth={isCompacted ? 4 : 6} 
-              strokeLinecap="round"
-              fill="none"
-              animate={{ d: isCompacted ? stemPathCompacted : stemPathHealthy }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-            />
-            {/* LEVELEK (Leaves) */}
-            <motion.path 
-               d={isCompacted ? leavesPathCompacted : leavesPathHealthy}
-               stroke={isCompacted ? "#AED581" : "#43A047"}
-               strokeWidth={4}
-               fill="none"
-               strokeLinecap="round"
-               animate={{ d: isCompacted ? leavesPathCompacted : leavesPathHealthy }}
-               transition={{ duration: 0.8, ease: "easeInOut" }}
-            />
-            
-            {/* GYÖKÉRZET (Roots) */}
-            <motion.path
-              d={isCompacted ? rootPathCompacted : rootPathHealthy}
-              stroke={isCompacted ? "#8D6E63" : "#D7CCC8"} // Kicsit sötétebb ha beteg
-              strokeWidth={isCompacted ? 3 : 4}
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={false}
-              animate={{ d: isCompacted ? rootPathCompacted : rootPathHealthy }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-            />
+          {/* SZÁR (Stem) */}
+          <motion.path
+            d={isCompacted ? stemPathCompacted : stemPathHealthy}
+            stroke={isCompacted ? "#AED581" : "#66BB6A"}
+            strokeWidth={isCompacted ? 4 : 6}
+            strokeLinecap="round"
+            fill="none"
+            animate={{ d: isCompacted ? stemPathCompacted : stemPathHealthy }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+          />
+          {/* LEVELEK (Leaves) */}
+          <motion.path
+            d={isCompacted ? leavesPathCompacted : leavesPathHealthy}
+            stroke={isCompacted ? "#AED581" : "#43A047"}
+            strokeWidth={4}
+            fill="none"
+            strokeLinecap="round"
+            animate={{ d: isCompacted ? leavesPathCompacted : leavesPathHealthy }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+          />
+
+          {/* GYÖKÉRZET (Roots) */}
+          <motion.path
+            d={isCompacted ? rootPathCompacted : rootPathHealthy}
+            stroke={isCompacted ? "#8D6E63" : "#D7CCC8"} // Kicsit sötétebb ha beteg
+            strokeWidth={isCompacted ? 3 : 4}
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={false}
+            animate={{ d: isCompacted ? rootPathCompacted : rootPathHealthy }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+          />
         </svg>
 
         {/* 6. RÉTEG: VÍZ (Részecskék) */}
         <div style={{ position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none' }}>
-           {particles.map((p) => (
-             <motion.div
-               key={p.id}
-               style={{ 
-                 position: 'absolute', left: 0, top: 0, width: 6, height: 8, 
-                 background: '#4FC3F7', borderRadius: '50%', boxShadow: '0 0 4px #29B6F6'
-               }}
-               initial={{ x: p.xStart, y: -20, opacity: 0 }}
-               animate={isCompacted ? {
-                 // TÖMÖRÖDÖTT: Koppan a rétegen (155px) VAGY a felszínen (120px) és elfolyik
-                 y: [0, PAN_START_Y, PAN_START_Y + 5],
-                 x: [p.xStart, p.xStart, p.xStart + (p.id % 2 === 0 ? 100 : -100)], // Oldalra úszik
-                 opacity: [0, 1, 0],
-                 scale: [1, 1, 0]
-               } : {
-                 // EGÉSZSÉGES: Lemegy mélyre
-                 y: [0, 480],
-                 x: p.xStart,
-                 opacity: [0, 1, 0],
-                 scale: [1, 1, 0.5]
-               }}
-               transition={{
-                 duration: isCompacted ? 1.5 : 2.5,
-                 repeat: Infinity,
-                 delay: p.delay,
-                 ease: isCompacted ? "easeOut" : "linear"
-               }}
-             />
-           ))}
+          {particles.map((p) => (
+            <motion.div
+              key={p.id}
+              style={{
+                position: 'absolute', left: 0, top: 0, width: 6, height: 8,
+                background: '#4FC3F7', borderRadius: '50%', boxShadow: '0 0 4px #29B6F6'
+              }}
+              initial={{ x: p.xStart, y: -20, opacity: 0 }}
+              animate={isCompacted ? {
+                // TÖMÖRÖDÖTT: Koppan a rétegen (155px) VAGY a felszínen (120px) és elfolyik
+                y: [0, PAN_START_Y, PAN_START_Y + 5],
+                x: [p.xStart, p.xStart, p.xStart + (p.id % 2 === 0 ? 100 : -100)], // Oldalra úszik
+                opacity: [0, 1, 0],
+                scale: [1, 1, 0]
+              } : {
+                // EGÉSZSÉGES: Lemegy mélyre
+                y: [0, 480],
+                x: p.xStart,
+                opacity: [0, 1, 0],
+                scale: [1, 1, 0.5]
+              }}
+              transition={{
+                duration: isCompacted ? 1.5 : 2.5,
+                repeat: Infinity,
+                delay: p.delay,
+                ease: isCompacted ? "easeOut" : "linear"
+              }}
+            />
+          ))}
         </div>
 
         {/* 7. RÉTEG: UI OVERLAY (Skálák) */}
-        
+
         {/* Jobb oldali Mélység Skála */}
         <div style={{ position: 'absolute', right: 10, top: GROUND_Y, bottom: 0, width: 40, zIndex: 20 }}>
-           {[0, 10, 20, 30, 40, 50].map((cm) => (
-             <div key={cm} style={{ position: 'absolute', top: cm * CM_TO_PX, right: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
-               <div style={{ width: 8, height: 1, background: 'rgba(255,255,255,0.5)' }} />
-               <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>{cm} cm</span>
-             </div>
-           ))}
+          {[0, 10, 20, 30, 40, 50].map((cm) => (
+            <div key={cm} style={{ position: 'absolute', top: cm * CM_TO_PX, right: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 8, height: 1, background: 'rgba(255,255,255,0.5)' }} />
+              <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>{cm} cm</span>
+            </div>
+          ))}
         </div>
 
         {/* Bal oldali Penetrométer színskála (Függőleges) */}
-        <div style={{ 
+        <div style={{
           position: 'absolute', left: 16, top: GROUND_Y + 10, height: '300px', width: 6, borderRadius: '3px',
           background: 'linear-gradient(180deg, #4CAF50 0%, #FFC107 40%, #D32F2F 100%)',
           zIndex: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
@@ -334,14 +334,14 @@ export default function InteractiveSoil() {
 
       {/* --- LÁBLÉC STATISZTIKA --- */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', padding: '24px', background: 'rgba(26, 22, 18, 0.8)', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-        <StatBox 
-          icon={<Sprout size={18} />} 
+        <StatBox
+          icon={<Sprout size={18} />}
           label="Gyökérzóna"
           value={isCompacted ? 'Sekély (20 cm)' : 'Mély (50 cm+)'}
           isGood={!isCompacted}
         />
-        <StatBox 
-          icon={<Droplets size={18} />} 
+        <StatBox
+          icon={<Droplets size={18} />}
           label="Vízgazdálkodás"
           value={isCompacted ? 'Gyenge, felszíni elfolyás' : 'Kiegyensúlyozott'}
           isGood={!isCompacted}
@@ -354,8 +354,8 @@ export default function InteractiveSoil() {
 // Segédkomponens
 function StatBox({ icon, label, value, isGood }: any) {
   return (
-    <div style={{ 
-      background: isGood ? 'rgba(76, 175, 80, 0.15)' : 'rgba(211, 47, 47, 0.15)', 
+    <div style={{
+      background: isGood ? 'rgba(76, 175, 80, 0.15)' : 'rgba(211, 47, 47, 0.15)',
       border: `1px solid ${isGood ? 'rgba(76, 175, 80, 0.3)' : 'rgba(211, 47, 47, 0.3)'}`,
       borderRadius: '12px', padding: '16px',
       display: 'flex', flexDirection: 'column', gap: '6px'
@@ -364,12 +364,12 @@ function StatBox({ icon, label, value, isGood }: any) {
         {icon} {label}
       </div>
       <AnimatePresence mode="wait">
-        <motion.div 
+        <motion.div
           key={value}
           initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
-          style={{ 
-            color: isGood ? '#81C784' : '#EF5350', 
-            fontWeight: 800, 
+          style={{
+            color: isGood ? '#81C784' : '#EF5350',
+            fontWeight: 800,
             fontSize: 'clamp(0.7rem, 2.5vw, 0.95rem)',
             whiteSpace: 'nowrap'
           }}

@@ -5,7 +5,8 @@ import { motion } from 'framer-motion'
 // import SoilHeroAlt from './SoilHeroAlt'
 // import SoilHeroSlider from './SoilHeroSlider'
 // import SoilHeroIsometric from './SoilHeroIsometric'
-import { SoilHeroInteractive } from './SoilHeroInteractive'
+// import SoilHeroInteractive from './SoilHeroInteractive'
+import ProblemHero from './ProblemHero'
 import CultivatorView from './CultivatorView'
 import SectionScrollIndicator from '@/components/ui/SectionScrollIndicator'
 import styles from './ProblemNew.module.css'
@@ -34,8 +35,8 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
 
   return (
     <section className={styles.sectionProblem}>
-      {/* ÚJ HERO - Interactive Soil Profile v6 */}
-      <SoilHeroInteractive onNavigate={scrollToSection} />
+      {/* ÚJ HERO - Split Layout v7 */}
+      <ProblemHero onNavigate={scrollToSection} />
 
       <div className="container">
         <div className={styles.contentWrapper}>
@@ -43,14 +44,14 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
           <div id="compaction" style={{ scrollMarginTop: '120px' }}>
             {compactionContent}
           </div>
-          
+
           <div style={{ height: '80px' }} />
 
           {/* 02: Nehézkultivátor korlátai */}
           <div id="cultivator" style={{ scrollMarginTop: '120px' }}>
             <CultivatorView />
           </div>
-          
+
           <div style={{ height: '80px' }} />
 
           {/* 03: Szántás korlátai */}
@@ -59,18 +60,18 @@ export default function ProblemLayout({ compactionContent, ploughingContent }: P
           </div>
         </div>
 
-        <motion.div 
+        <motion.div
           className={styles.footer}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-           <p className={styles.footerText}>
-             Van kiút a tömörödésből?
-           </p>
-           <a href="/technologia" className={styles.nextButton}>
-             Ismerje meg a technológiát <ArrowRight size={20} />
-           </a>
+          <p className={styles.footerText}>
+            Van kiút a tömörödésből?
+          </p>
+          <a href="/technologia" className={styles.nextButton}>
+            Ismerje meg a technológiát <ArrowRight size={20} />
+          </a>
         </motion.div>
       </div>
       {/* Section Scroll Indicator */}

@@ -62,7 +62,9 @@
 }
 
 /* Reset & Base */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -70,6 +72,7 @@
 
 /* GPU Acceleration for smooth animations */
 @media (prefers-reduced-motion: no-preference) {
+
     .folder,
     [data-animate="true"] {
         transform: translateZ(0);
@@ -149,16 +152,30 @@ img {
 }
 
 /* Typography */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
     font-family: var(--font-display);
     font-weight: 600;
     line-height: 1.2;
 }
 
-h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); }
-h2 { font-size: clamp(2rem, 4vw, 3rem); }
-h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
-h4 { font-size: clamp(1.125rem, 2vw, 1.25rem); }
+h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+h4 {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+}
 
 p {
     max-width: 65ch;
@@ -195,17 +212,26 @@ em {
 
 @media (max-width: 1600px) {
     :root {
-        --space-5xl: 5rem; /* Reduce from 8rem */
-        --space-4xl: 4rem; /* Reduce from 6rem */
+        --space-5xl: 5rem;
+        /* Reduce from 8rem */
+        --space-4xl: 4rem;
+        /* Reduce from 6rem */
     }
-    
-    h1 { font-size: clamp(2rem, 5vw, 3.5rem); } /* Reduce max size */
-    h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); }
+
+    h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+    }
+
+    /* Reduce max size */
+    h2 {
+        font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    }
 }
 
 @media (max-height: 900px) {
     .section {
-        padding: var(--space-3xl) 0; /* Even smaller padding for short screens */
+        padding: var(--space-3xl) 0;
+        /* Even smaller padding for short screens */
     }
 }
 
@@ -218,6 +244,7 @@ em {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -225,12 +252,19 @@ em {
 }
 
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
         transform: translateY(0);
     }
+
     40% {
         transform: translateY(8px);
     }
+
     60% {
         transform: translateY(4px);
     }
@@ -241,6 +275,7 @@ em {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -251,6 +286,7 @@ em {
     from {
         transform: scaleY(0);
     }
+
     to {
         transform: scaleY(1);
     }
@@ -260,6 +296,7 @@ em {
     from {
         transform: scaleX(0);
     }
+
     to {
         transform: scaleX(1);
     }
@@ -305,6 +342,7 @@ em {
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
@@ -346,10 +384,12 @@ em {
 
 /* High contrast mode improvements */
 @media (forced-colors: active) {
-    a, button {
+
+    a,
+    button {
         forced-color-adjust: none;
     }
-    
+
     :focus-visible {
         outline: 3px solid CanvasText;
     }
