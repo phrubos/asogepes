@@ -8,6 +8,7 @@ import PageNavigation from '@/components/ui/PageNavigation'
 import ScrollProgress from '@/components/ui/ScrollProgress'
 import BackToTop from '@/components/ui/BackToTop'
 import RouteLoadingProvider from '@/components/providers/RouteLoadingProvider'
+import { HydrationErrorBoundary } from '@/components/error/HydrationErrorBoundary'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -31,21 +32,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="hu" className={`${inter.variable} ${fraunces.variable}`}>
-      <body>
-        <Suspense fallback={null}>
-          <RouteLoadingProvider>
-            <a href="#main-content" className="skip-link">
-              Ugrás a tartalomhoz
-            </a>
-            <ScrollProgress color="green" />
-            <Navigation />
-            <PageNavigation />
-            {children}
-            <Footer />
-            <BackToTop threshold={400} />
-          </RouteLoadingProvider>
-        </Suspense>
-      </body>
+      <HydrationErrorBoundary>
+        <body>
+          <Suspense fallback={null}>
+            <RouteLoadingProvider>
+              <a href="#main-content" className="skip-link">
+                Ugrás a tartalomhoz
+              </a>
+              <ScrollProgress color="green" />
+              <Navigation />
+              <PageNavigation />
+              {children}
+              <Footer />
+              <BackToTop threshold={400} />
+            </RouteLoadingProvider>
+          </Suspense>
+        </body>
+      </HydrationErrorBoundary>
     </html>
   )
 }
