@@ -35,8 +35,8 @@ export default function ResearchHero({ onLocationClick }: ResearchHeroProps) {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.15 }}
           >
-            Tudományos igényességgel,<br />
-            <span className={styles.titleAccent}>mértük az ásógép hatását</span>
+            Szántóföldi talajszerkezet<br />
+            <span className={styles.titleAccent}>vizsgálatok</span>
           </motion.h1>
 
           <motion.p

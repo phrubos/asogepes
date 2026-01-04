@@ -137,10 +137,11 @@ export default function LocationSection({ id, locationKey, data, index }: Locati
         >
           {infoItems.map((item, idx) => {
             const IconComponent = item.icon
+            const isMeasurement = item.label.includes('mérések') || item.label.includes('Mérések') || item.label.includes('Parcellák')
             return (
               <motion.div
                 key={idx}
-                className={styles.infoCard}
+                className={`${styles.infoCard} ${isMeasurement ? styles.measurement : ''}`}
                 variants={itemVariants}
               >
                 <div className={styles.infoIcon}>
