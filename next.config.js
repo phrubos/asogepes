@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    serverComponentsExternalPackages: [],
-  },
+  serverExternalPackages: [],
   // Suppress hydration mismatch warnings for browser extensions
   onDemandEntries: {
     maxInactiveAge: 25 * 1000,

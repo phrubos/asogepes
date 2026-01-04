@@ -186,7 +186,7 @@ const ParcelGroup = ({
 }
 
 export default function FieldChart3D({ parcels, conclusions }: FieldChart3DProps) {
-    const isBestResult = (num: string) => conclusions?.bestResults.includes(num)
+    const isBestResult = (num: string): boolean => conclusions?.bestResults.includes(num) || false
 
     // Calculate spacing
     // We have 7 parcels. Center them.
