@@ -171,7 +171,8 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 8px;
+  padding-top: 4px;
+  min-height: 20px;
 }
 
 .barSpade {
@@ -191,10 +192,14 @@
 /* Value inside bar */
 .barValueInside {
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 700;
   color: var(--color-white);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Shimmer effect */
@@ -223,11 +228,14 @@
 
 .connector {
   position: absolute;
-  right: -20px;
+  right: -24px;
   top: 50%;
   transform: translateY(-50%);
   color: rgba(212, 168, 75, 0.4);
   transform-origin: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Summary */

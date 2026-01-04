@@ -248,7 +248,7 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
                   animate={isInView ? { opacity: 1, scaleX: 1 } : {}}
                   transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                 >
-                  <ArrowRight size={16} />
+                  <ArrowRight size={24} />
                 </motion.div>
               )}
             </motion.div>
