@@ -6,6 +6,7 @@ import { MapPin, Droplets, Calendar, Layers, Leaf, Ruler } from 'lucide-react'
 import Timeline from '../Timeline'
 import TemperatureChart from '../TemperatureChart'
 import IsometricFieldChart from '../IsometricFieldChart'
+import LakitelekCharts from '../LakitelekCharts'
 import styles from './LocationSection.module.css'
 
 interface LocationData {
@@ -260,7 +261,7 @@ export default function LocationSection({ id, locationKey, data, index }: Locati
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <IsometricFieldChart
+            <LakitelekCharts
               parcels={data.parcels}
               conclusions={data.conclusions}
             />
