@@ -1,0 +1,175 @@
+/* ============================================
+   SZENTKIRÁLY RESULTS PAGE - Temperature + Highlight
+   ============================================ */
+
+.resultsPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  height: 100%;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Override TemperatureChart container styles for compact book view */
+/* Section Container */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: var(--space-sm);
+}
+
+.headerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px var(--space-md);
+  background: rgba(212, 168, 75, 0.1);
+  border: 1px solid rgba(212, 168, 75, 0.2);
+  border-radius: 100px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-xs);
+}
+
+.headerTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  color: var(--color-white);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* Chart Container */
+.chartContainer {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, rgba(212, 168, 75, 0.05) 0%, rgba(26, 23, 20, 0.8) 100%);
+  border: 1px solid rgba(212, 168, 75, 0.15);
+  border-radius: 16px;
+  padding: var(--space-md);
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Override TemperatureChart container styles */
+.chartContainer :global(.container) {
+  margin: 0;
+  padding: 0;
+}
+
+.chartContainer :global(.chartArea) {
+  padding: var(--space-sm) 0;
+  gap: var(--space-xl);
+  justify-content: center;
+}
+
+.chartContainer :global(.barContainer) {
+  height: 120px;
+  width: 50px;
+}
+
+.chartContainer :global(.explanation) {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  text-align: center;
+  max-width: 80ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chartContainer :global(.explanation p) {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+/* Highlight / Photos Section */
+.highlight {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  /* background: linear-gradient(135deg, rgba(212, 168, 75, 0.05) 0%, rgba(26, 23, 20, 0.8) 100%); */
+  /* border: 1px solid rgba(212, 168, 75, 0.15); */
+  border-radius: 16px;
+  /* padding: var(--space-lg); */
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.highlightImage {
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.imagePlaceholder {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.imagePlaceholder span {
+  font-size: 0.8125rem;
+}
+
+.placeholderSub {
+  font-size: 0.6875rem !important;
+  opacity: 0.6;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .resultsPage {
+    gap: var(--space-md);
+  }
+
+  .headerTitle {
+    font-size: 1.125rem;
+  }
+
+  .highlight {
+    padding: var(--space-md);
+  }
+
+  .highlightTitle {
+    font-size: 1.0625rem;
+  }
+
+  .highlightText {
+    font-size: 0.875rem;
+  }
+}

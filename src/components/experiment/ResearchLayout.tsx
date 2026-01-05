@@ -1,25 +1,94 @@
 'use client'
 
-import { useRef, useCallback } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { locations } from '@/lib/data'
-import MagneticButton from '@/components/ui/MagneticButton'
-import ResearchHero from './ResearchHero'
-import LocationSection from './LocationSection'
-import ScrollIndicator from './ScrollIndicator'
-import styles from './ResearchNew.module.css'
-
-// Location keys in display order
-const LOCATION_KEYS = ['szentkiraly', 'kecskemet', 'lakitelek'] as const
+import { useMemo } from 'react'
+import BookLayout, { BookPage } from './BookLayout'
+import {
+  HeroPage,
+  MethodologyPage,
+  SzentkirályInfoPage,
+  SzentkirályTimelinePage,
+  SzentkirályTempPage,
+  SzentkirályPhotosPage
+} from './pages'
+// import { locations } from '@/lib/data'
+// import LocationSection from './LocationSection'
+// import ScrollIndicator from './ScrollIndicator'
 
 export default function ResearchLayout() {
+  // Define all book pages
+  const pages: BookPage[] = useMemo(() => [
+    // Hero page
+    {
+      id: 'hero',
+      section: 'Bevezető',
+      sectionIndex: 0,
+      title: 'Kutatás áttekintés',
+      component: <HeroPage />,
+    },
+    // Methodology page
+    {
+      id: 'methodology',
+      section: 'Módszertan',
+      sectionIndex: 1,
+      title: 'Penetrométeres mérés',
+      component: <MethodologyPage />,
+    },
+    // Szentkirály pages
+    {
+      id: 'szentkiraly-info',
+      section: 'Szentkirály',
+      sectionIndex: 2,
+      title: 'Helyszín adatok',
+      component: <SzentkirályInfoPage />,
+    },
+    {
+      id: 'szentkiraly-timeline',
+      section: 'Szentkirály',
+      sectionIndex: 2,
+      title: 'Talajszerkezet változás',
+      component: <SzentkirályTimelinePage />,
+    },
+    {
+      id: 'szentkiraly-temp',
+      section: 'Szentkirály',
+      sectionIndex: 2,
+      title: 'Talajhőmérséklet vizsgálat',
+      component: <SzentkirályTempPage />,
+    },
+    {
+      id: 'szentkiraly-photos',
+      section: 'Szentkirály',
+      sectionIndex: 2,
+      title: 'Fotók',
+      component: <SzentkirályPhotosPage />,
+    },
+    // TODO: Kecskemét pages (commented out for now)
+    // {
+    //   id: 'kecskemet-info',
+    //   section: 'Kecskemét',
+    //   sectionIndex: 2,
+    //   title: 'Helyszín adatok',
+    //   component: <KecskemétInfoPage />,
+    // },
+    // TODO: Lakitelek pages (commented out for now)
+    // {
+    //   id: 'lakitelek-info',
+    //   section: 'Lakitelek',
+    //   sectionIndex: 3,
+    //   title: 'Helyszín adatok',
+    //   component: <LakitelekInfoPage />,
+    // },
+  ], [])
+
+  return <BookLayout pages={pages} />
+}
+
+/* OLD LAYOUT - Kept for reference
+export default function ResearchLayoutOld() {
   const router = useRouter()
   const ctaRef = useRef(null)
   const isCtaInView = useInView(ctaRef, { once: true })
 
-  // Handle location click from hero map
   const handleLocationClick = useCallback((locationId: string) => {
     const element = document.getElementById(`location-${locationId}`)
     if (element) {
@@ -30,11 +99,9 @@ export default function ResearchLayout() {
   return (
     <section className={styles.sectionResearch}>
       <div className="container">
-        {/* Hero with Hungary Map */}
         <ResearchHero onLocationClick={handleLocationClick} />
       </div>
 
-      {/* Location Sections - Full width for better visual separation */}
       {LOCATION_KEYS.map((key, index) => (
         <LocationSection
           key={key}
@@ -45,10 +112,8 @@ export default function ResearchLayout() {
         />
       ))}
 
-      {/* Scroll Indicator - Fixed right side navigation */}
       <ScrollIndicator />
 
-      {/* CTA Section */}
       <div className="container">
         <motion.div
           ref={ctaRef}
@@ -75,3 +140,4 @@ export default function ResearchLayout() {
     </section>
   )
 }
+*/

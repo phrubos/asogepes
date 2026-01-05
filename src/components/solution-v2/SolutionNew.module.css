@@ -4,7 +4,7 @@
   padding: 0;
   min-height: 100vh;
   position: relative;
-  /* overflow: hidden; - removed to allow sticky positioning */
+  overflow-x: hidden; /* Prevent horizontal scroll from pseudo-elements */
 }
 
 /* Optional subtle grid background for blueprint feel */
