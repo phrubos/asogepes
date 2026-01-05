@@ -4,7 +4,6 @@ import { Suspense } from 'react'
 import './globals.css'
 import Navigation from '@/components/layout/Navigation'
 import Footer from '@/components/layout/Footer'
-import PageNavigation from '@/components/ui/PageNavigation'
 import ScrollProgress from '@/components/ui/ScrollProgress'
 import BackToTop from '@/components/ui/BackToTop'
 import RouteLoadingProvider from '@/components/providers/RouteLoadingProvider'
@@ -41,7 +40,6 @@ export default function RootLayout({
               </a>
               <ScrollProgress color="green" />
               <Navigation />
-              <PageNavigation />
               {children}
               <Footer />
               <BackToTop threshold={400} />

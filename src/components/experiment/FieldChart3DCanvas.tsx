@@ -464,7 +464,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
     }, [])
 
     return (
-        <div style={{ position: 'relative', width: '100%', height: '700px', borderRadius: '12px', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '400px', borderRadius: '12px', overflow: 'hidden' }}>
             <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
             
             {/* Legend overlay matching 2D design */}

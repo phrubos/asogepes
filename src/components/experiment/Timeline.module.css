@@ -7,9 +7,15 @@
   );
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  padding: var(--space-2xl);
-  margin: var(--space-2xl) 0;
+  padding: var(--space-lg);
+  margin: 0;
   position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr;
+  gap: var(--space-md);
+  height: 100%;
+  align-content: center;
 }
 
 /* Subtle background pattern */
@@ -25,8 +31,10 @@
 
 /* Header */
 .header {
+  grid-column: 1 / -1;
+  grid-row: 1;
   text-align: center;
-  margin-bottom: var(--space-lg);
+  margin-bottom: 0;
   position: relative;
 }
 
@@ -49,8 +57,13 @@
 
 /* Chart area */
 .chartArea {
+  grid-column: 1;
+  grid-row: 2;
   position: relative;
-  padding: var(--space-lg) 0;
+  padding: var(--space-sm) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Grid lines */
@@ -97,14 +110,14 @@
 
 .month {
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.6);
-  padding: var(--space-xs) var(--space-md);
+  padding: 4px var(--space-sm);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 100px;
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-lg);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   transition: all 0.3s ease;
@@ -113,7 +126,7 @@
 .bars {
   display: flex;
   gap: var(--space-sm);
-  height: 160px;
+  height: 180px;
   align-items: flex-end;
 }
 
@@ -134,8 +147,8 @@
 }
 
 .barContainer {
-  width: 36px;
-  height: 130px;
+  width: 40px;
+  height: 150px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
   position: relative;
@@ -237,29 +250,36 @@
   justify-content: center;
 }
 
-/* Summary Section - containing cards and note side by side */
+/* Summary Section - now positioned to the right of the chart */
 .summarySection {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-xl);
-  margin-top: var(--space-xl);
-  padding-top: var(--space-lg);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: 0;
+  padding-top: 0;
+  padding-left: var(--space-md);
+  border-top: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
   align-items: stretch;
+  justify-content: center;
+  width: 280px;
+  min-width: 280px;
 }
 
-/* Left side: Summary cards container */
+/* Summary cards container - now stacked vertically */
 .summaryCards {
   display: flex;
-  justify-content: center;
-  gap: var(--space-lg);
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
 .summaryItem {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -327,39 +347,65 @@
 /* Evaluation text in summary */
 .summaryText {
   margin: var(--space-xs) 0 0 0;
-  font-size: 0.8125rem;
-  line-height: 1.5;
+  font-size: 0.75rem;
+  line-height: 1.4;
   color: rgba(255, 255, 255, 0.6);
-  max-width: 280px;
+  max-width: 100%;
 }
 
-/* Summary note - right side panel */
+/* Summary note - now below the cards in the side panel */
 .summaryNote {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-lg) var(--space-xl);
+  padding: var(--space-md) var(--space-lg);
   background: rgba(212, 168, 75, 0.08);
   border: 1px solid rgba(212, 168, 75, 0.2);
   border-radius: var(--radius-md);
-  min-width: 280px;
-  max-width: 320px;
+  min-width: auto;
+  max-width: 100%;
+  flex: 1;
+  min-height: 80px;
 }
 
 .summaryNote p {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: 0.85rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
   font-style: italic;
   text-align: center;
 }
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .summarySection {
+  .container {
     grid-template-columns: 1fr;
-    gap: var(--space-lg);
+    grid-template-rows: auto auto auto;
+  }
+
+  .chartArea {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .summarySection {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: none;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-left: 0;
+    padding-top: var(--space-md);
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .summaryCards {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .summaryNote {

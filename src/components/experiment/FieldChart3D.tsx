@@ -76,15 +76,15 @@ const MachineryPlaceholder = ({ position, label }: { position: [number, number, 
             <Html position={[0, 0, 0.1]} transform center rotation={[0, 0, 0]}>
                 <div style={{
                     color: 'white',
-                    fontSize: '8px',
+                    fontSize: '14px',
                     textAlign: 'center',
-                    width: '80px',
+                    width: '150px',
                     background: 'rgba(0,0,0,0.5)',
                     padding: '4px',
                     borderRadius: '4px'
                 }}>
-                    <div>GÉP</div>
-                    <div style={{ fontSize: '6px', opacity: 0.8 }}>{label}</div>
+                    <div style={{ opacity: 0.7, marginBottom: '2px' }}>GÉP</div>
+                    <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{label}</div>
                 </div>
             </Html>
         </group>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import styles from './BookLayout.module.css'
 
 export interface BookPage {
@@ -51,6 +51,8 @@ export default function BookLayout({ pages }: BookLayoutProps) {
   const [direction, setDirection] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const scrollCountRef = useRef(0)
+  const scrollDirectionRef = useRef<'up' | 'down' | null>(null)
 
   // Navigate to page
   const goToPage = useCallback((pageIndex: number) => {
@@ -91,23 +93,55 @@ export default function BookLayout({ pages }: BookLayoutProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [nextPage, prevPage])
 
-  // Wheel navigation (debounced)
+  // Wheel navigation (requires 3 scrolls to change page)
   useEffect(() => {
-    let wheelTimeout: NodeJS.Timeout | null = null
+    let resetTimeout: NodeJS.Timeout | null = null
+    const SCROLLS_REQUIRED = 3
 
     const handleWheel = (e: WheelEvent) => {
-      e.preventDefault()
+      // Allow normal scrolling inside page content if it has scrollable area
+      const target = e.target as HTMLElement
+      const scrollable = target.closest(`.${styles.pageContent}`)
+      if (scrollable) {
+        if (e.deltaY > 0 && scrollable.scrollTop + scrollable.clientHeight < scrollable.scrollHeight) return
+        if (e.deltaY < 0 && scrollable.scrollTop > 0) return
+      }
 
-      if (wheelTimeout || isAnimating) return
+      if (isAnimating) return
 
-      wheelTimeout = setTimeout(() => {
-        wheelTimeout = null
-      }, 500)
+      // Determine scroll direction
+      const currentDirection = e.deltaY > 0 ? 'down' : 'up'
+      
+      // Reset counter if direction changed or timeout expired
+      if (scrollDirectionRef.current !== currentDirection) {
+        scrollCountRef.current = 0
+        scrollDirectionRef.current = currentDirection
+      }
 
-      if (e.deltaY > 30) {
-        nextPage()
-      } else if (e.deltaY < -30) {
-        prevPage()
+      // Clear previous reset timeout
+      if (resetTimeout) clearTimeout(resetTimeout)
+      
+      // Reset counter after 800ms of no scrolling
+      resetTimeout = setTimeout(() => {
+        scrollCountRef.current = 0
+        scrollDirectionRef.current = null
+      }, 800)
+
+      // Only count significant scroll events
+      if (Math.abs(e.deltaY) > 30) {
+        scrollCountRef.current++
+        
+        // Change page after required number of scrolls
+        if (scrollCountRef.current >= SCROLLS_REQUIRED) {
+          scrollCountRef.current = 0
+          scrollDirectionRef.current = null
+          
+          if (currentDirection === 'down') {
+            nextPage()
+          } else {
+            prevPage()
+          }
+        }
       }
     }
 
@@ -120,7 +154,7 @@ export default function BookLayout({ pages }: BookLayoutProps) {
       if (container) {
         container.removeEventListener('wheel', handleWheel)
       }
-      if (wheelTimeout) clearTimeout(wheelTimeout)
+      if (resetTimeout) clearTimeout(resetTimeout)
     }
   }, [nextPage, prevPage, isAnimating])
 
@@ -134,84 +168,89 @@ export default function BookLayout({ pages }: BookLayoutProps) {
 
   const currentPageData = pages[currentPage]
 
+  // Calculate progress for the timeline line
+  const activeSectionIndex = sections.findIndex(s => s.section === currentPageData?.section)
+  const progressPercentage = ((activeSectionIndex) / (sections.length - 1)) * 100
+
   return (
     <div ref={containerRef} className={styles.bookContainer}>
-      {/* Left Navigation Sidebar */}
+      {/* Left Sidebar Navigation (Timeline) */}
       <nav className={styles.sidebar}>
         <div className={styles.sidebarContent}>
-          {/* Section indicators */}
+
+          {/* Timeline Track Line */}
+          <div className={styles.timelineTrack}>
+            <motion.div
+              className={styles.timelineProgress}
+              initial={{ height: 0 }}
+              animate={{ height: `${progressPercentage}%` }}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
+            />
+          </div>
+
+          {/* Sections List */}
           <div className={styles.sectionNav}>
-            {sections.map((section, idx) => {
-              const isActive = currentPageData?.section === section.section
-              const sectionPages = pages.filter(p => p.section === section.section)
-              const currentSectionPageIndex = sectionPages.findIndex(p => p.id === currentPageData?.id)
+            <LayoutGroup>
+              {sections.map((section, idx) => {
+                const isActive = currentPageData?.section === section.section
+                const isPast = activeSectionIndex > idx
+                const sectionPages = pages.filter(p => p.section === section.section)
 
-              return (
-                <div key={section.section} className={styles.sectionGroup}>
-                  <button
-                    className={`${styles.sectionButton} ${isActive ? styles.active : ''}`}
+                return (
+                  <div
+                    key={section.section}
+                    className={`${styles.sectionGroup} ${isActive ? styles.active : ''} ${isPast ? styles.past : ''}`}
                     onClick={() => goToPage(section.firstPageIndex)}
-                    aria-label={`Go to ${section.section}`}
                   >
-                    <span className={styles.sectionNumber}>
-                      {String(idx + 1).padStart(2, '0')}
-                    </span>
-                    <span className={styles.sectionLabel}>{section.section}</span>
-                  </button>
+                    {/* Circle Marker */}
+                    <div className={styles.markerWrapper}>
+                      <motion.div
+                        className={styles.marker}
+                        layoutId={`marker-${section.section}`}
+                      />
+                    </div>
 
-                  {/* Page dots within section */}
-                  {isActive && sectionPages.length > 1 && (
-                    <motion.div
-                      className={styles.pageDots}
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                    >
-                      {sectionPages.map((page, pageIdx) => (
-                        <button
-                          key={page.id}
-                          className={`${styles.pageDot} ${currentSectionPageIndex === pageIdx ? styles.dotActive : ''}`}
-                          onClick={() => goToPage(pages.findIndex(p => p.id === page.id))}
-                          aria-label={`Page ${pageIdx + 1}`}
-                        />
-                      ))}
-                    </motion.div>
-                  )}
-                </div>
-              )
-            })}
+                    {/* Label Header */}
+                    <div className={styles.sectionHeader}>
+                      <span className={styles.sectionNumber}>
+                        {String(idx + 1).padStart(2, '0')}
+                      </span>
+                      <span className={styles.sectionLabel}>{section.section}</span>
+                    </div>
+
+                    {/* Sub-pages List (Only for active section) */}
+                    <AnimatePresence>
+                      {isActive && sectionPages.length > 0 && (
+                        <motion.div
+                          className={styles.subPages}
+                          initial={{ opacity: 0, height: 0, x: -10 }}
+                          animate={{ opacity: 1, height: 'auto', x: 0 }}
+                          exit={{ opacity: 0, height: 0, x: -10 }}
+                          transition={{ duration: 0.3, ease: 'easeOut' }}
+                        >
+                          {sectionPages.map((page, pageIdx) => {
+                            const isPageActive = page.id === currentPageData?.id
+                            return (
+                              <button
+                                key={page.id}
+                                className={`${styles.subPageBtn} ${isPageActive ? styles.activeBtn : ''}`}
+                                onClick={(e) => {
+                                  e.stopPropagation() // Prevent clicking parent section
+                                  goToPage(pages.findIndex(p => p.id === page.id))
+                                }}
+                              >
+                                {page.title}
+                              </button>
+                            )
+                          })}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                )
+              })}
+            </LayoutGroup>
           </div>
-
-          {/* Page counter */}
-          <div className={styles.pageCounter}>
-            <span className={styles.currentPageNum}>{currentPage + 1}</span>
-            <span className={styles.pageDivider}>/</span>
-            <span className={styles.totalPages}>{pages.length}</span>
-          </div>
-        </div>
-
-        {/* Navigation arrows */}
-        <div className={styles.navArrows}>
-          <button
-            className={`${styles.navArrow} ${styles.navPrev}`}
-            onClick={prevPage}
-            disabled={currentPage === 0}
-            aria-label="Previous page"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-          <button
-            className={`${styles.navArrow} ${styles.navNext}`}
-            onClick={nextPage}
-            disabled={currentPage === pages.length - 1}
-            aria-label="Next page"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
         </div>
       </nav>
 
@@ -248,16 +287,21 @@ export default function BookLayout({ pages }: BookLayoutProps) {
           </AnimatePresence>
         </div>
 
+        {/* Global Page Counter (bottom right) */}
+        <div className={styles.pageCounter}>
+          {currentPage + 1} / {pages.length}
+        </div>
+
         {/* Bottom navigation hint */}
         <motion.div
           className={styles.navHint}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
         >
           <span className={styles.hintKey}>←</span>
           <span className={styles.hintKey}>→</span>
-          <span className={styles.hintText}>vagy görgess a lapozáshoz</span>
+          <span className={styles.hintText}>Lapozás</span>
         </motion.div>
       </main>
     </div>
