@@ -195,6 +195,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
                 fill="none"
                 stroke="rgba(212, 168, 75, 0.5)"
                 strokeWidth="0.3"
+                pointerEvents="none"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
@@ -206,6 +207,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
                 cy={marker.y}
                 r={isHovered ? 4 : 3}
                 fill="url(#dotGlow)"
+                pointerEvents="none"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isHovered ? 0.8 : 0.4 }}
                 transition={{ duration: 0.25 }}
@@ -231,10 +233,10 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
 
               {/* Label */}
               <motion.text
-                x={marker.x + (marker.id === 'kecskemet' ? -15 : marker.id === 'lakitelek' ? 4 : -12)}
-                y={marker.y + (marker.id === 'kecskemet' ? -4 : marker.id === 'szentkiraly' ? -4 : 5)}
+                x={marker.x + (marker.id === 'kecskemet' ? -18 : marker.id === 'lakitelek' ? 1 : -8)}
+                y={marker.y + (marker.id === 'szentkiraly' ? -4 : 5)}
                 fill={isHovered ? 'var(--color-gold)' : 'rgba(255, 255, 255, 0.8)'}
-                fontSize="3"
+                fontSize="2.2"
                 fontWeight={isHovered ? '600' : '500'}
                 fontFamily="var(--font-display)"
                 initial={{ opacity: 0 }}
