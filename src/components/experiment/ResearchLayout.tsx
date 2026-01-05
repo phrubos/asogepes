@@ -8,7 +8,13 @@ import {
   SzentkirályInfoPage,
   SzentkirályTimelinePage,
   SzentkirályTempPage,
-  SzentkirályPhotosPage
+  SzentkirályPhotosPage,
+  KecskemétInfoPage,
+  KecskemétTimelinePage,
+  KecskemétPhotosPage,
+  LakitelekInfoPage,
+  LakitelekChartPage,
+  LakitelekPhotosPage
 } from './pages'
 // import { locations } from '@/lib/data'
 // import LocationSection from './LocationSection'
@@ -62,22 +68,50 @@ export default function ResearchLayout() {
       title: 'Fotók',
       component: <SzentkirályPhotosPage />,
     },
-    // TODO: Kecskemét pages (commented out for now)
-    // {
-    //   id: 'kecskemet-info',
-    //   section: 'Kecskemét',
-    //   sectionIndex: 2,
-    //   title: 'Helyszín adatok',
-    //   component: <KecskemétInfoPage />,
-    // },
-    // TODO: Lakitelek pages (commented out for now)
-    // {
-    //   id: 'lakitelek-info',
-    //   section: 'Lakitelek',
-    //   sectionIndex: 3,
-    //   title: 'Helyszín adatok',
-    //   component: <LakitelekInfoPage />,
-    // },
+    // Kecskemét-Borbás pages
+    {
+      id: 'kecskemet-info',
+      section: 'Kecskemét',
+      sectionIndex: 3,
+      title: 'Helyszín adatok',
+      component: <KecskemétInfoPage />,
+    },
+    {
+      id: 'kecskemet-timeline',
+      section: 'Kecskemét',
+      sectionIndex: 3,
+      title: 'Talajszerkezet változás',
+      component: <KecskemétTimelinePage />,
+    },
+    {
+      id: 'kecskemet-photos',
+      section: 'Kecskemét',
+      sectionIndex: 3,
+      title: 'Fotók',
+      component: <KecskemétPhotosPage />,
+    },
+    // Lakitelek pages
+    {
+      id: 'lakitelek-info',
+      section: 'Lakitelek',
+      sectionIndex: 4,
+      title: 'Helyszín adatok',
+      component: <LakitelekInfoPage />,
+    },
+    {
+      id: 'lakitelek-chart',
+      section: 'Lakitelek',
+      sectionIndex: 4,
+      title: '7 kezelés összehasonlítása',
+      component: <LakitelekChartPage />,
+    },
+    {
+      id: 'lakitelek-photos',
+      section: 'Lakitelek',
+      sectionIndex: 4,
+      title: 'Fotók',
+      component: <LakitelekPhotosPage />,
+    },
   ], [])
 
   return <BookLayout pages={pages} />

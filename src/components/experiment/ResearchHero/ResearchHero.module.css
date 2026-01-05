@@ -11,7 +11,8 @@
   gap: 4rem;
   align-items: center;
   margin-bottom: 0;
-  padding-top: 100px; /* Space for header - badge should be below header */
+  padding-top: 100px;
+  /* Space for header - badge should be below header */
   z-index: 1;
 }
 
@@ -322,10 +323,13 @@
   height: 100%;
   min-height: 500px;
   background: linear-gradient(135deg, rgba(26, 23, 20, 0.6) 0%, rgba(35, 30, 25, 0.7) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
+  border: 1px solid rgba(212, 168, 75, 0.2);
+  /* Slightly gold tinted border */
+  border-radius: 32px;
+  /* Nicely rounded */
   padding: var(--space-xl);
   overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 .mapContainer::before {

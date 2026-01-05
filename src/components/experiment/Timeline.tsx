@@ -256,72 +256,61 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
         </motion.div>
       </div>
       
-      {/* Summary with trend badges - Kontroll előrébb */}
+      {/* Summary section with evaluation cards and note */}
       <motion.div
-        className={styles.summary}
+        className={styles.summarySection}
         initial={{ opacity: 0, y: 20 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5, delay: 0.6 }}
       >
-        <motion.div
-          className={`${styles.summaryItem} ${styles.summaryControl}`}
-          whileHover={{ scale: 1.02, y: -2 }}
-        >
-          <div className={styles.summaryHeader}>
-            <span className={styles.summaryDot} />
-            <span className={styles.summaryLabel}>Kontroll művelés</span>
-          </div>
-          <div className={`${styles.summaryValue} ${controlChange <= 0 ? styles.good : styles.bad}`}>
-            {getTrendIcon(controlChange)}
-            <span>{controlChange > 0 ? '+' : ''}{controlChange} cm</span>
-          </div>
-          {evaluations?.control && (
-            <p className={styles.summaryText}>{evaluations.control}</p>
-          )}
-        </motion.div>
+        {/* Left side: Summary cards */}
+        <div className={styles.summaryCards}>
+          <motion.div
+            className={`${styles.summaryItem} ${styles.summaryControl}`}
+            whileHover={{ scale: 1.02, y: -2 }}
+          >
+            <div className={styles.summaryHeader}>
+              <span className={styles.summaryDot} />
+              <span className={styles.summaryLabel}>Kontroll művelés</span>
+            </div>
+            <div className={`${styles.summaryValue} ${controlChange <= 0 ? styles.good : styles.bad}`}>
+              {getTrendIcon(controlChange)}
+              <span>{controlChange > 0 ? '+' : ''}{controlChange} cm</span>
+            </div>
+            {evaluations?.control && (
+              <p className={styles.summaryText}>{evaluations.control}</p>
+            )}
+          </motion.div>
 
-        <motion.div
-          className={`${styles.summaryItem} ${styles.summarySpade}`}
-          whileHover={{ scale: 1.02, y: -2 }}
-        >
-          <div className={styles.summaryHeader}>
-            <span className={styles.summaryDot} />
-            <span className={styles.summaryLabel}>Ásógépes művelés</span>
-          </div>
-          <div className={`${styles.summaryValue} ${spadeChange <= 0 ? styles.good : styles.bad}`}>
-            {getTrendIcon(spadeChange)}
-            <span>{spadeChange > 0 ? '+' : ''}{spadeChange} cm</span>
-          </div>
-          {evaluations?.spade && (
-            <p className={styles.summaryText}>{evaluations.spade}</p>
-          )}
-        </motion.div>
-      </motion.div>
+          <motion.div
+            className={`${styles.summaryItem} ${styles.summarySpade}`}
+            whileHover={{ scale: 1.02, y: -2 }}
+          >
+            <div className={styles.summaryHeader}>
+              <span className={styles.summaryDot} />
+              <span className={styles.summaryLabel}>Ásógépes művelés</span>
+            </div>
+            <div className={`${styles.summaryValue} ${spadeChange <= 0 ? styles.good : styles.bad}`}>
+              {getTrendIcon(spadeChange)}
+              <span>{spadeChange > 0 ? '+' : ''}{spadeChange} cm</span>
+            </div>
+            {evaluations?.spade && (
+              <p className={styles.summaryText}>{evaluations.spade}</p>
+            )}
+          </motion.div>
+        </div>
 
-      {/* Summary note */}
-      {evaluations?.summary && (
-        <motion.div
-          className={styles.summaryNote}
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.7 }}
-        >
-          <p>{evaluations.summary}</p>
-        </motion.div>
-      )}
-
-      {/* Info tooltip */}
-      <motion.div 
-        className={styles.explanation}
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : {}}
-        transition={{ delay: 0.8 }}
-      >
-        <div className={styles.explanationIcon}>📊</div>
-        <p>
-          Az ábra a <strong>laza talajréteg mélységét</strong> mutatja centimé­terben. 
-          Magasabb érték = lazább talaj = jobb gyökérnövekedés.
-        </p>
+        {/* Right side: Summary note */}
+        {evaluations?.summary && (
+          <motion.div
+            className={styles.summaryNote}
+            initial={{ opacity: 0, x: 20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ delay: 0.7 }}
+          >
+            <p>{evaluations.summary}</p>
+          </motion.div>
+        )}
       </motion.div>
     </div>
   )

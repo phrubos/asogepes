@@ -449,8 +449,22 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
         }
     }, [parcels, conclusions])
 
+    // Prevent page scroll when mouse is over the 3D canvas
+    useEffect(() => {
+        const container = containerRef.current
+        if (!container) return
+
+        const preventScroll = (e: WheelEvent) => {
+            e.preventDefault()
+            e.stopPropagation()
+        }
+
+        container.addEventListener('wheel', preventScroll, { passive: false })
+        return () => container.removeEventListener('wheel', preventScroll)
+    }, [])
+
     return (
-        <div style={{ position: 'relative', width: '100%', height: '500px', borderRadius: '12px', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', width: '100%', height: '700px', borderRadius: '12px', overflow: 'hidden' }}>
             <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
             
             {/* Legend overlay matching 2D design */}

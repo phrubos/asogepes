@@ -10,7 +10,6 @@
   padding: var(--space-2xl);
   margin: var(--space-2xl) 0;
   position: relative;
-  overflow: hidden;
 }
 
 /* Subtle background pattern */
@@ -238,14 +237,22 @@
   justify-content: center;
 }
 
-/* Summary */
-.summary {
-  display: flex;
-  justify-content: center;
+/* Summary Section - containing cards and note side by side */
+.summarySection {
+  display: grid;
+  grid-template-columns: 1fr auto;
   gap: var(--space-xl);
   margin-top: var(--space-xl);
   padding-top: var(--space-lg);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+  align-items: stretch;
+}
+
+/* Left side: Summary cards container */
+.summaryCards {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-lg);
 }
 
 .summaryItem {
@@ -326,59 +333,41 @@
   max-width: 280px;
 }
 
-/* Summary note */
+/* Summary note - right side panel */
 .summaryNote {
-  text-align: center;
-  margin-top: var(--space-lg);
-  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg) var(--space-xl);
   background: rgba(212, 168, 75, 0.08);
-  border: 1px solid rgba(212, 168, 75, 0.15);
+  border: 1px solid rgba(212, 168, 75, 0.2);
   border-radius: var(--radius-md);
+  min-width: 280px;
+  max-width: 320px;
 }
 
 .summaryNote p {
-  margin: 0 auto;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
   font-style: italic;
   text-align: center;
-  max-width: 100%;
-}
-
-/* Explanation */
-.explanation {
-  margin-top: var(--space-lg);
-  padding: var(--space-md) var(--space-lg);
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: var(--radius-md);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-xs);
-  text-align: center;
-}
-
-.explanationIcon {
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-
-.explanation p {
-  margin: 0 auto;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.5);
-  text-align: center;
-  max-width: 100%;
-}
-
-.explanation strong {
-  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .summarySection {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .summaryNote {
+    min-width: auto;
+    max-width: none;
+  }
+}
+
 @media (max-width: 768px) {
   .container {
     padding: var(--space-lg);
@@ -411,7 +400,7 @@
     display: none;
   }
 
-  .summary {
+  .summaryCards {
     flex-direction: column;
     gap: var(--space-md);
   }

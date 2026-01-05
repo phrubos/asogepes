@@ -1,0 +1,225 @@
+/* ============================================
+   LAKITELEK INFO PAGE - Compact Book Version
+   ============================================ */
+
+.infoPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  height: 100%;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Header */
+.header {
+  text-align: center;
+}
+
+.headerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px var(--space-md);
+  background: rgba(212, 168, 75, 0.1);
+  border: 1px solid rgba(212, 168, 75, 0.2);
+  border-radius: 100px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-sm);
+}
+
+.headerTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  color: var(--color-white);
+  margin: 0 0 var(--space-sm);
+  letter-spacing: -0.02em;
+}
+
+.headerLine {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  margin: 0 auto;
+  border-radius: 1px;
+}
+
+/* Info Grid - 6 cards */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-md);
+}
+
+.infoCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: linear-gradient(135deg, rgba(26, 23, 20, 0.7) 0%, rgba(35, 30, 25, 0.8) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.infoCard:hover {
+  border-color: rgba(212, 168, 75, 0.2);
+  transform: translateY(-2px);
+}
+
+.infoCard.measurement {
+  background: linear-gradient(135deg, rgba(212, 168, 75, 0.12) 0%, rgba(212, 168, 75, 0.06) 100%);
+  border-color: rgba(212, 168, 75, 0.25);
+}
+
+.infoCard.measurement .infoIcon {
+  background: rgba(212, 168, 75, 0.2);
+  border-color: rgba(212, 168, 75, 0.35);
+}
+
+.infoCard.measurement .infoLabel,
+.infoCard.measurement .infoValue {
+  color: var(--color-gold);
+}
+
+.infoIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 168, 75, 0.08);
+  border: 1px solid rgba(212, 168, 75, 0.15);
+  border-radius: 8px;
+  color: var(--color-gold);
+  flex-shrink: 0;
+}
+
+.infoContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.infoLabel {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.infoValue {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-white);
+  line-height: 1.3;
+}
+
+/* Treatments Card - Special full-width card */
+.treatmentsCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  background: linear-gradient(135deg, rgba(212, 168, 75, 0.08) 0%, rgba(212, 168, 75, 0.04) 100%);
+  border: 1px solid rgba(212, 168, 75, 0.2);
+  border-radius: 12px;
+  justify-content: center;
+}
+
+.treatmentsIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 168, 75, 0.15);
+  border: 1px solid rgba(212, 168, 75, 0.3);
+  border-radius: 10px;
+  color: var(--color-gold);
+}
+
+.treatmentsContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.treatmentsLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.treatmentsValue {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1100px) {
+  .infoGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .infoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .infoPage {
+    gap: var(--space-lg);
+  }
+
+  .headerTitle {
+    font-size: 1.5rem;
+  }
+
+  .infoGrid {
+    gap: var(--space-sm);
+  }
+
+  .infoCard {
+    padding: var(--space-sm);
+  }
+
+  .infoIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .infoValue {
+    font-size: 0.8125rem;
+  }
+
+  .treatmentsCard {
+    padding: var(--space-md);
+  }
+
+  .treatmentsIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .treatmentsValue {
+    font-size: 1rem;
+  }
+}
