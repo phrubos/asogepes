@@ -178,6 +178,18 @@ export default function BookLayout({ pages }: BookLayoutProps) {
     }
   }, [nextPage, prevPage, isAnimating])
 
+  // Failsafe: Reset isAnimating if it gets stuck
+  useEffect(() => {
+    if (!isAnimating) return
+
+    const failsafe = setTimeout(() => {
+      console.warn('Animation failsafe triggered in BookLayout')
+      setIsAnimating(false)
+    }, 3000)
+
+    return () => clearTimeout(failsafe)
+  }, [isAnimating])
+
   // Get unique sections for navigation
   const sections = pages.reduce((acc, page) => {
     if (!acc.find(s => s.section === page.section)) {

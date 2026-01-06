@@ -26,6 +26,11 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
 
     const startNavigating = useCallback(() => {
         setIsNavigating(true)
+
+        // Failsafe: Reset navigating state if it takes too long
+        setTimeout(() => {
+            setIsNavigating(false)
+        }, 5000)
     }, [])
 
     const stopNavigating = useCallback(() => {

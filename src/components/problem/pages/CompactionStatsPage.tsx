@@ -72,8 +72,8 @@ function TomatoPlant({ style, variant = 1 }: { style: React.CSSProperties, varia
 function IrrigationBackground() {
     const surfaceY = 40; // Surface line at 40%
 
-    // Raindrops falling to the surface - MAXIMUM VISIBILITY
-    const drops = Array.from({ length: 60 }).map((_, i) => ({
+    // Raindrops falling to the surface - REDUCED COUNT FOR STABILITY
+    const drops = Array.from({ length: 25 }).map((_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
         delay: Math.random() * 2,
@@ -89,8 +89,8 @@ function IrrigationBackground() {
         { id: 5, left: '90%', variant: 3, scale: 1.4 },
     ]
 
-    // Subsurface infiltration paths - SOFTENED VISIBILITY
-    const infiltrationPaths = Array.from({ length: 35 }).map((_, i) => ({
+    // Subsurface infiltration paths - REDUCED COUNT
+    const infiltrationPaths = Array.from({ length: 15 }).map((_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
         delay: Math.random() * 4,
@@ -235,8 +235,8 @@ function IrrigationBackground() {
                 zIndex: 2
             }} />
 
-            {/* Subsurface Seeping "Particles" - Fill the ground space */}
-            {Array.from({ length: 40 }).map((_, i) => (
+            {/* Subsurface Seeping "Particles" - REDUCED COUNT */}
+            {Array.from({ length: 20 }).map((_, i) => (
                 <motion.div
                     key={`soil-p-${i}`}
                     style={{
@@ -262,7 +262,7 @@ function IrrigationBackground() {
             ))}
 
             {/* Slow Seeping Droplets in Soil */}
-            {Array.from({ length: 15 }).map((_, i) => (
+            {Array.from({ length: 8 }).map((_, i) => (
                 <motion.div
                     key={`seep-d-${i}`}
                     style={{
