@@ -457,6 +457,56 @@
    RESPONSIVE
    ============================================ */
 
+@media (max-width: 1600px) {
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    padding-left: var(--space-lg);
+    padding-top: 100px;
+  }
+
+  .sectionGroup {
+    padding-left: 45px;
+    min-height: 50px;
+  }
+
+  .markerWrapper {
+    left: 4px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .marker {
+    width: 10px;
+    height: 10px;
+  }
+
+  .sectionGroup.active .marker {
+    width: 28px;
+    height: 28px;
+  }
+
+  .sectionLabel {
+    font-size: 0.85rem;
+  }
+
+  .sectionNumber {
+    font-size: 0.7rem;
+    margin-bottom: 2px;
+  }
+
+  .subPages {
+    margin-top: 8px;
+    gap: 4px;
+    padding-left: 12px;
+  }
+
+  .subPageBtn {
+    font-size: 0.75rem;
+    padding: 2px 0;
+  }
+}
+
 @media (max-width: 1024px) {
   .sidebar {
     position: fixed;
