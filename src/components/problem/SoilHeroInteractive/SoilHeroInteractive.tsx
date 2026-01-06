@@ -90,7 +90,7 @@ export default function SoilHeroInteractive({ onNavigate }: SoilHeroInteractiveP
           {/* Left Column - Hero Text */}
           <div className={styles.leftColumn}>
             <motion.div variants={itemVariants}>
-              <PageBadge number="02" label="A PROBLÉMA" />
+              <PageBadge label="A PROBLÉMA" />
             </motion.div>
 
             <motion.h1 className={styles.headline} variants={itemVariants}>

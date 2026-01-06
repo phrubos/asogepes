@@ -478,57 +478,61 @@ export default function PloughingSoilComparison() {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
+      style={{ padding: '1rem 1.5rem', margin: 0, display: 'flex', flexDirection: 'column' }}
     >
       {/* Fejléc */}
-      <motion.div className={styles.header} variants={itemVariants}>
-        <h3 className={styles.title}>Talajszelvény Összehasonlítás</h3>
-        <p className={styles.subtitle}>
+      <motion.div className={styles.header} variants={itemVariants} style={{ marginBottom: '0.75rem', textAlign: 'center' }}>
+        <p style={{ 
+          fontSize: '0.85rem', 
+          margin: 0, 
+          color: 'rgba(255, 255, 255, 0.6)',
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
+          padding: '0.6rem 1.25rem',
+          borderRadius: '100px',
+          display: 'inline-block',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          fontStyle: 'italic'
+        }}>
           A Művelt réteg 0-30 cm. A függőleges cm mélység és penetrométeres színskála is látható.
         </p>
       </motion.div>
 
       {/* Összehasonlító vizualizáció */}
-      <motion.div className={styles.comparisonGrid} variants={itemVariants}>
+      <motion.div className={styles.comparisonGrid} variants={itemVariants} style={{ gap: '1.5rem', flex: 1 }}>
         {/* Szántott talaj */}
         <motion.div 
           className={`${styles.soilCard} ${styles.soilCardBad}`}
           onHoverStart={() => setHoveredSide('ploughed')}
           onHoverEnd={() => setHoveredSide(null)}
-          whileHover={{ y: -4 }}
+          whileHover={{ y: -2 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
-          <div className={styles.cardHeader}>
-            <div className={styles.labelBad}>
-              <X size={16} strokeWidth={3} />
+          <div className={styles.cardHeader} style={{ padding: '0.5rem 0.75rem' }}>
+            <div className={styles.labelBad} style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}>
+              <X size={14} strokeWidth={3} />
               <span>Szántott talaj</span>
             </div>
-            <span className={styles.badge}>Hagyományos</span>
+            <span className={styles.badge} style={{ fontSize: '0.65rem', padding: '0.2rem 0.4rem' }}>Hagyományos</span>
           </div>
           
           <div className={styles.visualContainer}>
             <PloughedSoilVisual isHovered={hoveredSide === 'ploughed'} />
           </div>
 
-          <div className={styles.caption}>
-            A szántott rétegnek egyenletesen a nagy és a túl nagy rögökből kellene állnia, 
-            míg az ásógépezett szelvényen a két optimális, kisebb méretű rög jelenne meg.
-          </div>
-
-          <motion.ul className={styles.problemList}>
+          <motion.ul className={styles.problemList} style={{ padding: '0.5rem', gap: '0.25rem' }}>
             {ploughedProblems.map((item, i) => (
               <motion.li 
                 key={i}
                 className={styles.problemItem}
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.3 + i * 0.1 }}
-                whileHover={{ x: 4, backgroundColor: 'rgba(244, 67, 54, 0.08)' }}
+                transition={{ delay: 0.2 + i * 0.05 }}
+                style={{ padding: '0.25rem 0.5rem' }}
               >
-                <X size={16} className={styles.iconBad} strokeWidth={3} />
+                <X size={12} className={styles.iconBad} strokeWidth={3} />
                 <div>
-                  <span className={styles.itemText}>{item.text}</span>
-                  <span className={styles.itemDetail}>{item.detail}</span>
+                  <span className={styles.itemText} style={{ fontSize: '0.75rem' }}>{item.text}</span>
                 </div>
               </motion.li>
             ))}
@@ -536,7 +540,7 @@ export default function PloughingSoilComparison() {
         </motion.div>
 
         {/* VS divider */}
-        <div className={styles.divider}>
+        <div className={styles.divider} style={{ padding: '0.5rem 0' }}>
           <motion.div 
             className={styles.vsCircle}
             initial={{ scale: 0, rotate: -180 }}
@@ -544,6 +548,7 @@ export default function PloughingSoilComparison() {
             viewport={{ once: true }}
             transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.3 }}
             whileHover={{ scale: 1.1, rotate: 10 }}
+            style={{ width: '40px', height: '40px', fontSize: '0.8rem' }}
           >
             VS
           </motion.div>
@@ -554,41 +559,35 @@ export default function PloughingSoilComparison() {
           className={`${styles.soilCard} ${styles.soilCardGood}`}
           onHoverStart={() => setHoveredSide('spaded')}
           onHoverEnd={() => setHoveredSide(null)}
-          whileHover={{ y: -4 }}
+          whileHover={{ y: -2 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
-          <div className={styles.cardHeader}>
-            <div className={styles.labelGood}>
-              <Check size={16} strokeWidth={3} />
+          <div className={styles.cardHeader} style={{ padding: '0.5rem 0.75rem' }}>
+            <div className={styles.labelGood} style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}>
+              <Check size={14} strokeWidth={3} />
               <span>Ásógépezett talaj</span>
             </div>
-            <span className={styles.badgeGood}>Ajánlott</span>
+            <span className={styles.badgeGood} style={{ fontSize: '0.65rem', padding: '0.2rem 0.4rem' }}>Ajánlott</span>
           </div>
           
           <div className={styles.visualContainer}>
             <SpadedSoilVisual isHovered={hoveredSide === 'spaded'} />
           </div>
 
-          <div className={styles.caption}>
-            Egyenletesen laza szerkezet alakul ki, a gyökerek szabadon fejlődhetnek 
-            és a víz akadálytalanul jut a mélyebb rétegekbe.
-          </div>
-
-          <motion.ul className={styles.benefitList}>
+          <motion.ul className={styles.benefitList} style={{ padding: '0.5rem', gap: '0.25rem' }}>
             {spadedBenefits.map((item, i) => (
               <motion.li 
                 key={i}
                 className={styles.benefitItem}
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.3 + i * 0.1 }}
-                whileHover={{ x: 4, backgroundColor: 'rgba(76, 175, 80, 0.08)' }}
+                transition={{ delay: 0.2 + i * 0.05 }}
+                style={{ padding: '0.25rem 0.5rem' }}
               >
-                <Check size={16} className={styles.iconGood} strokeWidth={3} />
+                <Check size={12} className={styles.iconGood} strokeWidth={3} />
                 <div>
-                  <span className={styles.itemText}>{item.text}</span>
-                  <span className={styles.itemDetail}>{item.detail}</span>
+                  <span className={styles.itemText} style={{ fontSize: '0.75rem' }}>{item.text}</span>
                 </div>
               </motion.li>
             ))}
@@ -597,13 +596,13 @@ export default function PloughingSoilComparison() {
       </motion.div>
 
       {/* Lábléc megjegyzés */}
-      <motion.div className={styles.footer} variants={itemVariants}>
-        <div className={styles.legendItem}>
-          <div className={styles.legendColor} style={{ background: 'linear-gradient(180deg, #4CAF50, #F44336, #FF9800)' }} />
+      <motion.div className={styles.footer} variants={itemVariants} style={{ marginTop: '0.75rem', paddingTop: '0.75rem' }}>
+        <div className={styles.legendItem} style={{ fontSize: '0.75rem' }}>
+          <div className={styles.legendColor} style={{ background: 'linear-gradient(180deg, #4CAF50, #F44336, #FF9800)', width: '12px', height: '12px' }} />
           <span>Penetrométer skála: zöld (laza) → piros (tömör)</span>
         </div>
-        <div className={styles.legendItem}>
-          <ArrowDown size={14} />
+        <div className={styles.legendItem} style={{ fontSize: '0.75rem' }}>
+          <ArrowDown size={12} />
           <span>Vízmozgás iránya a talajban</span>
         </div>
       </motion.div>

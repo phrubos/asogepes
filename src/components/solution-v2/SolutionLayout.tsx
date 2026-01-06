@@ -72,7 +72,7 @@ export default function SolutionLayout() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className={styles.headerContent}
           >
-            <PageBadge number="03" label="A TECHNOLÓGIA" />
+            <PageBadge label="A TECHNOLÓGIA" />
             <h1 className={styles.mainTitle}>
               Lazítás és forgatás,<br />
               optimális arányban

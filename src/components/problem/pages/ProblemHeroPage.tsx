@@ -1,18 +1,15 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Layers, AlertTriangle, XCircle, ChevronRight, Activity, AlertOctagon } from 'lucide-react'
 import PageBadge from '@/components/ui/PageBadge'
-import styles from './ProblemNew.module.css'
-
-interface ProblemHeroProps {
-    onNavigate: (sectionId: string) => void
-}
+import styles from './ProblemHeroPage.module.css'
+import { useBookNav } from '@/components/experiment/BookLayout/BookLayout'
 
 const HERO_NAV_ITEMS = [
     {
-        id: 'compaction',
+        id: 'compaction-stats',
         number: '01',
         title: 'Az öntözés okozta tömörödés',
         icon: <Layers size={24} />,
@@ -22,7 +19,7 @@ const HERO_NAV_ITEMS = [
         alertLevel: 'Magas'
     },
     {
-        id: 'cultivator',
+        id: 'cultivator-problems',
         number: '02',
         title: 'A szántóföldi nehézkultivátor korlátai',
         icon: <AlertTriangle size={24} />,
@@ -32,7 +29,7 @@ const HERO_NAV_ITEMS = [
         alertLevel: 'Kritikus'
     },
     {
-        id: 'ploughing',
+        id: 'ploughing-effects',
         number: '03',
         title: 'A szántás korlátai',
         icon: <XCircle size={24} />,
@@ -43,12 +40,21 @@ const HERO_NAV_ITEMS = [
     }
 ]
 
-export default function ProblemHero({ onNavigate }: ProblemHeroProps) {
+export default function ProblemHeroPage() {
+    const { goToPage, pages } = useBookNav()
     const [hoveredId, setHoveredId] = useState<string | null>(null)
 
+    const handleNavigate = (sectionId: string) => {
+        // Find the page with the matching ID
+        const pageIndex = pages.findIndex(p => p.id === sectionId)
+        if (pageIndex !== -1) {
+            goToPage(pageIndex)
+        }
+    }
+
     return (
-        <div className={styles.heroWrapper}>
-            <div className={styles.heroContainer}>
+        <div className={styles.heroPage}>
+            <div className={styles.content}>
                 {/* Left Column: Heading & Intro */}
                 <div className={styles.heroLeft}>
                     <motion.div
@@ -102,7 +108,7 @@ export default function ProblemHero({ onNavigate }: ProblemHeroProps) {
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.3 + (index * 0.1) }}
-                                    onClick={() => onNavigate(item.id)}
+                                    onClick={() => handleNavigate(item.id)}
                                     onMouseEnter={() => setHoveredId(item.id)}
                                     onMouseLeave={() => setHoveredId(null)}
                                 >

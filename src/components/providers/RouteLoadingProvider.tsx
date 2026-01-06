@@ -1,37 +1,31 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
+import { useEffect, useState } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import LoadingScreen from '@/components/ui/LoadingScreen'
+import { useNavigation } from './NavigationContext'
 
-export default function RouteLoadingProvider({ 
-  children 
-}: { 
-  children: React.ReactNode 
+export default function RouteLoadingProvider({
+  children
+}: {
+  children: React.ReactNode
 }) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const [isLoading, setIsLoading] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const { isNavigating } = useNavigation()
+  const [isMounting, setIsMounting] = useState(true)
 
-  // Show loading on initial page load (optional - remove if not wanted)
+  // Initial mounting loader
   useEffect(() => {
-    // Small delay to show loader only if page takes time to load
     const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 100)
-    
+      setIsMounting(false)
+    }, 500)
     return () => clearTimeout(timer)
   }, [])
 
-  // Track route changes
-  useEffect(() => {
-    setIsLoading(false)
-  }, [pathname, searchParams])
-
   return (
     <>
-      <LoadingScreen isLoading={isLoading || isPending} />
+      <LoadingScreen isLoading={isMounting || isNavigating} />
       {children}
     </>
   )

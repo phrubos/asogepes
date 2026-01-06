@@ -1,11 +1,22 @@
+/* OperationPrinciple.module.css - Compact Side-by-Side Layout */
+
 .section {
-  padding: var(--space-4xl) 0;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  max-height: 100%;
+  padding: 0 var(--space-xl);
+  overflow: hidden;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  gap: var(--space-lg);
 }
 
+/* Header */
 .header {
-  text-align: center;
-  margin-bottom: var(--space-3xl);
+  flex-shrink: 0;
 }
 
 .badge {
@@ -20,62 +31,55 @@
   border: 1px solid rgba(212, 168, 75, 0.3);
   padding: 0.5rem 1rem;
   border-radius: 100px;
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-sm);
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   font-weight: 700;
   color: var(--color-white);
-  margin-bottom: var(--space-md);
+  margin: 0 0 var(--space-xs) 0;
+  line-height: 1.2;
 }
 
 .subtitle {
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.7);
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
+  max-width: 800px;
+  margin: 0;
+  line-height: 1.5;
 }
 
-.subtitle em {
-  color: var(--color-gold);
-  font-style: normal;
-  font-weight: 500;
-}
-
+/* Two-Column Content */
 .content {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-3xl);
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+  flex: 1;
+  /* Take remaining space */
+  min-height: 0;
+  /* Allow shrinking */
 }
 
-@media (min-width: 1024px) {
-  .content {
-    grid-template-columns: 1.2fr 1fr;
-    align-items: center;
-  }
-}
-
-/* Animation Container */
-.animationWrapper {
-  position: relative;
-}
-
-/* Features Grid */
+/* Left: Features & Description */
 .featuresGrid {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-md);
+  justify-content: center;
 }
 
 .featureCard {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-md);
-  padding: var(--space-lg);
+  padding: var(--space-md);
   transition: all 0.3s ease;
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
 }
 
 .featureCard:hover {
@@ -83,62 +87,77 @@
 }
 
 .featureIcon {
+  background: rgba(207, 166, 87, 0.1);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  background: rgba(212, 168, 75, 0.1);
-  border-radius: var(--radius-md);
   color: var(--color-gold);
-  margin-bottom: var(--space-md);
-  transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
-.featureCard:hover .featureIcon {
-  background: rgba(212, 168, 75, 0.2);
-  transform: scale(1.05);
+.featureContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .featureTitle {
-  font-family: var(--font-display);
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-white);
-  margin-bottom: var(--space-xs);
+  margin: 0;
+  font-family: var(--font-display);
 }
 
 .featureDescription {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.6);
-  line-height: 1.5;
+  line-height: 1.4;
   margin: 0;
 }
 
-/* Mobile adjustments */
-@media (max-width: 768px) {
+/* Right: Animation */
+.animationWrapper {
+  height: 100%;
+  max-height: 500px;
+  /* Limit height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* You might need to adjust SpadeAnimation's internal sizing or scaling */
+}
+
+/* Responsive */
+@media (max-width: 900px) {
   .section {
-    padding: var(--space-3xl) 0;
-  }
-
-  .animationContainer {
     padding: var(--space-md);
+    overflow-y: auto;
+    justify-content: flex-start;
   }
 
-  .spadeAnimation {
-    max-height: 280px;
+  .content {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    display: flex;
+    flex-direction: column-reverse;
+    /* Put animation on top? Or Title then Animation then Features? */
+    /* Let's try: Title (in Header) -> Animation -> Features */
   }
 
-  .featuresGrid {
-    gap: var(--space-md);
+  .header {
+    text-align: center;
   }
 
-  .featureCard {
-    padding: var(--space-md);
+  .subtitle {
+    margin: 0 auto;
   }
 
-  .featureIcon {
-    width: 48px;
-    height: 48px;
+  .animationWrapper {
+    width: 100%;
+    height: 300px;
+    /* Reduced fixed height for mobile */
   }
 }

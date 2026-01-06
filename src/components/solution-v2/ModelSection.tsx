@@ -34,7 +34,7 @@ const fieldPreviewData = {
     location: 'Lakitelek',
     description: 'III. és VII. parcella eredményei ipari paradicsom kultúrában.',
     crop: 'Ipari paradicsom',
-    irrigation: '450 mm',
+    irrigation: '450mm',
     period: 'Máj-Aug',
     chartData: { spade: 20, control: 32, unit: 'cm', label: 'Aug.' },
     resultHighlight: '-1 cm',
@@ -44,7 +44,7 @@ const fieldPreviewData = {
     location: 'Szentkirály',
     description: 'Vöröshagyma kultúra 4 hónapos mérési időszak.',
     crop: 'Vöröshagyma',
-    irrigation: '350 mm',
+    irrigation: '350mm',
     period: 'Márc-Jún',
     chartData: { spade: 17, control: 5, unit: 'cm', label: 'Jún.' },
     resultHighlight: '17 cm',
@@ -54,10 +54,10 @@ const fieldPreviewData = {
     location: 'Kecskemét-Borbás',
     description: 'Ipari paradicsom 45 cm mélységű műveléssel.',
     crop: 'Ipari paradicsom',
-    irrigation: '400 mm',
+    irrigation: '400mm',
     period: 'Máj-Jún',
     chartData: { spade: 37, control: 27, unit: 'cm', label: 'Jún.' },
-    resultHighlight: '+10 cm',
+    resultHighlight: '+10cm',
     resultText: 'ásógép javára'
   }
 }
@@ -66,15 +66,15 @@ const fieldPreviewData = {
 const highlightData = {
   '38sx': {
     title: 'Legjobb stabilitás',
-    text: 'A szántás + ásógép kombináció (VII. parcella) adta a legjobb stabilitást (-1 cm változás), míg az önálló ásógép is kiváló eredményt hozott.'
+    text: 'A szántás + ásógép kombináció (VII. parcella) adta a legjobb stabilitást.'
   },
   '38wx': {
     title: 'Látható különbség',
-    text: 'A júniusi helyszíni bejáráson szemmel látható volt: az ásógépezett parcellán jelentősen kevesebb gyom fejlődött, mint a hagyományos művelésű területen.'
+    text: 'Jelentősen kevesebb gyom fejlődött az ásógépezett területen.'
   },
   '40sx': {
-    title: 'Szembetűnő növekedési különbség',
-    text: 'A júniusi fotón jól látható: az ásógépezett sorok paradicsomjai nagyobbak és fejlettebbek, mint a hagyományos művelésű terület növényei.'
+    title: 'Fejlettebb növények',
+    text: 'Az ásógépezett sorok paradicsomjai látványosan nagyobbak voltak.'
   }
 }
 
@@ -85,189 +85,91 @@ export default function ModelSection({ modelId, onOpenModal }: ModelSectionProps
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
   return (
-    <section className={styles.section}>
-      {/* Section Header */}
+    <section className={styles.compactSection}>
+      {/* Header */}
       <motion.div
         className={styles.sectionHeader}
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
       >
         <div className={styles.titleRow}>
           <h2 className={styles.modelName}>{model.name}</h2>
           <span className={styles.typeBadge}>{model.type}</span>
+          <span className={styles.typeEn}>{model.typeEn}</span>
         </div>
-        <span className={styles.typeEn}>{model.typeEn}</span>
       </motion.div>
 
-      {/* Specs Layout: Image + Specs Card */}
-      <div className={styles.specsLayout}>
-        {/* Machine Image - Clickable for Lightbox */}
-        <motion.div
-          className={styles.imageWrapper}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          onClick={() => setLightboxOpen(true)}
-          whileHover={{ scale: 1.02 }}
-          style={{ cursor: 'zoom-in', position: 'relative' }}
-        >
-          <Image
-            src={model.image}
-            alt={`${model.name} - ${model.type}`}
-            width={450}
-            height={350}
-            className={styles.machineImage}
-          />
-          {/* Zoom indicator */}
-          <motion.div 
-            className={styles.zoomIndicator}
-            initial={{ opacity: 0 }}
-            whileHover={{ opacity: 1 }}
+      {/* 2-Column Grid */}
+      <div className={styles.compactGrid}>
+
+        {/* Left Column: Visuals & Highlight */}
+        <div className={styles.leftColumn}>
+          <motion.div
+            className={styles.imageWrapper}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            onClick={() => setLightboxOpen(true)}
           >
-            <ZoomIn size={24} />
-            <span>Kattints a nagyításhoz</span>
+            <Image
+              src={model.image}
+              alt={`${model.name} - ${model.type}`}
+              width={500}
+              height={400} // Aspect ratio reference
+              className={styles.machineImage}
+            />
+            <div className={styles.zoomIndicator}>
+              <ZoomIn size={14} /> Nagyítás
+            </div>
           </motion.div>
-        </motion.div>
 
-        {/* Specs Card */}
-        <motion.div
-          className={styles.specsCard}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <h3 className={styles.specsTitle}>
-            <Wrench size={18} />
-            Műszaki Adatok
-          </h3>
-
-          <div className={styles.specRow}>
-            <motion.div 
-              className={styles.specIcon}
-              whileHover={{ scale: 1.1, rotate: -5 }}
-              transition={{ type: 'spring', stiffness: 400 }}
-            >
-              <Ruler size={20} />
-            </motion.div>
-            <div className={styles.specInfo}>
-              <span className={styles.specLabel}>Munkamélység</span>
-              <span className={styles.specValue}>{model.specs.depth}</span>
-              {/* Animated progress bar */}
-              <motion.div 
-                className={styles.specProgress}
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              />
+          <motion.div
+            className={styles.highlightBox}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div className={styles.highlightIcon}>
+              <Lightbulb size={20} />
             </div>
-          </div>
-
-          <div className={styles.specRow}>
-            <motion.div 
-              className={styles.specIcon}
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ type: 'spring', stiffness: 400 }}
-            >
-              <Gauge size={20} />
-            </motion.div>
-            <div className={styles.specInfo}>
-              <span className={styles.specLabel}>Teljesítmény igény</span>
-              <span className={styles.specValue}>{model.specs.power}</span>
-              {/* Animated progress bar */}
-              <motion.div 
-                className={styles.specProgress}
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              />
+            <div>
+              <h4 className={styles.highlightTitle}>{highlight.title}</h4>
+              <p className={styles.highlightText}>{highlight.text}</p>
             </div>
-          </div>
+          </motion.div>
+        </div>
 
-          <div className={styles.featuresSection}>
-            <span className={styles.featuresLabel}>Főbb jellemzők</span>
-            <ul className={styles.featuresList}>
-              {model.specs.features.map((feature, idx) => (
-                <motion.li 
-                  key={idx} 
-                  className={styles.featureItem}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.4 + idx * 0.1 }}
-                >
-                  <motion.span
-                    whileHover={{ scale: 1.2, rotate: 360 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <CheckCircle2 size={14} />
-                  </motion.span>
-                  {feature}
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-        </motion.div>
-      </div>
+        {/* Right Column: Specs & Data */}
+        <div className={styles.rightColumn}>
 
-      {/* Field Results Card (Clickable) - Smooth hover without tilt */}
-      <motion.div
-        className={styles.fieldCard}
-        onClick={onOpenModal}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        whileHover={{ 
-          y: -4,
-          boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 168, 75, 0.5)',
-        }}
-      >
-        <div className={styles.fieldCardInner}>
-          <div className={styles.fieldCardSection}>
-            <h4 className={styles.fieldCardTitle}>
-              <motion.span
-                whileHover={{ rotate: [0, -10, 10, 0] }}
-                transition={{ duration: 0.5 }}
-              >
-                <MapPin size={18} />
-              </motion.span>
-              Terep Eredmények
-            </h4>
-              <p className={styles.fieldCardPreview}>
-                {fieldPreview.location} kísérlet: {fieldPreview.description}
-              </p>
-              <div className={styles.fieldCardMeta}>
-                <span className={styles.metaTag}>
-                  <Leaf size={12} />
-                  {fieldPreview.crop}
-                </span>
-                <span className={styles.metaTag}>
-                  <Droplets size={12} />
-                  {fieldPreview.irrigation}
-                </span>
-                <span className={styles.metaTag}>
-                  <Calendar size={12} />
-                  {fieldPreview.period}
-                </span>
-              </div>
-              <span className={styles.fieldCardCta}>
-                Részletek megtekintése
-                <ArrowRight size={16} />
-              </span>
-            </div>
-
+          {/* Field Results - Top priority context */}
+          <motion.div
+            className={styles.fieldCard}
+            onClick={onOpenModal}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            whileHover={{ scale: 1.01 }}
+          >
             <div className={styles.fieldCardSection}>
               <h4 className={styles.fieldCardTitle}>
-                <motion.span
-                  whileHover={{ scale: 1.2 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <BarChart3 size={18} />
-                </motion.span>
-                Mérési Adatok
+                <MapPin size={16} />
+                Terep Eredmények: {fieldPreview.location}
               </h4>
+              <p className={styles.fieldCardPreview}>{fieldPreview.description}</p>
+
+              <div className={styles.fieldCardMeta}>
+                <span className={styles.metaTag}><Leaf />{fieldPreview.crop}</span>
+                <span className={styles.metaTag}><Droplets />{fieldPreview.irrigation}</span>
+                <span className={styles.metaTag}><Calendar />{fieldPreview.period}</span>
+              </div>
+
+              <p className={styles.fieldCardResult}>
+                <strong>{fieldPreview.resultHighlight}</strong> {fieldPreview.resultText}
+              </p>
+            </div>
+
+            <div className={styles.fieldCardSection} style={{ alignItems: 'flex-end' }}>
               <div className={styles.miniChartWrapper}>
                 <span className={styles.miniChartLabel}>{fieldPreview.chartData.label}</span>
                 <div className={styles.miniChart}>
@@ -276,50 +178,67 @@ export default function ModelSection({ modelId, onOpenModal }: ModelSectionProps
                       className={`${styles.miniBar} ${styles.gold}`}
                       initial={{ height: 0 }}
                       whileInView={{ height: `${(fieldPreview.chartData.spade / 40) * 100}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     />
                     <span className={styles.miniBarValue}>{fieldPreview.chartData.spade}</span>
-                    <span className={styles.miniBarLabel}>Ásógép</span>
                   </div>
                   <div className={styles.miniBarGroup}>
                     <motion.div
                       className={`${styles.miniBar} ${styles.gray}`}
                       initial={{ height: 0 }}
                       whileInView={{ height: `${(fieldPreview.chartData.control / 40) * 100}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     />
                     <span className={styles.miniBarValue}>{fieldPreview.chartData.control}</span>
-                    <span className={styles.miniBarLabel}>Kontroll</span>
                   </div>
                 </div>
                 <span className={styles.miniChartUnit}>{fieldPreview.chartData.unit}</span>
               </div>
-              <p className={styles.fieldCardResult}>
-                <strong>{fieldPreview.resultHighlight}</strong> {fieldPreview.resultText}
-              </p>
+              <div style={{ fontSize: '0.8rem', color: 'var(--color-gold)', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                Részletek <ArrowRight size={14} />
+              </div>
             </div>
-          </div>
-      </motion.div>
+          </motion.div>
 
-      {/* Highlight Box */}
-      <motion.div
-        className={styles.highlightBox}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
-        <div className={styles.highlightIcon}>
-          <Lightbulb size={24} />
-        </div>
-        <div className={styles.highlightContent}>
-          <h4 className={styles.highlightTitle}>{highlight.title}</h4>
-          <p className={styles.highlightText}>{highlight.text}</p>
-        </div>
-      </motion.div>
+          {/* Specs - Compact */}
+          <motion.div
+            className={styles.specsCompact}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h3 className={styles.specsTitle}>
+              <Wrench size={16} /> Műszaki Adatok
+            </h3>
 
-      {/* Image Lightbox */}
+            <div className={styles.specsGrid}>
+              <div className={styles.specRowCompact}>
+                <div className={styles.specIconCompact}><Ruler size={18} /></div>
+                <div className={styles.specInfoCompact}>
+                  <span className={styles.specLabel}>Munkamélység</span>
+                  <span className={styles.specValue}>{model.specs.depth}</span>
+                </div>
+              </div>
+              <div className={styles.specRowCompact}>
+                <div className={styles.specIconCompact}><Gauge size={18} /></div>
+                <div className={styles.specInfoCompact}>
+                  <span className={styles.specLabel}>Teljesítmény</span>
+                  <span className={styles.specValue}>{model.specs.power}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.featuresGrid}>
+              {model.specs.features.map((feature, idx) => (
+                <div key={idx} className={styles.featureItem}>
+                  <CheckCircle2 size={12} />
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+        </div>
+      </div>
+
       <ImageLightbox
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}

@@ -1,0 +1,129 @@
+/* ============================================
+   HERO PAGE - Technology - Compact
+   ============================================ */
+
+.heroPage {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Ensure it fits in viewport */
+    max-height: 100%;
+    justify-content: center;
+    overflow: hidden;
+    padding-bottom: var(--space-xl);
+}
+
+.content {
+    display: grid;
+    /* Adjusted ratio for better side-by-side fit */
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: var(--space-xl);
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 0 var(--space-xl);
+    box-sizing: border-box;
+    /* Limit max width to keep things tighter */
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Text Column */
+.textColumn {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    /* Tighter gap */
+    max-width: 550px;
+}
+
+.title {
+    font-family: var(--font-display);
+    /* Reduced font size for compact fit */
+    font-size: clamp(1.75rem, 3.5vw, 3.5rem);
+    line-height: 1.1;
+    font-weight: 800;
+    color: var(--color-white);
+    margin: var(--space-md) 0;
+    /* Reduced margins */
+    letter-spacing: -0.02em;
+}
+
+.subTitle {
+    font-size: 1rem;
+    /* Slightly smaller */
+    line-height: 1.5;
+    color: rgba(245, 240, 232, 0.95);
+    max-width: 60ch;
+    margin: 0;
+}
+
+.subTitle em {
+    color: var(--color-gold);
+    font-style: normal;
+}
+
+/* Right Column - Hub Folder Visual */
+.visualColumn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    perspective: 1000px;
+    /* Ensure visual doesn't overflow or force scroll */
+    max-height: 80vh;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: var(--space-lg);
+        padding-top: var(--space-2xl);
+        /* Add top padding when stacked */
+        display: flex;
+        /* Flex works better for stacking */
+        flex-direction: column;
+        justify-content: flex-start;
+        /* Start from top */
+        overflow-y: auto;
+        /* Allow Scroll on mobile/tablet if needed */
+    }
+
+    .textColumn {
+        margin: 0 auto;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .title {
+        font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .visualColumn {
+        min-height: 400px;
+        width: 100%;
+        max-height: 50vh;
+        /* Limit height on mobile */
+    }
+}
+
+@media (max-width: 768px) {
+    .heroPage {
+        padding: var(--space-md) 0;
+        padding-top: 60px;
+    }
+
+    .title {
+        font-size: clamp(1.75rem, 6vw, 2.5rem);
+    }
+
+    .subTitle {
+        font-size: 0.9375rem;
+    }
+}

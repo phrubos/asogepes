@@ -51,6 +51,9 @@ function WaterDropAnimation() {
 
 export default function CompactionView() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [soilDayIndex, setSoilDayIndex] = useState(0)
+  const [isSoilCompacted, setIsSoilCompacted] = useState(false)
+  const [isSoilHovered, setIsSoilHovered] = useState(false)
   
   const iconMap: Record<string, JSX.Element> = {
     droplet: <Droplet size={24} />,
@@ -238,7 +241,12 @@ export default function CompactionView() {
             }}
             transition={{ duration: 0.3 }}
           >
-            <InteractiveSoil />
+            <InteractiveSoil
+              dayIndex={soilDayIndex}
+              isCompacted={isSoilCompacted}
+              isHovered={isSoilHovered}
+              setIsHovered={setIsSoilHovered}
+            />
             <motion.p 
               className={styles.interactiveCaption}
               initial={{ opacity: 0 }}

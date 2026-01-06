@@ -7,6 +7,7 @@ import Footer from '@/components/layout/Footer'
 import ScrollProgress from '@/components/ui/ScrollProgress'
 import BackToTop from '@/components/ui/BackToTop'
 import RouteLoadingProvider from '@/components/providers/RouteLoadingProvider'
+import { NavigationProvider } from '@/components/providers/NavigationContext'
 import { HydrationErrorBoundary } from '@/components/error/HydrationErrorBoundary'
 
 const inter = Inter({
@@ -34,16 +35,18 @@ export default function RootLayout({
       <HydrationErrorBoundary>
         <body>
           <Suspense fallback={null}>
-            <RouteLoadingProvider>
-              <a href="#main-content" className="skip-link">
-                Ugrás a tartalomhoz
-              </a>
-              <ScrollProgress color="green" />
-              <Navigation />
-              {children}
-              <Footer />
-              <BackToTop threshold={400} />
-            </RouteLoadingProvider>
+            <NavigationProvider>
+              <RouteLoadingProvider>
+                <a href="#main-content" className="skip-link">
+                  Ugrás a tartalomhoz
+                </a>
+                <ScrollProgress color="green" />
+                <Navigation />
+                {children}
+                <Footer />
+                <BackToTop threshold={400} />
+              </RouteLoadingProvider>
+            </NavigationProvider>
           </Suspense>
         </body>
       </HydrationErrorBoundary>

@@ -85,11 +85,11 @@ const Clod = ({ cx, cy, rx, ry, type = 'medium', delay = 0, opacity = 1 }: ClodP
       strokeWidth={type === 'large' || type === 'huge' ? 0.5 : 0}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      transition={{ 
-        delay: delay, 
-        type: "spring", 
-        stiffness: 150, 
-        damping: 20 
+      transition={{
+        delay: delay,
+        type: "spring",
+        stiffness: 150,
+        damping: 20
       }}
     />
   )
@@ -193,7 +193,7 @@ const CultivatorVisual = () => {
         style={{ transformOrigin: '90px 45px' }}
         transition={{ duration: 0.6, delay: 0.2 }}
       />
-      
+
       <motion.path
         d={`M180,45 Q210,138 240,45`}
         fill="#F5F0EB"
@@ -322,20 +322,20 @@ const SpadeVisual = () => {
           <stop offset="100%" stopColor="#6D4C41" />
         </linearGradient>
       </defs>
-      
-      <motion.rect 
-        x="0" y="45" width="300" height="105" 
-        fill="url(#spadeSoilGradient)" 
+
+      <motion.rect
+        x="0" y="45" width="300" height="105"
+        fill="url(#spadeSoilGradient)"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       />
-      
+
       {clods.map((clod, i) => (
-        <Clod 
+        <Clod
           key={clod.id}
           {...clod}
-          delay={i * 0.008} 
+          delay={i * 0.008}
         />
       ))}
 
@@ -355,7 +355,7 @@ const SpadeVisual = () => {
 
 export default function CultivatorView() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
-  
+
   const iconMap: Record<string, React.ReactNode> = {
     layers: <Layers size={24} />,
     sprout: <Sprout size={24} />,
@@ -373,20 +373,23 @@ export default function CultivatorView() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, y: 0, 
+    visible: {
+      opacity: 1, y: 0,
       transition: { duration: 0.5, ease: "easeOut" }
     }
   }
 
   return (
-    <motion.div 
+    <motion.div
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
     >
       <motion.div className={styles.cultivatorIntro} variants={itemVariants}>
+        <div style={{ textAlign: 'center', marginBottom: 'var(--space-xl)' }}>
+          <span className={styles.pillBadge}>Nehézkultivátor korlátai</span>
+        </div>
         <div className={styles.cultivatorGrid}>
           <div className={styles.cultivatorImageWrapper}>
             <motion.div
@@ -394,9 +397,9 @@ export default function CultivatorView() {
               whileHover={{ scale: 1.01 }}
               transition={{ duration: 0.4 }}
             >
-              <img 
-                src="/images/nehezkultivator.png" 
-                alt="Nehézkultivátor" 
+              <img
+                src="/images/nehezkultivator.png"
+                alt="Nehézkultivátor"
                 className={styles.cultivatorImage}
               />
               <div className={styles.imageOverlay}>
@@ -406,20 +409,12 @@ export default function CultivatorView() {
               </div>
             </motion.div>
           </div>
-          
+
           <div className={styles.cultivatorText}>
-            <motion.div 
-              className={styles.sectionBadge}
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <span className={styles.badgeNumber}>02</span>
-              <span className={styles.badgeText}>Nehézkultivátor korlátai</span>
-            </motion.div>
-            
+
+
             <p className={styles.introText}>
-              A nehézkultivátor jól lazít, de <strong>nem tudja bedolgozni a szármaradványokat</strong>. 
+              A nehézkultivátor jól lazít, de <strong>nem tudja bedolgozni a szármaradványokat</strong>.
               Az árvakelés és a gyomnövények magjai a felszín közelében maradnak.
             </p>
           </div>
@@ -439,18 +434,18 @@ export default function CultivatorView() {
                 <div
                   onMouseEnter={() => setHoveredCard(index)}
                   onMouseLeave={() => setHoveredCard(null)}
-                  style={{ 
-                    padding: '1.5rem', 
-                    height: '100%', 
-                    display: 'flex', 
-                    flexDirection: 'column', 
+                  style={{
+                    padding: '1.5rem',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
                     gap: '1rem'
                   }}
                 >
-                  <motion.div 
+                  <motion.div
                     className={styles.problemIcon}
-                    animate={hoveredCard === index 
-                      ? { scale: 1.05, backgroundColor: 'var(--color-gold)', color: 'var(--color-earth-900)' } 
+                    animate={hoveredCard === index
+                      ? { scale: 1.05, backgroundColor: 'var(--color-gold)', color: 'var(--color-earth-900)' }
                       : { scale: 1, backgroundColor: 'rgba(212, 168, 75, 0.15)', color: 'var(--color-gold)' }
                     }
                     transition={{ duration: 0.3 }}
@@ -468,14 +463,14 @@ export default function CultivatorView() {
 
       <motion.div className={styles.soilComparisonSection} variants={itemVariants}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-            <Layers className={styles.iconGold} size={24} strokeWidth={1.5} />
-            <h3 className={styles.comparisonTitle} style={{ margin: 0 }}>
-                Talajszelvény összehasonlítás
-            </h3>
+          <Layers className={styles.iconGold} size={24} strokeWidth={1.5} />
+          <h3 className={styles.comparisonTitle} style={{ margin: 0 }}>
+            Talajszelvény összehasonlítás
+          </h3>
         </div>
-        
+
         <div className={styles.soilProfilesContainer}>
-          <motion.div 
+          <motion.div
             className={styles.soilProfile}
             whileHover={{ y: -4, boxShadow: '0 12px 24px -8px rgba(0,0,0,0.15)' }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -484,20 +479,20 @@ export default function CultivatorView() {
               <X size={16} strokeWidth={2.5} />
               <span>Nehézkultivátor szelvény</span>
             </div>
-            
+
             <div className={styles.soilProfileVisual} style={{ cursor: 'default' }}>
               <CultivatorVisual />
-              
+
               <div className={styles.soilProfileCaption}>
                 <p>
-                  <strong>Sematikus ábrázolás:</strong> A kapa nyomában (25-30 cm mélyen) apró morzsás talaj gyűlik össze. 
+                  <strong>Sematikus ábrázolás:</strong> A kapa nyomában (25-30 cm mélyen) apró morzsás talaj gyűlik össze.
                   A sorközökben <em>nagy, tömör rögök</em> maradnak megmunkálatlanul.
                 </p>
               </div>
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className={styles.soilProfile}
             whileHover={{ y: -4, boxShadow: '0 12px 24px -8px rgba(107, 139, 94, 0.25)' }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -506,13 +501,13 @@ export default function CultivatorView() {
               <Check size={16} strokeWidth={2.5} />
               <span>Ásógépezett szelvény</span>
             </div>
-            
+
             <div className={styles.soilProfileVisual} style={{ cursor: 'default' }}>
               <SpadeVisual />
-              
+
               <div className={styles.soilProfileCaption}>
                 <p>
-                  <strong>Sematikus ábrázolás:</strong> Egyenletes, 3-4 különböző méretű, dominánsan apró rögből álló szerkezet. 
+                  <strong>Sematikus ábrázolás:</strong> Egyenletes, 3-4 különböző méretű, dominánsan apró rögből álló szerkezet.
                   A szelvény teljes szélességében átmunkált.
                 </p>
               </div>

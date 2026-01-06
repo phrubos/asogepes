@@ -14,12 +14,12 @@ interface FeatureItem {
 
 const features: FeatureItem[] = [
   {
-    icon: <ArrowDown size={28} />,
+    icon: <ArrowDown size={24} />,
     title: 'Függőleges lazítás',
     description: 'Az ásókanalak mélyen belemerülnek a talajba, fellazítják és sekélyen átkeverik a talajfelszínt'
   },
   {
-    icon: <Layers size={28} />,
+    icon: <Layers size={24} />,
     title: 'Optimális magágy',
     description: 'Az elmunkáló henger egyenletes, vetésre ültetésre kész felületet hagy'
   }
@@ -27,51 +27,24 @@ const features: FeatureItem[] = [
 
 export default function OperationPrinciple() {
   const sectionRef = useRef<HTMLElement>(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
 
+  // Reuse existing animation variants...
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2
-      }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.2 } }
   }
-
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    }
-  }
-
-  const featureVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: {
-        delay: 0.4 + i * 0.15,
-        duration: 0.5,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    })
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.6 } }
   }
 
   return (
     <section ref={sectionRef} id="operation-principle" className={styles.section}>
       <motion.div
         className={styles.header}
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6 }}
+        initial={{ opacity: 0, y: -20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
       >
         <span className={styles.badge}>MŰKÖDÉSI ELV</span>
         <h2 className={styles.title}>Hogyan működik a duplarotoros ásógép?</h2>
@@ -80,48 +53,44 @@ export default function OperationPrinciple() {
         </p>
       </motion.div>
 
-      <motion.div
-        className={styles.content}
-        variants={containerVariants}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-      >
-        {/* Animation Area - New SpadeAnimation component */}
-        <motion.div className={styles.animationWrapper} variants={itemVariants}>
-          <SpadeAnimation />
-        </motion.div>
+      <div className={styles.content}>
 
-        {/* Features Grid */}
-        <div className={styles.featuresGrid}>
+        {/* Left Column: Features */}
+        <motion.div
+          className={styles.featuresGrid}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+        >
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
               className={styles.featureCard}
-              custom={index}
-              variants={featureVariants}
-              initial="hidden"
-              animate={isInView ? "visible" : "hidden"}
-              whileHover={{ 
-                y: -6, 
-                boxShadow: '0 15px 30px rgba(0,0,0,0.2)',
-                borderColor: 'var(--color-gold)'
-              }}
+              variants={itemVariants}
             >
-              <motion.div 
-                className={styles.featureIcon}
-                whileHover={{
-                  rotate: [0, -10, 10, -5, 5, 0],
-                  transition: { duration: 0.5 }
-                }}
-              >
+              <div className={styles.featureIcon}>
                 {feature.icon}
-              </motion.div>
-              <h3 className={styles.featureTitle}>{feature.title}</h3>
-              <p className={styles.featureDescription}>{feature.description}</p>
+              </div>
+              <div className={styles.featureContent}>
+                <h3 className={styles.featureTitle}>{feature.title}</h3>
+                <p className={styles.featureDescription}>{feature.description}</p>
+              </div>
             </motion.div>
           ))}
-        </div>
-      </motion.div>
+        </motion.div>
+
+        {/* Right Column: Animation */}
+        <motion.div
+          className={styles.animationWrapper}
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <SpadeAnimation />
+        </motion.div>
+      </div>
     </section>
   )
 }

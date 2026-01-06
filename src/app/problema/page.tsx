@@ -1,6 +1,4 @@
-import ProblemLayout from '@/components/problem/ProblemLayout'
-import CompactionView from '@/components/problem/CompactionView'
-import PloughingView from '@/components/problem/PloughingView'
+import ProblemBookLayout from '@/components/problem/ProblemBookLayout'
 
 export const metadata = {
   title: 'A Probléma | Ásógépes Technológia',
@@ -8,10 +6,5 @@ export const metadata = {
 }
 
 export default function ProblemaPage() {
-  return (
-    <ProblemLayout
-      compactionContent={<CompactionView />}
-      ploughingContent={<PloughingView />}
-    />
-  )
+  return <ProblemBookLayout />
 }

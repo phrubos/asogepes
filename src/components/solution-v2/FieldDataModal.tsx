@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import {
   X,
@@ -116,14 +117,14 @@ const backdropVariants = {
 }
 
 const modalVariants = {
-  hidden: { 
-    opacity: 0, 
-    scale: 0.9, 
-    y: 40 
+  hidden: {
+    opacity: 0,
+    scale: 0.9,
+    y: 40
   },
-  visible: { 
-    opacity: 1, 
-    scale: 1, 
+  visible: {
+    opacity: 1,
+    scale: 1,
     y: 0,
     transition: {
       type: 'spring',
@@ -132,9 +133,9 @@ const modalVariants = {
       delayChildren: 0.1
     }
   },
-  exit: { 
-    opacity: 0, 
-    scale: 0.95, 
+  exit: {
+    opacity: 0,
+    scale: 0.95,
     y: 20,
     transition: {
       duration: 0.2,
@@ -157,8 +158,8 @@ const contentVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 10 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
   }
@@ -166,8 +167,8 @@ const itemVariants = {
 
 const metaItemVariants = {
   hidden: { opacity: 0, x: -10 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     x: 0,
     transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
   }
@@ -175,8 +176,8 @@ const metaItemVariants = {
 
 const listItemVariants = {
   hidden: { opacity: 0, x: -15 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     x: 0,
     transition: { duration: 0.25 }
   }
@@ -184,14 +185,14 @@ const listItemVariants = {
 
 const highlightVariants = {
   hidden: { opacity: 0, x: -20, scale: 0.98 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     x: 0,
     scale: 1,
-    transition: { 
-      duration: 0.4, 
+    transition: {
+      duration: 0.4,
       delay: 0.4,
-      ease: [0.22, 1, 0.36, 1] 
+      ease: [0.22, 1, 0.36, 1]
     }
   }
 }
@@ -228,13 +229,13 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
   // Focus trap
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key !== 'Tab' || !modalRef.current) return
-    
+
     const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     )
     const firstElement = focusableElements[0]
     const lastElement = focusableElements[focusableElements.length - 1]
-    
+
     if (e.shiftKey && document.activeElement === firstElement) {
       e.preventDefault()
       lastElement?.focus()
@@ -244,7 +245,17 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
     }
   }, [])
 
-  return (
+
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
+
+  if (!mounted) return null
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -276,7 +287,7 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
             >
               {/* Header */}
               <header className={styles.header}>
-                <motion.div 
+                <motion.div
                   className={styles.headerLeft}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -293,10 +304,10 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                     <span className={styles.subtitle}>{data.model}</span>
                   </div>
                 </motion.div>
-                <button 
+                <button
                   ref={closeButtonRef}
-                  className={styles.closeBtn} 
-                  onClick={onClose} 
+                  className={styles.closeBtn}
+                  onClick={onClose}
                   aria-label="Bezárás"
                 >
                   <X size={20} />
@@ -304,7 +315,7 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
               </header>
 
               {/* Body */}
-              <motion.div 
+              <motion.div
                 className={styles.body}
                 variants={contentVariants}
                 initial="hidden"
@@ -318,8 +329,8 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                     { icon: Droplets, text: `${data.meta.irrigation} öntözés` },
                     { icon: Calendar, text: data.meta.period }
                   ].map((item, i) => (
-                    <motion.div 
-                      key={i} 
+                    <motion.div
+                      key={i}
                       className={styles.metaItem}
                       variants={metaItemVariants}
                       whileHover={{ x: 4, color: 'var(--color-gold)' }}
@@ -332,14 +343,14 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
 
                 {/* Treatments Comparison - Staggered */}
                 <motion.div className={styles.treatmentsGrid} variants={itemVariants}>
-                  <motion.div 
+                  <motion.div
                     className={`${styles.treatmentCol} ${styles.spade}`}
                     whileHover={{ borderColor: 'rgba(207, 166, 87, 0.5)' }}
                   >
                     <h4 className={styles.treatmentTitle}>Ásógépes kezelés</h4>
                     <ul className={styles.treatmentList}>
                       {data.spadeTreatments.map((t, i) => (
-                        <motion.li 
+                        <motion.li
                           key={i}
                           variants={listItemVariants}
                           initial="hidden"
@@ -351,14 +362,14 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                       ))}
                     </ul>
                   </motion.div>
-                  <motion.div 
+                  <motion.div
                     className={styles.treatmentCol}
                     whileHover={{ borderColor: 'rgba(255, 255, 255, 0.2)' }}
                   >
                     <h4 className={styles.treatmentTitle}>Kontroll kezelés</h4>
                     <ul className={styles.treatmentList}>
                       {data.controlTreatments.map((t, i) => (
-                        <motion.li 
+                        <motion.li
                           key={i}
                           variants={listItemVariants}
                           initial="hidden"
@@ -374,7 +385,7 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
 
                 {/* Chart - Animated Bars with micro-interactions */}
                 <motion.div className={styles.chartSection} variants={itemVariants}>
-                  <motion.h4 
+                  <motion.h4
                     className={styles.chartTitle}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -382,26 +393,26 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                   >
                     Penetrométeres mérések (cm)
                   </motion.h4>
-                  
+
                   {/* Animated title underline */}
-                  <motion.div 
+                  <motion.div
                     className={styles.chartTitleLine}
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
                     transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   />
-                  
+
                   <div className={styles.chartGrid}>
                     {data.chartData.map((d, i) => (
-                      <motion.div 
-                        key={i} 
+                      <motion.div
+                        key={i}
                         className={styles.chartItem}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 + i * 0.08 }}
                         whileHover={{ scale: 1.02 }}
                       >
-                        <motion.span 
+                        <motion.span
                           className={styles.chartMonth}
                           whileHover={{ color: 'var(--color-gold)' }}
                         >
@@ -419,21 +430,21 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                             <motion.div
                               className={`${styles.bar} ${styles.spadeBar}`}
                               initial={{ height: 0, opacity: 0 }}
-                              animate={{ 
+                              animate={{
                                 height: `${Math.max(20, d.spade * 2.5)}px`,
                                 opacity: 1
                               }}
-                              transition={{ 
+                              transition={{
                                 height: { duration: 0.8, delay: 0.35 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
                                 opacity: { duration: 0.3, delay: 0.35 + i * 0.1 }
                               }}
-                              whileHover={{ 
-                                filter: 'brightness(1.25)', 
+                              whileHover={{
+                                filter: 'brightness(1.25)',
                                 y: -3,
                                 boxShadow: '0 8px 25px rgba(212, 168, 75, 0.4)'
                               }}
                             >
-                              <motion.span 
+                              <motion.span
                                 className={styles.barValue}
                                 initial={{ opacity: 0, y: -5 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -441,14 +452,14 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                               >
                                 {d.spade}
                               </motion.span>
-                              
+
                               {/* Shimmer effect */}
                               <motion.div
                                 className={styles.barShimmer}
                                 initial={{ x: '-100%' }}
                                 animate={{ x: '200%' }}
-                                transition={{ 
-                                  duration: 1.2, 
+                                transition={{
+                                  duration: 1.2,
                                   delay: 0.8 + i * 0.15,
                                   ease: 'easeInOut'
                                 }}
@@ -466,21 +477,21 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                             <motion.div
                               className={`${styles.bar} ${styles.controlBar}`}
                               initial={{ height: 0, opacity: 0 }}
-                              animate={{ 
+                              animate={{
                                 height: `${Math.max(15, d.control * 2.5)}px`,
                                 opacity: 1
                               }}
-                              transition={{ 
+                              transition={{
                                 height: { duration: 0.8, delay: 0.4 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
                                 opacity: { duration: 0.3, delay: 0.4 + i * 0.1 }
                               }}
-                              whileHover={{ 
-                                filter: 'brightness(1.4)', 
+                              whileHover={{
+                                filter: 'brightness(1.4)',
                                 y: -3,
                                 boxShadow: '0 8px 20px rgba(255, 255, 255, 0.15)'
                               }}
                             >
-                              <motion.span 
+                              <motion.span
                                 className={styles.barValue}
                                 initial={{ opacity: 0, y: -5 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -488,13 +499,13 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                               >
                                 {d.control}
                               </motion.span>
-                              
+
                               <motion.div
                                 className={styles.barShimmer}
                                 initial={{ x: '-100%' }}
                                 animate={{ x: '200%' }}
-                                transition={{ 
-                                  duration: 1.2, 
+                                transition={{
+                                  duration: 1.2,
                                   delay: 0.9 + i * 0.15,
                                   ease: 'easeInOut'
                                 }}
@@ -506,20 +517,20 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                       </motion.div>
                     ))}
                   </div>
-                  <motion.div 
+                  <motion.div
                     className={styles.chartLegend}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7 }}
                   >
-                    <motion.div 
+                    <motion.div
                       className={styles.legendItem}
                       whileHover={{ scale: 1.05, x: 2 }}
                     >
                       <span className={`${styles.legendDot} ${styles.spadeDot}`} />
                       <span>Ásógépes kezelés</span>
                     </motion.div>
-                    <motion.div 
+                    <motion.div
                       className={styles.legendItem}
                       whileHover={{ scale: 1.05, x: 2 }}
                     >
@@ -530,7 +541,7 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
                 </motion.div>
 
                 {/* Highlight - Slide in */}
-                <motion.div 
+                <motion.div
                   className={styles.highlight}
                   variants={highlightVariants}
                   initial="hidden"
@@ -564,6 +575,7 @@ export default function FieldDataModal({ isOpen, onClose, modelId }: FieldDataMo
           </div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   )
 }

@@ -72,33 +72,44 @@ export default function TiltCard({
   }
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
-      className={`${styles.tiltCard} ${className}`}
+      className={className ? undefined : styles.tiltCardWrapper} // Optional: purely structural
       style={{
-        rotateX,
-        rotateY,
-        transformPerspective: perspective,
+        display: 'grid',
+        gridTemplateAreas: '"stack"',
+        perspective, // Perspective on container usually works best
         transformStyle: 'preserve-3d'
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      whileHover={{ scale }}
     >
-      {/* Glow effect layer */}
-      {showGlow && (
-        <motion.div 
-          className={styles.glow}
-          style={{
-            background: `radial-gradient(600px circle at ${glowX}% ${glowY}%, ${glowColor}, transparent 40%)`
-          }}
-        />
-      )}
+      <motion.div
+        className={`${styles.tiltCard} ${className}`}
+        style={{
+          gridArea: 'stack',
+          rotateX,
+          rotateY,
+          transformStyle: 'preserve-3d',
+          width: '100%' // Ensure it fills the grid cell
+        }}
+        whileHover={{ scale }}
+      >
+        {/* Glow effect layer */}
+        {showGlow && (
+          <motion.div
+            className={styles.glow}
+            style={{
+              background: `radial-gradient(600px circle at ${glowX}% ${glowY}%, ${glowColor}, transparent 40%)`
+            }}
+          />
+        )}
 
-      {/* Content with z-depth effect */}
-      <div className={styles.content} style={{ transform: 'translateZ(30px)' }}>
-        {children}
-      </div>
-    </motion.div>
+        {/* Content with z-depth effect */}
+        <div className={styles.content} style={{ transform: 'translateZ(30px)' }}>
+          {children}
+        </div>
+      </motion.div>
+    </div>
   )
 }
