@@ -32,9 +32,12 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
         setIsNavigating(false)
     }, [])
 
-    // Stop navigating when route changes
+    // Stop navigating when route changes with a small delay to ensure rendering
     useEffect(() => {
-        setIsNavigating(false)
+        const timer = setTimeout(() => {
+            setIsNavigating(false)
+        }, 500) // 500ms persistence to hide the 'white' gap
+        return () => clearTimeout(timer)
     }, [pathname, searchParams])
 
     return (
