@@ -291,7 +291,7 @@ export default function BookLayout({ pages }: BookLayoutProps) {
         <main className={styles.bookContent}>
           <div className={styles.pageWrapper}>
             <AnimatePresence
-              initial={false}
+              initial={true}
               custom={direction}
               mode="wait"
               onExitComplete={() => {

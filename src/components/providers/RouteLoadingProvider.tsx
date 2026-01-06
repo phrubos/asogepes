@@ -19,7 +19,7 @@ export default function RouteLoadingProvider({
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsMounting(false)
-    }, 500)
+    }, 800)
     return () => clearTimeout(timer)
   }, [])
 

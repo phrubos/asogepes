@@ -12,18 +12,20 @@ import AnimatedNumber from '@/components/ui/AnimatedNumber'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 import { TextReveal } from '@/components/ui/TextReveal'
 import PageBadge from '@/components/ui/PageBadge'
+import { useNavigation } from '../providers/NavigationContext'
 
 export default function Hero() {
   const { style: parallaxStyle } = useParallax({ speed: 0.3, maxOffset: 150 })
-  
+  const { startNavigating } = useNavigation()
+
   // Typewriter effect for "végtelen erőforrás"
   const [typewriterText, setTypewriterText] = useState('')
   const [isTyping, setIsTyping] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
   const [hasInitialDelay, setHasInitialDelay] = useState(true)
-  
+
   const fullText = 'végtelen erőforrás'
-  
+
   useEffect(() => {
     // Initial delay before starting
     if (hasInitialDelay) {
@@ -32,9 +34,9 @@ export default function Hero() {
       }, 1000)
       return () => clearTimeout(initialTimeout)
     }
-    
+
     let timeout: NodeJS.Timeout
-    
+
     if (isTyping && !isDeleting) {
       if (typewriterText.length < fullText.length) {
         timeout = setTimeout(() => {
@@ -59,7 +61,7 @@ export default function Hero() {
         }, 500)
       }
     }
-    
+
     return () => clearTimeout(timeout)
   }, [typewriterText, isTyping, isDeleting, hasInitialDelay, fullText])
 
@@ -86,7 +88,7 @@ export default function Hero() {
         </motion.div>
 
         <h1 className={styles.heroTitle}>
-          <motion.span 
+          <motion.span
             className={styles.titleLine}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -122,13 +124,13 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           {heroStats.map((stat, index) => (
-            <motion.div 
-              key={index} 
+            <motion.div
+              key={index}
               className={styles.stat}
             >
               <span className={styles.statNumber}>
-                <AnimatedNumber 
-                  value={parseInt(stat.number.replace(/\D/g, '')) || 0} 
+                <AnimatedNumber
+                  value={parseInt(stat.number.replace(/\D/g, '')) || 0}
                   suffix={stat.number.replace(/[0-9]/g, '')}
                   duration={2000}
                   delay={index * 150}
@@ -148,11 +150,12 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <Link href="/problema">
-            <MagneticButton 
-              variant="primary" 
+          <Link href="/kutatas">
+            <MagneticButton
+              variant="primary"
               size="lg"
               magneticStrength={0.25}
+              onClick={() => startNavigating()}
             >
               Fedezd fel a kutatást
               <ArrowRight size={20} />
