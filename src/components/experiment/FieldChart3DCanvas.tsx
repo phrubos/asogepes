@@ -89,7 +89,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                 const y = Math.random() * 512
                 const size = Math.random() * 4 + 1
                 const shade = Math.random()
-                
+
                 if (shade < 0.3) {
                     ctx.fillStyle = `rgba(61, 40, 23, ${Math.random() * 0.8})`
                 } else if (shade < 0.6) {
@@ -100,7 +100,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                     // Small stones/pebbles
                     ctx.fillStyle = `rgba(100, 85, 70, ${Math.random() * 0.5})`
                 }
-                
+
                 ctx.beginPath()
                 ctx.ellipse(x, y, size, size * 0.7, Math.random() * Math.PI, 0, Math.PI * 2)
                 ctx.fill()
@@ -226,10 +226,10 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
 
             months.forEach(({ value, z }) => {
                 const height = value * 0.12
-                
+
                 // Create cylinder matching 2D green gradient
                 const geometry = new THREE.CylinderGeometry(0.4, 0.4, height, 32)
-                const material = new THREE.MeshStandardMaterial({ 
+                const material = new THREE.MeshStandardMaterial({
                     color: looseColor,
                     metalness: 0.1,
                     roughness: 0.6,
@@ -243,7 +243,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
 
                 // Add a subtle ring at the base matching 2D style
                 const ringGeometry = new THREE.RingGeometry(0.42, 0.52, 32)
-                const ringMaterial = new THREE.MeshBasicMaterial({ 
+                const ringMaterial = new THREE.MeshBasicMaterial({
                     color: 0x81C784,
                     side: THREE.DoubleSide,
                     transparent: true,
@@ -259,18 +259,18 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                 const ctx = canvas.getContext('2d')!
                 canvas.width = 96
                 canvas.height = 48
-                
+
                 // Background matching 2D tooltip style
                 ctx.fillStyle = 'rgba(30, 27, 24, 0.95)'
                 ctx.roundRect(4, 4, 88, 40, 8)
                 ctx.fill()
-                
+
                 // Border matching 2D
                 ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)'
                 ctx.lineWidth = 1
                 ctx.roundRect(4, 4, 88, 40, 8)
                 ctx.stroke()
-                
+
                 // Text
                 ctx.fillStyle = '#ffffff'
                 ctx.font = 'bold 22px system-ui, sans-serif'
@@ -291,18 +291,18 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
             const numCtx = numCanvas.getContext('2d')!
             numCanvas.width = 96
             numCanvas.height = 56
-            
+
             // Rounded rect background matching 2D parcelBadge
             numCtx.fillStyle = isBest ? 'rgba(212, 168, 75, 0.25)' : 'rgba(255, 255, 255, 0.08)'
             numCtx.roundRect(4, 4, 88, 48, 8)
             numCtx.fill()
-            
+
             // Border
             numCtx.strokeStyle = isBest ? 'rgba(212, 168, 75, 0.5)' : 'rgba(255, 255, 255, 0.12)'
             numCtx.lineWidth = 1
             numCtx.roundRect(4, 4, 88, 48, 8)
             numCtx.stroke()
-            
+
             // Text - gold for best, white for others
             numCtx.fillStyle = isBest ? '#d4a84b' : 'rgba(255, 255, 255, 0.9)'
             numCtx.font = 'bold 28px system-ui, sans-serif'
@@ -323,18 +323,18 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                 const starCtx = starCanvas.getContext('2d')!
                 starCanvas.width = 96
                 starCanvas.height = 48
-                
+
                 // Badge background matching 2D gold accent
                 starCtx.fillStyle = 'rgba(212, 168, 75, 0.2)'
                 starCtx.roundRect(4, 4, 88, 40, 8)
                 starCtx.fill()
-                
+
                 // Border
                 starCtx.strokeStyle = 'rgba(212, 168, 75, 0.4)'
                 starCtx.lineWidth = 1
                 starCtx.roundRect(4, 4, 88, 40, 8)
                 starCtx.stroke()
-                
+
                 // Text in gold
                 starCtx.fillStyle = '#d4a84b'
                 starCtx.font = 'bold 16px system-ui, sans-serif'
@@ -351,34 +351,35 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
             }
 
             // Treatment name label - full name instead of abbreviation
+
             const nameCanvas = document.createElement('canvas')
             const nameCtx = nameCanvas.getContext('2d')!
-            nameCanvas.width = 320
-            nameCanvas.height = 56
-            
+            nameCanvas.width = 420
+            nameCanvas.height = 80
+
             // Background matching 2D style
             nameCtx.fillStyle = 'rgba(30, 27, 24, 0.9)'
-            nameCtx.roundRect(8, 4, 304, 48, 8)
+            nameCtx.roundRect(8, 4, 404, 72, 10)
             nameCtx.fill()
-            
+
             // Border
             nameCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)'
-            nameCtx.lineWidth = 1
-            nameCtx.roundRect(8, 4, 304, 48, 8)
+            nameCtx.lineWidth = 2
+            nameCtx.roundRect(8, 4, 404, 72, 10)
             nameCtx.stroke()
-            
+
             // Text - full treatment name
-            nameCtx.fillStyle = 'rgba(255, 255, 255, 0.7)'
-            nameCtx.font = '14px system-ui, sans-serif'
+            nameCtx.fillStyle = 'rgba(255, 255, 255, 0.9)'
+            nameCtx.font = 'bold 24px system-ui, sans-serif'
             nameCtx.textAlign = 'center'
             nameCtx.textBaseline = 'middle'
-            nameCtx.fillText(parcel.treatment, 160, 28)
+            nameCtx.fillText(parcel.treatment, 210, 40)
 
             const nameTexture = new THREE.CanvasTexture(nameCanvas)
             const nameSpriteMaterial = new THREE.SpriteMaterial({ map: nameTexture })
             const nameSprite = new THREE.Sprite(nameSpriteMaterial)
             nameSprite.position.set(xPos, 0.8, 5.5)
-            nameSprite.scale.set(4, 0.7, 1)
+            nameSprite.scale.set(4.5, 0.9, 1)
             scene.add(nameSprite)
         })
 
@@ -390,18 +391,18 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
             const ctx = canvas.getContext('2d')!
             canvas.width = 160
             canvas.height = 56
-            
+
             // Background matching 2D monthActive style with gold accent
             ctx.fillStyle = 'rgba(212, 168, 75, 0.15)'
             ctx.roundRect(4, 4, 152, 48, 24)
             ctx.fill()
-            
+
             // Border matching 2D
             ctx.strokeStyle = 'rgba(212, 168, 75, 0.3)'
             ctx.lineWidth = 1
             ctx.roundRect(4, 4, 152, 48, 24)
             ctx.stroke()
-            
+
             // Gold text matching 2D monthActive
             ctx.fillStyle = '#d4a84b'
             ctx.font = '500 20px system-ui, sans-serif'
@@ -466,12 +467,12 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '400px', borderRadius: '12px', overflow: 'hidden' }}>
             <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
-            
+
             {/* Legend overlay matching 2D design */}
-            <div style={{ 
-                position: 'absolute', 
-                bottom: '20px', 
-                left: '20px', 
+            <div style={{
+                position: 'absolute',
+                bottom: '20px',
+                left: '20px',
                 pointerEvents: 'none',
                 zIndex: 10,
                 background: 'rgba(26, 23, 20, 0.9)',

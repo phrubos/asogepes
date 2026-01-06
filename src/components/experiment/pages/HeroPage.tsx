@@ -6,11 +6,28 @@ import PageBadge from '@/components/ui/PageBadge'
 import HungaryMap from '../ResearchHero/HungaryMap'
 import styles from './HeroPage.module.css'
 
-interface HeroPageProps {
-  onLocationClick?: (locationId: string) => void
+import { useBookNav } from '../BookLayout/BookLayout'
+
+// Mapping from map ID to page ID
+const LOCATION_PAGE_MAP: Record<string, string> = {
+  'szentkiraly': 'szentkiraly-info',
+  'kecskemet': 'kecskemet-info',
+  'lakitelek': 'lakitelek-info',
 }
 
-export default function HeroPage({ onLocationClick }: HeroPageProps) {
+export default function HeroPage() {
+  const { goToPage, pages } = useBookNav()
+
+  const handleLocationClick = (locationId: string) => {
+    const targetPageId = LOCATION_PAGE_MAP[locationId]
+    if (targetPageId) {
+      const pageIndex = pages.findIndex(p => p.id === targetPageId)
+      if (pageIndex !== -1) {
+        goToPage(pageIndex)
+      }
+    }
+  }
+
   const stats = [
     { icon: MapPin, number: '3', label: 'Helyszín' },
     { icon: Calendar, number: '4', label: 'Hónap' },
@@ -27,7 +44,7 @@ export default function HeroPage({ onLocationClick }: HeroPageProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <PageBadge number="04" label="A KUTATÁS" />
+            <PageBadge label="A KUTATÁS" />
           </motion.div>
 
           <motion.h1
@@ -87,7 +104,7 @@ export default function HeroPage({ onLocationClick }: HeroPageProps) {
           transition={{ duration: 0.8, delay: 0.3 }}
         >
           <div className={styles.mapContainer}>
-            <HungaryMap onLocationClick={onLocationClick} />
+            <HungaryMap onLocationClick={handleLocationClick} />
           </div>
         </motion.div>
       </div>

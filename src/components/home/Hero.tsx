@@ -82,7 +82,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <PageBadge number="01" label="FŐOLDAL" />
+          <PageBadge label="FŐOLDAL" />
         </motion.div>
 
         <h1 className={styles.heroTitle}>

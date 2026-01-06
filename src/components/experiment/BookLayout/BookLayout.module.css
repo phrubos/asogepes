@@ -38,7 +38,7 @@
   flex-direction: column;
   justify-content: center;
   /* Center content vertically */
-  padding: 160px 0 120px var(--space-xl);
+  padding: 120px 0 80px var(--space-xl);
   z-index: 100;
   transition: width 0.3s ease;
 }
@@ -198,6 +198,7 @@
   letter-spacing: 0.05em;
   color: #fff;
   line-height: 1.2;
+  white-space: pre-line;
 }
 
 .sectionGroup.active .sectionLabel {
@@ -293,6 +294,35 @@
   position: relative;
   padding-top: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.loaderOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(14, 12, 10, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+}
+
+.loaderContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.loaderText {
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 /* Individual Page */
@@ -309,7 +339,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 140px 0 120px 0;
+  padding: 100px 0 60px 0;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -364,12 +394,26 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-xs) var(--space-md);
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(35, 30, 25, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 100px;
   z-index: 50;
   pointer-events: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.pageCounter {
+  position: absolute;
+  bottom: var(--space-lg);
+  right: var(--space-xl);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  opacity: 0.8;
+  letter-spacing: 0.1em;
+  z-index: 50;
 }
 
 .hintKey {

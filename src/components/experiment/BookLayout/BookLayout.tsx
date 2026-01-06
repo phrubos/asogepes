@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
+import SoilLoader from '@/components/ui/SoilLoader'
 import styles from './BookLayout.module.css'
 
 export interface BookPage {
@@ -44,6 +45,25 @@ const pageTransition = {
   stiffness: 300,
   damping: 30,
   mass: 0.8,
+}
+
+// Context for child components to control navigation
+import { createContext, useContext } from 'react'
+
+interface BookContextType {
+  goToPage: (index: number) => void
+  pages: BookPage[]
+  currentPage: number
+}
+
+const BookContext = createContext<BookContextType | null>(null)
+
+export const useBookNav = () => {
+  const context = useContext(BookContext)
+  if (!context) {
+    throw new Error('useBookNav must be used within a BookLayout')
+  }
+  return context
 }
 
 export default function BookLayout({ pages }: BookLayoutProps) {
@@ -111,7 +131,7 @@ export default function BookLayout({ pages }: BookLayoutProps) {
 
       // Determine scroll direction
       const currentDirection = e.deltaY > 0 ? 'down' : 'up'
-      
+
       // Reset counter if direction changed or timeout expired
       if (scrollDirectionRef.current !== currentDirection) {
         scrollCountRef.current = 0
@@ -120,7 +140,7 @@ export default function BookLayout({ pages }: BookLayoutProps) {
 
       // Clear previous reset timeout
       if (resetTimeout) clearTimeout(resetTimeout)
-      
+
       // Reset counter after 800ms of no scrolling
       resetTimeout = setTimeout(() => {
         scrollCountRef.current = 0
@@ -130,12 +150,12 @@ export default function BookLayout({ pages }: BookLayoutProps) {
       // Only count significant scroll events
       if (Math.abs(e.deltaY) > 30) {
         scrollCountRef.current++
-        
+
         // Change page after required number of scrolls
         if (scrollCountRef.current >= SCROLLS_REQUIRED) {
           scrollCountRef.current = 0
           scrollDirectionRef.current = null
-          
+
           if (currentDirection === 'down') {
             nextPage()
           } else {
@@ -173,137 +193,166 @@ export default function BookLayout({ pages }: BookLayoutProps) {
   const progressPercentage = ((activeSectionIndex) / (sections.length - 1)) * 100
 
   return (
-    <div ref={containerRef} className={styles.bookContainer}>
-      {/* Left Sidebar Navigation (Timeline) */}
-      <nav className={styles.sidebar}>
-        <div className={styles.sidebarContent}>
+    <BookContext.Provider value={{ goToPage, pages, currentPage }}>
+      <div ref={containerRef} className={styles.bookContainer}>
+        {/* Left Sidebar Navigation (Timeline) */}
+        <nav className={styles.sidebar}>
+          <div className={styles.sidebarContent}>
 
-          {/* Timeline Track Line */}
-          <div className={styles.timelineTrack}>
-            <motion.div
-              className={styles.timelineProgress}
-              initial={{ height: 0 }}
-              animate={{ height: `${progressPercentage}%` }}
-              transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            />
-          </div>
+            {/* Timeline Track Line */}
+            <div className={styles.timelineTrack}>
+              <motion.div
+                className={styles.timelineProgress}
+                initial={{ height: 0 }}
+                animate={{ height: `${progressPercentage}%` }}
+                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+              />
+            </div>
 
-          {/* Sections List */}
-          <div className={styles.sectionNav}>
-            <LayoutGroup>
-              {sections.map((section, idx) => {
-                const isActive = currentPageData?.section === section.section
-                const isPast = activeSectionIndex > idx
-                const sectionPages = pages.filter(p => p.section === section.section)
+            {/* Sections List */}
+            <div className={styles.sectionNav}>
+              <LayoutGroup>
+                {sections.map((section, idx) => {
+                  const isActive = currentPageData?.section === section.section
+                  const isPast = activeSectionIndex > idx
+                  const sectionPages = pages.filter(p => p.section === section.section)
 
-                return (
-                  <div
-                    key={section.section}
-                    className={`${styles.sectionGroup} ${isActive ? styles.active : ''} ${isPast ? styles.past : ''}`}
-                    onClick={() => goToPage(section.firstPageIndex)}
-                  >
-                    {/* Circle Marker */}
-                    <div className={styles.markerWrapper}>
-                      <motion.div
-                        className={styles.marker}
-                        layoutId={`marker-${section.section}`}
-                      />
-                    </div>
-
-                    {/* Label Header */}
-                    <div className={styles.sectionHeader}>
-                      <span className={styles.sectionNumber}>
-                        {String(idx + 1).padStart(2, '0')}
-                      </span>
-                      <span className={styles.sectionLabel}>{section.section}</span>
-                    </div>
-
-                    {/* Sub-pages List (Only for active section) */}
-                    <AnimatePresence>
-                      {isActive && sectionPages.length > 0 && (
+                  return (
+                    <div
+                      key={section.section}
+                      className={`${styles.sectionGroup} ${isActive ? styles.active : ''} ${isPast ? styles.past : ''}`}
+                      onClick={() => goToPage(section.firstPageIndex)}
+                    >
+                      {/* Circle Marker */}
+                      <div className={styles.markerWrapper}>
                         <motion.div
-                          className={styles.subPages}
-                          initial={{ opacity: 0, height: 0, x: -10 }}
-                          animate={{ opacity: 1, height: 'auto', x: 0 }}
-                          exit={{ opacity: 0, height: 0, x: -10 }}
-                          transition={{ duration: 0.3, ease: 'easeOut' }}
-                        >
-                          {sectionPages.map((page, pageIdx) => {
-                            const isPageActive = page.id === currentPageData?.id
-                            return (
-                              <button
-                                key={page.id}
-                                className={`${styles.subPageBtn} ${isPageActive ? styles.activeBtn : ''}`}
-                                onClick={(e) => {
-                                  e.stopPropagation() // Prevent clicking parent section
-                                  goToPage(pages.findIndex(p => p.id === page.id))
-                                }}
-                              >
-                                {page.title}
-                              </button>
-                            )
-                          })}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                )
-              })}
-            </LayoutGroup>
+                          className={styles.marker}
+                          layoutId={`marker-${section.section}`}
+                        />
+                      </div>
+
+                      {/* Label Header */}
+                      <div className={styles.sectionHeader}>
+                        <span className={styles.sectionNumber}>
+                          {String(idx).padStart(2, '0')}
+                        </span>
+                        <span className={styles.sectionLabel}>{section.section}</span>
+                      </div>
+
+                      {/* Sub-pages List (Only for active section) */}
+                      <AnimatePresence>
+                        {isActive && sectionPages.length > 0 && (
+                          <motion.div
+                            className={styles.subPages}
+                            initial={{ opacity: 0, height: 0, x: -10 }}
+                            animate={{ opacity: 1, height: 'auto', x: 0 }}
+                            exit={{ opacity: 0, height: 0, x: -10 }}
+                            transition={{ duration: 0.3, ease: 'easeOut' }}
+                          >
+                            {sectionPages.map((page, pageIdx) => {
+                              const isPageActive = page.id === currentPageData?.id
+                              return (
+                                <button
+                                  key={page.id}
+                                  className={`${styles.subPageBtn} ${isPageActive ? styles.activeBtn : ''}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation() // Prevent clicking parent section
+                                    goToPage(pages.findIndex(p => p.id === page.id))
+                                  }}
+                                >
+                                  {page.title}
+                                </button>
+                              )
+                            })}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )
+                })}
+              </LayoutGroup>
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
 
-      {/* Book Content Area */}
-      <main className={styles.bookContent}>
-        <div className={styles.pageWrapper}>
-          <AnimatePresence
-            initial={false}
-            custom={direction}
-            mode="wait"
-            onExitComplete={() => setIsAnimating(false)}
-          >
-            <motion.div
-              key={currentPage}
+        {/* Book Content Area */}
+        <main className={styles.bookContent}>
+          <div className={styles.pageWrapper}>
+            <AnimatePresence
+              initial={false}
               custom={direction}
-              variants={pageVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={pageTransition}
-              className={styles.page}
+              mode="wait"
+              onExitComplete={() => {
+                // Short delay to ensure the new page is ready and to show the loader meaningfully
+                setTimeout(() => setIsAnimating(false), 400)
+              }}
             >
-              {/* Page corner decoration */}
-              <div className={styles.pageCorner} />
+              <motion.div
+                key={currentPage}
+                custom={direction}
+                variants={pageVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={pageTransition}
+                className={styles.page}
+              >
+                {/* Page corner decoration */}
+                <div className={styles.pageCorner} />
 
-              {/* Page content */}
-              <div className={styles.pageContent}>
-                {currentPageData?.component}
-              </div>
+                {/* Page content */}
+                <div className={styles.pageContent}>
+                  {currentPageData?.component}
+                </div>
 
-              {/* Page shadow effect */}
-              <div className={styles.pageShadow} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
+                {/* Page shadow effect */}
+                <div className={styles.pageShadow} />
+              </motion.div>
+            </AnimatePresence>
 
-        {/* Global Page Counter (bottom right) */}
-        <div className={styles.pageCounter}>
-          {currentPage + 1} / {pages.length}
-        </div>
+            {/* Premium Loading State Overlay */}
+            <AnimatePresence>
+              {isAnimating && (
+                <motion.div
+                  className={styles.loaderOverlay}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className={styles.loaderContent}>
+                    <SoilLoader size="lg" />
+                    <motion.span
+                      className={styles.loaderText}
+                      animate={{ opacity: [0.4, 1, 0.4] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      Betöltés....
+                    </motion.span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-        {/* Bottom navigation hint */}
-        <motion.div
-          className={styles.navHint}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
-        >
-          <span className={styles.hintKey}>←</span>
-          <span className={styles.hintKey}>→</span>
-          <span className={styles.hintText}>Lapozás</span>
-        </motion.div>
-      </main>
-    </div>
+          {/* Global Page Counter (bottom right) */}
+          <div className={styles.pageCounter}>
+            {currentPage + 1} / {pages.length}
+          </div>
+
+          {/* Bottom navigation hint */}
+          <motion.div
+            className={styles.navHint}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1 }}
+          >
+            <span className={styles.hintKey}>←</span>
+            <span className={styles.hintKey}>→</span>
+            <span className={styles.hintText}>Lapozás</span>
+          </motion.div>
+        </main>
+      </div>
+    </BookContext.Provider>
   )
 }

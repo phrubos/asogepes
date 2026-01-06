@@ -26,7 +26,7 @@ export default function ResearchHero({ onLocationClick }: ResearchHeroProps) {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
           >
-            <PageBadge number="04" label="A KUTATÁS" />
+            <PageBadge label="A KUTATÁS" />
           </motion.div>
 
           <motion.h1

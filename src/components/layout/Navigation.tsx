@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
+import { useNavigation } from '../providers/NavigationContext'
 import styles from './Navigation.module.css'
 
 export default function Navigation() {
@@ -16,6 +17,7 @@ export default function Navigation() {
   const [mounted, setMounted] = useState(false)
   const navRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+  const { startNavigating } = useNavigation()
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -81,9 +83,9 @@ export default function Navigation() {
         document.body.style.overflow = ''
       }
     }
-    return () => { 
+    return () => {
       if (mounted) {
-        document.body.style.overflow = '' 
+        document.body.style.overflow = ''
       }
     }
   }, [mobileMenuOpen, mounted])
@@ -104,7 +106,7 @@ export default function Navigation() {
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             />
           )}
-          
+
           {navItems.map((item, index) => (
             <Link
               key={item.href}
@@ -112,6 +114,9 @@ export default function Navigation() {
               className={`${styles.navLink} ${pathname === item.href ? styles.active : ''}`}
               onMouseEnter={() => setHoverIndex(index)}
               onMouseLeave={() => setHoverIndex(null)}
+              onClick={() => {
+                if (pathname !== item.href) startNavigating()
+              }}
               aria-current={pathname === item.href ? 'page' : undefined}
             >
               {item.label}
@@ -184,11 +189,14 @@ export default function Navigation() {
                       <Link
                         href={item.href}
                         className={`${styles.mobileLink} ${pathname === item.href ? styles.mobileActive : ''}`}
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={() => {
+                          setMobileMenuOpen(false)
+                          if (pathname !== item.href) startNavigating()
+                        }}
                         aria-current={pathname === item.href ? 'page' : undefined}
                       >
                         <span className={styles.mobileLinkNumber}>
-                          {String(index + 1).padStart(2, '0')}
+                          {String(index).padStart(2, '0')}
                         </span>
                         <span className={styles.mobileLinkText}>{item.label}</span>
                         {pathname === item.href && (
