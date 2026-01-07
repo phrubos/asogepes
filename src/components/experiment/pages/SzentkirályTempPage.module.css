@@ -70,10 +70,7 @@
     justify-content: center;
 }
 
-.chartContainer :global(.barContainer) {
-    height: 120px;
-    width: 50px;
-}
+
 
 .chartContainer :global(.explanation) {
     margin-top: var(--space-md);
@@ -93,5 +90,49 @@
 @media (max-width: 768px) {
     .headerTitle {
         font-size: 1.125rem;
+    }
+}
+
+/* Fix for 125% scaling (short viewports) */
+/* Fix for 125% scaling (short viewports) - Side-by-Side Layout */
+@media (max-height: 900px) {
+    .container {
+        height: 100vh;
+        max-height: 100%;
+        justify-content: flex-start;
+        padding-top: 90px;
+        padding-bottom: 70px;
+        gap: 0;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .header {
+        flex-shrink: 0;
+        margin-bottom: var(--space-xs);
+        z-index: 2;
+    }
+
+    .headerTitle {
+        font-size: 1.25rem;
+    }
+
+    .chartContainer {
+        flex: 1;
+        width: 100%;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 1200px;
+        /* Allow more width for side-by-side */
+        margin: 0 auto;
+        padding: 0 var(--space-xl);
+    }
+
+    /* Inner chart scaling will be handled by the component's own responsiveness */
+    .chartContainer>div {
+        margin: 0 !important;
+        width: 100%;
     }
 }
