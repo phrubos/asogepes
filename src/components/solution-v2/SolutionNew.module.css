@@ -4,7 +4,8 @@
   padding: 0;
   min-height: 100vh;
   position: relative;
-  overflow-x: hidden; /* Prevent horizontal scroll from pseudo-elements */
+  overflow-x: hidden;
+  /* Prevent horizontal scroll from pseudo-elements */
 }
 
 /* Optional subtle grid background for blueprint feel */
@@ -15,9 +16,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
   pointer-events: none;
@@ -33,7 +34,8 @@
   grid-template-columns: 1fr 1.2fr;
   gap: 4rem;
   align-items: center;
-  padding-top: 100px; /* Space for header - badge should be below header */
+  padding-top: 100px;
+  /* Space for header - badge should be below header */
 }
 
 @media (max-width: 1200px) {
@@ -127,6 +129,7 @@
 }
 
 @media (max-width: 768px) {
+
   .folder:nth-child(1),
   .folder:nth-child(2),
   .folder:nth-child(3) {
@@ -168,7 +171,7 @@
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
+  box-shadow:
     0 30px 60px -15px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(255, 255, 255, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -190,9 +193,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 20px 20px;
   opacity: 0.5;
   pointer-events: none;
@@ -442,10 +445,11 @@
 
 @media (min-width: 1200px) {
   .blueprintGrid {
-    grid-template-columns: 1.2fr 1fr; /* Balanced split */
+    grid-template-columns: 1.2fr 1fr;
+    /* Balanced split */
     align-items: stretch;
   }
-  
+
   /* Force benefits grid to 1 column when inside the blueprint grid layout */
   .blueprintGrid .benefitsGrid {
     grid-template-columns: 1fr;
@@ -454,16 +458,16 @@
 }
 
 .benefitCard {
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: var(--space-md);
   border-radius: var(--radius-md);
-  background: rgba(255,255,255,0.02);
+  background: rgba(255, 255, 255, 0.02);
   transition: all 0.3s ease;
 }
 
 .benefitCard:hover {
   border-color: var(--color-gold);
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   transform: translateY(-4px);
 }
 
@@ -480,7 +484,8 @@
 .subTitle {
   font-size: 1.125rem;
   line-height: 1.6;
-  color: rgba(245, 240, 232, 0.95); /* Improved contrast from 0.8 */
+  color: rgba(245, 240, 232, 0.95);
+  /* Improved contrast from 0.8 */
   max-width: 65ch;
 }
 
@@ -493,7 +498,7 @@
 /* Section Divider */
 .sectionDivider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   margin: var(--space-3xl) 0;
 }
 
@@ -534,7 +539,8 @@
 /* Sticky Model Tabs */
 .modelTabs {
   position: sticky;
-  top: 64px; /* Below the main navigation (nav height ~64px) */
+  top: 64px;
+  /* Below the main navigation (nav height ~64px) */
   z-index: 90;
   background: var(--color-earth-800);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -594,6 +600,16 @@
   position: relative;
   z-index: 1;
   min-height: 600px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Specific adjustment for 125% scaling (height constrained) - more aggressive */
+@media (max-height: 900px) {
+  .contentWrapper {
+    max-width: 1000px;
+    /* Reduced from 1150px to ensure wide margins */
+  }
 }
 
 .modelSectionActive {
@@ -606,6 +622,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -689,9 +706,9 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
   /* Ensure the white background of the image is clipped */
-  background: white; 
+  background: white;
 }
 
 .modelImage {
@@ -711,16 +728,16 @@
     width: 200px;
     height: 300px;
   }
-  
+
   .folderImageContainer {
     height: 120px;
     top: 40px;
   }
-  
+
   .folderLabel {
     font-size: 1.25rem;
   }
-  
+
   .blueprintGrid {
     grid-template-columns: 1fr;
     gap: var(--space-2xl);
@@ -732,52 +749,52 @@
     padding: 0;
     padding-bottom: var(--space-3xl);
   }
-  
+
   .header {
     min-height: auto;
     padding-top: var(--space-3xl);
     margin-bottom: var(--space-3xl);
   }
-  
+
   .mainTitle {
     font-size: clamp(1.75rem, 8vw, 2.5rem);
   }
-  
+
   .folder {
     width: 260px;
     height: 320px;
   }
-  
+
   .folderImageContainer {
     height: 140px;
   }
-  
+
   .folderLabel {
     font-size: 1.5rem;
   }
-  
+
   .blueprintContainer {
     padding: var(--space-lg);
   }
-  
+
   .blueprintHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-sm);
   }
-  
+
   .blueprintTitle {
     font-size: 1.25rem;
   }
-  
+
   .footer {
     margin-top: var(--space-2xl);
   }
-  
+
   .footerText {
     font-size: 1.125rem;
   }
-  
+
   .nextButton {
     padding: var(--space-sm) var(--space-xl);
     font-size: 0.9375rem;
@@ -789,28 +806,27 @@
     padding: 0;
     padding-bottom: var(--space-2xl);
   }
-  
+
   .header {
     padding-top: var(--space-2xl);
     margin-bottom: var(--space-2xl);
     gap: var(--space-xl);
   }
-  
+
   .folder {
     width: 240px;
     height: 300px;
   }
-  
+
   .folderLabel {
     font-size: 1.25rem;
   }
-  
+
   .blueprintContainer {
     padding: var(--space-md);
   }
-  
+
   .contentWrapper {
     gap: var(--space-3xl);
   }
 }
-

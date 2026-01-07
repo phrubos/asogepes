@@ -344,19 +344,7 @@ export default function CultivatorComparisonPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className={styles.contentWrapper}
-            style={{
-                minHeight: 'auto',
-                paddingBottom: '90px',
-                paddingTop: '60px',
-                paddingLeft: '4%',
-                paddingRight: '4%',
-                marginTop: '0',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
-            }}
+            className={`${styles.contentWrapper} ${styles.comparisonPageWrapper}`}
         >
             <motion.div variants={itemVariants} style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                 <span className={styles.pillBadge}>Talajszelvény összehasonlítás</span>

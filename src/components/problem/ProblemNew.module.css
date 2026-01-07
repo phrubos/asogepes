@@ -465,6 +465,15 @@
   /* Balanced padding */
 }
 
+@media (max-height: 900px) {
+  .statsPageGrid {
+    max-height: calc(100vh - 100px);
+    /* More space for content */
+    gap: var(--space-md);
+    padding: 0 var(--space-lg);
+  }
+}
+
 @media (max-width: 1024px) {
   .statsPageGrid {
     grid-template-columns: 1fr;
@@ -533,12 +542,31 @@
   margin-top: var(--space-md);
 }
 
+@media (max-height: 900px) {
+  .mainStat {
+    font-size: clamp(2rem, 5vh, 3rem);
+    margin-bottom: 0;
+  }
+
+  .statDescription {
+    margin-top: var(--space-xs);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+}
+
 .challengesList {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
   height: 100%;
   justify-content: flex-start;
+}
+
+@media (max-height: 900px) {
+  .challengesList {
+    gap: var(--space-sm);
+  }
 }
 
 .challengeItem {
@@ -553,6 +581,33 @@
   height: auto;
   min-height: 0;
   padding: var(--space-md);
+}
+
+@media (max-height: 900px) {
+  .challengeItem {
+    padding: var(--space-sm);
+    gap: var(--space-md);
+  }
+
+  .iconBox {
+    width: 32px;
+    height: 32px;
+  }
+
+  .iconBox svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .itemContent h3 {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+  }
+
+  .itemContent p {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
 }
 
 .iconBox {
@@ -778,6 +833,27 @@
   background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
   border-radius: 2px;
   transform-origin: center;
+}
+
+/* Responsive wrapper for CultivatorComparisonPage */
+.comparisonPageWrapper {
+  min-height: auto;
+  padding-bottom: 90px;
+  padding-top: 60px;
+  padding-left: 4%;
+  padding-right: 4%;
+  margin-top: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-height: 900px) {
+  .comparisonPageWrapper {
+    padding-top: 4vh !important;
+    padding-bottom: 8vh !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1037,6 +1113,70 @@
   line-height: 1.5;
 }
 
+@media (max-height: 900px) {
+  .cultivatorPageWrapper {
+    padding: 4vh var(--space-2xl) 6vh;
+  }
+
+  .cultivatorGrid {
+    gap: 2vh;
+  }
+
+  .cultivatorVisualSide {
+    gap: 1.5vh;
+  }
+
+  .cultivatorProblemsSide {
+    gap: 1.5vh;
+  }
+
+  .cultivatorProblemsGrid {
+    gap: var(--space-sm);
+  }
+
+  .problemCardContent {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .problemIcon {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 0.5rem;
+  }
+
+  .problemIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .problemCardTitle {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .problemCardDesc {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .introText {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .cultivatorImageContainer {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+
+  .pillBadge {
+    padding: 0.35rem 0.75rem;
+    margin-bottom: 1vh;
+    font-size: 0.7rem;
+  }
+}
+
 /* Talajszelvény összehasonlítás */
 .soilComparisonSection {
   margin-bottom: var(--space-4xl);
@@ -1185,6 +1325,54 @@
   color: var(--color-green);
 }
 
+/* Height-based adjustments for smaller viewports (e.g., 125% scaling @ 1536x800) */
+@media (max-height: 900px) {
+  .soilComparisonSection {
+    padding: var(--space-md) var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+
+  .comparisonTitle {
+    margin-bottom: var(--space-md);
+    font-size: 1.25rem;
+  }
+
+  .soilProfilesContainer {
+    gap: var(--space-md);
+  }
+
+  .soilProfileHeader {
+    padding: 0.6rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .soilProfileVisual {
+    padding: 1rem;
+    gap: 0.5rem !important;
+  }
+
+  .soilProfileCaption {
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .comparisonCard {
+    padding: 1.25rem;
+  }
+
+  .comparisonCardHeader h4 {
+    font-size: 1.125rem;
+  }
+
+  .comparisonList {
+    gap: 0.4rem;
+  }
+
+  .comparisonList li {
+    font-size: 0.8125rem;
+  }
+}
+
 /* ========================================
    END CULTIVATOR VIEW STYLES
    ======================================== */
@@ -1196,12 +1384,22 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 60px 4% 90px;
+  padding: 40px 3% 60px;
   margin-top: -50px;
   justify-content: center;
   position: relative;
   z-index: 1;
-  overflow: hidden;
+  overflow: visible;
+}
+
+@media (max-height: 900px) {
+  .ploughPageContainer {
+    padding: 0 2% 0;
+    margin-top: 0;
+    height: 100%;
+    max-height: 100%;
+    overflow: visible;
+  }
 }
 
 .ploughPageHeader {
@@ -1226,6 +1424,17 @@
   gap: 1rem;
   height: 100%;
   overflow: hidden;
+}
+
+.ploughStructureContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* Allow scrolling/flex shrinking */
+  width: 100%;
+  justify-content: center;
+  /* Center content vertically if space permits */
 }
 
 .compactQuoteBlock {
@@ -1434,9 +1643,18 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  max-height: calc(100% - 60px);
-  padding: 1rem;
+  justify-content: center;
+  min-height: 0;
+  width: 100%;
+  padding: 0.5rem;
+  overflow: visible;
+}
+
+@media (max-height: 900px) {
+  .ploughStructureContent {
+    padding: 0.25rem;
+    justify-content: flex-start;
+  }
 }
 
 /* ============================================
@@ -1454,6 +1672,8 @@
   justify-content: center;
   margin-top: 0;
 }
+
+
 
 .orbitalHeader {
   text-align: center;
@@ -1557,7 +1777,7 @@
 .flipBackDecoration {
   position: absolute;
   inset: -1rem;
-  border: 1px solid rgba(212, 168, 75, 0.15);
+  border: none;
   border-radius: 50%;
   pointer-events: none;
   z-index: -1;
@@ -1753,12 +1973,109 @@
 
 .orbitalProgressBar {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-gold), #E57373);
   border-radius: 2px;
 }
 
-/* Quote Section - hidden, using image overlay instead */
-/* Quote Section at bottom */
+@media (max-height: 900px) {
+  .orbitalContainer {
+    padding: 2vh 4% 2vh;
+    /* Minimized bottom padding to stretch layout */
+  }
+
+  /* Compact Center Core - EVEN LARGER */
+  .flipCardInner,
+  .orbitalImageWrapper {
+    width: 320px !important;
+    height: 320px !important;
+  }
+
+  .orbitRing,
+  .orbitRingInner {
+    width: 400px !important;
+    height: 400px !important;
+  }
+
+  .orbitalGlow {
+    width: 400px !important;
+    height: 400px !important;
+  }
+
+  .orbitalCenter:hover .orbitalGlow {
+    width: 450px !important;
+  }
+
+  /* Compact Cards - Balanced Width */
+  .orbitalCard {
+    width: 260px;
+  }
+
+  /* Positions - Shift Layout Downwards */
+  .orbitalCardTopLeft {
+    top: 0;
+    left: 0;
+  }
+
+  .orbitalCardTopRight {
+    top: 0;
+    right: 0;
+  }
+
+  .orbitalCardBottomLeft {
+    bottom: -5%;
+    /* Pushed slightly down */
+    left: 0;
+  }
+
+  .orbitalCardBottomRight {
+    bottom: -5%;
+    /* Pushed slightly down */
+    right: 0;
+  }
+
+  /* Compact Typography & Spacing */
+  .orbitalCardInner {
+    padding: 0.75rem 1rem;
+    gap: 0.2rem;
+  }
+
+  .orbitalCardIcon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0.2rem;
+  }
+
+  .orbitalCardIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .orbitalCardBadge {
+    font-size: 0.5rem;
+    padding: 0.15rem 0.35rem;
+  }
+
+  .orbitalCardTitle {
+    font-size: 0.9rem;
+    line-height: 1.1;
+    margin-bottom: 0.15rem;
+  }
+
+  .orbitalCardDesc {
+    font-size: 0.75rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Move header closer but keep clearance */
+  .orbitalHeader {
+    margin-bottom: 2vh;
+  }
+}
+
+/* Quote Section at bottom - Ensure it can move down */
 .orbitalQuote {
   display: flex;
   align-items: center;
@@ -1766,10 +2083,21 @@
   gap: 1.5rem;
   width: 100%;
   max-width: 800px;
-  padding: 1.5rem 0;
+  padding: 1rem 0;
   margin-top: auto;
   flex-shrink: 0;
+  position: relative;
+  z-index: 10;
 }
+
+@media (max-height: 900px) {
+  .orbitalQuote {
+    margin-bottom: -5vh;
+    /* Push quote further down as requested */
+  }
+}
+
+
 
 .orbitalQuoteLine {
   flex: 1;
@@ -2525,80 +2853,82 @@
 .compactPageGrid .problemCard>div {
   padding: 1.25rem !important;
   gap: 0.75rem !important;
-}/* ============================================
+}
+
+/* ============================================
    RESPONSIVE OPTIMIZATION (125% SCALING)
    ============================================ */
 
 @media (max-width: 1600px) {
 
-    /* Orbital Layout Adjustments */
-    .orbitalContainer {
-        padding: 40px 4% 80px;
-    }
+  /* Orbital Layout Adjustments */
+  .orbitalContainer {
+    padding: 40px 4% 80px;
+  }
 
-    .orbitalLayout {
-        max-width: 1000px;
-        padding: 1rem 0;
-    }
+  .orbitalLayout {
+    max-width: 1000px;
+    padding: 1rem 0;
+  }
 
-    .flipCardInner {
-        width: 300px;
-        height: 300px;
-    }
+  .flipCardInner {
+    width: 300px;
+    height: 300px;
+  }
 
-    .flipCardBack {
-        padding: 1.5rem;
-    }
+  .flipCardBack {
+    padding: 1.5rem;
+  }
 
-    .flipCardBackContent {
-        gap: 1rem;
-    }
+  .flipCardBackContent {
+    gap: 1rem;
+  }
 
-    .flipBackText {
-        font-size: 0.85rem;
-    }
+  .flipBackText {
+    font-size: 0.85rem;
+  }
 
-    .orbitalCard {
-        width: 240px;
-    }
+  .orbitalCard {
+    width: 240px;
+  }
 
-    .orbitalCardInner {
-        padding: 0.9rem 1rem;
-        gap: 0.4rem;
-    }
+  .orbitalCardInner {
+    padding: 0.9rem 1rem;
+    gap: 0.4rem;
+  }
 
-    .orbitalCardTitle {
-        font-size: 0.95rem;
-    }
+  .orbitalCardTitle {
+    font-size: 0.95rem;
+  }
 
-    .orbitalCardDesc {
-        font-size: 0.8rem;
-    }
+  .orbitalCardDesc {
+    font-size: 0.8rem;
+  }
 
-    /* Cultivator & Comparison Page Adjustments */
-    .ploughPageContainer,
-    .cultivatorPageWrapper {
-        padding: 40px 4% 80px;
-    }
+  /* Cultivator & Comparison Page Adjustments */
+  .ploughPageContainer,
+  .cultivatorPageWrapper {
+    padding: 40px 4% 80px;
+  }
 
-    .ploughPageMainGrid,
-    .cultivatorGrid {
-        gap: 1.5rem;
-    }
+  .ploughPageMainGrid,
+  .cultivatorGrid {
+    gap: 1.5rem;
+  }
 
-    .compactQuoteBlock {
-        padding: 1rem;
-    }
+  .compactQuoteBlock {
+    padding: 1rem;
+  }
 
-    .compactQuoteText {
-        font-size: 0.9rem;
-    }
+  .compactQuoteText {
+    font-size: 0.9rem;
+  }
 
-    .statsPageGrid {
-        gap: 1.5rem;
-    }
+  .statsPageGrid {
+    gap: 1.5rem;
+  }
 
-    .statDescription {
-        font-size: 0.85rem;
-    }
+  .statDescription {
+    font-size: 0.85rem;
+  }
 }

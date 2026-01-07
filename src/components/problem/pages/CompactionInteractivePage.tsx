@@ -68,19 +68,13 @@ export default function CompactionInteractivePage() {
             whileInView="visible"
             viewport={{ once: true }}
             className={styles.contentWrapper}
-            style={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
-            }}
         >
-            <div className={styles.statsPageGrid} style={{ paddingBottom: '3rem' }}>
+            <div className={styles.statsPageGrid} style={{ paddingBottom: 'clamp(1rem, 5vh, 3rem)' }}>
                 {/* LEFT: VISUALIZATION */}
                 <motion.div
                     className={styles.statCard}
                     variants={itemVariants}
-                    style={{ padding: 0, overflow: 'hidden', minHeight: '400px' }}
+                    style={{ padding: 0, overflow: 'hidden', minHeight: 'clamp(300px, 45vh, 430px)' }}
                 >
                     <InteractiveSoil
                         dayIndex={dayIndex}
@@ -113,7 +107,7 @@ export default function CompactionInteractivePage() {
                 </motion.div>
 
                 {/* RIGHT: INFO & CONTROLS */}
-                <div className={styles.challengesList} style={{ justifyContent: 'center', gap: 'var(--space-md)' }}>
+                <div className={styles.challengesList} style={{ justifyContent: 'center', gap: 'clamp(0.5rem, 2vh, var(--space-md))' }}>
 
                     {/* Header Info */}
                     <motion.div variants={itemVariants}>
@@ -121,15 +115,16 @@ export default function CompactionInteractivePage() {
                             <span className={styles.pillBadge}>Talajszerkezet</span>
                         </div>
                         <h2 style={{
-                            fontSize: '1.8rem',
+                            fontSize: 'clamp(1.4rem, 4vh, 1.8rem)',
                             textAlign: 'left',
                             margin: '0 0 var(--space-xs) 0',
                             fontFamily: 'var(--font-display)',
-                            color: 'var(--color-white)'
+                            color: 'var(--color-white)',
+                            lineHeight: 1.2
                         }}>
                             Talajszerkezet <span style={{ color: currentData.color }}>Változása</span>
                         </h2>
-                        <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.5, margin: 0 }}>
+                        <p style={{ fontSize: 'clamp(0.75rem, 1.6vh, 0.9rem)', color: 'rgba(255,255,255,0.7)', lineHeight: 1.4, margin: 0 }}>
                             A talajtömörödés közvetlen hatással van a gyökérfejlődésre és vízgazdálkodásra.
                         </p>
                     </motion.div>
@@ -190,12 +185,12 @@ export default function CompactionInteractivePage() {
 
                     {/* Impact Stats */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                        <motion.div variants={itemVariants} className={styles.challengeItem} style={{ flexDirection: 'column', gap: '8px', padding: '14px' }}>
-                            <div className={styles.iconBox} style={{ width: '32px', height: '32px', color: isCompacted ? '#EF5350' : '#81C784', borderColor: isCompacted ? '#EF535040' : '#81C78440', background: isCompacted ? '#EF535010' : '#81C78410' }}>
-                                <Sprout size={18} />
+                        <motion.div variants={itemVariants} className={styles.challengeItem} style={{ flexDirection: 'column', gap: 'clamp(4px, 1vh, 8px)', padding: 'clamp(8px, 2vh, 14px)' }}>
+                            <div className={styles.iconBox} style={{ width: 'clamp(24px, 4vh, 32px)', height: 'clamp(24px, 4vh, 32px)', color: isCompacted ? '#EF5350' : '#81C784', borderColor: isCompacted ? '#EF535040' : '#81C78440', background: isCompacted ? '#EF535010' : '#81C78410' }}>
+                                <Sprout size={16} />
                             </div>
                             <div>
-                                <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 2px 0', fontSize: '0.85rem' }}>Gyökérzóna</h4>
+                                <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 2px 0', fontSize: 'clamp(0.75rem, 1.6vh, 0.85rem)' }}>Gyökérzóna</h4>
                                 <AnimatePresence mode="wait">
                                     <motion.p
                                         key={isCompacted ? 'bad' : 'good'}
@@ -208,12 +203,12 @@ export default function CompactionInteractivePage() {
                             </div>
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className={styles.challengeItem} style={{ flexDirection: 'column', gap: '8px', padding: '14px' }}>
-                            <div className={styles.iconBox} style={{ width: '32px', height: '32px', color: isCompacted ? '#EF5350' : '#81C784', borderColor: isCompacted ? '#EF535040' : '#81C78440', background: isCompacted ? '#EF535010' : '#81C78410' }}>
-                                <Droplets size={18} />
+                        <motion.div variants={itemVariants} className={styles.challengeItem} style={{ flexDirection: 'column', gap: 'clamp(4px, 1vh, 8px)', padding: 'clamp(8px, 2vh, 14px)' }}>
+                            <div className={styles.iconBox} style={{ width: 'clamp(24px, 4vh, 32px)', height: 'clamp(24px, 4vh, 32px)', color: isCompacted ? '#EF5350' : '#81C784', borderColor: isCompacted ? '#EF535040' : '#81C78440', background: isCompacted ? '#EF535010' : '#81C78410' }}>
+                                <Droplets size={16} />
                             </div>
                             <div>
-                                <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 2px 0', fontSize: '0.85rem' }}>Vízgazdálkodás</h4>
+                                <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 2px 0', fontSize: 'clamp(0.75rem, 1.6vh, 0.85rem)' }}>Vízgazdálkodás</h4>
                                 <AnimatePresence mode="wait">
                                     <motion.p
                                         key={isCompacted ? 'bad' : 'good'}

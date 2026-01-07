@@ -56,6 +56,7 @@
   position: absolute;
   left: 24px;
   /* Center of the dots */
+  transform: translateX(-50%);
   top: 0;
   bottom: 0;
   width: 2px;
@@ -348,6 +349,13 @@
   scrollbar-color: rgba(212, 168, 75, 0.3) transparent;
 }
 
+/* Compact padding for smaller viewports (125% zoom) */
+@media (max-height: 900px) {
+  .pageContent {
+    padding: 70px 0 50px 0;
+  }
+}
+
 .pageContent::-webkit-scrollbar {
   width: 4px;
 }
@@ -386,7 +394,8 @@
 
 /* Navigation Hint */
 .navHint {
-  position: absolute;
+  position: fixed;
+  /* Fixed to viewport to center properly on screen */
   bottom: var(--space-lg);
   left: 50%;
   transform: translateX(-50%);
@@ -470,8 +479,13 @@
     min-height: 50px;
   }
 
+  .timelineTrack {
+    left: 18px;
+  }
+
   .markerWrapper {
     left: 4px;
+    /* 18px - 14px (half of 28px) */
     width: 28px;
     height: 28px;
   }

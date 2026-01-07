@@ -163,6 +163,8 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+  max-height: 65vh;
+  /* Prevent overflow on shorter screens/high zoom */
 }
 
 .imagePlaceholder::before {

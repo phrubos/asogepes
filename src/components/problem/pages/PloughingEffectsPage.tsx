@@ -89,8 +89,6 @@ export default function PloughingEffectsPage() {
         { className: styles.orbitalCardBottomRight },
     ]
 
-    // Severity levels for progress bars
-    const severityLevels = [90, 75, 65, 55]
 
     return (
         <motion.div
@@ -207,15 +205,6 @@ export default function PloughingEffectsPage() {
                                 {problem.description}
                             </p>
 
-                            <div className={styles.orbitalProgressContainer}>
-                                <motion.div
-                                    className={styles.orbitalProgressBar}
-                                    initial={{ width: 0 }}
-                                    whileInView={{ width: `${severityLevels[index]}%` }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
-                                />
-                            </div>
                         </div>
                     </motion.div>
                 ))}

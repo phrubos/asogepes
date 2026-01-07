@@ -31,46 +31,74 @@ const spadedBenefits = [
 // Mélység jelölők
 const depthMarkers = [0, 10, 20, 30]
 
-// Penetrométer színskála
-const getPenetrometerColor = (depth: number, isPloughed: boolean) => {
-  if (isPloughed) {
-    if (depth < 25) return '#4CAF50' // Zöld - laza
-    if (depth < 30) return '#F44336' // Piros - eketalp
-    return '#FF9800' // Narancs - tömör
-  }
-  return '#4CAF50' // Ásógépnél végig zöld
-}
+// Scale Overlay Komponens
+const ScaleOverlays = ({ type }: { type: 'ploughed' | 'spaded' }) => (
+  <div className={styles.overlayScales}>
+    {/* Bal oldali Penetrométer skála */}
+    <div className={styles.scaleLeft}>
+      <div className={styles.penetrometerBar}>
+        <div
+          className={styles.penetrometerBar}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: type === 'ploughed'
+              ? 'linear-gradient(180deg, #4CAF50 0%, #8BC34A 40%, #F44336 45%, #F44336 55%, #FF9800 60%, #FF5722 100%)'
+              : 'linear-gradient(180deg, #4CAF50 0%, #66BB6A 100%)'
+          }}
+        />
+        <span className={styles.penetrometerLabel}>bar</span>
+      </div>
+    </div>
 
-// Szántott talaj SVG vizualizáció
+    {/* Jobb oldali Mélység skála */}
+    <div className={styles.scaleRight}>
+      <div className={styles.depthMarkers}>
+        {[0, 10, 20, 30].map((depth) => (
+          <div
+            key={depth}
+            className={styles.depthMarker}
+            style={{ top: `${(depth / 30) * 100}%` }}
+          >
+            <span className={styles.depthText}>{depth} cm</span>
+            <div className={styles.depthLine} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)
+
+// Szántott talaj SVG vizualizáció - 600px széles
 const PloughedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
   const clods = useMemo(() => {
     const data: Array<{ cx: number; cy: number; rx: number; ry: number; type: string }> = []
     let seed = 100
-    
-    // Felső művelt réteg - nagyobb rögök
-    for (let i = 0; i < 25; i++) {
-      const cx = 20 + seededRandom(seed++) * 260
+
+    // Felső művelt réteg - nagyobb rögök - Szélesebb terület (0-600)
+    for (let i = 0; i < 50; i++) {
+      const cx = 20 + seededRandom(seed++) * 560
       const cy = 50 + seededRandom(seed++) * 70
       const size = 8 + seededRandom(seed++) * 12
       data.push({ cx, cy, rx: size, ry: size * 0.7, type: 'large' })
     }
-    
+
     // Eketalp réteg alatt - nagyon tömör
-    for (let i = 0; i < 15; i++) {
-      const cx = 20 + seededRandom(seed++) * 260
+    for (let i = 0; i < 30; i++) {
+      const cx = 20 + seededRandom(seed++) * 560
       const cy = 170 + seededRandom(seed++) * 50
       const size = 15 + seededRandom(seed++) * 10
       data.push({ cx, cy, rx: size, ry: size * 0.5, type: 'compact' })
     }
-    
+
     return data
   }, [])
 
-  // Blokkolt gyökerek
+  // Blokkolt gyökerek - Több gyökér a szélesebb nézethez
   const blockedRoots = useMemo(() => {
     const roots: Array<{ x: number; path: string }> = []
-    for (let i = 0; i < 5; i++) {
-      const x = 60 + i * 45
+    for (let i = 0; i < 10; i++) {
+      const x = 60 + i * 53 // Ritkábban, de szélesebben
       roots.push({
         x,
         path: `M${x},45 Q${x + (i % 2 === 0 ? 5 : -5)},80 ${x},120 L${x},135`
@@ -82,14 +110,14 @@ const PloughedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
   // Víz részecskék - pangóvíz az eketalp felett
   const waterParticles = useMemo(() => {
     const particles: Array<{ x: number; delay: number }> = []
-    for (let i = 0; i < 8; i++) {
-      particles.push({ x: 40 + i * 30, delay: i * 0.3 })
+    for (let i = 0; i < 16; i++) {
+      particles.push({ x: 40 + i * 35, delay: i * 0.2 })
     }
     return particles
   }, [])
 
   return (
-    <svg viewBox="0 0 300 250" className={styles.soilSvg}>
+    <svg viewBox="0 0 600 250" className={styles.soilSvg} preserveAspectRatio="none">
       <defs>
         <linearGradient id="ploughedSoilGradient" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#8D6E63" />
@@ -113,33 +141,33 @@ const PloughedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
       </defs>
 
       {/* Ég háttér - világos kék */}
-      <rect x="0" y="0" width="300" height="45" fill="#7B8FAD" />
-      
+      <rect x="0" y="0" width="600" height="45" fill="#7B8FAD" />
+
       {/* Talaj háttér */}
-      <rect x="0" y="45" width="300" height="195" fill="url(#ploughedSoilGradient)" />
-      
+      <rect x="0" y="45" width="600" height="205" fill="url(#ploughedSoilGradient)" />
+
       {/* Textúra overlay */}
-      <rect x="0" y="45" width="300" height="195" fill="url(#ploughedSoilGradient)" filter="url(#soilTexture)" opacity="0.3" />
-      
+      <rect x="0" y="45" width="600" height="205" fill="url(#ploughedSoilGradient)" filter="url(#soilTexture)" opacity="0.3" />
+
       {/* Talajfelszín vonal */}
-      <line x1="0" y1="45" x2="300" y2="45" stroke="#8B7355" strokeWidth="2" />
+      <line x1="0" y1="45" x2="600" y2="45" stroke="#8B7355" strokeWidth="2" />
 
       {/* Eketalp réteg - kiemelt */}
       <motion.g
         animate={{ opacity: isHovered ? 1 : 0.8 }}
         transition={{ duration: 0.3 }}
       >
-        <rect x="0" y="130" width="300" height="25" fill="url(#eketalpGradient)" />
-        <motion.rect 
-          x="0" y="130" width="300" height="25" 
-          fill="#B71C1C" 
+        <rect x="0" y="130" width="600" height="25" fill="url(#eketalpGradient)" />
+        <motion.rect
+          x="0" y="130" width="600" height="25"
+          fill="#B71C1C"
           opacity={0.3}
           animate={{ opacity: isHovered ? [0.3, 0.5, 0.3] : 0.3 }}
           transition={{ duration: 1.5, repeat: Infinity }}
         />
         {/* Eketalp vonalak */}
-        <line x1="0" y1="130" x2="300" y2="130" stroke="#B71C1C" strokeWidth="2" strokeDasharray="8,4" />
-        <line x1="0" y1="155" x2="300" y2="155" stroke="#B71C1C" strokeWidth="2" strokeDasharray="8,4" />
+        <line x1="0" y1="130" x2="600" y2="130" stroke="#B71C1C" strokeWidth="2" strokeDasharray="8,4" />
+        <line x1="0" y1="155" x2="600" y2="155" stroke="#B71C1C" strokeWidth="2" strokeDasharray="8,4" />
       </motion.g>
 
       {/* Rögök */}
@@ -155,7 +183,7 @@ const PloughedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
           strokeWidth={1}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: clod.type === 'large' ? 0.8 : 0.9 }}
-          transition={{ delay: i * 0.02, type: 'spring', stiffness: 150 }}
+          transition={{ delay: i * 0.01, type: 'spring', stiffness: 150 }}
         />
       ))}
 
@@ -208,71 +236,39 @@ const PloughedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
         />
       ))}
 
-      {/* Eketalp címke */}
+      {/* Eketalp címke - Középen */}
       <motion.g
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.8 }}
       >
-        <rect x="100" y="135" width="100" height="18" rx="4" fill="#B71C1C" />
-        <text x="150" y="148" fill="white" fontSize="10" fontWeight="700" textAnchor="middle">
+        <rect x="230" y="135" width="140" height="22" rx="4" fill="#B71C1C" />
+        <text x="300" y="150" fill="white" fontSize="12" fontWeight="700" textAnchor="middle">
           EKETALP (20+ bar)
         </text>
       </motion.g>
-
-      {/* Mélység skála */}
-      <g className={styles.depthScale}>
-        {depthMarkers.map((depth, i) => {
-          const y = 45 + (depth / 30) * 195
-          return (
-            <g key={depth}>
-              <line x1="285" y1={y} x2="295" y2={y} stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
-              <text x="280" y={y + 4} fill="rgba(255,255,255,0.8)" fontSize="9" textAnchor="end">
-                {depth} cm
-              </text>
-            </g>
-          )
-        })}
-        <line x1="290" y1="45" x2="290" y2="245" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="4,4" />
-      </g>
-
-      {/* Penetrométer skála (bal oldal) */}
-      <g className={styles.penetrometerScale}>
-        <defs>
-          <linearGradient id="penetrometerPloughed" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#4CAF50" />
-            <stop offset="40%" stopColor="#8BC34A" />
-            <stop offset="45%" stopColor="#F44336" />
-            <stop offset="55%" stopColor="#F44336" />
-            <stop offset="60%" stopColor="#FF9800" />
-            <stop offset="100%" stopColor="#FF5722" />
-          </linearGradient>
-        </defs>
-        <rect x="8" y="50" width="8" height="180" rx="4" fill="url(#penetrometerPloughed)" />
-        <text x="12" y="42" fill="rgba(255,255,255,0.7)" fontSize="8" textAnchor="middle">bar</text>
-      </g>
     </svg>
   )
 }
 
-// Ásógépezett talaj SVG vizualizáció
+// Ásógépezett talaj SVG vizualizáció - 600px széles
 const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
   const clods = useMemo(() => {
     const data: Array<{ cx: number; cy: number; rx: number; ry: number; type: string; delay: number }> = []
     let seed = 500
-    
-    // Egyenletes, apró rögök az egész szelvényben
+
+    // Egyenletes, apró rögök az egész szelvényben - Szélesebb rács
     for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 12; col++) {
+      for (let col = 0; col < 24; col++) { // 12 helyett 24 oszlop
         const baseX = 15 + col * 24
         const baseY = 55 + row * 23
         const cx = baseX + (seededRandom(seed++) - 0.5) * 12
         const cy = baseY + (seededRandom(seed++) - 0.5) * 10
-        
+
         const rand = seededRandom(seed++)
         let type = 'small'
         let size = 4 + seededRandom(seed++) * 3
-        
+
         if (rand > 0.85) {
           type = 'medium'
           size = 6 + seededRandom(seed++) * 4
@@ -280,13 +276,14 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
           type = 'large'
           size = 8 + seededRandom(seed++) * 3
         }
-        
-        data.push({ 
-          cx, cy, 
-          rx: size, 
-          ry: size * 0.75, 
+
+        data.push({
+          cx: cx > 585 ? 585 : cx, // Boundary check
+          cy,
+          rx: size,
+          ry: size * 0.75,
           type,
-          delay: (row * 12 + col) * 0.008
+          delay: (row * 24 + col) * 0.004 // Gyorsabb stagger
         })
       }
     }
@@ -296,8 +293,8 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
   // Egészséges gyökerek - mélyre nyúlnak
   const healthyRoots = useMemo(() => {
     const roots: Array<{ x: number; path: string }> = []
-    for (let i = 0; i < 5; i++) {
-      const x = 60 + i * 45
+    for (let i = 0; i < 9; i++) { // 5 helyett 9 gyökér
+      const x = 60 + i * 60
       const depth = 180 + seededRandom(i * 100) * 40
       const curve1 = (seededRandom(i * 200) - 0.5) * 30
       const curve2 = (seededRandom(i * 300) - 0.5) * 20
@@ -312,14 +309,15 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
   // Víz részecskék - egyenletesen szivárognak le
   const waterParticles = useMemo(() => {
     const particles: Array<{ x: number; delay: number }> = []
-    for (let i = 0; i < 6; i++) {
-      particles.push({ x: 50 + i * 40, delay: i * 0.4 })
+    for (let i = 0; i < 12; i++) { // 6 helyett 12
+      const x = 50 + i * 45
+      particles.push({ x, delay: i * 0.2 })
     }
     return particles
   }, [])
 
   return (
-    <svg viewBox="0 0 300 250" className={styles.soilSvg}>
+    <svg viewBox="0 0 600 250" className={styles.soilSvg} preserveAspectRatio="none">
       <defs>
         <linearGradient id="spadedSoilGradient" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#8D6E63" />
@@ -337,14 +335,14 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
       </defs>
 
       {/* Ég háttér - világos kék */}
-      <rect x="0" y="0" width="300" height="45" fill="#7B8FAD" />
-      
+      <rect x="0" y="0" width="600" height="45" fill="#7B8FAD" />
+
       {/* Talaj háttér - egyenletesebb */}
-      <rect x="0" y="45" width="300" height="195" fill="url(#spadedSoilGradient)" />
-      <rect x="0" y="45" width="300" height="195" fill="url(#spadedSoilGradient)" filter="url(#soilTextureSpaded)" opacity="0.2" />
-      
+      <rect x="0" y="45" width="600" height="205" fill="url(#spadedSoilGradient)" />
+      <rect x="0" y="45" width="600" height="205" fill="url(#spadedSoilGradient)" filter="url(#soilTextureSpaded)" opacity="0.2" />
+
       {/* Talajfelszín vonal */}
-      <line x1="0" y1="45" x2="300" y2="45" stroke="#8B7355" strokeWidth="2" />
+      <line x1="0" y1="45" x2="600" y2="45" stroke="#8B7355" strokeWidth="2" />
 
       {/* Egyenletes rögök */}
       {clods.map((clod, i) => (
@@ -399,7 +397,7 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
 
       {/* Felszín vonal */}
       <motion.line
-        x1="0" y1="45" x2="300" y2="45"
+        x1="0" y1="45" x2="600" y2="45"
         stroke="#A1887F"
         strokeWidth="2"
         initial={{ pathLength: 0 }}
@@ -413,39 +411,11 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.8 }}
       >
-        <rect x="90" y="135" width="120" height="18" rx="4" fill="#4CAF50" />
-        <text x="150" y="148" fill="white" fontSize="10" fontWeight="700" textAnchor="middle">
+        <rect x="230" y="135" width="140" height="22" rx="4" fill="#4CAF50" />
+        <text x="300" y="150" fill="white" fontSize="12" fontWeight="700" textAnchor="middle">
           NINCS EKETALP ✓
         </text>
       </motion.g>
-
-      {/* Mélység skála */}
-      <g className={styles.depthScale}>
-        {[0, 10, 20, 30].map((depth) => {
-          const y = 45 + (depth / 30) * 195
-          return (
-            <g key={depth}>
-              <line x1="285" y1={y} x2="295" y2={y} stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
-              <text x="280" y={y + 4} fill="rgba(255,255,255,0.8)" fontSize="9" textAnchor="end">
-                {depth} cm
-              </text>
-            </g>
-          )
-        })}
-        <line x1="290" y1="45" x2="290" y2="245" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="4,4" />
-      </g>
-
-      {/* Penetrométer skála (bal oldal) - végig zöld */}
-      <g className={styles.penetrometerScale}>
-        <defs>
-          <linearGradient id="penetrometerSpaded" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#4CAF50" />
-            <stop offset="100%" stopColor="#66BB6A" />
-          </linearGradient>
-        </defs>
-        <rect x="8" y="50" width="8" height="180" rx="4" fill="url(#penetrometerSpaded)" />
-        <text x="12" y="42" fill="rgba(255,255,255,0.7)" fontSize="8" textAnchor="middle">bar</text>
-      </g>
     </svg>
   )
 }
@@ -464,27 +434,26 @@ export default function PloughingSoilComparison() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: { type: 'spring', stiffness: 100, damping: 15 }
     }
   }
 
   return (
-    <motion.div 
+    <motion.div
       className={styles.container}
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
-      style={{ padding: '1rem 1.5rem', margin: 0, display: 'flex', flexDirection: 'column' }}
     >
       {/* Fejléc */}
       <motion.div className={styles.header} variants={itemVariants} style={{ marginBottom: '0.75rem', textAlign: 'center' }}>
-        <p style={{ 
-          fontSize: '0.85rem', 
-          margin: 0, 
+        <p style={{
+          fontSize: '0.85rem',
+          margin: 0,
           color: 'rgba(255, 255, 255, 0.6)',
           background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
           padding: '0.6rem 1.25rem',
@@ -498,9 +467,9 @@ export default function PloughingSoilComparison() {
       </motion.div>
 
       {/* Összehasonlító vizualizáció */}
-      <motion.div className={styles.comparisonGrid} variants={itemVariants} style={{ gap: '1.5rem', flex: 1 }}>
+      <motion.div className={styles.comparisonGrid} variants={itemVariants} style={{ gap: '1rem', flex: 1, minHeight: 0 }}>
         {/* Szántott talaj */}
-        <motion.div 
+        <motion.div
           className={`${styles.soilCard} ${styles.soilCardBad}`}
           onHoverStart={() => setHoveredSide('ploughed')}
           onHoverEnd={() => setHoveredSide(null)}
@@ -514,14 +483,15 @@ export default function PloughingSoilComparison() {
             </div>
             <span className={styles.badge} style={{ fontSize: '0.65rem', padding: '0.2rem 0.4rem' }}>Hagyományos</span>
           </div>
-          
+
           <div className={styles.visualContainer}>
             <PloughedSoilVisual isHovered={hoveredSide === 'ploughed'} />
+            <ScaleOverlays type="ploughed" />
           </div>
 
           <motion.ul className={styles.problemList} style={{ padding: '0.5rem', gap: '0.25rem' }}>
             {ploughedProblems.map((item, i) => (
-              <motion.li 
+              <motion.li
                 key={i}
                 className={styles.problemItem}
                 initial={{ opacity: 0, x: -10 }}
@@ -541,7 +511,7 @@ export default function PloughingSoilComparison() {
 
         {/* VS divider */}
         <div className={styles.divider} style={{ padding: '0.5rem 0' }}>
-          <motion.div 
+          <motion.div
             className={styles.vsCircle}
             initial={{ scale: 0, rotate: -180 }}
             whileInView={{ scale: 1, rotate: 0 }}
@@ -555,7 +525,7 @@ export default function PloughingSoilComparison() {
         </div>
 
         {/* Ásógépezett talaj */}
-        <motion.div 
+        <motion.div
           className={`${styles.soilCard} ${styles.soilCardGood}`}
           onHoverStart={() => setHoveredSide('spaded')}
           onHoverEnd={() => setHoveredSide(null)}
@@ -569,14 +539,15 @@ export default function PloughingSoilComparison() {
             </div>
             <span className={styles.badgeGood} style={{ fontSize: '0.65rem', padding: '0.2rem 0.4rem' }}>Ajánlott</span>
           </div>
-          
+
           <div className={styles.visualContainer}>
             <SpadedSoilVisual isHovered={hoveredSide === 'spaded'} />
+            <ScaleOverlays type="spaded" />
           </div>
 
           <motion.ul className={styles.benefitList} style={{ padding: '0.5rem', gap: '0.25rem' }}>
             {spadedBenefits.map((item, i) => (
-              <motion.li 
+              <motion.li
                 key={i}
                 className={styles.benefitItem}
                 initial={{ opacity: 0, x: 10 }}

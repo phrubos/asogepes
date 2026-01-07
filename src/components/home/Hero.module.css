@@ -12,10 +12,62 @@
 
 @media (max-height: 900px) {
     .hero {
-        min-height: auto;
-        padding-top: 140px;
-        /* Account for nav */
-        padding-bottom: var(--space-3xl);
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: 20px var(--space-2xl) 0;
+        /* Slightly less top padding */
+    }
+
+    .heroBadge {
+        margin-bottom: 0.25vh;
+        font-size: 0.8rem;
+    }
+
+    .heroTitle {
+        margin-bottom: 0.25vh;
+    }
+
+    .titleLine {
+        font-size: clamp(1.5rem, 5vh, 2.75rem);
+        /* Smaller font size to match proportions */
+        line-height: 1.05;
+    }
+
+    .heroSubtitle {
+        margin: 0 0 1vh 0;
+        font-size: clamp(0.8rem, 1.4vh, 0.9rem);
+        padding-left: var(--space-md);
+        line-height: 1.25;
+        max-width: 500px;
+        /* Narrower max-width */
+    }
+
+    .heroStats {
+        padding-top: 0.75vh;
+        gap: clamp(0.4rem, 1.2vh, 1.2rem);
+    }
+
+    .statNumber {
+        font-size: clamp(1.1rem, 3vh, 2rem);
+    }
+
+    .statLabel {
+        font-size: clamp(0.55rem, 0.9vh, 0.65rem);
+    }
+
+    .statSublabel {
+        font-size: 0.65rem;
+        margin-top: 0;
+    }
+
+    .heroCta {
+        margin-top: 1vh;
+    }
+
+    .ctaButton {
+        padding: var(--space-sm) var(--space-xl);
+        font-size: 0.85rem;
+        gap: var(--space-xs);
     }
 }
 

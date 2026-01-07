@@ -414,3 +414,38 @@
   margin-top: 2px;
   flex-shrink: 0;
 }
+
+/* Specific adjustment for 125% scaling (height constrained) to prevent scrolling */
+@media (max-height: 900px) {
+  .compactSection {
+    padding-bottom: var(--space-md);
+    gap: var(--space-md);
+    /* Increased from sm */
+  }
+
+  .compactGrid {
+    gap: var(--space-lg);
+    /* Increased from md */
+  }
+
+  /* Force image smaller to save vertical space */
+  .imageWrapper {
+    min-height: 280px;
+    /* Increased from 200px */
+    padding: var(--space-md);
+  }
+
+  .machineImage {
+    max-height: 280px;
+    /* Increased from 200px */
+  }
+
+  .specsCompact {
+    padding: var(--space-md);
+  }
+
+  .fieldCard {
+    padding: var(--space-sm) var(--space-md);
+    gap: var(--space-md);
+  }
+}

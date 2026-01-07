@@ -70,8 +70,6 @@ export default function PloughingView() {
     }
   }
 
-  // Severity levels for progress bars
-  const severityLevels = [90, 75, 65, 55]
 
   return (
     <motion.div
@@ -212,28 +210,6 @@ export default function PloughingView() {
 
                 <p className={styles.cardDesc}>{problem.description}</p>
 
-                {/* Severity progress bar */}
-                <motion.div
-                  style={{
-                    marginTop: '1.25rem',
-                    height: 4,
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <motion.div
-                    style={{
-                      height: '100%',
-                      background: 'linear-gradient(90deg, var(--color-gold), var(--color-warning, #E57373))',
-                      borderRadius: 2,
-                    }}
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${severityLevels[index]}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: 0.3 + index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  />
-                </motion.div>
               </div>
             </TiltCard>
           </motion.div>

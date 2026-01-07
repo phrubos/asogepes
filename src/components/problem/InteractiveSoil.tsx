@@ -52,7 +52,7 @@ export default function InteractiveSoil({ dayIndex, isCompacted, isHovered, setI
   useEffect(() => {
     setParticles(Array.from({ length: 30 }).map((_, i) => ({
       id: i,
-      xStart: 100 + Math.random() * 400, // Szélesebb szórás (100-500)
+      xStart: 100 + Math.random() * 800, // Szélesebb szórás (100-900) - ViewBox 1000
       delay: Math.random() * 2,
       duration: 1.2 + Math.random(),
     })))
@@ -91,7 +91,7 @@ export default function InteractiveSoil({ dayIndex, isCompacted, isHovered, setI
 
         {/* 5. RÉTEG: SVG NÖVÉNY ÉS HÁTTÉR (Közös koordináta-rendszerben szélesebb nézet) */}
         <svg
-          width="100%" height="100%" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid slice"
+          width="100%" height="100%" viewBox="0 0 1000 500" preserveAspectRatio="none"
           style={{ position: 'absolute', inset: 0, zIndex: 10 }}
         >
           <defs>
@@ -113,16 +113,16 @@ export default function InteractiveSoil({ dayIndex, isCompacted, isHovered, setI
 
           {/* 1. ÉG HÁTTÉR */}
           <motion.rect
-            x="0" y="0" width="600" height={GROUND_Y}
+            x="0" y="0" width="1000" height={GROUND_Y}
             fill="url(#skyGradient)"
           />
 
           {/* 2. TALAJ HÁTTÉR */}
-          <rect x="0" y={GROUND_Y} width="600" height="500" fill="url(#soilGradient)" />
-          <rect x="0" y={GROUND_Y} width="600" height="500" filter="url(#soilNoiseSVG)" opacity="0.3" />
+          <rect x="0" y={GROUND_Y} width="1000" height="500" fill="url(#soilGradient)" />
+          <rect x="0" y={GROUND_Y} width="1000" height="500" filter="url(#soilNoiseSVG)" opacity="0.3" />
 
           {/* Talajfelszín vonal */}
-          <rect x="0" y={GROUND_Y} width="600" height="4" fill="rgba(139, 115, 85, 0.6)" />
+          <rect x="0" y={GROUND_Y} width="1000" height="4" fill="rgba(139, 115, 85, 0.6)" />
 
 
           {/* 3. TÖMÖRÖDÖTT SÁV (SVG-ben) */}
@@ -137,53 +137,56 @@ export default function InteractiveSoil({ dayIndex, isCompacted, isHovered, setI
                 <rect
                   x="0"
                   y={PAN_START_Y}
-                  width="600"
+                  width="1000"
                   height={PAN_END_Y - PAN_START_Y}
                   fill="rgba(120, 20, 20, 0.35)"
                 />
-                <line x1="0" y1={PAN_START_Y} x2="600" y2={PAN_START_Y} stroke="rgba(200, 50, 50, 0.6)" strokeWidth="2" strokeDasharray="5,5" />
-                <line x1="0" y1={PAN_END_Y} x2="600" y2={PAN_END_Y} stroke="rgba(200, 50, 50, 0.6)" strokeWidth="2" strokeDasharray="5,5" />
+                <line x1="0" y1={PAN_START_Y} x2="1000" y2={PAN_START_Y} stroke="rgba(200, 50, 50, 0.6)" strokeWidth="2" strokeDasharray="5,5" />
+                <line x1="0" y1={PAN_END_Y} x2="1000" y2={PAN_END_Y} stroke="rgba(200, 50, 50, 0.6)" strokeWidth="2" strokeDasharray="5,5" />
 
-                {/* Text Label in SVG - Centered at 300 */}
-                <rect x="220" y={PAN_START_Y + 25} width="160" height="24" rx="6" fill="rgba(0,0,0,0.5)" />
-                <text x="300" y={PAN_START_Y + 41} textAnchor="middle" fill="#FFEBEE" fontSize="12" fontWeight="800" letterSpacing="1">TÖMÖRÖDÖTT RÉTEG</text>
+                {/* Text Label in SVG - Centered at 500 */}
+                <rect x="420" y={PAN_START_Y + 25} width="160" height="24" rx="6" fill="rgba(0,0,0,0.5)" />
+                <text x="500" y={PAN_START_Y + 41} textAnchor="middle" fill="#FFEBEE" fontSize="12" fontWeight="800" letterSpacing="1">TÖMÖRÖDÖTT RÉTEG</text>
               </motion.g>
             )}
           </AnimatePresence>
 
-          {/* SZÁR (Stem) */}
-          <motion.path
-            d={isCompacted ? stemPathCompacted : stemPathHealthy}
-            stroke={isCompacted ? "#AED581" : "#66BB6A"}
-            strokeWidth={isCompacted ? 6 : 8}
-            strokeLinecap="round"
-            fill="none"
-            animate={{ d: isCompacted ? stemPathCompacted : stemPathHealthy }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-          />
-          {/* LEVELEK (Leaves) */}
-          <motion.path
-            d={isCompacted ? leavesPathCompacted : leavesPathHealthy}
-            stroke={isCompacted ? "#AED581" : "#43A047"}
-            strokeWidth={5}
-            fill="none"
-            strokeLinecap="round"
-            animate={{ d: isCompacted ? leavesPathCompacted : leavesPathHealthy }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-          />
+          {/* NÖVÉNY GRUPOK - X eltolás 200px (Center 300->500) */}
+          <g transform="translate(200, 0)">
+            {/* SZÁR (Stem) */}
+            <motion.path
+              d={isCompacted ? stemPathCompacted : stemPathHealthy}
+              stroke={isCompacted ? "#AED581" : "#66BB6A"}
+              strokeWidth={isCompacted ? 6 : 8}
+              strokeLinecap="round"
+              fill="none"
+              animate={{ d: isCompacted ? stemPathCompacted : stemPathHealthy }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+            />
+            {/* LEVELEK (Leaves) */}
+            <motion.path
+              d={isCompacted ? leavesPathCompacted : leavesPathHealthy}
+              stroke={isCompacted ? "#AED581" : "#43A047"}
+              strokeWidth={5}
+              fill="none"
+              strokeLinecap="round"
+              animate={{ d: isCompacted ? leavesPathCompacted : leavesPathHealthy }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+            />
 
-          {/* GYÖKÉRZET (Roots) */}
-          <motion.path
-            d={isCompacted ? rootPathCompacted : rootPathHealthy}
-            stroke={isCompacted ? "#8D6E63" : "#D7CCC8"} // Kicsit sötétebb ha beteg
-            strokeWidth={isCompacted ? 4 : 5}
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={false}
-            animate={{ d: isCompacted ? rootPathCompacted : rootPathHealthy }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-          />
+            {/* GYÖKÉRZET (Roots) */}
+            <motion.path
+              d={isCompacted ? rootPathCompacted : rootPathHealthy}
+              stroke={isCompacted ? "#8D6E63" : "#D7CCC8"} // Kicsit sötétebb ha beteg
+              strokeWidth={isCompacted ? 4 : 5}
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={false}
+              animate={{ d: isCompacted ? rootPathCompacted : rootPathHealthy }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+            />
+          </g>
         </svg>
 
         {/* 4. RÉTEG: NAP (HTML overlay) */}
@@ -209,21 +212,21 @@ export default function InteractiveSoil({ dayIndex, isCompacted, isHovered, setI
                 position: 'absolute', left: 0, top: 0, width: 6, height: 8,
                 background: '#4FC3F7', borderRadius: '50%', boxShadow: '0 0 4px #29B6F6'
               }}
-              // Need to map coordinates roughly from SVG 600x500 to % or similar.
+              // Need to map coordinates roughly from SVG 1000x500 to % or similar.
               // Easier to use % for responsiveness. 
-              // xStart was 100-500. 100/600 ~ 16%, 500/600 ~ 83%.
-              initial={{ left: `${(p.xStart / 600) * 100}%`, top: '-5%', opacity: 0 }}
+              // xStart was 100-900. 100/1000 ~ 10%, 900/1000 ~ 90%.
+              initial={{ left: `${(p.xStart / 1000) * 100}%`, top: '-5%', opacity: 0 }}
               animate={isCompacted ? {
                 // TÖMÖRÖDÖTT: Koppan a rétegen 
                 // PAN_START_Y = 185. 185/500 = 37%.
                 top: ['0%', '37%', '38%'],
-                left: [`${(p.xStart / 600) * 100}%`, `${(p.xStart / 600) * 100}%`, `${((p.xStart + (p.id % 2 === 0 ? 100 : -100)) / 600) * 100}%`],
+                left: [`${(p.xStart / 1000) * 100}%`, `${(p.xStart / 1000) * 100}%`, `${((p.xStart + (p.id % 2 === 0 ? 100 : -100)) / 1000) * 100}%`],
                 opacity: [0, 1, 0],
                 scale: [1, 1, 0]
               } : {
                 // EGÉSZSÉGES: Lemegy mélyre
                 top: ['0%', '90%'],
-                left: `${(p.xStart / 600) * 100}%`,
+                left: `${(p.xStart / 1000) * 100}%`,
                 opacity: [0, 1, 0],
                 scale: [1, 1, 0.5]
               }}
