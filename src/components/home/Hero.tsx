@@ -83,8 +83,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className={styles.heroBadge}
         >
-          <PageBadge label="FŐOLDAL" />
+          Neumann János Egyetem × Agroskill Kft.
         </motion.div>
 
         <h1 className={styles.heroTitle}>
@@ -114,7 +115,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról öntözött kertészeti kultúrákban
+          Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról, öntözött kertészeti kultúrákban
         </motion.p>
 
         <motion.div

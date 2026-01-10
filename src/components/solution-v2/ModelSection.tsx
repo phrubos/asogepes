@@ -42,7 +42,7 @@ const fieldPreviewData = {
   },
   '38wx': {
     location: 'Szentkirály',
-    description: 'Vöröshagyma kultúra 4 hónapos mérési időszak.',
+    description: 'Vöröshagyma kultúra 6 hónapos mérési időszak.',
     crop: 'Vöröshagyma',
     irrigation: '350mm',
     period: 'Márc-Jún',

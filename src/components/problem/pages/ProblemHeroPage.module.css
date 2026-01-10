@@ -138,7 +138,7 @@
 
 .monitorHeader {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     margin-bottom: var(--space-lg);
     position: relative;
@@ -173,12 +173,6 @@
         opacity: 1;
         text-shadow: 0 0 8px var(--color-gold);
     }
-}
-
-.monitorId {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.3);
 }
 
 .monitorContent {
@@ -264,14 +258,6 @@
     opacity: 0.8;
 }
 
-.threatDepth {
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
-    color: rgba(255, 255, 255, 0.4);
-}
-
 .threatTitle {
     font-family: var(--font-display);
     font-size: 1.125rem;
@@ -292,33 +278,6 @@
     transform: translateX(0);
 }
 
-/* Alert Tag */
-.alertTag {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: rgba(229, 115, 115, 0.15);
-    border: 1px solid rgba(229, 115, 115, 0.3);
-    color: #E57373;
-    font-size: 0.65rem;
-    padding: 4px 8px;
-    border-radius: 100px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    text-transform: uppercase;
-    font-weight: 700;
-    opacity: 0;
-    transform: translateY(-5px);
-    transition: all 0.3s ease;
-    z-index: 3;
-}
-
-.alertTagVisible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
 .threatScanEffect {
     position: absolute;
     inset: 0;
@@ -326,6 +285,7 @@
     pointer-events: none;
     z-index: 1;
 }
+
 
 /* Responsive */
 @media (max-width: 1024px) {

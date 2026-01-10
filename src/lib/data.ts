@@ -205,7 +205,7 @@ export const findings = [
 export const heroStats = [
   { number: '3', label: 'Helyszín', sublabel: 'Szentkirály · Kecskemét · Lakitelek' },
   { number: '9', label: 'Kezelés kombináció', sublabel: 'Különböző művelési módok' },
-  { number: '4', label: 'Hónap', sublabel: 'Március – Augusztus' },
+  { number: '6', label: 'Hónap', sublabel: 'Március – Augusztus' },
 ]
 
 // Tab 1: A Tömörödés Problémája
@@ -260,10 +260,10 @@ export const irrigationChallenges = compactionChallenges
 // Problem statistics
 export const problemStatistics = {
   irrigation: {
-    min: 20,
-    max: 40,
+    min: 350,
+    max: 450,
     unit: 'mm',
-    label: 'Gyakori öntözés hatása',
+    label: 'Öntözővíz / szezon',
   },
   frequency: {
     min: 4,

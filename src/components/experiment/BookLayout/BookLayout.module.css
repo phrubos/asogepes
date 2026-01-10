@@ -392,55 +392,112 @@
   z-index: 5;
 }
 
-/* Navigation Hint */
-.navHint {
+/* Navigation Control Bar (Premium) */
+.navControlBar {
   position: fixed;
-  /* Fixed to viewport to center properly on screen */
-  bottom: var(--space-lg);
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-xs) var(--space-md);
-  background: rgba(35, 30, 25, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  gap: 16px;
+  padding: 8px 12px;
+  background: rgba(20, 17, 14, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 100px;
-  z-index: 50;
-  pointer-events: none;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 10px 40px -10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  z-index: 100;
+  transition: all 0.3s ease;
 }
 
-.pageCounter {
-  position: absolute;
-  bottom: var(--space-lg);
-  right: var(--space-xl);
-  font-family: var(--font-display);
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--color-gold);
-  opacity: 0.8;
-  letter-spacing: 0.1em;
-  z-index: 50;
+.navControlBar:hover {
+  border-color: rgba(212, 168, 75, 0.3);
+  box-shadow:
+    0 15px 50px -10px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(212, 168, 75, 0.1);
 }
 
-.hintKey {
-  display: inline-flex;
+.navBtn {
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  font-size: 0.75rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
   color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.hintText {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+.navBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-gold);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.navBtn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* Gold glow effect on main action hover */
+.navBtn:hover:not(:disabled) svg {
+  filter: drop-shadow(0 0 8px rgba(212, 168, 75, 0.5));
+}
+
+.navBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.navInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  gap: 2px;
+}
+
+.navLabel {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+}
+
+.navCounter {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--color-gold);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.navDivider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Mobile Toggle */

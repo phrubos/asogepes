@@ -421,7 +421,7 @@ export default function CompactionStatsPage() {
                             <strong style={{ color: 'var(--color-gold)', display: 'block', marginBottom: 4, fontSize: '1.2rem', letterSpacing: '0.02em' }}>
                                 {problemStatistics.irrigation.label}
                             </strong>
-                            Ekkora mennyiségű öntözővíz befogadása jelentős kihívás a tömörödött talajszelvény számára egy tenyészidőszak alatt.
+                            Ennyi öntözővizet kell a talajfelszínnek elnyelnie és mélyebbre szivárogtatnia egy öntözési szezonban, bármely átlagos kertészeti kultúrában.
                         </motion.div>
                     </div>
                 </motion.div>
@@ -442,8 +442,9 @@ export default function CompactionStatsPage() {
                                 <Droplet size={24} />
                             </div>
                             <div className={styles.itemContent}>
-                                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Befogadóképesség</h3>
-                                <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>A tömörödött felszín gátolja a víz mélyre szivárgását, ami belvizet és tápanyag-kimosódást okozhat.</p>
+                                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Gyakori öntözés hatása</h3>
+                                <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>Intenzív öntözéses kertészeti kultúrákban 4-7 naponként 20-40 mm víz kijuttatása történik, ami fokozatosan tömöríti a talajt.</p>
+                                <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-gold)', marginTop: '0.75rem' }}>350-450 mm/szezon</p>
                             </div>
                         </TiltCard>
                     </motion.div>
@@ -459,8 +460,9 @@ export default function CompactionStatsPage() {
                                 <Layers size={24} />
                             </div>
                             <div className={styles.itemContent}>
-                                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Szerkezetromlás</h3>
-                                <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>Intenzív öntözés mellett a nem megfelelően lazított talaj szerkezete már hetek alatt összeomolhat.</p>
+                                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Szerkezetromlás üteme</h3>
+                                <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>Tárcsázott vagy kombinátorozott talajon már 30 nap alatt 20-50%-os szerkezetromlás mérhető intenzív öntözés mellett.</p>
+                                <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-gold)', marginTop: '0.75rem' }}>30 nap után kritikus</p>
                             </div>
                         </TiltCard>
                     </motion.div>
@@ -472,12 +474,12 @@ export default function CompactionStatsPage() {
                             glowColor="rgba(212, 168, 75, 0.15)"
                             className={styles.challengeItem}
                         >
-                            <div className={styles.iconBox} style={{ background: 'rgba(212, 168, 75, 0.1)', color: 'var(--color-gold)' }}>
-                                <Weight size={24} />
+                            <div className={styles.iconBox} style={{ background: 'rgba(212, 168, 75, 0.1)', color: 'var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <span style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'monospace' }}>O₂</span>
                             </div>
                             <div className={styles.itemContent}>
                                 <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Oxigénhiány</h3>
-                                <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>A tömörödés kiszorítja a pórusokból az oxigént, ami fulladáshoz vezeti a gyökérzetet és rontja a talajéletet.</p>
+                                <p style={{ fontSize: '0.85rem', opacity: 0.8 }}>A tömörödés kiszorítja a pórusokból a levegőt, ami gyökérfulladáshoz, gyökértömeg veszteséghez vezet és romlik a talajélet.</p>
                             </div>
                         </TiltCard>
                     </motion.div>

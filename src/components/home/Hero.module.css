@@ -109,23 +109,15 @@
     align-items: center;
     gap: var(--space-md);
     padding: var(--space-xs) 0;
-    /* Minimal padding */
     background: transparent;
-    /* Removed background */
     border: none;
-    /* Removed border */
-    font-size: 0.9375rem;
+    font-size: clamp(0.75rem, 1.5vw, 0.95rem);
     font-family: var(--font-display);
     color: var(--color-gold);
-    /* Gold text */
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
     animation: fadeInUp 0.8s ease both;
-    letter-spacing: 0.05em;
-}
-
-.badgeYear {
-    display: none;
-    /* Hide year badge for cleaner look, or keep if preferred */
+    letter-spacing: 0.02em;
+    font-weight: 500;
 }
 
 .heroTitle {

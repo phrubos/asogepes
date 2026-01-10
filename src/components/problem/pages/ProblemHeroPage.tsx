@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Layers, AlertTriangle, XCircle, ChevronRight, Activity, AlertOctagon } from 'lucide-react'
+import { Layers, Shovel, Tractor, ChevronRight, Activity } from 'lucide-react'
 import PageBadge from '@/components/ui/PageBadge'
 import styles from './ProblemHeroPage.module.css'
 import { useBookNav } from '@/components/experiment/BookLayout/BookLayout'
@@ -22,7 +22,7 @@ const HERO_NAV_ITEMS = [
         id: 'cultivator-problems',
         number: '02',
         title: 'A szántóföldi nehézkultivátor korlátai',
-        icon: <AlertTriangle size={24} />,
+        icon: <Shovel size={24} />,
         color: '#7D6B5A',
         accent: '#C9A227', // Gold
         stats: '20-35 cm',
@@ -32,7 +32,7 @@ const HERO_NAV_ITEMS = [
         id: 'ploughing-effects',
         number: '03',
         title: 'A szántás korlátai',
-        icon: <XCircle size={24} />,
+        icon: <Tractor size={24} />,
         color: '#5C4D3D',
         accent: '#E57373', // Red for high danger
         stats: '35+ cm',
@@ -81,7 +81,7 @@ export default function ProblemHeroPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                        <em>… teszi tönkre a talajszerkezetet, homok és vályog talajon egyaránt.</em><br />
+                        Az intenzív öntözés és a nehéz gépek taposása láthatatlanul teszi tönkre a talajszerkezetet, homok és vályog talajon egyaránt.<br />
                         Három fő ellenséggel küzdünk.
                     </motion.p>
                 </div>
@@ -95,9 +95,7 @@ export default function ProblemHeroPage() {
                         <div className={styles.monitorHeader}>
                             <div className={styles.monitorStatus}>
                                 <Activity size={14} className={styles.pulseIcon} />
-                                <span>TALAJ DIAGNOSZTIKA</span>
                             </div>
-                            <div className={styles.monitorId}>SYS-2025-V2</div>
                         </div>
 
                         <div className={styles.monitorContent}>
@@ -121,7 +119,6 @@ export default function ProblemHeroPage() {
                                         <div className={styles.threatInfo}>
                                             <div className={styles.threatMeta}>
                                                 <span className={styles.threatNumber}>{item.number}</span>
-                                                <span className={styles.threatDepth}>{item.stats}</span>
                                             </div>
                                             <h3 className={styles.threatTitle}>{item.title}</h3>
                                         </div>
@@ -141,12 +138,6 @@ export default function ProblemHeroPage() {
                                             exit={{ opacity: 0 }}
                                         />
                                     )}
-
-                                    {/* Alert Tag on Hover */}
-                                    <div className={`${styles.alertTag} ${hoveredId === item.id ? styles.alertTagVisible : ''}`}>
-                                        <AlertOctagon size={12} />
-                                        {item.alertLevel}
-                                    </div>
                                 </motion.button>
                             ))}
                         </div>

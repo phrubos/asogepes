@@ -1,268 +1,315 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-
-// --- KONFIGURÁCIÓ & ADATOK ---
-const GROUND_Y = 150 // Talajszint Y (lejjebb hozva)
-const CM_TO_PX = 7
-const PAN_START_Y = GROUND_Y + (5 * CM_TO_PX) // 150 + 35 = 185
-const PAN_END_Y = GROUND_Y + (15 * CM_TO_PX)  // 150 + 105 = 255
+import { motion, useMotionValue, useTransform, MotionValue } from 'framer-motion'
+import { useEffect, useMemo } from 'react'
 
 interface InteractiveSoilProps {
-  dayIndex: number
-  isCompacted: boolean
+  progress: number | MotionValue<number> // 0.0 to 4.0
   isHovered: boolean
   setIsHovered: (hover: boolean) => void
 }
 
-export default function InteractiveSoil({ dayIndex, isCompacted, isHovered, setIsHovered }: InteractiveSoilProps) {
+export default function InteractiveSoil({ progress, isHovered, setIsHovered }: InteractiveSoilProps) {
+  const progressMV = useMotionValue(0)
+  const activeProgress = (typeof progress === 'number') ? progressMV : progress
 
-  // --- PATH DEFINÍCIÓK (X=300 a középvonal) ---
-
-  // 1. SZÁR (Stem) - Földfelszín felett
-  const stemPathHealthy = "M300,150 L300,60"
-  const stemPathCompacted = "M300,150 L302,70"
-
-  // 2. LEVELEK (Leaves)
-  // Szélesebb ívek, hogy kitöltsék a teret
-  const leavesPathHealthy = "M300,95 Q220,55 200,110 M300,105 Q380,65 400,120"
-  const leavesPathCompacted = "M301,100 Q250,130 240,150 M301,110 Q350,140 360,150"
-
-  // 3. GYÖKÉRZET (Roots)
-  const rootPathHealthy = `
-    M300,150 
-    C300,200 290,300 280,380 
-    C275,410 260,430 240,450 
-    M300,190 C330,230 350,320 365,400 
-    M300,170 C270,210 250,280 240,360
-    M300,175 C315,215 330,290 340,370
-  `
-
-  const rootPathCompacted = `
-    M300,150 
-    C300,165 300,175 300,185 
-    C260,190 220,185 180,180 
-    M300,185 C340,188 380,185 420,180 
-    M300,185 L302,260 
-  `
-
-  // --- RÉSZECSKÉK (VÍZ) ---
-  const [particles, setParticles] = useState<any[]>([])
   useEffect(() => {
-    setParticles(Array.from({ length: 30 }).map((_, i) => ({
-      id: i,
-      xStart: 100 + Math.random() * 800, // Szélesebb szórás (100-900) - ViewBox 1000
-      delay: Math.random() * 2,
-      duration: 1.2 + Math.random(),
-    })))
-  }, [])
+    if (typeof progress === 'number') {
+      progressMV.set(progress)
+    }
+  }, [progress, progressMV])
+
+
+  // --- PATH DEFINITIONS (PREMIUM QUALITY) ---
+
+  // 1. STEM (Thirsty Morph)
+  const stemPaths = [
+    "M295,150 C295,120 298,90 298,60 L302,60 C302,90 305,120 305,150 Z",
+    "M295,150 C295,122 298,95 298,65 L302,65 C302,95 305,122 305,150 Z",
+    "M294,150 C294,125 297,100 297,75 L303,75 C303,100 306,125 306,150 Z",
+    "M294,150 C294,125 298,105 298,85 L302,85 C302,105 306,125 306,150 Z",
+    "M293,150 C293,130 299,110 299,95 L301,95 C301,110 307,130 307,150 Z"
+  ]
+
+  // 2. LEAVES (Organic Morph - NO Clipping)
+  const leavesPaths = [
+    // 0: Perky
+    "M298,100 Q250,60 200,80 Q250,110 298,110 M302,105 Q350,65 400,85 Q350,115 302,115",
+
+    // 1: Slightly lower
+    "M298,105 Q250,75 200,95 Q250,115 298,115 M302,110 Q350,80 400,100 Q350,120 302,120",
+
+    // 2: Horizontal / Neutral
+    "M298,110 Q250,100 205,115 Q250,125 298,120 M302,115 Q350,105 395,120 Q350,130 302,125",
+
+    // 3: Drooping
+    "M296,115 Q240,125 210,140 Q250,150 296,128 M304,120 Q360,130 390,145 Q350,148 304,133",
+
+    // 4: Wilted / Thirsty (Right leaf raised)
+    // Left Tip: 220,148. Right Tip: 380,148. (Strictly < 150)
+    "M295,125 Q245,140 220,148 Q250,150 295,135 M305,130 Q355,140 380,148 Q350,150 305,140"
+  ]
+
+  // 3. ROOTS - "Fountain Style" (As per reference image)
+  const rootMassPaths = [
+    // 0: Full Extension (Healthy)
+    `M300,150 Q280,250 230,400 
+       M300,150 Q290,280 270,420 
+       M300,150 Q310,280 330,420 
+       M300,150 Q320,250 370,400`,
+
+    // 1: Slightly less spread?
+    `M300,150 Q280,250 230,380 
+       M300,150 Q290,280 270,400 
+       M300,150 Q310,280 330,400 
+       M300,150 Q320,250 370,380`,
+
+    // 2: Starting to hit layer?
+    `M300,150 Q280,250 230,350 
+       M300,150 Q290,280 270,370 
+       M300,150 Q310,280 330,370 
+       M300,150 Q320,250 370,350`,
+
+    // 3: Diverting
+    `M300,150 Q270,200 220,220 
+       M300,150 Q285,220 250,230 
+       M300,150 Q315,220 350,230 
+       M300,150 Q330,200 380,220`,
+
+    // 4: Shallow / Surface (Compacted)
+    `M300,150 Q260,180 210,185 
+       M300,150 Q280,185 240,190 
+       M300,150 Q320,185 360,190 
+       M300,150 Q340,180 390,185`
+  ]
+
+  // 4. SPECIAL ROOT (Shortened + Zigzag)
+  const specialRootPaths = [
+    "M300,150 Q300,250 300,450 M300,255 L300,255 M300,255 L300,255",
+    "M300,150 Q300,250 300,450 M300,255 L300,255 M300,255 L300,255",
+    "M300,150 Q300,250 300,400 M300,255 L300,255 M300,255 L300,255",
+    "M300,150 Q300,250 290,350 M300,255 L280,275 M300,255 L320,275",
+    "M300,150 Q300,200 300,295 M300,255 L260,285 M300,255 L340,285"
+  ]
+
+
+  // --- INTERPOLATIONS ---
+  const layerColor = useTransform(activeProgress, [0, 1, 2, 3, 4],
+    ['#4CAF50', '#8BC34A', '#FFC107', '#FF9800', '#D32F2F'])
+  const layerOpacity = useTransform(activeProgress, [0, 4], [0.2, 0.5])
+  const textOpacity = useTransform(activeProgress, [0, 4], [0.5, 1])
+
+  const stemD = useTransform(activeProgress, [0, 1, 2, 3, 4], stemPaths)
+  const leavesD = useTransform(activeProgress, [0, 1, 2, 3, 4], leavesPaths)
+  const rootsMassD = useTransform(activeProgress, [0, 1, 2, 3, 4], rootMassPaths)
+  const specialRootD = useTransform(activeProgress, [0, 1, 2, 3, 4], specialRootPaths)
+
+  const plantColor = useTransform(activeProgress, [0, 4], ['#2E7D32', '#558B2F'])
+  const leafColor = useTransform(activeProgress, [0, 4], ['#43A047', '#827717'])
+  const rootColor = '#8D6E63';
+
+  // Water Logic
+  const waterThroughOpacity = useTransform(activeProgress, [0, 2, 4], [1, 0.5, 0])
+  const waterPoolOpacity = useTransform(activeProgress, [0, 2.5, 4], [0, 0.1, 0.6])
+
+  const PAN_START_Y = 185;
+  const PAN_END_Y = 255;
+
+  const skyRain = useMemo(() => Array.from({ length: 15 }, (_, i) => ({
+    id: i, x: 50 + Math.random() * 500, delay: Math.random() * 2
+  })), [])
+  const soilDrops = useMemo(() => Array.from({ length: 25 }, (_, i) => ({
+    id: i, x: 50 + Math.random() * 500, delay: Math.random() * 2.5
+  })), [])
 
   return (
     <motion.div
-      style={{
-        width: '100%',
-        height: '100%',
-        minHeight: '400px',
-        background: 'transparent',
-        borderRadius: '24px',
-        fontFamily: '"Inter", sans-serif',
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
+      className="relative w-full h-full bg-[#1a1a1a] rounded-xl overflow-hidden shadow-2xl border border-white/10"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
+      style={{ cursor: isHovered ? 'grab' : 'default' }}
     >
-      {/* TEXTÚRA SVG (Rejtett) */}
-      <svg width="0" height="0">
-        <filter id="soilNoise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
-          <feColorMatrix type="saturate" values="0" />
-          <feComponentTransfer><feFuncA type="linear" slope="0.1" /></feComponentTransfer>
-        </filter>
-      </svg>
-
-      {/* --- VIZUALIZÁCIÓ (Teljes kitöltés) --- */}
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: 'inherit' }}>
-
-        {/* 5. RÉTEG: SVG NÖVÉNY ÉS HÁTTÉR (Közös koordináta-rendszerben szélesebb nézet) */}
-        <svg
-          width="100%" height="100%" viewBox="0 0 1000 500" preserveAspectRatio="none"
-          style={{ position: 'absolute', inset: 0, zIndex: 10 }}
-        >
+      <div className="w-full h-full relative select-none" style={{ pointerEvents: 'none' }}>
+        <svg viewBox="0 0 600 500" className="w-full h-full absolute inset-0">
           <defs>
-            <filter id="soilNoiseSVG">
-              <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
-              <feColorMatrix type="saturate" values="0" />
-              <feComponentTransfer><feFuncA type="linear" slope="0.1" /></feComponentTransfer>
+            <linearGradient id="skyGradientPremium" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#4FC3F7" />
+              <stop offset="60%" stopColor="#81D4FA" />
+              <stop offset="100%" stopColor="#B3E5FC" />
+            </linearGradient>
+
+            <pattern id="soilTexture" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+              <rect x="0" y="0" width="10" height="10" fill="#3E2723" />
+              <circle cx="2" cy="2" r="1.5" fill="#4E342E" />
+              <circle cx="7" cy="8" r="1" fill="#5D4037" />
+            </pattern>
+            <linearGradient id="soilDepth" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(0,0,0,0)" />
+              <stop offset="100%" stopColor="rgba(0,0,0,0.6)" />
+            </linearGradient>
+
+            <filter id="sunGlow">
+              <feGaussianBlur stdDeviation="8" result="coloredBlur" />
+              <feMerge>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
             </filter>
-            <linearGradient id="skyGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={isCompacted ? "#5C6B8A" : "#7B8FAD"} />
-              <stop offset="100%" stopColor={isCompacted ? "#4A5568" : "#5C6B8A"} />
-            </linearGradient>
-            <linearGradient id="soilGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#5D4E37" />
-              <stop offset="30%" stopColor="#3D3226" />
-              <stop offset="100%" stopColor="#2A231C" />
-            </linearGradient>
+
+            <mask id="waterFlowMask">
+              <rect x="0" y="150" width="600" height={PAN_START_Y - 150} fill="white" />
+              <motion.rect
+                x="0" y={PAN_START_Y} width="600" height={500 - PAN_START_Y}
+                fill="white"
+                style={{ opacity: waterThroughOpacity }}
+              />
+            </mask>
           </defs>
 
-          {/* 1. ÉG HÁTTÉR */}
+          {/* === SKY === */}
+          <rect x="0" y="0" width="600" height="150" fill="url(#skyGradientPremium)" />
+
+          <g>
+            {skyRain.map(p => (
+              <circle key={p.id} cx={p.x} cy="0" r="1.5" fill="rgba(255,255,255,0.6)">
+                <animate attributeName="cy" from="-10" to="160" dur="0.8s" begin={`${p.delay}s`} repeatCount="indefinite" />
+              </circle>
+            ))}
+          </g>
+
+          {/* === SUN === */}
+          <motion.g
+            initial={{ opacity: 0.9, scale: 1 }}
+            animate={{ scale: [1, 1.05, 1], opacity: [0.9, 1, 0.9] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transformOrigin: "520px 60px" }}
+          >
+            <circle cx="520" cy="60" r="45" fill="#FFF9C4" opacity="0.4" filter="url(#sunGlow)" />
+            <circle cx="520" cy="60" r="25" fill="#FDD835" />
+          </motion.g>
+
+          {/* === SOIL === */}
+          <rect x="0" y="150" width="600" height="350" fill="url(#soilTexture)" />
+          <rect x="0" y="150" width="600" height="350" fill="url(#soilDepth)" style={{ mixBlendMode: 'multiply' }} />
+
+          {/* === WATER INFILTRATION === */}
+          <g mask="url(#waterFlowMask)">
+            {soilDrops.map(p => (
+              <circle key={p.id} cx={p.x} cy="150" r="2" fill="#29B6F6" opacity="0.6">
+                <animate attributeName="cy" from="150" to="500" dur="2s" begin={`${p.delay}s`} repeatCount="indefinite" />
+              </circle>
+            ))}
+          </g>
+
+          {/* === COMPACTED LAYER === */}
           <motion.rect
-            x="0" y="0" width="1000" height={GROUND_Y}
-            fill="url(#skyGradient)"
+            x="0"
+            y={PAN_START_Y}
+            width="600"
+            height={PAN_END_Y - PAN_START_Y}
+            fill={layerColor}
+            style={{
+              opacity: layerOpacity,
+              mixBlendMode: 'overlay'
+            }}
+          />
+          <motion.line x1="0" y1={PAN_START_Y} x2="600" y2={PAN_START_Y} stroke={layerColor} strokeWidth="1" strokeDasharray="4 4" strokeOpacity={0.8} />
+          <motion.line x1="0" y1={PAN_END_Y} x2="600" y2={PAN_END_Y} stroke={layerColor} strokeWidth="1" strokeDasharray="4 4" strokeOpacity={0.8} />
+
+
+          {/* === WATER POOLING === */}
+          <motion.rect
+            x="0"
+            y={PAN_START_Y - 10}
+            width="600"
+            height="15"
+            fill="#039BE5"
+            filter="blur(5px)"
+            style={{
+              opacity: waterPoolOpacity,
+              mixBlendMode: 'hard-light'
+            }}
+          />
+          <motion.rect
+            x="0"
+            y="150"
+            width="600"
+            height={PAN_START_Y - 150}
+            fill="#039BE5"
+            style={{
+              opacity: useTransform(activeProgress, [0, 2.5, 4], [0, 0, 0.2]),
+              mixBlendMode: 'overlay'
+            }}
           />
 
-          {/* 2. TALAJ HÁTTÉR */}
-          <rect x="0" y={GROUND_Y} width="1000" height="500" fill="url(#soilGradient)" />
-          <rect x="0" y={GROUND_Y} width="1000" height="500" filter="url(#soilNoiseSVG)" opacity="0.3" />
 
-          {/* Talajfelszín vonal */}
-          <rect x="0" y={GROUND_Y} width="1000" height="4" fill="rgba(139, 115, 85, 0.6)" />
+          {/* === ROOTS === */}
+          <motion.path
+            d={rootsMassD}
+            stroke={rootColor}
+            strokeWidth="3.5"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.5))"
+          />
+          <motion.path
+            d={specialRootD}
+            stroke="#A1887F"
+            strokeWidth="3"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.5))"
+          />
 
+          {/* === PLANT === */}
+          <motion.path
+            d={stemD}
+            fill={plantColor}
+            stroke="#1B5E20"
+            strokeWidth="0.5"
+          />
+          <motion.path
+            d={leavesD}
+            fill={leafColor}
+            stroke="#1B5E20"
+            strokeWidth="0.5"
+            style={{ transformOrigin: "300px 150px" }}
+          />
 
-          {/* 3. TÖMÖRÖDÖTT SÁV (SVG-ben) */}
-          <AnimatePresence>
-            {isCompacted && (
-              <motion.g
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <rect
-                  x="0"
-                  y={PAN_START_Y}
-                  width="1000"
-                  height={PAN_END_Y - PAN_START_Y}
-                  fill="rgba(120, 20, 20, 0.35)"
-                />
-                <line x1="0" y1={PAN_START_Y} x2="1000" y2={PAN_START_Y} stroke="rgba(200, 50, 50, 0.6)" strokeWidth="2" strokeDasharray="5,5" />
-                <line x1="0" y1={PAN_END_Y} x2="1000" y2={PAN_END_Y} stroke="rgba(200, 50, 50, 0.6)" strokeWidth="2" strokeDasharray="5,5" />
+          {/* === ANNOTATIONS === */}
 
-                {/* Text Label in SVG - Centered at 500 */}
-                <rect x="420" y={PAN_START_Y + 25} width="160" height="24" rx="6" fill="rgba(0,0,0,0.5)" />
-                <text x="500" y={PAN_START_Y + 41} textAnchor="middle" fill="#FFEBEE" fontSize="12" fontWeight="800" letterSpacing="1">TÖMÖRÖDÖTT RÉTEG</text>
-              </motion.g>
-            )}
-          </AnimatePresence>
+          <motion.text
+            x="20"
+            y={PAN_END_Y - 10}
+            textAnchor="start"
+            fill="rgba(255,255,255,1)"
+            style={{
+              opacity: textOpacity,
+              fontSize: '13px',
+              fontWeight: '900',
+              textShadow: '0 2px 4px rgba(0,0,0,0.9)',
+              letterSpacing: '1px',
+              textTransform: 'uppercase'
+            }}
+          >
+            TÖMÖRÖDÖTT RÉTEG
+          </motion.text>
 
-          {/* NÖVÉNY GRUPOK - X eltolás 200px (Center 300->500) */}
-          <g transform="translate(200, 0)">
-            {/* SZÁR (Stem) */}
-            <motion.path
-              d={isCompacted ? stemPathCompacted : stemPathHealthy}
-              stroke={isCompacted ? "#AED581" : "#66BB6A"}
-              strokeWidth={isCompacted ? 6 : 8}
-              strokeLinecap="round"
-              fill="none"
-              animate={{ d: isCompacted ? stemPathCompacted : stemPathHealthy }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-            />
-            {/* LEVELEK (Leaves) */}
-            <motion.path
-              d={isCompacted ? leavesPathCompacted : leavesPathHealthy}
-              stroke={isCompacted ? "#AED581" : "#43A047"}
-              strokeWidth={5}
-              fill="none"
-              strokeLinecap="round"
-              animate={{ d: isCompacted ? leavesPathCompacted : leavesPathHealthy }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-            />
-
-            {/* GYÖKÉRZET (Roots) */}
-            <motion.path
-              d={isCompacted ? rootPathCompacted : rootPathHealthy}
-              stroke={isCompacted ? "#8D6E63" : "#D7CCC8"} // Kicsit sötétebb ha beteg
-              strokeWidth={isCompacted ? 4 : 5}
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={false}
-              animate={{ d: isCompacted ? rootPathCompacted : rootPathHealthy }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-            />
+          <g transform="translate(560, 150)">
+            {/* Background Removed */}
+            {[0, 10, 20, 30, 40, 50].map((cm, i) => (
+              <g key={cm} transform={`translate(0, ${i * 70})`}>
+                <line x1="0" y1="0" x2="8" y2="0" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
+                <text x="36" y="4" textAnchor="end" fill="rgba(255,255,255,0.8)" fontSize="10px" fontWeight="bold">
+                  {cm}cm
+                </text>
+              </g>
+            ))}
           </g>
+
         </svg>
-
-        {/* 4. RÉTEG: NAP (HTML overlay) */}
-        <motion.div
-          style={{
-            position: 'absolute', top: '15px', right: '15px', width: 64, height: 64, borderRadius: '50%',
-            background: 'radial-gradient(circle, #FDD835 0%, #FBC02D 100%)', zIndex: 12,
-            boxShadow: '0 0 35px rgba(253, 216, 53, 0.4)'
-          }}
-          animate={{ opacity: isCompacted ? 0.4 : 1, scale: isCompacted ? 0.8 : 1 }}
-        />
-
-        {/* 6. RÉTEG: VÍZ (Részecskék) */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 15, pointerEvents: 'none' }}>
-          {/* Note: Particles logic needs to be aware of the SVG scaling if using HTML overlay. 
-               Since preserveAspectRatio is slice, exact alignment might be tricky unless viewBox ~= container.
-               Container is roughly 600x500 in desktop split view, so this map is close.
-           */}
-          {particles.map((p) => (
-            <motion.div
-              key={p.id}
-              style={{
-                position: 'absolute', left: 0, top: 0, width: 6, height: 8,
-                background: '#4FC3F7', borderRadius: '50%', boxShadow: '0 0 4px #29B6F6'
-              }}
-              // Need to map coordinates roughly from SVG 1000x500 to % or similar.
-              // Easier to use % for responsiveness. 
-              // xStart was 100-900. 100/1000 ~ 10%, 900/1000 ~ 90%.
-              initial={{ left: `${(p.xStart / 1000) * 100}%`, top: '-5%', opacity: 0 }}
-              animate={isCompacted ? {
-                // TÖMÖRÖDÖTT: Koppan a rétegen 
-                // PAN_START_Y = 185. 185/500 = 37%.
-                top: ['0%', '37%', '38%'],
-                left: [`${(p.xStart / 1000) * 100}%`, `${(p.xStart / 1000) * 100}%`, `${((p.xStart + (p.id % 2 === 0 ? 100 : -100)) / 1000) * 100}%`],
-                opacity: [0, 1, 0],
-                scale: [1, 1, 0]
-              } : {
-                // EGÉSZSÉGES: Lemegy mélyre
-                top: ['0%', '90%'],
-                left: `${(p.xStart / 1000) * 100}%`,
-                opacity: [0, 1, 0],
-                scale: [1, 1, 0.5]
-              }}
-              transition={{
-                duration: isCompacted ? 1.5 : 2.5, // Faster in air
-                repeat: Infinity,
-                delay: p.delay,
-                ease: isCompacted ? "easeOut" : "linear"
-              }}
-            />
-          ))}
-        </div>
-
-        {/* 7. RÉTEG: UI OVERLAY (Skálák) */}
-        {/* Jobb oldali Mélység Skála - Relative to Percentage to match SVG roughly */}
-        <div style={{ position: 'absolute', right: 10, top: '30%', bottom: 0, width: 40, zIndex: 20 }}>
-          {/* GROUND_Y = 150. 150/500 = 30%. */}
-          {[0, 10, 20, 30, 40, 50].map((cm) => (
-            <div key={cm} style={{ position: 'absolute', top: `${(cm * 1.6)}%`, right: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
-              {/* Simplified mapping: 50cm = 70% of height? 
-                   If GROUND is 30%, bottom is 100%. Range is 70%.
-                   50cm -> 70%. 1cm -> 1.4%. 
-                   Let's use 1.4 multiplier.
-               */}
-              <div style={{ width: 8, height: 1, background: 'rgba(255,255,255,0.5)' }} />
-              <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>{cm} cm</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Bal oldali Penetrométer színskála (Függőleges) */}
-        <div style={{
-          position: 'absolute', left: 16, top: '32%', bottom: 20, width: 6, borderRadius: '3px',
-          background: 'linear-gradient(180deg, #4CAF50 0%, #FFC107 40%, #D32F2F 100%)',
-          zIndex: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-        }} />
 
       </div>
     </motion.div>

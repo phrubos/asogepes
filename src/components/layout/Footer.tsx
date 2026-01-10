@@ -13,20 +13,14 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className="container">
         <div className={styles.footerContent}>
-          <div className={styles.footerLogos}>
-            <div className={styles.footerLogo}>
-              <span className={styles.logoPlaceholder}>Neumann János Egyetem</span>
-              <span className={styles.logoSub}>Kertészeti és Vidékfejlesztési Kar</span>
-            </div>
-            <div className={styles.footerLogo}>
-              <span className={styles.logoPlaceholder}>Agroskill Kft.</span>
-              <span className={styles.logoSub}>Szentkirály</span>
-            </div>
+          <div className={styles.footerItem}>
+            <span className={styles.itemName}>Neumann János Egyetem</span>
+            <span className={styles.itemDetail}>Kertészeti és Vidékfejlesztési Kar</span>
           </div>
-          <div className={styles.footerCredits}>
-            <p><strong>Kutatás:</strong> Dobecz Andor (Kertészmérnök BSc)</p>
-            <p><strong>Konzulens:</strong> Dr. Hüvely Attila (Egyetemi docens)</p>
-            <p className={styles.footerYear}>2025</p>
+          <div className={styles.footerDivider}></div>
+          <div className={styles.footerItem}>
+            <span className={styles.itemName}>Agroskill Kft.</span>
+            <span className={styles.itemDetail}>Szentkirály</span>
           </div>
         </div>
       </div>

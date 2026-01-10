@@ -1,49 +1,90 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeftRight, Sprout, Droplets, Info } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion'
+import { ArrowLeftRight, Sprout, Droplets, Info, Play, Pause } from 'lucide-react'
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
 import styles from '../ProblemNew.module.css'
 
 const timelineData = [
-    { day: 0, label: 'Optimális', penetrometer: 8, color: '#4CAF50' },
-    { day: 30, label: '30 nap', penetrometer: 11, color: '#8BC34A' },
-    { day: 60, label: '60 nap', penetrometer: 14, color: '#FFC107' },
-    { day: 90, label: '90 nap', penetrometer: 17, color: '#FF9800' },
-    { day: 120, label: '120 nap után', penetrometer: 20, color: '#D32F2F' },
+    { day: 0, label: 'Optimális', color: '#4CAF50' },
+    { day: 30, label: '30 nap', color: '#8BC34A' },
+    { day: 60, label: '60 nap', color: '#FFC107' },
+    { day: 90, label: '90 nap', color: '#FF9800' },
+    { day: 120, label: '120 nap után', color: '#D32F2F' },
 ]
 
 export default function CompactionInteractivePage() {
-    const [dayIndex, setDayIndex] = useState(0)
+    const progress = useMotionValue(0)
+    const [isPlaying, setIsPlaying] = useState(true)
     const [isHovered, setIsHovered] = useState(false)
-    const [isUserInteracting, setIsUserInteracting] = useState(false)
+    const [currentProgress, setCurrentProgress] = useState(0)
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const controlsRef = useRef<any>(null)
 
-    const isCompacted = dayIndex === 4
-    const currentData = timelineData[dayIndex]
-
-    // --- AUTOMATIKUS LOOP ---
     useEffect(() => {
-        let interval: NodeJS.Timeout
-        if (!isHovered && !isUserInteracting) {
-            interval = setInterval(() => {
-                setDayIndex((prev) => (prev === 0 ? 4 : 0))
-            }, 5000)
+        const unsubscribe = progress.on("change", (latest) => {
+            setCurrentProgress(latest)
+        })
+        return unsubscribe
+    }, [progress])
+
+    useEffect(() => {
+        if (!isPlaying || isHovered) {
+            if (controlsRef.current) controlsRef.current.stop();
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            return;
         }
-        return () => clearInterval(interval)
-    }, [isHovered, isUserInteracting])
 
-    const handleInteractionStart = () => setIsUserInteracting(true)
+        const totalDuration = 20;
 
-    const handleToggle = () => {
-        handleInteractionStart()
-        setDayIndex(dayIndex === 0 ? 4 : 0)
-    }
+        const startLoop = () => {
+            const current = progress.get();
+            const remainingFac = (4 - current) / 4;
+            const duration = remainingFac > 0.001 ? remainingFac * totalDuration : 0;
+
+            if (duration <= 0.1 && current >= 3.99) {
+                timeoutRef.current = setTimeout(() => {
+                    progress.set(0);
+                    startLoop();
+                }, 5000);
+            } else {
+                controlsRef.current = animate(progress, 4, {
+                    duration: duration,
+                    ease: "linear",
+                    onComplete: () => {
+                        timeoutRef.current = setTimeout(() => {
+                            progress.set(0);
+                            startLoop();
+                        }, 5000);
+                    }
+                });
+            }
+        };
+
+        startLoop();
+
+        return () => {
+            if (controlsRef.current) controlsRef.current.stop();
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, [isPlaying, isHovered]);
+
 
     const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        handleInteractionStart()
-        setDayIndex(parseInt(e.target.value))
+        const val = parseFloat(e.target.value)
+        progress.set(val)
+        setIsPlaying(false)
     }
+
+    const togglePlay = () => {
+        setIsPlaying(prev => !prev)
+    }
+
+    const currentPressure = Math.round(8 + (currentProgress * 3))
+    const nearestIndex = Math.round(currentProgress)
+    const currentData = timelineData[Math.min(nearestIndex, 4)]
+    const isCompacted = currentProgress >= 3.5
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -69,62 +110,77 @@ export default function CompactionInteractivePage() {
             viewport={{ once: true }}
             className={styles.contentWrapper}
         >
-            <div className={styles.statsPageGrid} style={{ paddingBottom: 'clamp(1rem, 5vh, 3rem)' }}>
-                {/* LEFT: VISUALIZATION */}
+            {/* 
+               Grid Layout: Using the standard layout which likely gives 1fr 1fr or 60/40.
+               Matched padding to Reference: 60px bottom to clear nav.
+            */}
+            <div className={styles.statsPageGrid} style={{ paddingBottom: '60px', alignItems: 'center' }}>
+
+                {/* LEFT: HERO VISUALIZATION */}
                 <motion.div
                     className={styles.statCard}
                     variants={itemVariants}
-                    style={{ padding: 0, overflow: 'hidden', minHeight: 'clamp(300px, 45vh, 430px)' }}
+                    style={{
+                        padding: 0,
+                        // FULL WIDTH of the column (Hero Proportions)
+                        // Aspect Ratio locked to Native 600x500 (6:5)
+                        // No max-width constraint -> It scales with screen size, just like the reference.
+                        width: '100%',
+                        aspectRatio: '6/5',
+                        display: 'flex',
+                        position: 'relative',
+                        margin: '0 auto',
+                        overflow: 'hidden',
+                        boxShadow: '0 20px 50px rgba(0,0,0,0.3)' // Premium Shadow
+                    }}
                 >
                     <InteractiveSoil
-                        dayIndex={dayIndex}
-                        isCompacted={isCompacted}
+                        progress={progress}
                         isHovered={isHovered}
                         setIsHovered={setIsHovered}
                     />
 
-                    {/* Floating Toggle Button on the visual */}
                     <motion.button
-                        onClick={handleToggle}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        onClick={togglePlay}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                         style={{
                             position: 'absolute',
-                            top: '20px',
-                            left: '20px',
+                            top: '25px',
+                            left: '25px',
                             zIndex: 20,
-                            background: isCompacted ? 'rgba(46, 125, 50, 0.9)' : 'rgba(198, 40, 40, 0.9)',
-                            color: 'white', border: 'none', borderRadius: '8px',
-                            padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '8px',
-                            cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem',
+                            background: 'rgba(255, 255, 255, 0.2)',
+                            color: 'white', border: 'none', borderRadius: '50%',
+                            width: 56, height: 56, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer',
                             backdropFilter: 'blur(4px)',
                             boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
                         }}
                     >
-                        <ArrowLeftRight size={16} />
-                        {isCompacted ? 'Javítás' : 'Rontás'}
+                        {isPlaying ? <Pause size={28} fill="white" /> : <Play size={28} fill="white" />}
                     </motion.button>
                 </motion.div>
 
                 {/* RIGHT: INFO & CONTROLS */}
-                <div className={styles.challengesList} style={{ justifyContent: 'center', gap: 'clamp(0.5rem, 2vh, var(--space-md))' }}>
+                {/* 
+                   Centered vertically against the chart.
+                   Gap increased to 2rem for "Airy" feel of the reference.
+                */}
+                <div className={styles.challengesList} style={{ gap: '2rem', justifyContent: 'center', display: 'flex', flexDirection: 'column' }}>
 
                     {/* Header Info */}
                     <motion.div variants={itemVariants}>
-                        <div style={{ textAlign: 'left', marginBottom: 'var(--space-xs)' }}>
-                            <span className={styles.pillBadge}>Talajszerkezet</span>
-                        </div>
                         <h2 style={{
-                            fontSize: 'clamp(1.4rem, 4vh, 1.8rem)',
+                            fontSize: '2.5rem', // Hero Title Size (Reference Style)
                             textAlign: 'left',
-                            margin: '0 0 var(--space-xs) 0',
-                            fontFamily: 'var(--font-display)',
+                            margin: '0 0 12px 0',
+                            fontFamily: 'var(--font-display)', // Use Serif/Display if mapped
                             color: 'var(--color-white)',
-                            lineHeight: 1.2
+                            lineHeight: 1.1
                         }}>
                             Talajszerkezet <span style={{ color: currentData.color }}>Változása</span>
                         </h2>
-                        <p style={{ fontSize: 'clamp(0.75rem, 1.6vh, 0.9rem)', color: 'rgba(255,255,255,0.7)', lineHeight: 1.4, margin: 0 }}>
+                        <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, margin: 0, maxWidth: '90%' }}>
                             A talajtömörödés közvetlen hatással van a gyökérfejlődésre és vízgazdálkodásra.
                         </p>
                     </motion.div>
@@ -133,69 +189,95 @@ export default function CompactionInteractivePage() {
                     <motion.div
                         variants={itemVariants}
                         style={{
-                            background: 'rgba(255, 255, 255, 0.02)',
-                            borderRadius: '16px',
-                            padding: '14px',
+                            background: 'rgba(255, 255, 255, 0.03)',
+                            borderRadius: '24px',
+                            padding: '24px',
                             border: '1px solid rgba(255, 255, 255, 0.08)'
                         }}
                     >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.65rem', fontWeight: 600 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', fontSize: '0.8rem', fontWeight: 600 }}>
                             {timelineData.map((d, i) => (
                                 <motion.span
                                     key={i}
-                                    animate={{
-                                        color: i === dayIndex ? d.color : 'rgba(255, 255, 255, 0.4)',
-                                        scale: i === dayIndex ? 1.1 : 1,
-                                        opacity: i === dayIndex ? 1 : 0.6
+                                    style={{
+                                        color: Math.abs(currentProgress - i) < 0.5 ? d.color : 'rgba(255, 255, 255, 0.4)',
+                                        cursor: 'pointer',
+                                        transition: 'color 0.3s'
                                     }}
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={() => { handleInteractionStart(); setDayIndex(i); }}
+                                    onClick={() => {
+                                        setIsPlaying(false)
+                                        animate(progress, i, { duration: 0.5 })
+                                    }}
                                 >
                                     {d.label}
                                 </motion.span>
                             ))}
                         </div>
-                        <input
-                            type="range" min="0" max="4" step="1"
-                            value={dayIndex} onChange={handleSliderChange}
-                            style={{
-                                width: '100%',
-                                cursor: 'pointer',
-                                accentColor: currentData.color,
-                                display: 'block',
-                                height: '5px',
-                                borderRadius: '3px'
-                            }}
-                        />
-                        <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+
+                        <div style={{ position: 'relative', marginBottom: '16px', height: '20px', display: 'flex', alignItems: 'center' }}>
                             <div style={{
-                                width: '36px', height: '36px', borderRadius: '8px',
+                                position: 'absolute',
+                                left: 0, right: 0, height: 6, borderRadius: 3,
+                                background: 'linear-gradient(90deg, #4CAF50 0%, #FFC107 50%, #D32F2F 100%)',
+                                opacity: 0.8,
+                                zIndex: 1,
+                                width: '100%'
+                            }} />
+
+                            <input
+                                type="range" min="0" max="4" step="0.01"
+                                value={currentProgress}
+                                onChange={handleSliderChange}
+                                onMouseDown={() => setIsPlaying(false)}
+                                style={{
+                                    width: '100%',
+                                    cursor: 'grabbing',
+                                    accentColor: currentData.color,
+                                    display: 'block',
+                                    height: '32px',
+                                    marginTop: 0,
+                                    borderRadius: '3px',
+                                    position: 'relative',
+                                    zIndex: 5,
+                                    background: 'transparent',
+                                    WebkitAppearance: 'none'
+                                }}
+                                className={styles.customRange}
+                            />
+                        </div>
+
+                        <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            <div style={{
+                                width: '48px', height: '48px', borderRadius: '12px',
                                 background: `${currentData.color}20`,
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                color: currentData.color, border: `1px solid ${currentData.color}40`
+                                color: currentData.color, border: `1px solid ${currentData.color}40`,
+                                transition: 'background 0.3s, color 0.3s, border-color 0.3s'
                             }}>
-                                <Info size={18} />
+                                <Info size={24} />
                             </div>
                             <div>
-                                <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', fontWeight: 700 }}>Talajellenállás</div>
-                                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: currentData.color }}>{currentData.penetrometer} bar</div>
+                                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '1px' }}>Talajellenállás</div>
+                                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: currentData.color, transition: 'color 0.3s', fontFamily: 'var(--font-display)' }}>
+                                    {currentPressure} bar
+                                </div>
                             </div>
                         </div>
                     </motion.div>
 
-                    {/* Impact Stats */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                        <motion.div variants={itemVariants} className={styles.challengeItem} style={{ flexDirection: 'column', gap: 'clamp(4px, 1vh, 8px)', padding: 'clamp(8px, 2vh, 14px)' }}>
-                            <div className={styles.iconBox} style={{ width: 'clamp(24px, 4vh, 32px)', height: 'clamp(24px, 4vh, 32px)', color: isCompacted ? '#EF5350' : '#81C784', borderColor: isCompacted ? '#EF535040' : '#81C78440', background: isCompacted ? '#EF535010' : '#81C78410' }}>
-                                <Sprout size={16} />
+                    {/* Impact Stats Cards - Styled to match "Szántás" Reference Cards */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                        <motion.div variants={itemVariants} className={styles.challengeItem} style={{ flexDirection: 'column', gap: '12px', padding: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px' }}>
+                            <div className={styles.iconBox} style={{ width: '40px', height: '40px', color: isCompacted ? '#EF5350' : '#81C784', borderColor: isCompacted ? '#EF535040' : '#81C78440', background: isCompacted ? '#EF535010' : '#81C78410', transition: 'all 0.5s', marginBottom: '4px' }}>
+                                <Sprout size={20} />
                             </div>
                             <div>
-                                <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 2px 0', fontSize: 'clamp(0.75rem, 1.6vh, 0.85rem)' }}>Gyökérzóna</h4>
+                                <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 6px 0', fontSize: '1rem', fontFamily: 'var(--font-display)' }}>Gyökérzóna</h4>
                                 <AnimatePresence mode="wait">
                                     <motion.p
                                         key={isCompacted ? 'bad' : 'good'}
                                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                        style={{ margin: 0, fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)' }}
+                                        style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}
                                     >
                                         {isCompacted ? 'Sekély, korlátozott' : 'Mély, kiterjedt'}
                                     </motion.p>
@@ -203,17 +285,17 @@ export default function CompactionInteractivePage() {
                             </div>
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className={styles.challengeItem} style={{ flexDirection: 'column', gap: 'clamp(4px, 1vh, 8px)', padding: 'clamp(8px, 2vh, 14px)' }}>
-                            <div className={styles.iconBox} style={{ width: 'clamp(24px, 4vh, 32px)', height: 'clamp(24px, 4vh, 32px)', color: isCompacted ? '#EF5350' : '#81C784', borderColor: isCompacted ? '#EF535040' : '#81C78440', background: isCompacted ? '#EF535010' : '#81C78410' }}>
-                                <Droplets size={16} />
+                        <motion.div variants={itemVariants} className={styles.challengeItem} style={{ flexDirection: 'column', gap: '12px', padding: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px' }}>
+                            <div className={styles.iconBox} style={{ width: '40px', height: '40px', color: isCompacted ? '#EF5350' : '#81C784', borderColor: isCompacted ? '#EF535040' : '#81C78440', background: isCompacted ? '#EF535010' : '#81C78410', transition: 'all 0.5s', marginBottom: '4px' }}>
+                                <Droplets size={20} />
                             </div>
                             <div>
-                                <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 2px 0', fontSize: 'clamp(0.75rem, 1.6vh, 0.85rem)' }}>Vízgazdálkodás</h4>
+                                <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 6px 0', fontSize: '1rem', fontFamily: 'var(--font-display)' }}>Vízgazdálkodás</h4>
                                 <AnimatePresence mode="wait">
                                     <motion.p
                                         key={isCompacted ? 'bad' : 'good'}
                                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                        style={{ margin: 0, fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)' }}
+                                        style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}
                                     >
                                         {isCompacted ? 'Gyenge elfolyás' : 'Kiegyensúlyozott'}
                                     </motion.p>
@@ -224,6 +306,11 @@ export default function CompactionInteractivePage() {
 
                 </div>
             </div>
+
+            <style jsx>{`
+                input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: ${currentData.color}; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); margin-top: -6px; cursor: grabbing; transition: background 0.2s; }
+                input[type=range]::-moz-range-thumb { height: 16px; width: 16px; border-radius: 50%; background: ${currentData.color}; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); cursor: grabbing; transition: background 0.2s; }
+            `}</style>
         </motion.div>
     )
 }

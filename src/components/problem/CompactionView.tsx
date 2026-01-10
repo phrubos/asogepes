@@ -12,11 +12,11 @@ import styles from './ProblemNew.module.css'
 // Animated water drops for stat card
 function WaterDropAnimation() {
   return (
-    <div style={{ 
-      position: 'absolute', 
-      top: 20, 
-      right: 20, 
-      width: 80, 
+    <div style={{
+      position: 'absolute',
+      top: 20,
+      right: 20,
+      width: 80,
       height: 100,
       pointerEvents: 'none',
       overflow: 'hidden',
@@ -54,7 +54,7 @@ export default function CompactionView() {
   const [soilDayIndex, setSoilDayIndex] = useState(0)
   const [isSoilCompacted, setIsSoilCompacted] = useState(false)
   const [isSoilHovered, setIsSoilHovered] = useState(false)
-  
+
   const iconMap: Record<string, JSX.Element> = {
     droplet: <Droplet size={24} />,
     weight: <Weight size={24} />,
@@ -74,9 +74,9 @@ export default function CompactionView() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30, scale: 0.95 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
+    visible: {
+      opacity: 1,
+      y: 0,
       scale: 1,
       transition: {
         type: 'spring',
@@ -88,22 +88,22 @@ export default function CompactionView() {
 
   const iconVariants = {
     idle: { scale: 1, rotate: 0 },
-    hover: { 
-      scale: 1.1, 
+    hover: {
+      scale: 1.1,
       rotate: -10,
       transition: { type: 'spring', stiffness: 400, damping: 10 }
     }
   }
 
   return (
-    <motion.div 
+    <motion.div
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
     >
       {/* Section Badge */}
-      <motion.div 
+      <motion.div
         className={styles.sectionBadge}
         initial={{ opacity: 0, x: -10 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -115,156 +115,155 @@ export default function CompactionView() {
       </motion.div>
 
       <div className={styles.gridContainer}>
-      <div className={styles.leftColumn}>
-        <motion.div 
-          className={styles.statCard}
-          variants={itemVariants}
-          whileHover={{ 
-            boxShadow: '0 25px 50px -15px rgba(0,0,0,0.12)',
-          }}
-          transition={{ duration: 0.3 }}
-          style={{ position: 'relative', overflow: 'hidden' }}
-        >
-          {/* Water drop animation inside card */}
-          <WaterDropAnimation />
-          
-          {/* Animated gradient bar */}
+        <div className={styles.leftColumn}>
           <motion.div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 6,
-              background: 'linear-gradient(90deg, var(--color-gold), var(--color-gold-light, #E8C872))',
-              transformOrigin: 'left',
-              borderRadius: '6px 6px 0 0',
-            }}
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          />
-          
-          <div className={styles.mainStat}>
-            <AnimatedNumber 
-              value={problemStatistics.irrigation.min}
-              duration={1500}
-              className={styles.statValue}
-            />
-            <span className={styles.statSeparator}>-</span>
-            <AnimatedNumber 
-              value={problemStatistics.irrigation.max}
-              duration={1500}
-              delay={200}
-              className={styles.statValue}
-            />
-            <motion.span 
-              className={styles.statUnit}
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-            >
-              {problemStatistics.irrigation.unit}
-            </motion.span>
-          </div>
-          <motion.div 
-            className={styles.statDescription}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-          >
-            {problemStatistics.irrigation.label}. Ennyi öntözővizet kell a talajfelszínnek elnyelnie és mélyebbre szivárogtatnia.
-          </motion.div>
-        </motion.div>
-
-        <div className={styles.challengesList}>
-          {compactionChallenges.map((challenge, index) => (
-            <motion.div 
-              key={index} 
-              variants={itemVariants}
-            >
-              <TiltCard
-                tiltAmount={8}
-                glowColor="rgba(107, 139, 94, 0.2)"
-                scale={1.02}
-                className={styles.challengeItem}
-              >
-                <div
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  style={{ padding: 'var(--space-lg)', height: '100%' }}
-                >
-                  <motion.div 
-                    className={styles.iconBox}
-                    variants={iconVariants}
-                    animate={hoveredIndex === index ? 'hover' : 'idle'}
-                    style={{ 
-                      background: hoveredIndex === index 
-                        ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-light))' 
-                        : 'rgba(212, 168, 75, 0.15)',
-                      color: hoveredIndex === index ? 'var(--color-earth-900)' : 'var(--color-gold)',
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {iconMap[challenge.icon]}
-                  </motion.div>
-                  <div className={styles.itemContent}>
-                    <motion.h3
-                      animate={{ 
-                        color: 'var(--color-white)'
-                      }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {challenge.title}
-                    </motion.h3>
-                    <p>{challenge.description}</p>
-                  </div>
-                </div>
-              </TiltCard>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      <div className={styles.rightColumn}>
-        <motion.div 
-          className={styles.interactiveWrapper}
-          variants={itemVariants}
-        >
-          <motion.div 
-            className={styles.interactiveCard}
-            whileHover={{ 
-              boxShadow: '0 30px 60px -20px rgba(0,0,0,0.15)',
+            className={styles.statCard}
+            variants={itemVariants}
+            whileHover={{
+              boxShadow: '0 25px 50px -15px rgba(0,0,0,0.12)',
             }}
             transition={{ duration: 0.3 }}
+            style={{ position: 'relative', overflow: 'hidden' }}
           >
-            <InteractiveSoil
-              dayIndex={soilDayIndex}
-              isCompacted={isSoilCompacted}
-              isHovered={isSoilHovered}
-              setIsHovered={setIsSoilHovered}
+            {/* Water drop animation inside card */}
+            <WaterDropAnimation />
+
+            {/* Animated gradient bar */}
+            <motion.div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 6,
+                background: 'linear-gradient(90deg, var(--color-gold), var(--color-gold-light, #E8C872))',
+                transformOrigin: 'left',
+                borderRadius: '6px 6px 0 0',
+              }}
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             />
-            <motion.p 
-              className={styles.interactiveCaption}
+
+            <div className={styles.mainStat}>
+              <AnimatedNumber
+                value={problemStatistics.irrigation.min}
+                duration={1500}
+                className={styles.statValue}
+              />
+              <span className={styles.statSeparator}>-</span>
+              <AnimatedNumber
+                value={problemStatistics.irrigation.max}
+                duration={1500}
+                delay={200}
+                className={styles.statValue}
+              />
+              <motion.span
+                className={styles.statUnit}
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+              >
+                {problemStatistics.irrigation.unit}
+              </motion.span>
+            </div>
+            <motion.div
+              className={styles.statDescription}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.5 }}
             >
-              <motion.span
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                ↔
-              </motion.span>
-              {' '}Kattints a gombra az állapotváltáshoz
-            </motion.p>
+              {problemStatistics.irrigation.label}. Ennyi öntözővizet kell a talajfelszínnek elnyelnie és mélyebbre szivárogtatnia.
+            </motion.div>
           </motion.div>
-        </motion.div>
-      </div>
+
+          <div className={styles.challengesList}>
+            {compactionChallenges.map((challenge, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+              >
+                <TiltCard
+                  tiltAmount={8}
+                  glowColor="rgba(107, 139, 94, 0.2)"
+                  scale={1.02}
+                  className={styles.challengeItem}
+                >
+                  <div
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    style={{ padding: 'var(--space-lg)', height: '100%' }}
+                  >
+                    <motion.div
+                      className={styles.iconBox}
+                      variants={iconVariants}
+                      animate={hoveredIndex === index ? 'hover' : 'idle'}
+                      style={{
+                        background: hoveredIndex === index
+                          ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-light))'
+                          : 'rgba(212, 168, 75, 0.15)',
+                        color: hoveredIndex === index ? 'var(--color-earth-900)' : 'var(--color-gold)',
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {iconMap[challenge.icon]}
+                    </motion.div>
+                    <div className={styles.itemContent}>
+                      <motion.h3
+                        animate={{
+                          color: 'var(--color-white)'
+                        }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {challenge.title}
+                      </motion.h3>
+                      <p>{challenge.description}</p>
+                    </div>
+                  </div>
+                </TiltCard>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.rightColumn}>
+          <motion.div
+            className={styles.interactiveWrapper}
+            variants={itemVariants}
+          >
+            <motion.div
+              className={styles.interactiveCard}
+              whileHover={{
+                boxShadow: '0 30px 60px -20px rgba(0,0,0,0.15)',
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <InteractiveSoil
+                progress={soilDayIndex}
+                isHovered={isSoilHovered}
+                setIsHovered={setIsSoilHovered}
+              />
+              <motion.p
+                className={styles.interactiveCaption}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6 }}
+              >
+                <motion.span
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  ↔
+                </motion.span>
+                {' '}Kattints a gombra az állapotváltáshoz
+              </motion.p>
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
     </motion.div>
   )
