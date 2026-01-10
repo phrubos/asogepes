@@ -22,7 +22,7 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: 'Ásógépes Talajművelés | Tudományos Kutatás 2025',
-  description: 'Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról öntözött kertészeti kultúrákban. Neumann János Egyetem × Agroskill Kft. együttműködés.',
+  description: 'Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról, öntözött kertészeti kultúrákban. Neumann János Egyetem × Agroskill Kft. együttműködés.',
 }
 
 export default function RootLayout({
