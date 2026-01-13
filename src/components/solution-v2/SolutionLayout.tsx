@@ -152,10 +152,7 @@ export default function SolutionLayout() {
                   ease: [0.22, 1, 0.36, 1]
                 }}
               >
-                <ModelSection 
-                  modelId={activeModel} 
-                  onOpenModal={() => openFieldModal(activeModel)} 
-                />
+                <ModelSection modelId={activeModel} />
               </motion.div>
             </AnimatePresence>
           </div>
