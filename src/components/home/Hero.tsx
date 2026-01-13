@@ -69,7 +69,7 @@ export default function Hero() {
     <header className={styles.hero}>
       <div className={styles.heroBg} style={parallaxStyle}>
         <Image
-          src="/images/hero-bg-final_new.png"
+          src="/images/hero_2026.jpeg"
           alt="Ásógép munkában - kontrasztos mezőgazdasági tájkép"
           fill
           priority

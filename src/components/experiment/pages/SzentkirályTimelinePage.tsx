@@ -22,7 +22,7 @@ export default function SzentkirályTimelinePage() {
           <MapPin size={12} />
           <span>Szentkirály</span>
         </div>
-        <h3 className={styles.headerTitle}>Talajszerkezet változása</h3>
+        <h3 className={styles.headerTitle}>A talajszerkezet változása</h3>
       </motion.div>
 
       {/* Timeline Chart */}
@@ -35,7 +35,7 @@ export default function SzentkirályTimelinePage() {
         {data.chartData && (
           <Timeline
             data={data.chartData}
-            title={`A laza talajréteg mélysége ${data.chartData.length} hónap alatt`}
+            title={`A laza talajréteg mélységének változása ${data.chartData.length} hónap alatt`}
             evaluations={data.evaluations}
           />
         )}

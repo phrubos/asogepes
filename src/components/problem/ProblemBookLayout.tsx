@@ -79,7 +79,7 @@ export default function ProblemBookLayout() {
             id: 'ploughing-structure',
             section: 'Szántás\nkorlátai',
             sectionIndex: 3,
-            title: 'Talajszerkezet',
+            title: 'Szántott vs. ásógépezett talaj',
             component: <PageContent><PloughingStructurePage /></PageContent>,
         },
     ], [])

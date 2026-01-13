@@ -2,9 +2,8 @@
 
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { ArrowDown, Layers } from 'lucide-react'
+import { ArrowDown, Sprout } from 'lucide-react'
 import styles from './OperationPrinciple.module.css'
-import SpadeAnimation from './SpadeAnimation'
 
 interface FeatureItem {
   icon: React.ReactNode
@@ -19,7 +18,7 @@ const features: FeatureItem[] = [
     description: 'Az ásókanalak mélyen belemerülnek a talajba, fellazítják és sekélyen átkeverik a talajfelszínt'
   },
   {
-    icon: <Layers size={24} />,
+    icon: <Sprout size={24} />,
     title: 'Optimális magágy',
     description: 'Az elmunkáló henger egyenletes, vetésre ültetésre kész felületet hagy'
   }
@@ -88,7 +87,25 @@ export default function OperationPrinciple() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <SpadeAnimation />
+          <video
+            src="/videos/Andornak.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className={styles.video}
+          />
+
+          {/* Overlay Labels */}
+          <div className={`${styles.overlayLabel} ${styles.labelLeft}`}>
+            <div className={styles.labelDot} />
+            <span>Ásórotor</span>
+          </div>
+
+          <div className={`${styles.overlayLabel} ${styles.labelRight}`}>
+            <div className={styles.labelDot} />
+            <span>Elmunkáló henger</span>
+          </div>
         </motion.div>
       </div>
     </section>

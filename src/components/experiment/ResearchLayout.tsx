@@ -51,14 +51,14 @@ export default function ResearchLayout() {
       id: 'szentkiraly-timeline',
       section: 'Szentkirály',
       sectionIndex: 2,
-      title: 'Talajszerkezet változás',
+      title: 'A talajszerkezet változása',
       component: <SzentkirályTimelinePage />,
     },
     {
       id: 'szentkiraly-temp',
       section: 'Szentkirály',
       sectionIndex: 2,
-      title: 'Talajhőmérséklet vizsgálat',
+      title: 'Talajhőmérséklet',
       component: <SzentkirályTempPage />,
     },
     {
@@ -73,14 +73,14 @@ export default function ResearchLayout() {
       id: 'kecskemet-info',
       section: 'Kecskemét',
       sectionIndex: 3,
-      title: 'Helyszín adatok',
+      title: 'KECSKEMÉT-BORBÁS',
       component: <KecskemétInfoPage />,
     },
     {
       id: 'kecskemet-timeline',
       section: 'Kecskemét',
       sectionIndex: 3,
-      title: 'Talajszerkezet változás',
+      title: 'A talajszerkezet változása',
       component: <KecskemétTimelinePage />,
     },
     {
@@ -102,7 +102,7 @@ export default function ResearchLayout() {
       id: 'lakitelek-chart',
       section: 'Lakitelek',
       sectionIndex: 4,
-      title: '7 kezelés összehasonlítása',
+      title: '7 művelési kombináció eredménye',
       component: <LakitelekChartPage />,
     },
     {

@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MapPin, Calendar, Droplets } from 'lucide-react'
 import PageBadge from '@/components/ui/PageBadge'
 import HungaryMap from '../ResearchHero/HungaryMap'
 import styles from './HeroPage.module.css'
@@ -27,12 +26,6 @@ export default function HeroPage() {
       }
     }
   }
-
-  const stats = [
-    { icon: MapPin, number: '3', label: 'Helyszín' },
-    { icon: Calendar, number: '4', label: 'Hónap' },
-    { icon: Droplets, number: '9', label: 'Kezelés' },
-  ]
 
   return (
     <div className={styles.heroPage}>
@@ -64,7 +57,7 @@ export default function HeroPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             Három helyszínen, 9 különböző művelési kombinációval,
-            négy hónapon át mértük a talajszerkezet változását —{' '}
+            hat hónapon át mértük a talajszerkezet változását —{' '}
             <em>az eredmények egyértelműek.</em>
           </motion.p>
 
@@ -75,24 +68,32 @@ export default function HeroPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            {stats.map((stat, index) => {
-              const IconComponent = stat.icon
-              return (
-                <motion.div
-                  key={stat.label}
-                  className={styles.statItem}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.4 + index * 0.1 }}
-                >
-                  <div className={styles.statIcon}>
-                    <IconComponent size={16} />
-                  </div>
-                  <span className={styles.statNumber}>{stat.number}</span>
-                  <span className={styles.statLabel}>{stat.label}</span>
-                </motion.div>
-              )
-            })}
+            {/* Stat 1 */}
+            <div className={styles.statItem}>
+              <div className={styles.statValue}>3</div>
+              <div className={styles.statInfo}>
+                <div className={styles.statLabel}>HELYSZÍN</div>
+                <div className={styles.statDetail}>Szentkirály · Kecskemét · Lakitelek</div>
+              </div>
+            </div>
+
+            {/* Stat 2 */}
+            <div className={styles.statItem}>
+              <div className={styles.statValue}>9</div>
+              <div className={styles.statInfo}>
+                <div className={styles.statLabel}>KEZELÉS KOMBINÁCIÓ</div>
+                <div className={styles.statDetail}>Különböző művelési módok</div>
+              </div>
+            </div>
+
+            {/* Stat 3 */}
+            <div className={styles.statItem}>
+              <div className={styles.statValue}>6</div>
+              <div className={styles.statInfo}>
+                <div className={styles.statLabel}>HÓNAP</div>
+                <div className={styles.statDetail}>Március – Augusztus</div>
+              </div>
+            </div>
           </motion.div>
         </div>
 

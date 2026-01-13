@@ -28,7 +28,7 @@ export default function MethodologyPage() {
           <p className={styles.description}>
             A készülék acél szondatüskéjét kézi erővel, függőlegesen a talajba szúrjuk, egyenletesen haladva.
             A fogantyú közepén elhelyezett manométer mutatja a talaj ellenállását a szonda csúcsánál.
-            A talaj szerkezete <strong>20 bar nyomásig</strong> tekinthető optimálisnak.
+            A talaj szerkezete <strong>20 bar nyomásig</strong> tekinthető optimálisnak, tömörödésmentesnek.
           </p>
 
           <div className={styles.scaleBar}>

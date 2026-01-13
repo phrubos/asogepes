@@ -8,12 +8,12 @@ import styles from '../ProblemNew.module.css'
 
 const cultivatorProblems = [
     {
-        title: 'Szármaradványok a felszínen',
-        description: 'A nehézkultivátor nem tudja bedolgozni a növényi maradványokat a talajba.',
+        title: 'Csekély mértékű átkeverés',
+        description: 'A nehézkultivátor jól lazít, de nem tudja bedolgozni a szármaradványokat és sok esetben rögösít. Az árvakelés és a gyomnövények magjai a felszín közelében maradnak, ahogy a herbicidek szermaradékai is.',
         icon: 'layers',
     },
     {
-        title: 'Lassú és részleges csírázás',
+        title: 'A tarló zöldülése csak részleges',
         description: 'A gyomnövények csírázása a tarlóhántás után lassú és részleges.',
         icon: 'sprout',
     },
@@ -23,7 +23,7 @@ const cultivatorProblems = [
         icon: 'grid',
     },
     {
-        title: 'Kombinátoros ültetés szükséges',
+        title: 'Ültetés előtt elmarkolás szükséges',
         description: 'Ültetésre csak kombinátoros művelés után alkalmas.',
         icon: 'shovel',
     },
@@ -77,20 +77,11 @@ export default function CultivatorProblemsPage() {
                                 alt="Nehézkultivátor"
                                 className={styles.cultivatorImage}
                             />
-                            <div className={styles.imageOverlay}>
-                                <div className={styles.imageLabels}>
-                                    <span className={styles.imageLabel}>25-30 cm mély árkok</span>
-                                </div>
-                            </div>
+
                         </motion.div>
                     </motion.div>
 
-                    <motion.div variants={itemVariants} className={styles.cultivatorText}>
-                        <p className={styles.introText}>
-                            A nehézkultivátor jól lazít, de <strong>nem tudja bedolgozni a szármaradványokat</strong>.
-                            Az árvakelés és a gyomnövények magjai a felszín közelében maradnak.
-                        </p>
-                    </motion.div>
+
                 </div>
 
                 {/* Right Side: Problems Grid */}
@@ -98,7 +89,7 @@ export default function CultivatorProblemsPage() {
                     <motion.div variants={itemVariants}>
                         <span className={styles.pillBadge}>Kiemelhető problémák</span>
                     </motion.div>
-                    
+
                     <div className={styles.cultivatorProblemsGrid}>
                         {cultivatorProblems.map((problem, index) => (
                             <motion.div key={index} variants={itemVariants} style={{ height: '100%' }}>

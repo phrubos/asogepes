@@ -47,7 +47,7 @@ export default function HeroPage() {
                 >
                     <HubFolder
                         onScrollToOperation={() => navigateToPage('operation-principle')}
-                        onScrollToModel={() => navigateToPage('models')}
+                        onScrollToModel={(modelId) => navigateToPage(`models-${modelId}`)}
                         onScrollToGuide={() => navigateToPage('application-guide')}
                     />
                 </motion.div>

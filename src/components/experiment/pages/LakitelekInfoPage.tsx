@@ -12,7 +12,7 @@ const infoItems = [
   { icon: Ruler, label: 'KA érték', value: data.ka },
   { icon: Leaf, label: 'Kultúra', value: data.crop },
   { icon: Droplets, label: 'Öntözés', value: data.irrigation },
-  { icon: Calendar, label: 'Időszak', value: data.period },
+  { icon: Calendar, label: 'Vizsgált időszak', value: data.period },
   { icon: MapPin, label: data.measurementLabel || 'Mérések', value: data.measurements },
 ]
 
@@ -61,6 +61,8 @@ export default function LakitelekInfoPage() {
         {infoItems.map((item, idx) => {
           const IconComponent = item.icon
           const isMeasurement = item.label.includes('mérések') || item.label.includes('Mérések')
+          const isKA = item.label === 'KA érték'
+
           return (
             <motion.div
               key={idx}
@@ -71,7 +73,9 @@ export default function LakitelekInfoPage() {
                 <IconComponent size={16} strokeWidth={1.5} />
               </div>
               <div className={styles.infoContent}>
-                <span className={styles.infoLabel}>{item.label}</span>
+                <span className={styles.infoLabel}>
+                  {isKA ? <>Arany-féle kötöttség (K<sub>A</sub>)</> : item.label}
+                </span>
                 <span className={styles.infoValue}>{item.value}</span>
               </div>
             </motion.div>
@@ -80,18 +84,29 @@ export default function LakitelekInfoPage() {
       </motion.div>
 
       {/* Special card: 7 treatments */}
+      {/* Special card: 7 treatments */}
       <motion.div
-        className={styles.treatmentsCard}
+        className={styles.treatmentsWrapper}
         initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
       >
-        <div className={styles.treatmentsIcon}>
-          <Grid3X3 size={18} strokeWidth={1.5} />
-        </div>
-        <div className={styles.treatmentsContent}>
-          <span className={styles.treatmentsLabel}>Művelések</span>
-          <span className={styles.treatmentsValue}>{data.treatmentCount}</span>
+        <h3 className={styles.treatmentMainHeader}>MŰVELÉSI LÉPÉSEK</h3>
+
+        <div className={styles.treatmentsCard}>
+          <div className={styles.treatmentsContentRow}>
+            <div className={styles.treatmentsIconWrapper}>
+              <div className={styles.treatmentsIcon}>
+                <Grid3X3 size={20} strokeWidth={1.5} />
+              </div>
+            </div>
+            <div className={styles.treatmentsContent}>
+              <span className={styles.treatmentsLabel}>7 művelési kombináció összehasonlítása</span>
+              <p className={styles.treatmentsDescription}>
+                Lakiteleken 7 különböző művelési kombinációt vizsgáltunk egymás mellett, azonos körülmények között. A vizsgálati eredmények feltárják, hogy melyik művelési technológia őrzi meg legjobban a talaj optimálisan laza szerkezetét.
+              </p>
+            </div>
+          </div>
         </div>
       </motion.div>
     </div>

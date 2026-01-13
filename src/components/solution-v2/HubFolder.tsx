@@ -37,7 +37,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
   const [hoveredOption, setHoveredOption] = useState<HoveredOption>(null)
   const [isHubHovered, setIsHubHovered] = useState(false)
   const [hoveredMiniFolder, setHoveredMiniFolder] = useState<string | null>(null)
-  
+
   // Demo animation state
   const [demoState, setDemoState] = useState<DemoState>('idle')
   const [isUserInteracting, setIsUserInteracting] = useState(false)
@@ -52,7 +52,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
     const runNextStep = () => {
       const step = DEMO_SEQUENCE[sequenceIndexRef.current]
       setDemoState(step.state)
-      
+
       demoTimeoutRef.current = setTimeout(() => {
         sequenceIndexRef.current = (sequenceIndexRef.current + 1) % DEMO_SEQUENCE.length
         runNextStep()
@@ -84,13 +84,21 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
   }, [])
 
   // Keep nav visible when hovering over nav buttons
+  // Sticky hover logic: only reset if user clicks outside
+  const handleWrapperClick = useCallback((e: React.MouseEvent) => {
+    // If the click originated from an interactive element, do nothing (handled by button click)
+    // If it's a background click within the hub scene, clear the selection
+    const target = e.target as HTMLElement;
+    if (!target.closest('[data-interactive="true"]')) {
+      setHoveredOption(null);
+    }
+  }, []);
+
   const handleNavMouseEnter = useCallback((type: HoveredOption) => {
     setHoveredOption(type)
   }, [])
 
-  const handleNavMouseLeave = useCallback(() => {
-    setHoveredOption(null)
-  }, [])
+  // Removed handleNavMouseLeave to make it sticky until click
 
   // Animation variants - snappier for dynamic demo
   const hubVariants = {
@@ -218,14 +226,15 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
   const effectiveHoveredOption = isUserInteracting ? hoveredOption : (demoState === 'operation' ? 'operation' : demoState === 'models' ? 'models' : demoState === 'guide' ? 'guide' : null)
 
   return (
-    <div 
+    <div
       className={`${styles.hubScene} ${effectiveHoveredOption ? styles.hubSceneActive : ''}`}
       onMouseEnter={handleUserInteractionStart}
       onMouseLeave={handleUserInteractionEnd}
+      onClick={handleWrapperClick} // Add click handler for clearing selection
     >
       {/* Background Glow */}
       <div className={styles.hubGlow} />
-      
+
       {/* Animated Particles */}
       <div className={styles.particles}>
         {[...Array(6)].map((_, i) => (
@@ -236,7 +245,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
       {/* Connection Lines - SVG Bezier Curves */}
       <AnimatePresence>
         {effectiveHoveredOption === 'operation' && (
-          <motion.svg 
+          <motion.svg
             className={`${styles.connectionSvg} ${styles.connectionSvgLeft}`}
             viewBox="0 0 100 60"
             initial={{ opacity: 0 }}
@@ -327,10 +336,10 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
       {/* Nav Folders: Operation (left side) */}
       <AnimatePresence>
         {effectiveHoveredOption === 'operation' && (
-          <motion.div 
+          <motion.div
             className={`${styles.navGroup} ${styles.navLeft}`}
-            onMouseEnter={() => handleNavMouseEnter('operation')}
-            onMouseLeave={handleNavMouseLeave}
+            data-interactive="true"
+          // Removed onMouseLeave
           >
             <motion.button
               className={`${styles.miniFolder} ${styles.miniFolderGreen} ${hoveredMiniFolder && hoveredMiniFolder !== 'operation' ? styles.miniFolderDimmed : ''}`}
@@ -366,15 +375,15 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
       {/* Nav Folders: Models (right side) */}
       <AnimatePresence>
         {effectiveHoveredOption === 'models' && (
-          <motion.div 
+          <motion.div
             className={`${styles.navGroup} ${styles.navRight}`}
-            onMouseEnter={() => handleNavMouseEnter('models')}
-            onMouseLeave={handleNavMouseLeave}
+            data-interactive="true"
+          // Removed onMouseLeave
           >
             {modelData.map((model, index) => (
               <motion.button
                 key={model.id}
-                className={`${styles.miniFolder} ${styles[`miniFolder${model.color.charAt(0).toUpperCase() + model.color.slice(1)}`]} ${hoveredMiniFolder && hoveredMiniFolder !== model.id ? styles.miniFolderDimmed : ''}`}
+                className={`${styles.miniFolder} ${styles[`miniFolder${model.color.charAt(0).toUpperCase() + model.color.slice(1)}`]}`} // Removed dimmed conditional
                 variants={navButtonVariants}
                 custom={index}
                 initial="hidden"
@@ -394,8 +403,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
                 </div>
                 <div className={styles.miniFolderFront}>
                   <div className={styles.miniFolderImageWrap}>
-                    <img 
-                      src={`/images/${model.name}.png`} 
+                    <img
+                      src={`/images/${model.name}.png`}
                       alt={model.name}
                       className={styles.miniFolderImage}
                     />
@@ -415,8 +424,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
         {effectiveHoveredOption === 'guide' && (
           <motion.div
             className={`${styles.navGroup} ${styles.navLeftLower}`}
-            onMouseEnter={() => handleNavMouseEnter('guide')}
-            onMouseLeave={handleNavMouseLeave}
+            data-interactive="true"
+          // Removed onMouseLeave
           >
             <motion.button
               className={`${styles.miniFolder} ${styles.miniFolderPurple} ${hoveredMiniFolder && hoveredMiniFolder !== 'guide' ? styles.miniFolderDimmed : ''}`}
@@ -475,7 +484,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
         style={{ transformStyle: 'preserve-3d' }}
       >
         {/* Tab */}
-        <motion.div 
+        <motion.div
           className={styles.hubTab}
           variants={tabVariants}
           animate={effectiveHubHovered ? "hover" : "initial"}
@@ -488,13 +497,13 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
 
         {/* Sheets */}
         <div className={styles.hubSheets}>
-          <motion.div 
-            className={styles.hubSheet} 
+          <motion.div
+            className={styles.hubSheet}
             variants={sheetVariants}
             animate={effectiveHubHovered ? "hover" : "initial"}
           />
-          <motion.div 
-            className={styles.hubSheet} 
+          <motion.div
+            className={styles.hubSheet}
             variants={sheet2Variants}
             animate={effectiveHubHovered ? "hover" : "initial"}
           />
@@ -518,10 +527,11 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
             {/* Options */}
             <div className={styles.hubOptions}>
               {/* Option 1: Működési elv */}
-              <div 
+              <div
                 className={`${styles.hubOption} ${effectiveHoveredOption === 'operation' ? styles.hubOptionActive : ''}`}
                 onMouseEnter={() => handleNavMouseEnter('operation')}
-                onMouseLeave={handleNavMouseLeave}
+                data-interactive="true"
+              // Removed onMouseLeave
               >
                 <div className={styles.optionIcon}>
                   <Settings size={18} />
@@ -537,7 +547,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               <div
                 className={`${styles.hubOption} ${effectiveHoveredOption === 'models' ? styles.hubOptionActive : ''}`}
                 onMouseEnter={() => handleNavMouseEnter('models')}
-                onMouseLeave={handleNavMouseLeave}
+                data-interactive="true"
+              // Removed onMouseLeave
               >
                 <div className={styles.optionIcon}>
                   <Folder size={18} />
@@ -553,7 +564,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               <div
                 className={`${styles.hubOption} ${effectiveHoveredOption === 'guide' ? styles.hubOptionActive : ''}`}
                 onMouseEnter={() => handleNavMouseEnter('guide')}
-                onMouseLeave={handleNavMouseLeave}
+                data-interactive="true"
+              // Removed onMouseLeave
               >
                 <div className={styles.optionIcon}>
                   <HelpCircle size={18} />
@@ -566,11 +578,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               </div>
             </div>
 
-            {/* Footer */}
-            <div className={styles.hubFooter}>
-              <span className={styles.hubMeta}>IMANTS Tech</span>
-              <span className={styles.hubVersion}>v2.0</span>
-            </div>
+            {/* Footer Removed */}
           </div>
         </motion.div>
       </motion.div>

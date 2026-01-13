@@ -79,7 +79,8 @@ export default function TiltCard({
         display: 'grid',
         gridTemplateAreas: '"stack"',
         perspective, // Perspective on container usually works best
-        transformStyle: 'preserve-3d'
+        transformStyle: 'preserve-3d',
+        height: '100%'
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}

@@ -20,148 +20,177 @@ export default function InteractiveSoil({ progress, isHovered, setIsHovered }: I
   }, [progress, progressMV])
 
 
-  // --- PATH DEFINITIONS (PREMIUM QUALITY) ---
+  // --- PATH DEFINITIONS (PREMIUM INFOGRAPHIC STYLE) ---
 
-  // 1. STEM (Thirsty Morph)
+  // 1. STEM - Slimmer, more technical
   const stemPaths = [
-    "M295,150 C295,120 298,90 298,60 L302,60 C302,90 305,120 305,150 Z",
-    "M295,150 C295,122 298,95 298,65 L302,65 C302,95 305,122 305,150 Z",
-    "M294,150 C294,125 297,100 297,75 L303,75 C303,100 306,125 306,150 Z",
-    "M294,150 C294,125 298,105 298,85 L302,85 C302,105 306,125 306,150 Z",
-    "M293,150 C293,130 299,110 299,95 L301,95 C301,110 307,130 307,150 Z"
+    // 0: Healthy
+    "M298,150 L298,80 L302,80 L302,150 Z",
+    // 1: Slightly Stressed
+    "M298,150 L298,85 L302,85 L302,150 Z",
+    // 2: Stunted start
+    "M298,150 L298,95 L302,95 L302,150 Z",
+    // 3: Stunted more
+    "M298,150 L299,105 L301,105 L301,150 Z",
+    // 4: Critical
+    "M299,150 L299,115 L301,115 L301,150 Z"
   ]
 
-  // 2. LEAVES (Organic Morph - NO Clipping)
+  // 2. LEAVES - Sharp, corn/crop style
   const leavesPaths = [
-    // 0: Perky
-    "M298,100 Q250,60 200,80 Q250,110 298,110 M302,105 Q350,65 400,85 Q350,115 302,115",
+    // 0: Vigorously Up
+    "M298,100 Q260,60 220,70 Q260,110 298,110 M302,100 Q340,60 380,70 Q340,110 302,110",
 
-    // 1: Slightly lower
-    "M298,105 Q250,75 200,95 Q250,115 298,115 M302,110 Q350,80 400,100 Q350,120 302,120",
+    // 1: Neutral
+    "M298,105 Q260,80 220,90 Q260,115 298,115 M302,105 Q340,80 380,90 Q340,115 302,115",
 
-    // 2: Horizontal / Neutral
-    "M298,110 Q250,100 205,115 Q250,125 298,120 M302,115 Q350,105 395,120 Q350,130 302,125",
+    // 2: Flat
+    "M298,110 Q260,100 220,110 Q260,120 298,120 M302,110 Q340,100 380,110 Q340,120 302,120",
 
     // 3: Drooping
-    "M296,115 Q240,125 210,140 Q250,150 296,128 M304,120 Q360,130 390,145 Q350,148 304,133",
+    "M298,115 Q260,130 230,140 Q260,140 298,125 M302,115 Q340,130 370,140 Q340,140 302,125",
 
-    // 4: Wilted / Thirsty (Right leaf raised)
-    // Left Tip: 220,148. Right Tip: 380,148. (Strictly < 150)
-    "M295,125 Q245,140 220,148 Q250,150 295,135 M305,130 Q355,140 380,148 Q350,150 305,140"
+    // 4: Wilted (Small)
+    "M299,120 Q270,135 250,140 Q270,145 299,130 M301,120 Q330,135 350,140 Q330,145 301,130"
   ]
 
-  // 3. ROOTS - "Fountain Style" (As per reference image)
+  // 3. ROOTS - Complex, fibrous network
   const rootMassPaths = [
-    // 0: Full Extension (Healthy)
-    `M300,150 Q280,250 230,400 
-       M300,150 Q290,280 270,420 
-       M300,150 Q310,280 330,420 
-       M300,150 Q320,250 370,400`,
+    // 0: Deep, Extensive System
+    "M300,150 C300,200 280,300 240,430 M300,150 C300,220 320,300 360,430 M300,150 C290,250 260,350 250,450 M300,150 C310,250 340,350 350,450 M300,150 C300,180 220,200 210,250 M300,150 C300,180 380,200 390,250",
 
-    // 1: Slightly less spread?
-    `M300,150 Q280,250 230,380 
-       M300,150 Q290,280 270,400 
-       M300,150 Q310,280 330,400 
-       M300,150 Q320,250 370,380`,
+    // 1: Good but slight restrict
+    "M300,150 C300,200 280,300 240,400 M300,150 C300,220 320,300 360,400 M300,150 C290,250 260,350 250,420 M300,150 C310,250 340,350 350,420 M300,150 C300,180 220,200 210,250 M300,150 C300,180 380,200 390,250",
 
-    // 2: Starting to hit layer?
-    `M300,150 Q280,250 230,350 
-       M300,150 Q290,280 270,370 
-       M300,150 Q310,280 330,370 
-       M300,150 Q320,250 370,350`,
+    // 2: Hitting Pan
+    "M300,150 C300,200 280,280 250,330 M300,150 C300,220 320,280 350,330 M300,150 C290,250 270,300 260,340 M300,150 C310,250 330,300 340,340 M300,150 C300,180 220,200 210,250 M300,150 C300,180 380,200 390,250",
 
-    // 3: Diverting
-    `M300,150 Q270,200 220,220 
-       M300,150 Q285,220 250,230 
-       M300,150 Q315,220 350,230 
-       M300,150 Q330,200 380,220`,
+    // 3: J-Hook / Horizontal deflection
+    "M300,150 C290,190 270,215 220,220 M300,150 C310,190 330,215 380,220 M300,150 C295,200 260,210 240,230 M300,150 C305,200 340,210 360,230 M300,150 C300,180 250,190 240,200 M300,150 C300,180 350,190 360,200",
 
-    // 4: Shallow / Surface (Compacted)
-    `M300,150 Q260,180 210,185 
-       M300,150 Q280,185 240,190 
-       M300,150 Q320,185 360,190 
-       M300,150 Q340,180 390,185`
+    // 4: Shallow Surface Mat
+    "M300,150 C290,170 250,175 200,180 M300,150 C310,170 350,175 400,180 M300,150 C280,165 240,170 220,185 M300,150 C320,165 360,170 380,185 M300,150 C290,160 260,165 250,170 M300,150 C310,160 340,165 350,170"
   ]
 
-  // 4. SPECIAL ROOT (Shortened + Zigzag)
-  const specialRootPaths = [
-    "M300,150 Q300,250 300,450 M300,255 L300,255 M300,255 L300,255",
-    "M300,150 Q300,250 300,450 M300,255 L300,255 M300,255 L300,255",
-    "M300,150 Q300,250 300,400 M300,255 L300,255 M300,255 L300,255",
-    "M300,150 Q300,250 290,350 M300,255 L280,275 M300,255 L320,275",
-    "M300,150 Q300,200 300,295 M300,255 L260,285 M300,255 L340,285"
+  // 4. TAP ROOT - The main anchor - FIX: Remains straight and penetrates INTO the pan
+  const tapRootPaths = [
+    "M300,150 L300,450", // 0
+    "M300,150 L300,420", // 1
+    "M300,150 L300,300", // 2 
+    "M300,150 L300,230", // 3 - Stuck deep in the layer (Start 190, End 230)
+    "M300,150 L300,210"  // 4 - Stuck shallow in the layer (Start 190, End 210)
   ]
 
+  // Constants for Compaction Layer Zone
+  const PAN_START_Y = 190;
+  const PAN_HEIGHT = 60; // Thicker layer visualization
 
   // --- INTERPOLATIONS ---
+  // Layer Color: Green -> Yellow -> Orange -> Red
   const layerColor = useTransform(activeProgress, [0, 1, 2, 3, 4],
     ['#4CAF50', '#8BC34A', '#FFC107', '#FF9800', '#D32F2F'])
-  const layerOpacity = useTransform(activeProgress, [0, 4], [0.2, 0.5])
-  const textOpacity = useTransform(activeProgress, [0, 4], [0.5, 1])
 
+  const layerBorderColor = useTransform(activeProgress, [0, 2, 4],
+    ['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0.4)'])
+
+  // Plant Health Colors
+  const plantColor = useTransform(activeProgress, [0, 4], ['#66BB6A', '#9E9D24']) // Fresh Green -> Olive/Dry
+  const rootColor = '#EFEBE9' // Off-white roots
+
+  // Geometry Transforms
   const stemD = useTransform(activeProgress, [0, 1, 2, 3, 4], stemPaths)
   const leavesD = useTransform(activeProgress, [0, 1, 2, 3, 4], leavesPaths)
   const rootsMassD = useTransform(activeProgress, [0, 1, 2, 3, 4], rootMassPaths)
-  const specialRootD = useTransform(activeProgress, [0, 1, 2, 3, 4], specialRootPaths)
-
-  const plantColor = useTransform(activeProgress, [0, 4], ['#2E7D32', '#558B2F'])
-  const leafColor = useTransform(activeProgress, [0, 4], ['#43A047', '#827717'])
-  const rootColor = '#8D6E63';
+  const tapRootD = useTransform(activeProgress, [0, 1, 2, 3, 4], tapRootPaths)
 
   // Water Logic
-  const waterThroughOpacity = useTransform(activeProgress, [0, 2, 4], [1, 0.5, 0])
-  const waterPoolOpacity = useTransform(activeProgress, [0, 2.5, 4], [0, 0.1, 0.6])
+  const waterFlowOpacity = useTransform(activeProgress, [0, 2, 3.5], [0.8, 0.5, 0])
 
-  const PAN_START_Y = 185;
-  const PAN_END_Y = 255;
+  // Water pools ON TOP of the pan layer (internal waterlogging)
+  const waterPoolOpacity = useTransform(activeProgress, [2.5, 4], [0, 0.9])
+  const waterPoolHeight = useTransform(activeProgress, [2.5, 4], [0, 15])
 
-  const skyRain = useMemo(() => Array.from({ length: 15 }, (_, i) => ({
-    id: i, x: 50 + Math.random() * 500, delay: Math.random() * 2
+  // Rain fading: Opacity for drops BELOW the layer
+  // They should be visible at 0, and invisible at 4
+  const deepRainOpacity = useTransform(activeProgress, [1, 3.5], [1, 0])
+
+
+  // Particle Systems
+  const skyRain = useMemo(() => Array.from({ length: 40 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 600,
+    delay: Math.random() * 5,
+    dur: 1.5 + Math.random() // varied speed
   })), [])
-  const soilDrops = useMemo(() => Array.from({ length: 25 }, (_, i) => ({
-    id: i, x: 50 + Math.random() * 500, delay: Math.random() * 2.5
+
+  const soilDrops = useMemo(() => Array.from({ length: 60 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 600,
+    delay: Math.random() * 4,
+    dur: 2 + Math.random() * 2 // Slower in soil
   })), [])
 
   return (
     <motion.div
-      className="relative w-full h-full bg-[#1a1a1a] rounded-xl overflow-hidden shadow-2xl border border-white/10"
+      className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl border border-white/5"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      style={{ cursor: isHovered ? 'grab' : 'default' }}
+      style={{
+        cursor: isHovered ? 'grab' : 'default',
+        background: 'radial-gradient(circle at 50% 30%, #2c3e50 0%, #1a1a1a 100%)' // Fallback bg
+      }}
     >
       <div className="w-full h-full relative select-none" style={{ pointerEvents: 'none' }}>
         <svg viewBox="0 0 600 500" className="w-full h-full absolute inset-0">
           <defs>
+            {/* 1. SKY GRADIENT - Atmospheric */}
             <linearGradient id="skyGradientPremium" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4FC3F7" />
-              <stop offset="60%" stopColor="#81D4FA" />
-              <stop offset="100%" stopColor="#B3E5FC" />
+              <stop offset="0%" stopColor="#0288D1" />
+              <stop offset="50%" stopColor="#81D4FA" />
+              <stop offset="100%" stopColor="#E1F5FE" />
             </linearGradient>
 
-            <pattern id="soilTexture" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-              <rect x="0" y="0" width="10" height="10" fill="#3E2723" />
-              <circle cx="2" cy="2" r="1.5" fill="#4E342E" />
-              <circle cx="7" cy="8" r="1" fill="#5D4037" />
+            {/* 2. SOIL TEXTURE - Realistic Noise */}
+            <filter id="soilNoise" x="0%" y="0%" width="100%" height="100%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="noise" />
+              <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0" in="noise" result="coloredNoise" />
+              <feComposite operator="in" in="coloredNoise" in2="SourceGraphic" result="composite" />
+              <feBlend mode="multiply" in="composite" in2="SourceGraphic" />
+            </filter>
+
+            {/* 3. SOIL GRADIENT - Deep Earth */}
+            <linearGradient id="soilDeepGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#5D4037" />   {/* Brown 700 */}
+              <stop offset="60%" stopColor="#3E2723" />  {/* Brown 900 */}
+              <stop offset="100%" stopColor="#1a0f0a" /> {/* Very Dark */}
+            </linearGradient>
+
+            {/* 4. COMPACTED LAYER PATTERN */}
+            <pattern id="compactedPattern" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+              <rect width="8" height="8" fill="#4E342E" />
+              <path d="M0,8 L8,0 M-2,2 L2,-2 M6,10 L10,6" stroke="#3E2723" strokeWidth="1" />
             </pattern>
-            <linearGradient id="soilDepth" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(0,0,0,0)" />
-              <stop offset="100%" stopColor="rgba(0,0,0,0.6)" />
-            </linearGradient>
 
-            <filter id="sunGlow">
-              <feGaussianBlur stdDeviation="8" result="coloredBlur" />
+            {/* 5. GLOWS */}
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
               <feMerge>
                 <feMergeNode in="coloredBlur" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
 
-            <mask id="waterFlowMask">
+            {/* 6. WATER MASK - Dynamic fading */}
+            <mask id="waterMask">
+              {/* Top region: Always allow water */}
               <rect x="0" y="150" width="600" height={PAN_START_Y - 150} fill="white" />
+
+              {/* Bottom region: Fades out as compaction increases */}
               <motion.rect
-                x="0" y={PAN_START_Y} width="600" height={500 - PAN_START_Y}
+                x="0" y={PAN_START_Y}
+                width="600" height={500 - PAN_START_Y}
                 fill="white"
-                style={{ opacity: waterThroughOpacity }}
+                style={{ opacity: deepRainOpacity }}
               />
             </mask>
           </defs>
@@ -169,141 +198,199 @@ export default function InteractiveSoil({ progress, isHovered, setIsHovered }: I
           {/* === SKY === */}
           <rect x="0" y="0" width="600" height="150" fill="url(#skyGradientPremium)" />
 
+          {/* Subtle clouds/atmosphere could go here */}
+
+          {/* === RAIN (Atmospheric) === */}
           <g>
             {skyRain.map(p => (
-              <circle key={p.id} cx={p.x} cy="0" r="1.5" fill="rgba(255,255,255,0.6)">
-                <animate attributeName="cy" from="-10" to="160" dur="0.8s" begin={`${p.delay}s`} repeatCount="indefinite" />
-              </circle>
+              <line
+                key={p.id}
+                x1={p.x} y1="-20" x2={p.x - 5} y2="0"
+                stroke="rgba(255,255,255,0.4)"
+                strokeWidth="1"
+              >
+                <animate
+                  attributeName="y1" from="-20" to="160" dur={`${p.dur}s`}
+                  begin={`${p.delay}s`} repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="y2" from="0" to="180" dur={`${p.dur}s`}
+                  begin={`${p.delay}s`} repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="x1" from={p.x} to={p.x - 30} dur={`${p.dur}s`}
+                  begin={`${p.delay}s`} repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="x2" from={p.x - 5} to={p.x - 35} dur={`${p.dur}s`}
+                  begin={`${p.delay}s`} repeatCount="indefinite"
+                />
+              </line>
             ))}
           </g>
 
           {/* === SUN === */}
-          <motion.g
-            initial={{ opacity: 0.9, scale: 1 }}
-            animate={{ scale: [1, 1.05, 1], opacity: [0.9, 1, 0.9] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            style={{ transformOrigin: "520px 60px" }}
-          >
-            <circle cx="520" cy="60" r="45" fill="#FFF9C4" opacity="0.4" filter="url(#sunGlow)" />
-            <circle cx="520" cy="60" r="25" fill="#FDD835" />
-          </motion.g>
+          <g transform="translate(520, 60)">
+            <circle r="40" fill="#FFF176" opacity="0.2" filter="url(#glow)" />
+            <circle r="25" fill="#FDD835" />
+          </g>
 
           {/* === SOIL === */}
-          <rect x="0" y="150" width="600" height="350" fill="url(#soilTexture)" />
-          <rect x="0" y="150" width="600" height="350" fill="url(#soilDepth)" style={{ mixBlendMode: 'multiply' }} />
+          {/* Base Layer */}
+          <rect x="0" y="150" width="600" height="350" fill="url(#soilDeepGradient)" />
+          {/* Noise Texture Overlay */}
+          <rect x="0" y="150" width="600" height="350" fill="url(#soilDeepGradient)" filter="url(#soilNoise)" opacity="0.6" style={{ mixBlendMode: 'overlay' }} />
+
+
+          {/* === COMPACTED LAYER (Dynamic Color, Constant Visibility) === */}
+          <g>
+            {/* Pattern texture always visible but subtle */}
+            <rect
+              x="0" y={PAN_START_Y} width="600" height={PAN_HEIGHT}
+              fill="url(#compactedPattern)"
+              opacity="0.2"
+            />
+            {/* Colored Overlay that changes with progress */}
+            <motion.rect
+              x="0" y={PAN_START_Y} width="600" height={PAN_HEIGHT}
+              fill={layerColor}
+              style={{
+                mixBlendMode: 'normal',
+                opacity: 0.5
+              }}
+            />
+            {/* Top/Bottom definition lines */}
+            <motion.line
+              x1="0" y1={PAN_START_Y} x2="600" y2={PAN_START_Y}
+              stroke={layerBorderColor} strokeWidth="2" strokeDasharray="6 4"
+            />
+            <motion.line
+              x1="0" y1={PAN_START_Y + PAN_HEIGHT} x2="600" y2={PAN_START_Y + PAN_HEIGHT}
+              stroke={layerBorderColor} strokeWidth="1" strokeDasharray="2 4"
+            />
+          </g>
+
 
           {/* === WATER INFILTRATION === */}
-          <g mask="url(#waterFlowMask)">
+          <g mask="url(#waterMask)">
             {soilDrops.map(p => (
-              <circle key={p.id} cx={p.x} cy="150" r="2" fill="#29B6F6" opacity="0.6">
-                <animate attributeName="cy" from="150" to="500" dur="2s" begin={`${p.delay}s`} repeatCount="indefinite" />
+              <circle key={p.id} r={Math.random() * 1.5 + 0.5} fill="#4FC3F7" opacity="0.5">
+                <animate
+                  attributeName="cx" from={p.x} to={p.x}
+                  dur="0.1s" fill="freeze"
+                />
+                <animate
+                  attributeName="cy" from="150" to="520"
+                  dur={`${p.dur}s`} begin={`${p.delay}s`}
+                  repeatCount="indefinite"
+                />
+                {/* Fade out as it goes deep */}
+                <animate
+                  attributeName="opacity" values="0.5;0.5;0"
+                  dur={`${p.dur}s`} begin={`${p.delay}s`}
+                  repeatCount="indefinite"
+                />
               </circle>
             ))}
           </g>
 
-          {/* === COMPACTED LAYER === */}
+          {/* === WATER POOLING (INTERNAL) === */}
+          {/* Pools ON TOP of the pan layer (PAN_START_Y) */}
           <motion.rect
             x="0"
-            y={PAN_START_Y}
+            y={useTransform(waterPoolHeight, h => PAN_START_Y - h)}
             width="600"
-            height={PAN_END_Y - PAN_START_Y}
-            fill={layerColor}
-            style={{
-              opacity: layerOpacity,
-              mixBlendMode: 'overlay'
-            }}
-          />
-          <motion.line x1="0" y1={PAN_START_Y} x2="600" y2={PAN_START_Y} stroke={layerColor} strokeWidth="1" strokeDasharray="4 4" strokeOpacity={0.8} />
-          <motion.line x1="0" y1={PAN_END_Y} x2="600" y2={PAN_END_Y} stroke={layerColor} strokeWidth="1" strokeDasharray="4 4" strokeOpacity={0.8} />
-
-
-          {/* === WATER POOLING === */}
-          <motion.rect
-            x="0"
-            y={PAN_START_Y - 10}
-            width="600"
-            height="15"
-            fill="#039BE5"
-            filter="blur(5px)"
+            height={waterPoolHeight}
+            fill="#0288D1"
             style={{
               opacity: waterPoolOpacity,
               mixBlendMode: 'hard-light'
             }}
           />
-          <motion.rect
-            x="0"
-            y="150"
-            width="600"
-            height={PAN_START_Y - 150}
-            fill="#039BE5"
-            style={{
-              opacity: useTransform(activeProgress, [0, 2.5, 4], [0, 0, 0.2]),
-              mixBlendMode: 'overlay'
-            }}
-          />
 
 
-          {/* === ROOTS === */}
+          {/* === PLANTS & ROOTS === */}
+
+          {/* Roots - Background (Finer hairs) */}
           <motion.path
             d={rootsMassD}
             stroke={rootColor}
-            strokeWidth="3.5"
+            strokeWidth="1"
             fill="none"
+            opacity="0.6"
             strokeLinecap="round"
             strokeLinejoin="round"
-            filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.5))"
-          />
-          <motion.path
-            d={specialRootD}
-            stroke="#A1887F"
-            strokeWidth="3"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.5))"
           />
 
-          {/* === PLANT === */}
+          {/* Roots - Main System */}
+          <motion.path
+            d={rootsMassD}
+            stroke={rootColor}
+            strokeWidth="2.5"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            filter="drop-shadow(2px 2px 2px rgba(0,0,0,0.5))"
+          />
+
+          {/* Tap Root (The Anchor) */}
+          <motion.path
+            d={tapRootD}
+            stroke={rootColor}
+            strokeWidth="4"
+            fill="none"
+            strokeLinecap="round"
+            style={{ pathLength: 1 }}
+          />
+
+
+          {/* Stem & Leaves */}
           <motion.path
             d={stemD}
             fill={plantColor}
             stroke="#1B5E20"
             strokeWidth="0.5"
+            filter="drop-shadow(3px 5px 2px rgba(0,0,0,0.3))"
           />
           <motion.path
             d={leavesD}
-            fill={leafColor}
+            fill={plantColor}
             stroke="#1B5E20"
             strokeWidth="0.5"
-            style={{ transformOrigin: "300px 150px" }}
+            style={{ transformOrigin: "300px 110px" }}
+            filter="drop-shadow(3px 5px 2px rgba(0,0,0,0.3))"
           />
+
 
           {/* === ANNOTATIONS === */}
 
+          {/* Compaction Label */}
           <motion.text
-            x="20"
-            y={PAN_END_Y - 10}
+            x="30"
+            y={PAN_START_Y + 35}
             textAnchor="start"
-            fill="rgba(255,255,255,1)"
+            fill="rgba(255,255,255,0.9)"
             style={{
-              opacity: textOpacity,
-              fontSize: '13px',
-              fontWeight: '900',
-              textShadow: '0 2px 4px rgba(0,0,0,0.9)',
-              letterSpacing: '1px',
-              textTransform: 'uppercase'
+              fontSize: '14px',
+              fontFamily: 'monospace',
+              fontWeight: 'bold',
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+              textShadow: '0 2px 4px rgba(0,0,0,0.9)'
             }}
           >
-            TÖMÖRÖDÖTT RÉTEG
+            Tömörödött Réteg
           </motion.text>
 
+          {/* Depth Ruler */}
           <g transform="translate(560, 150)">
-            {/* Background Removed */}
+            <rect x="0" y="0" width="40" height="350" fill="url(#soilDeepGradient)" opacity="0.8" />
+            <line x1="0" y1="0" x2="0" y2="350" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
             {[0, 10, 20, 30, 40, 50].map((cm, i) => (
               <g key={cm} transform={`translate(0, ${i * 70})`}>
-                <line x1="0" y1="0" x2="8" y2="0" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
-                <text x="36" y="4" textAnchor="end" fill="rgba(255,255,255,0.8)" fontSize="10px" fontWeight="bold">
-                  {cm}cm
+                <line x1="-5" y1="0" x2="5" y2="0" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
+                <text x="10" y="4" textAnchor="start" fill="rgba(255,255,255,0.6)" fontSize="10px" fontWeight="normal" style={{ fontFamily: 'monospace' }}>
+                  -{cm}cm
                 </text>
               </g>
             ))}
@@ -311,6 +398,12 @@ export default function InteractiveSoil({ progress, isHovered, setIsHovered }: I
 
         </svg>
 
+        {/* Overlay Vignette for integration */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.4) 100%)'
+          }}
+        />
       </div>
     </motion.div>
   )

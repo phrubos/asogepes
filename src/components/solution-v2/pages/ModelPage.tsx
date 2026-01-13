@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import ModelSection from '../ModelSection'
-import FieldDataModal from '../FieldDataModal'
 import styles from './ModelsPage.module.css' // We can reuse the header styles if needed, or inline them. 
 // Actually, let's look at ModelsPage.module.css to see if we can reuse or if we should create ModelPage.module.css
 // The design in ModelsPage had a header "IMANTS DUPLAROTOROS...". 
@@ -19,8 +18,6 @@ interface ModelPageProps {
 }
 
 export default function ModelPage({ modelId }: ModelPageProps) {
-    const [modalOpen, setModalOpen] = useState(false)
-
     return (
         <div style={{ padding: '0 var(--space-xl) var(--space-4xl)', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
             <motion.div
@@ -28,17 +25,8 @@ export default function ModelPage({ modelId }: ModelPageProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
             >
-                <ModelSection
-                    modelId={modelId}
-                    onOpenModal={() => setModalOpen(true)}
-                />
+                <ModelSection modelId={modelId} />
             </motion.div>
-
-            <FieldDataModal
-                isOpen={modalOpen}
-                onClose={() => setModalOpen(false)}
-                modelId={modelId}
-            />
         </div>
     )
 }

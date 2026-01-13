@@ -46,9 +46,38 @@ export default function ResearchHero({ onLocationClick }: ResearchHeroProps) {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             Három helyszínen, 9 különböző művelési kombinációval,
-            négy hónapon át mértük a talajszerkezet változását —{' '}
+            hat hónapon át mértük a talajszerkezet változását —{' '}
             <em>az eredmények egyértelműek.</em>
           </motion.p>
+
+          {/* Stats Row */}
+          <motion.div
+            className={styles.statsRow}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            {/* Stat 1 */}
+            <div className={styles.statItem}>
+              <div className={styles.statValue}>3</div>
+              <div className={styles.statLabel}>HELYSZÍN</div>
+              <div className={styles.statDetail}>Szentkirály · Kecskemét · Lakitelek</div>
+            </div>
+
+            {/* Stat 2 */}
+            <div className={styles.statItem}>
+              <div className={styles.statValue}>9</div>
+              <div className={styles.statLabel}>KEZELÉS KOMBINÁCIÓ</div>
+              <div className={styles.statDetail}>Különböző művelési módok</div>
+            </div>
+
+            {/* Stat 3 */}
+            <div className={styles.statItem}>
+              <div className={styles.statValue}>6</div>
+              <div className={styles.statLabel}>HÓNAP</div>
+              <div className={styles.statDetail}>Március – Augusztus</div>
+            </div>
+          </motion.div>
 
           {/* Penetrometer Info - Hover Trigger */}
           <motion.div
@@ -84,7 +113,7 @@ export default function ResearchHero({ onLocationClick }: ResearchHeroProps) {
                       <span className={styles.popupBadge}>Módszertan</span>
                     </div>
                   </div>
-                  
+
                   <p className={styles.popupText}>
                     A készülék acél szondatüskéjét kézi erővel, függőlegesen a talajba szúrjuk, egyenletesen haladva.
                     A fogantyú közepén elhelyezett manométer mutatja a talaj ellenállását a szonda csúcsánál,

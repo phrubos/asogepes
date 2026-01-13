@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <img id="orig" src="/images/hero_original.png" onload="check()">
+    <img id="mod" src="/images/hero_corrected.png" onload="check()">
+    <div id="results">Waiting...</div>
+    <script>
+        function check() {
+            const orig = document.getElementById('orig');
+            const mod = document.getElementById('mod');
+            if (orig.naturalWidth && mod.naturalWidth) {
+                document.getElementById('results').innerText = 
+                    `Original: ${orig.naturalWidth}x${orig.naturalHeight}, Modified: ${mod.naturalWidth}x${mod.naturalHeight}`;
+            }
+        }
+    </script>
+</body>
+</html>

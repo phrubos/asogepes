@@ -12,7 +12,7 @@ const infoItems = [
   { icon: Ruler, label: 'KA érték', value: data.ka },
   { icon: Leaf, label: 'Kultúra', value: data.crop },
   { icon: Droplets, label: 'Öntözés', value: data.irrigation },
-  { icon: Calendar, label: 'Időszak', value: data.period },
+  { icon: Calendar, label: 'Vizsgált időszak', value: data.period },
   { icon: MapPin, label: data.measurementLabel || 'Mérések', value: data.measurements },
 ]
 
@@ -61,6 +61,8 @@ export default function KecskemétInfoPage() {
         {infoItems.map((item, idx) => {
           const IconComponent = item.icon
           const isMeasurement = item.label.includes('mérések') || item.label.includes('Mérések')
+          const isKA = item.label === 'KA érték'
+
           return (
             <motion.div
               key={idx}
@@ -71,7 +73,9 @@ export default function KecskemétInfoPage() {
                 <IconComponent size={16} strokeWidth={1.5} />
               </div>
               <div className={styles.infoContent}>
-                <span className={styles.infoLabel}>{item.label}</span>
+                <span className={styles.infoLabel}>
+                  {isKA ? <>Arany-féle kötöttség (K<sub>A</sub>)</> : item.label}
+                </span>
                 <span className={styles.infoValue}>{item.value}</span>
               </div>
             </motion.div>
@@ -86,6 +90,8 @@ export default function KecskemétInfoPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
       >
+        <h3 className={styles.treatmentMainHeader}>MŰVELÉSI LÉPÉSEK</h3>
+
         {/* Control Treatment */}
         <div className={`${styles.treatment} ${styles.treatmentControl}`}>
           <div className={styles.treatmentHeader}>

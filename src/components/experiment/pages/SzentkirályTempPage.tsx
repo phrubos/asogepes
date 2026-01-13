@@ -22,7 +22,7 @@ export default function SzentkirályTempPage() {
                     <MapPin size={12} />
                     <span>Szentkirály</span>
                 </div>
-                <h3 className={styles.headerTitle}>Talajhőmérséklet vizsgálat</h3>
+                <h3 className={styles.headerTitle}>Talajhőmérséklet</h3>
             </motion.div>
 
             {/* Content */}

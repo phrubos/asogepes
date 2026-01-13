@@ -26,9 +26,9 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
   const isInView = useInView(containerRef, { once: true, margin: '-50px' })
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [hoveredBar, setHoveredBar] = useState<'spade' | 'control' | null>(null)
-  
+
   const maxValue = Math.max(...data.flatMap(d => [d.spade, d.control])) * 1.15
-  
+
   const spadeChange = data[data.length - 1].spade - data[0].spade
   const controlChange = data[data.length - 1].control - data[0].control
 
@@ -78,14 +78,14 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
   return (
     <div ref={containerRef} className={styles.container}>
       {/* Header with animated line */}
-      <motion.div 
+      <motion.div
         className={styles.header}
         initial={{ opacity: 0, y: -10 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5 }}
       >
         <h4 className={styles.title}>{title}</h4>
-        <motion.div 
+        <motion.div
           className={styles.titleLine}
           initial={{ scaleX: 0 }}
           animate={isInView ? { scaleX: 1 } : {}}
@@ -110,24 +110,24 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
         </div>
 
         {/* Timeline points */}
-        <motion.div 
+        <motion.div
           className={styles.timeline}
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
           {data.map((point, index) => (
-            <motion.div 
-              key={index} 
+            <motion.div
+              key={index}
               className={styles.timepoint}
               variants={itemVariants}
               onHoverStart={() => setHoveredIndex(index)}
               onHoverEnd={() => setHoveredIndex(null)}
             >
               {/* Month pill */}
-              <motion.div 
+              <motion.div
                 className={styles.month}
-                animate={hoveredIndex === index ? { 
+                animate={hoveredIndex === index ? {
                   scale: 1.05,
                   backgroundColor: 'rgba(212, 168, 75, 0.15)'
                 } : {}}
@@ -135,7 +135,7 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
               >
                 {point.month}
               </motion.div>
-              
+
               {/* Bars - Kontroll előrébb (balra), majd Ásógép (jobbra) */}
               <div className={styles.bars}>
                 {/* Control bar - ELSŐ */}
@@ -239,10 +239,10 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
                   </motion.div>
                 </motion.div>
               </div>
-              
+
               {/* Animated connector */}
               {index < data.length - 1 && (
-                <motion.div 
+                <motion.div
                   className={styles.connector}
                   initial={{ opacity: 0, scaleX: 0 }}
                   animate={isInView ? { opacity: 1, scaleX: 1 } : {}}
@@ -255,7 +255,7 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
           ))}
         </motion.div>
       </div>
-      
+
       {/* Summary section with evaluation cards and note */}
       <motion.div
         className={styles.summarySection}
@@ -273,10 +273,6 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
               <span className={styles.summaryDot} />
               <span className={styles.summaryLabel}>Kontroll művelés</span>
             </div>
-            <div className={`${styles.summaryValue} ${controlChange <= 0 ? styles.good : styles.bad}`}>
-              {getTrendIcon(controlChange)}
-              <span>{controlChange > 0 ? '+' : ''}{controlChange} cm</span>
-            </div>
             {evaluations?.control && (
               <p className={styles.summaryText}>{evaluations.control}</p>
             )}
@@ -289,10 +285,6 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
             <div className={styles.summaryHeader}>
               <span className={styles.summaryDot} />
               <span className={styles.summaryLabel}>Ásógépes művelés</span>
-            </div>
-            <div className={`${styles.summaryValue} ${spadeChange <= 0 ? styles.good : styles.bad}`}>
-              {getTrendIcon(spadeChange)}
-              <span>{spadeChange > 0 ? '+' : ''}{spadeChange} cm</span>
             </div>
             {evaluations?.spade && (
               <p className={styles.summaryText}>{evaluations.spade}</p>

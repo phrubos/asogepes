@@ -54,7 +54,7 @@
 /* Info Grid - 6 cards */
 .infoGrid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-md);
 }
 
@@ -125,47 +125,91 @@
 }
 
 /* Treatments Card - Special full-width card */
-.treatmentsCard {
+.treatmentsWrapper {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  width: 100%;
+}
+
+.treatmentsCard {
+  background: linear-gradient(135deg, rgba(26, 23, 20, 0.8) 0%, rgba(35, 30, 25, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: var(--space-md);
-  padding: var(--space-lg) var(--space-xl);
-  background: linear-gradient(135deg, rgba(212, 168, 75, 0.08) 0%, rgba(212, 168, 75, 0.04) 100%);
-  border: 1px solid rgba(212, 168, 75, 0.2);
-  border-radius: 12px;
-  justify-content: center;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.treatmentsCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 14px 14px 0 0;
+  background: var(--color-gold);
+}
+
+.treatmentMainHeader {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-xs);
+}
+
+.treatmentsContentRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.treatmentsIconWrapper {
+  flex-shrink: 0;
 }
 
 .treatmentsIcon {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(212, 168, 75, 0.15);
   border: 1px solid rgba(212, 168, 75, 0.3);
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--color-gold);
 }
 
 .treatmentsContent {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-sm);
 }
 
 .treatmentsLabel {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.treatmentsValue {
-  font-size: 1.125rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
   font-weight: 700;
   color: var(--color-gold);
+}
+
+.treatmentsDescription {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
 }
 
 /* ============================================

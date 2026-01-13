@@ -112,7 +112,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
       <div className={styles.mapContainer}>
         <div className={styles.mapLabel}>
           <span>Magyarország</span>
-          <span className={styles.mapLabelSub}>Kutatási helyszínek</span>
+          <span className={styles.mapLabelSub}>Kísérleti helyszínek</span>
         </div>
       </div>
     )
@@ -301,7 +301,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
         transition={{ delay: 1.8 }}
       >
         <span>Magyarország</span>
-        <span className={styles.mapLabelSub}>Kutatási helyszínek</span>
+        <span className={styles.mapLabelSub}>Kísérleti helyszínek</span>
       </motion.div>
     </div>
   )

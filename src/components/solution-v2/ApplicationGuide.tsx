@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
-import { Shovel, Layers, Combine, Star, ChevronRight } from 'lucide-react'
+import { Shovel, Layers, Combine, Star, ChevronRight, ChevronsDown } from 'lucide-react'
 import styles from './ApplicationGuide.module.css'
 
 interface ApplicationMode {
@@ -20,11 +20,11 @@ interface ApplicationMode {
 const applicationModes: ApplicationMode[] = [
   {
     id: 'solo',
-    title: 'Önálló ásógép',
+    title: 'Ásógép',
     subtitle: 'Csak ásógép, más eszköz nélkül',
     icon: <Shovel size={32} />,
     when: 'Első alkalmazás, jó szerkezetű talaj',
-    soilType: 'Homokos, lazább talajok',
+    soilType: 'Laza szerkezetű talajok',
     rating: 4,
     isBest: false,
     color: '#8B7355'
@@ -32,17 +32,28 @@ const applicationModes: ApplicationMode[] = [
   {
     id: 'with-loosening',
     title: 'Lazítás + Ásógép',
-    subtitle: 'Előzetes mélylazítás után ásógép',
+    subtitle: 'Mélylazítás után ásógép',
     icon: <Layers size={32} />,
-    when: 'Nagyon tömör, mély eketalpas talaj',
-    soilType: 'Kötött, agyagos talajok',
+    when: 'Tömör eketalpas talaj',
+    soilType: 'Középkötött, kötött talajok',
     rating: 3,
     isBest: false,
     color: '#6B8B6B'
   },
   {
+    id: 'deep-spading',
+    title: 'Mélyásógép',
+    subtitle: 'Csak mélyásógép, más eszköz nélkül',
+    icon: <ChevronsDown size={32} />,
+    when: 'Szántóföldi, intenzíven öntözött, nagy gyökértömegű kertészeti kultúrákra',
+    soilType: 'Középkötött, kötött talaj',
+    rating: 5,
+    isBest: false,
+    color: '#CD853F'
+  },
+  {
     id: 'with-ploughing',
-    title: 'Szántás + Ásógép',
+    title: 'Lazítás + Szántás + Ásógép',
     subtitle: 'Őszi szántás után tavaszi ásógép',
     icon: <Combine size={32} />,
     when: 'Hagyományos gazdálkodásba illeszkedve',
@@ -54,23 +65,23 @@ const applicationModes: ApplicationMode[] = [
 ]
 
 // Separate card component with hover state for micro-interactions
-function CardWithHover({ 
-  mode, 
-  cardVariants, 
-  isInView 
-}: { 
+function CardWithHover({
+  mode,
+  cardVariants,
+  isInView
+}: {
   mode: ApplicationMode
   cardVariants: any
-  isInView: boolean 
+  isInView: boolean
 }) {
   const [isHovered, setIsHovered] = useState(false)
 
   const iconVariants = {
     idle: { scale: 1, rotate: 0 },
-    hover: { 
+    hover: {
       scale: 1.15,
       rotate: [0, -8, 8, -4, 4, 0],
-      transition: { 
+      transition: {
         scale: { duration: 0.3, ease: 'easeOut' },
         rotate: { duration: 0.6, ease: 'easeInOut' }
       }
@@ -79,7 +90,7 @@ function CardWithHover({
 
   const glowVariants = {
     idle: { opacity: 0, scale: 0.8 },
-    hover: { 
+    hover: {
       opacity: [0, 0.6, 0.3],
       scale: [0.8, 1.4, 1.2],
       transition: { duration: 0.5 }
@@ -100,7 +111,7 @@ function CardWithHover({
     hover: (i: number) => ({
       scale: [1, 1.3, 1],
       y: [0, -3, 0],
-      transition: { 
+      transition: {
         delay: i * 0.08,
         duration: 0.3,
         ease: 'easeOut'
@@ -110,7 +121,7 @@ function CardWithHover({
 
   const shimmerVariants = {
     idle: { x: '-100%', opacity: 0 },
-    hover: { 
+    hover: {
       x: '200%',
       opacity: [0, 0.3, 0],
       transition: { duration: 0.8, ease: 'easeInOut' }
@@ -119,8 +130,8 @@ function CardWithHover({
 
   const ctaVariants = {
     idle: { opacity: 0, y: 20 },
-    hover: { 
-      opacity: 1, 
+    hover: {
+      opacity: 1,
       y: 0,
       transition: { duration: 0.3, ease: 'easeOut' }
     }
@@ -132,8 +143,8 @@ function CardWithHover({
       variants={cardVariants}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      whileHover={{ 
-        y: -12, 
+      whileHover={{
+        y: -12,
         boxShadow: `0 25px 50px rgba(0,0,0,0.25), 0 0 0 1px ${mode.isBest ? 'var(--color-gold)' : 'rgba(255,255,255,0.15)'}`,
       }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
@@ -175,16 +186,16 @@ function CardWithHover({
           initial="idle"
           animate={isHovered ? "hover" : "idle"}
         />
-        <motion.div 
+        <motion.div
           className={styles.iconWrapper}
           style={{ backgroundColor: `${mode.color}20`, borderColor: `${mode.color}40` }}
           variants={iconVariants}
           initial="idle"
           animate={isHovered ? "hover" : "idle"}
         >
-          <motion.span 
+          <motion.span
             style={{ color: mode.color }}
-            animate={isHovered ? { 
+            animate={isHovered ? {
               filter: ['brightness(1)', 'brightness(1.3)', 'brightness(1)']
             } : {}}
             transition={{ duration: 0.4 }}
@@ -195,14 +206,14 @@ function CardWithHover({
       </div>
 
       {/* Title with subtle animation */}
-      <motion.h3 
+      <motion.h3
         className={styles.cardTitle}
         animate={isHovered ? { x: 2 } : { x: 0 }}
         transition={{ duration: 0.2 }}
       >
         {mode.title}
       </motion.h3>
-      <motion.p 
+      <motion.p
         className={styles.cardSubtitle}
         animate={isHovered ? { opacity: 0.8 } : { opacity: 0.5 }}
         transition={{ duration: 0.2 }}
@@ -214,9 +225,9 @@ function CardWithHover({
       <div className={styles.infoGrid}>
         {[
           { label: 'Mikor ajánlott?', value: mode.when },
-          { label: 'Ideális talaj', value: mode.soilType }
+          { label: 'Milyen talajra?', value: mode.soilType }
         ].map((info, i) => (
-          <motion.div 
+          <motion.div
             key={info.label}
             className={styles.infoItem}
             variants={infoItemVariants}
@@ -225,7 +236,7 @@ function CardWithHover({
             animate={isHovered ? "hover" : "idle"}
           >
             <span className={styles.infoLabel}>{info.label}</span>
-            <motion.span 
+            <motion.span
               className={styles.infoValue}
               animate={isHovered ? { color: 'rgba(255, 255, 255, 1)' } : { color: 'rgba(255, 255, 255, 0.85)' }}
             >
@@ -237,7 +248,7 @@ function CardWithHover({
 
       {/* Rating with bouncing stars on hover */}
       <div className={styles.ratingRow}>
-        <span className={styles.ratingLabel}>Stabilitás</span>
+        <span className={styles.ratingLabel}>Szerkezet tartossága</span>
         <div className={styles.stars}>
           {[1, 2, 3, 4, 5].map((star) => (
             <motion.span
@@ -265,7 +276,7 @@ function CardWithHover({
       </div>
 
       {/* Hover CTA sliding up */}
-      <motion.div 
+      <motion.div
         className={styles.hoverCta}
         variants={ctaVariants}
         initial="idle"
@@ -321,7 +332,7 @@ export default function ApplicationGuide() {
         <span className={styles.badge}>ALKALMAZÁSI ÚTMUTATÓ</span>
         <h2 className={styles.title}>Melyik módszert válasszam?</h2>
         <p className={styles.subtitle}>
-          Az ásógép önállóan és más művelőeszközökkel kombinálva is használható — 
+          Az ásógép önállóan és más művelőeszközökkel kombinálva is használható —
           a talaj állapota határozza meg a legjobb stratégiát.
         </p>
       </motion.div>
@@ -337,19 +348,7 @@ export default function ApplicationGuide() {
         ))}
       </motion.div>
 
-      {/* Conclusion */}
-      <motion.div
-        className={styles.conclusion}
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.8, duration: 0.6 }}
-      >
-        <div className={styles.conclusionIcon}>💡</div>
-        <p className={styles.conclusionText}>
-          <strong>Tipp:</strong> A <em>szántás + ásógép</em> kombináció adta a legstabilabb szerkezetet 
-          a kísérleteink során — de az önálló ásógép is kiváló választás jó szerkezetű talajokon.
-        </p>
-      </motion.div>
+
     </section>
   )
 }

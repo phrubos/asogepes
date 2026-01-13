@@ -1,21 +1,19 @@
-'use client'
-
+// ModelSection.tsx - Redesign Layout
 import { useState } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
+  Wrench,
+  Ruler,
+  Gauge,
+  CheckCircle2,
+  ZoomIn,
+  ArrowRight,
   MapPin,
   Leaf,
   Droplets,
   Calendar,
-  CheckCircle2,
-  Lightbulb,
-  Ruler,
-  Gauge,
-  Wrench,
-  BarChart3,
-  ArrowRight,
-  ZoomIn
+  BarChart3
 } from 'lucide-react'
 import { modelDetails } from '@/lib/data'
 import ImageLightbox from '@/components/ui/ImageLightbox'
@@ -25,64 +23,20 @@ type ModelId = '38sx' | '38wx' | '40sx'
 
 interface ModelSectionProps {
   modelId: ModelId
-  onOpenModal?: () => void
 }
 
-// Preview data for the field card
-const fieldPreviewData = {
-  '38sx': {
-    location: 'Lakitelek',
-    description: 'III. és VII. parcella eredményei ipari paradicsom kultúrában.',
-    crop: 'Ipari paradicsom',
-    irrigation: '450mm',
-    period: 'Máj-Aug',
-    chartData: { spade: 20, control: 32, unit: 'cm', label: 'Aug.' },
-    resultHighlight: '-1 cm',
-    resultText: 'legjobb stabilitás'
-  },
-  '38wx': {
-    location: 'Szentkirály',
-    description: 'Vöröshagyma kultúra 6 hónapos mérési időszak.',
-    crop: 'Vöröshagyma',
-    irrigation: '350mm',
-    period: 'Márc-Jún',
-    chartData: { spade: 17, control: 5, unit: 'cm', label: 'Jún.' },
-    resultHighlight: '17 cm',
-    resultText: 'lazaság megmaradt'
-  },
-  '40sx': {
-    location: 'Kecskemét-Borbás',
-    description: 'Ipari paradicsom 45 cm mélységű műveléssel.',
-    crop: 'Ipari paradicsom',
-    irrigation: '400mm',
-    period: 'Máj-Jún',
-    chartData: { spade: 37, control: 27, unit: 'cm', label: 'Jún.' },
-    resultHighlight: '+10cm',
-    resultText: 'ásógép javára'
-  }
-}
-
-// Highlight data
-const highlightData = {
-  '38sx': {
-    title: 'Legjobb stabilitás',
-    text: 'A szántás + ásógép kombináció (VII. parcella) adta a legjobb stabilitást.'
-  },
-  '38wx': {
-    title: 'Látható különbség',
-    text: 'Jelentősen kevesebb gyom fejlődött az ásógépezett területen.'
-  },
-  '40sx': {
-    title: 'Fejlettebb növények',
-    text: 'Az ásógépezett sorok paradicsomjai látványosan nagyobbak voltak.'
-  }
-}
-
-export default function ModelSection({ modelId, onOpenModal }: ModelSectionProps) {
+export default function ModelSection({ modelId }: ModelSectionProps) {
   const model = modelDetails[modelId]
-  const fieldPreview = fieldPreviewData[modelId]
-  const highlight = highlightData[modelId]
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isInView, setIsInView] = useState(false)
+
+  const handleChartClick = () => {
+    const element = document.getElementById('experiment-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
   return (
     <section className={styles.compactSection}>
@@ -95,148 +49,180 @@ export default function ModelSection({ modelId, onOpenModal }: ModelSectionProps
         <div className={styles.titleRow}>
           <h2 className={styles.modelName}>{model.name}</h2>
           <span className={styles.typeBadge}>{model.type}</span>
-          <span className={styles.typeEn}>{model.typeEn}</span>
         </div>
       </motion.div>
 
-      {/* 2-Column Grid */}
-      <div className={styles.compactGrid}>
+      <div className={styles.mainLayout}>
+        {/* Top Row: Image (Left) + Specs (Right) */}
+        <div className={styles.topRow}>
 
-        {/* Left Column: Visuals & Highlight */}
-        <div className={styles.leftColumn}>
+          {/* Image Card */}
           <motion.div
-            className={styles.imageWrapper}
-            initial={{ opacity: 0, scale: 0.95 }}
+            className={styles.imageCard}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
             onClick={() => setLightboxOpen(true)}
           >
             <Image
               src={model.image}
-              alt={`${model.name} - ${model.type}`}
-              width={500}
-              height={400} // Aspect ratio reference
+              alt={`${model.name} ${model.type}`}
+              width={800}
+              height={600}
               className={styles.machineImage}
+              priority
             />
-            <div className={styles.zoomIndicator}>
-              <ZoomIn size={14} /> Nagyítás
-            </div>
+            <div className={styles.zoomIndicator}><ZoomIn size={18} /></div>
           </motion.div>
 
+          {/* Specs Panel */}
           <motion.div
-            className={styles.highlightBox}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <div className={styles.highlightIcon}>
-              <Lightbulb size={20} />
-            </div>
-            <div>
-              <h4 className={styles.highlightTitle}>{highlight.title}</h4>
-              <p className={styles.highlightText}>{highlight.text}</p>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Right Column: Specs & Data */}
-        <div className={styles.rightColumn}>
-
-          {/* Field Results - Top priority context */}
-          <motion.div
-            className={styles.fieldCard}
-            onClick={onOpenModal}
+            className={styles.specsPanel}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            whileHover={{ scale: 1.01 }}
           >
-            <div className={styles.fieldCardSection}>
-              <h4 className={styles.fieldCardTitle}>
-                <MapPin size={16} />
-                Terep Eredmények: {fieldPreview.location}
-              </h4>
-              <p className={styles.fieldCardPreview}>{fieldPreview.description}</p>
-
-              <div className={styles.fieldCardMeta}>
-                <span className={styles.metaTag}><Leaf />{fieldPreview.crop}</span>
-                <span className={styles.metaTag}><Droplets />{fieldPreview.irrigation}</span>
-                <span className={styles.metaTag}><Calendar />{fieldPreview.period}</span>
-              </div>
-
-              <p className={styles.fieldCardResult}>
-                <strong>{fieldPreview.resultHighlight}</strong> {fieldPreview.resultText}
-              </p>
+            <div className={styles.panelHeader}>
+              <Wrench size={24} color="var(--color-gold)" /> Műszaki Adatok
             </div>
 
-            <div className={styles.fieldCardSection} style={{ alignItems: 'flex-end' }}>
-              <div className={styles.miniChartWrapper}>
-                <span className={styles.miniChartLabel}>{fieldPreview.chartData.label}</span>
-                <div className={styles.miniChart}>
-                  <div className={styles.miniBarGroup}>
-                    <motion.div
-                      className={`${styles.miniBar} ${styles.gold}`}
-                      initial={{ height: 0 }}
-                      whileInView={{ height: `${(fieldPreview.chartData.spade / 40) * 100}%` }}
-                    />
-                    <span className={styles.miniBarValue}>{fieldPreview.chartData.spade}</span>
-                  </div>
-                  <div className={styles.miniBarGroup}>
-                    <motion.div
-                      className={`${styles.miniBar} ${styles.gray}`}
-                      initial={{ height: 0 }}
-                      whileInView={{ height: `${(fieldPreview.chartData.control / 40) * 100}%` }}
-                    />
-                    <span className={styles.miniBarValue}>{fieldPreview.chartData.control}</span>
-                  </div>
-                </div>
-                <span className={styles.miniChartUnit}>{fieldPreview.chartData.unit}</span>
-              </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--color-gold)', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                Részletek <ArrowRight size={14} />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Specs - Compact */}
-          <motion.div
-            className={styles.specsCompact}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h3 className={styles.specsTitle}>
-              <Wrench size={16} /> Műszaki Adatok
-            </h3>
-
-            <div className={styles.specsGrid}>
-              <div className={styles.specRowCompact}>
-                <div className={styles.specIconCompact}><Ruler size={18} /></div>
-                <div className={styles.specInfoCompact}>
+            <div className={styles.specsBoxContainer}>
+              {/* Depth */}
+              <div className={styles.specRow}>
+                <div className={styles.specIconBox}><Ruler size={24} /></div>
+                <div className={styles.specContent}>
                   <span className={styles.specLabel}>Munkamélység</span>
                   <span className={styles.specValue}>{model.specs.depth}</span>
                 </div>
               </div>
-              <div className={styles.specRowCompact}>
-                <div className={styles.specIconCompact}><Gauge size={18} /></div>
-                <div className={styles.specInfoCompact}>
-                  <span className={styles.specLabel}>Teljesítmény</span>
+
+              {/* Power */}
+              <div className={styles.specRow}>
+                <div className={styles.specIconBox}><Gauge size={24} /></div>
+                <div className={styles.specContent}>
+                  <span className={styles.specLabel}>Teljesítmény Igény</span>
                   <span className={styles.specValue}>{model.specs.power}</span>
                 </div>
               </div>
             </div>
 
-            <div className={styles.featuresGrid}>
+            <div className={styles.featuresList}>
+              <div className={styles.featuresTitle}>Főbb Jellemzők</div>
               {model.specs.features.map((feature, idx) => (
                 <div key={idx} className={styles.featureItem}>
-                  <CheckCircle2 size={12} />
+                  <CheckCircle2 size={16} />
                   <span>{feature}</span>
                 </div>
               ))}
             </div>
           </motion.div>
-
         </div>
+
+        {/* Bottom Row: Results/Chart Card */}
+        <motion.div
+          className={styles.resultsCard}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          onClick={handleChartClick}
+        >
+          {/* Left: Info */}
+          <div className={styles.resultsInfo}>
+            <div className={styles.resultsHeader}>
+              <MapPin size={24} /> Kísérleti eredmények
+            </div>
+
+            <div className={styles.infoCard}>
+              <div className={styles.infoList}>
+                {/* Location */}
+                <div className={styles.infoItem}>
+                  <div className={styles.infoIconBox}><MapPin size={18} /></div>
+                  <div className={styles.infoContent}>
+                    <span className={styles.infoLabel}>Helyszín</span>
+                    <span className={styles.infoValue}>Szentkirály</span>
+                  </div>
+                </div>
+
+                {/* Culture */}
+                <div className={styles.infoItem}>
+                  <div className={styles.infoIconBox}><Leaf size={18} /></div>
+                  <div className={styles.infoContent}>
+                    <span className={styles.infoLabel}>Kultúra</span>
+                    <span className={styles.infoValue}>{modelId === '38wx' ? 'Vöröshagyma' : 'Ipari paradicsom'}</span>
+                  </div>
+                </div>
+
+                {/* Duration */}
+                <div className={styles.infoItem}>
+                  <div className={styles.infoIconBox}><Calendar size={18} /></div>
+                  <div className={styles.infoContent}>
+                    <span className={styles.infoLabel}>Időszak</span>
+                    <span className={styles.infoValue}>{modelId === '38wx' ? 'Márc-Jún (4 hónap)' : 'Máj-Aug (4 hónap)'}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.quoteBox}>
+                <p className={styles.quoteText}>
+                  {modelId === '38sx' && "Lazítással, szántással alkalmazva 95%-os hatékonyság."}
+                  {modelId === '38wx' && "Optimális talajszerkezet fenntartás 3 hónapon túl."}
+                  {modelId === '40sx' && "Kedvezően laza talajszerkezet 40 cm mélységig"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Chart and Link Side-by-Side */}
+          <div className={styles.chartSection}>
+            <div className={styles.chartHeader}>
+              <div className={styles.chartHeaderLeft}>
+                <BarChart3 size={24} /> Mérési Adatok
+              </div>
+            </div>
+
+            <div
+              className={styles.chartContainer}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              <motion.div
+                className={styles.chartVisual}
+                initial="hidden"
+                animate={isHovered ? "static" : (isInView ? "floating" : "hidden")}
+                onViewportEnter={() => setIsInView(true)}
+                viewport={{ once: true, margin: "-50px" }}
+              >
+                {[0.3, 0.5, 0.7, 1].map((targetScale, i) => (
+                  <div key={i} className={styles.barContainer}>
+                    <motion.div
+                      className={`${styles.bar} ${i === 3 ? styles.gold : styles.gray}`}
+                      variants={{
+                        hidden: { height: '10%' },
+                        floating: {
+                          height: [`${targetScale * 40}%`, `${targetScale * 90}%`, `${targetScale * 30}%`, `${targetScale * 80}%`],
+                          transition: {
+                            duration: 2 + i * 0.5,
+                            repeat: Infinity,
+                            repeatType: "mirror",
+                            ease: "easeInOut"
+                          }
+                        },
+                        static: {
+                          height: `${targetScale * 80}%`,
+                          transition: { duration: 0.5, ease: "easeOut" }
+                        }
+                      }}
+                    />
+                  </div>
+                ))}
+              </motion.div>
+
+              <div className={styles.detailsLink}>
+                Részletek <ArrowRight size={16} />
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       <ImageLightbox

@@ -94,18 +94,8 @@ const PloughedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
     return data
   }, [])
 
-  // Blokkolt gyökerek - Több gyökér a szélesebb nézethez
-  const blockedRoots = useMemo(() => {
-    const roots: Array<{ x: number; path: string }> = []
-    for (let i = 0; i < 10; i++) {
-      const x = 60 + i * 53 // Ritkábban, de szélesebben
-      roots.push({
-        x,
-        path: `M${x},45 Q${x + (i % 2 === 0 ? 5 : -5)},80 ${x},120 L${x},135`
-      })
-    }
-    return roots
-  }, [])
+  // Roots removed
+  const blockedRoots: Array<{ x: number; path: string }> = []
 
   // Víz részecskék - pangóvíz az eketalp felett
   const waterParticles = useMemo(() => {
@@ -187,31 +177,7 @@ const PloughedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
         />
       ))}
 
-      {/* Blokkolt gyökerek */}
-      {blockedRoots.map((root, i) => (
-        <motion.g key={i}>
-          <motion.path
-            d={root.path}
-            stroke="#8D6E63"
-            strokeWidth="3"
-            fill="none"
-            strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
-          />
-          {/* Blokkolt vég jelzés */}
-          <motion.circle
-            cx={root.x}
-            cy={135}
-            r={4}
-            fill="#F44336"
-            initial={{ scale: 0 }}
-            animate={{ scale: [0, 1.2, 1] }}
-            transition={{ delay: 1.3 + i * 0.1 }}
-          />
-        </motion.g>
-      ))}
+
 
       {/* Pangóvíz az eketalp felett */}
       {waterParticles.map((p, i) => (
@@ -290,21 +256,8 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
     return data
   }, [])
 
-  // Egészséges gyökerek - mélyre nyúlnak
-  const healthyRoots = useMemo(() => {
-    const roots: Array<{ x: number; path: string }> = []
-    for (let i = 0; i < 9; i++) { // 5 helyett 9 gyökér
-      const x = 60 + i * 60
-      const depth = 180 + seededRandom(i * 100) * 40
-      const curve1 = (seededRandom(i * 200) - 0.5) * 30
-      const curve2 = (seededRandom(i * 300) - 0.5) * 20
-      roots.push({
-        x,
-        path: `M${x},45 Q${x + curve1},100 ${x + curve2},${depth}`
-      })
-    }
-    return roots
-  }, [])
+  // Roots removed
+  const healthyRoots: Array<{ x: number; path: string }> = []
 
   // Víz részecskék - egyenletesen szivárognak le
   const waterParticles = useMemo(() => {
@@ -359,20 +312,7 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
         />
       ))}
 
-      {/* Egészséges, mély gyökerek */}
-      {healthyRoots.map((root, i) => (
-        <motion.path
-          key={i}
-          d={root.path}
-          stroke="#A5D6A7"
-          strokeWidth="3"
-          fill="none"
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ delay: 0.5 + i * 0.15, duration: 1.2, ease: 'easeOut' }}
-        />
-      ))}
+
 
       {/* Víz egyenletesen szivárog */}
       {waterParticles.map((p, i) => (
@@ -449,22 +389,7 @@ export default function PloughingSoilComparison() {
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
     >
-      {/* Fejléc */}
-      <motion.div className={styles.header} variants={itemVariants} style={{ marginBottom: '0.75rem', textAlign: 'center' }}>
-        <p style={{
-          fontSize: '0.85rem',
-          margin: 0,
-          color: 'rgba(255, 255, 255, 0.6)',
-          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
-          padding: '0.6rem 1.25rem',
-          borderRadius: '100px',
-          display: 'inline-block',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          fontStyle: 'italic'
-        }}>
-          A Művelt réteg 0-30 cm. A függőleges cm mélység és penetrométeres színskála is látható.
-        </p>
-      </motion.div>
+      {/* Fejléc REMOVED */}
 
       {/* Összehasonlító vizualizáció */}
       <motion.div className={styles.comparisonGrid} variants={itemVariants} style={{ gap: '1rem', flex: 1, minHeight: 0 }}>
@@ -566,17 +491,7 @@ export default function PloughingSoilComparison() {
         </motion.div>
       </motion.div>
 
-      {/* Lábléc megjegyzés */}
-      <motion.div className={styles.footer} variants={itemVariants} style={{ marginTop: '0.75rem', paddingTop: '0.75rem' }}>
-        <div className={styles.legendItem} style={{ fontSize: '0.75rem' }}>
-          <div className={styles.legendColor} style={{ background: 'linear-gradient(180deg, #4CAF50, #F44336, #FF9800)', width: '12px', height: '12px' }} />
-          <span>Penetrométer skála: zöld (laza) → piros (tömör)</span>
-        </div>
-        <div className={styles.legendItem} style={{ fontSize: '0.75rem' }}>
-          <ArrowDown size={12} />
-          <span>Vízmozgás iránya a talajban</span>
-        </div>
-      </motion.div>
+      {/* Lábléc megjegyzés REMOVED */}
     </motion.div>
   )
 }

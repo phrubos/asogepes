@@ -50,7 +50,7 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
       >
         <div className={styles.titleWrapper}>
           <Thermometer className={styles.titleIcon} size={20} />
-          <h4 className={styles.title}>Márciusi talajhőmérséklet</h4>
+          <h4 className={styles.title}>A talajhőmérséklet a vöröshagyma csírázásakor</h4>
         </div>
         <motion.div
           className={styles.titleLine}

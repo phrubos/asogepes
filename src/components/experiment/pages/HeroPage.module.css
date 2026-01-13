@@ -60,55 +60,71 @@
   font-style: normal;
 }
 
-/* Stats Row */
+/* Stats Row - Premium Panel Redesign */
 .statsRow {
-  display: flex;
-  gap: var(--space-lg);
-  margin-top: var(--space-md);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: var(--space-xl);
+  width: 100%;
+  background: linear-gradient(135deg, rgba(26, 23, 20, 0.6) 0%, rgba(35, 30, 25, 0.7) 100%);
+  border: 1px solid rgba(212, 168, 75, 0.15);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 .statItem {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
-  background: rgba(26, 23, 20, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  transition: all 0.3s ease;
+  padding: var(--space-md) var(--space-lg);
+  border-right: 1px solid rgba(212, 168, 75, 0.15);
+  transition: background 0.3s ease;
+}
+
+.statItem:last-child {
+  border-right: none;
 }
 
 .statItem:hover {
-  border-color: rgba(212, 168, 75, 0.25);
-  background: rgba(30, 27, 24, 0.7);
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.statIcon {
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(212, 168, 75, 0.1);
-  border-radius: 6px;
-  color: var(--color-gold);
-}
-
-.statNumber {
+.statValue {
   font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-size: 2.5rem;
+  font-weight: 700;
   color: var(--color-white);
   line-height: 1;
+  margin-bottom: 4px;
+}
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .statLabel {
   font-size: 0.75rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
+  font-weight: 700;
+  color: var(--color-gold);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
+  margin: 0;
 }
+
+.statDetail {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+  white-space: normal;
+  /* Allow wrapping if needed */
+}
+
 
 /* Map Column */
 .mapColumn {

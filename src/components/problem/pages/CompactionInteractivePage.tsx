@@ -214,9 +214,12 @@ export default function CompactionInteractivePage() {
                             ))}
                         </div>
 
-                        <div style={{ position: 'relative', marginBottom: '16px', height: '20px', display: 'flex', alignItems: 'center' }}>
+                        {/* Slider Container - 32px height to match input interaction height */}
+                        <div style={{ position: 'relative', marginBottom: '16px', height: '32px', display: 'flex', alignItems: 'center' }}>
+                            {/* Visual Gradient Track - Centered Absolutely */}
                             <div style={{
                                 position: 'absolute',
+                                top: '50%', transform: 'translateY(-50%)',
                                 left: 0, right: 0, height: 6, borderRadius: 3,
                                 background: 'linear-gradient(90deg, #4CAF50 0%, #FFC107 50%, #D32F2F 100%)',
                                 opacity: 0.8,
@@ -268,7 +271,7 @@ export default function CompactionInteractivePage() {
                     {/* Impact Stats Cards - Styled to match "Szántás" Reference Cards */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                         <motion.div variants={itemVariants} className={styles.challengeItem} style={{ flexDirection: 'column', gap: '12px', padding: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px' }}>
-                            <div className={styles.iconBox} style={{ width: '40px', height: '40px', color: isCompacted ? '#EF5350' : '#81C784', borderColor: isCompacted ? '#EF535040' : '#81C78440', background: isCompacted ? '#EF535010' : '#81C78410', transition: 'all 0.5s', marginBottom: '4px' }}>
+                            <div className={styles.iconBox} style={{ width: '40px', height: '40px', color: currentData.color, borderColor: `${currentData.color}40`, background: `${currentData.color}10`, transition: 'all 0.5s', marginBottom: '4px' }}>
                                 <Sprout size={20} />
                             </div>
                             <div>
@@ -286,7 +289,7 @@ export default function CompactionInteractivePage() {
                         </motion.div>
 
                         <motion.div variants={itemVariants} className={styles.challengeItem} style={{ flexDirection: 'column', gap: '12px', padding: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px' }}>
-                            <div className={styles.iconBox} style={{ width: '40px', height: '40px', color: isCompacted ? '#EF5350' : '#81C784', borderColor: isCompacted ? '#EF535040' : '#81C78440', background: isCompacted ? '#EF535010' : '#81C78410', transition: 'all 0.5s', marginBottom: '4px' }}>
+                            <div className={styles.iconBox} style={{ width: '40px', height: '40px', color: currentData.color, borderColor: `${currentData.color}40`, background: `${currentData.color}10`, transition: 'all 0.5s', marginBottom: '4px' }}>
                                 <Droplets size={20} />
                             </div>
                             <div>
@@ -308,8 +311,10 @@ export default function CompactionInteractivePage() {
             </div>
 
             <style jsx>{`
-                input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: ${currentData.color}; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); margin-top: -6px; cursor: grabbing; transition: background 0.2s; }
-                input[type=range]::-moz-range-thumb { height: 16px; width: 16px; border-radius: 50%; background: ${currentData.color}; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); cursor: grabbing; transition: background 0.2s; }
+                input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: transparent; border: none; border-radius: 3px; }
+                input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: ${currentData.color}; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); margin-top: -5px; cursor: grabbing; transition: background 0.2s; position: relative; z-index: 10; }
+                input[type=range]::-moz-range-thumb { height: 16px; width: 16px; border-radius: 50%; background: ${currentData.color}; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3); cursor: grabbing; transition: background 0.2s; border: none; }
+                input[type=range]::-moz-range-track { width: 100%; height: 6px; background: transparent; border: none; border-radius: 3px; }
             `}</style>
         </motion.div>
     )
