@@ -24,7 +24,8 @@
 }
 
 .header.scrolled::before {
-    opacity: 0.98;
+    opacity: 0;
+    /* Changed from 0.98 to 0 to keep transparent */
 }
 
 /* Solid nav pill background when scrolled */
@@ -80,7 +81,8 @@
 
 .header.scrolled .headerInner {
     padding: var(--space-md) 0;
-    border-bottom-color: rgba(255, 255, 255, 0.08);
+    border-bottom-color: transparent;
+    /* Removed gray line */
 }
 
 /* Logo */
@@ -266,7 +268,7 @@
     .nav {
         display: none;
     }
-    
+
     .menuToggle {
         display: flex;
     }
@@ -276,11 +278,11 @@
     .header {
         padding: 0 var(--space-md);
     }
-    
+
     .mobileNavInner {
         padding: 0 var(--space-md);
     }
-    
+
     .mobileLinkText {
         font-size: 1.5rem;
     }

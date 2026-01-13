@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, createContext, useContext } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import SoilLoader from '@/components/ui/SoilLoader'
@@ -12,44 +13,15 @@ export interface BookPage {
   sectionIndex: number
   title: string
   component: React.ReactNode
+  scrollToId?: string
+  viewGroupId?: string
 }
 
 interface BookLayoutProps {
   pages: BookPage[]
   children?: React.ReactNode
+  resetEventName?: string
 }
-
-// Page flip animation variants
-const pageVariants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? '100%' : '-100%',
-    opacity: 0,
-    rotateY: direction > 0 ? -15 : 15,
-    scale: 0.95,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-    rotateY: 0,
-    scale: 1,
-  },
-  exit: (direction: number) => ({
-    x: direction < 0 ? '100%' : '-100%',
-    opacity: 0,
-    rotateY: direction < 0 ? -15 : 15,
-    scale: 0.95,
-  }),
-}
-
-const pageTransition = {
-  type: 'spring',
-  stiffness: 300,
-  damping: 30,
-  mass: 0.8,
-}
-
-// Context for child components to control navigation
-import { createContext, useContext } from 'react'
 
 interface BookContextType {
   goToPage: (index: number) => void
@@ -67,23 +39,144 @@ export const useBookNav = () => {
   return context
 }
 
-export default function BookLayout({ pages }: BookLayoutProps) {
+export default function BookLayout({ pages, resetEventName }: BookLayoutProps) {
   const [currentPage, setCurrentPage] = useState(0)
   const [direction, setDirection] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const scrollCountRef = useRef(0)
-  const scrollDirectionRef = useRef<'up' | 'down' | null>(null)
+  const isProgrammaticScroll = useRef(false)
+  const isPopState = useRef(false)
+  const navigationSource = useRef<'manual' | 'scroll'>('manual')
+  const searchParams = useSearchParams()
+
+  const pageVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? '100%' : '-100%',
+      opacity: 0,
+      rotateY: direction > 0 ? -15 : 15,
+      scale: 0.95,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      rotateY: 0,
+      scale: 1,
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? '100%' : '-100%',
+      opacity: 0,
+      rotateY: direction < 0 ? -15 : 15,
+      scale: 0.95,
+    }),
+  }
+
+  const pageTransition = {
+    type: 'spring',
+    stiffness: 300,
+    damping: 30,
+    mass: 0.8,
+  }
+
+  // Initialize state from URL
+  useEffect(() => {
+    const pageId = searchParams.get('page')
+    if (pageId) {
+      const index = pages.findIndex(p => p.id === pageId)
+      if (index !== -1 && index !== currentPage) {
+        setCurrentPage(index)
+        // Replace initial state so back button works correctly to leave the app or go to prev page
+        // Only do this if we haven't already set up state (check if history.state matches?)
+        // Safe to replace to ensure consistency
+        if (!window.history.state || typeof window.history.state.pageIndex !== 'number') {
+          window.history.replaceState({ pageIndex: index }, '', window.location.href)
+        }
+      }
+    }
+  }, [searchParams, pages]) // React to searchParams changes too!
+
+  // Sync URL with currentPage
+  useEffect(() => {
+    if (isPopState.current) {
+      isPopState.current = false
+      return
+    }
+
+    const page = pages[currentPage]
+    if (!page) return
+
+    const url = new URL(window.location.href)
+    url.searchParams.set('page', page.id)
+
+    if (navigationSource.current === 'manual') {
+      window.history.pushState({ pageIndex: currentPage }, '', url)
+    } else {
+      window.history.replaceState({ pageIndex: currentPage }, '', url)
+    }
+  }, [currentPage, pages])
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && typeof event.state.pageIndex === 'number') {
+        isPopState.current = true
+        navigationSource.current = 'manual' // Treat popstate as manual nav
+        setCurrentPage(event.state.pageIndex)
+      } else {
+        // Fallback to URL parsing if state is missing (e.g. external link return)
+        const params = new URLSearchParams(window.location.search)
+        const pageId = params.get('page')
+        if (pageId) {
+          const index = pages.findIndex(p => p.id === pageId)
+          if (index !== -1) {
+            isPopState.current = true
+            navigationSource.current = 'manual'
+            setCurrentPage(index)
+          }
+        } else {
+          // If no state and no param, go to 0?
+          // Only if we are not at 0?
+          if (currentPage !== 0) {
+            isPopState.current = true
+            navigationSource.current = 'manual'
+            setCurrentPage(0)
+          }
+        }
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [pages, currentPage])
 
   // Navigate to page
   const goToPage = useCallback((pageIndex: number) => {
     if (isAnimating || pageIndex === currentPage) return
     if (pageIndex < 0 || pageIndex >= pages.length) return
 
+    navigationSource.current = 'manual' // Mark as manual navigation
+
+    const targetPage = pages[pageIndex]
+    const currentPageData = pages[currentPage]
+
+    // Check if we are staying in the same view group
+    const isSameGroup = targetPage.viewGroupId && currentPageData.viewGroupId &&
+      targetPage.viewGroupId === currentPageData.viewGroupId
+
+    // Lock scroll-spy to prevent reverting navigation
+    isProgrammaticScroll.current = true
+    setTimeout(() => {
+      isProgrammaticScroll.current = false
+    }, 1000)
+
+    if (isSameGroup) {
+      setCurrentPage(pageIndex)
+      return
+    }
+
     setDirection(pageIndex > currentPage ? 1 : -1)
     setIsAnimating(true)
     setCurrentPage(pageIndex)
-  }, [currentPage, pages.length, isAnimating])
+  }, [currentPage, pages, isAnimating])
 
   // Navigation functions
   const nextPage = useCallback(() => {
@@ -114,70 +207,17 @@ export default function BookLayout({ pages }: BookLayoutProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [nextPage, prevPage])
 
-  // Wheel navigation (requires 3 scrolls to change page)
+  // Listen for global reset event (from Navigation)
   useEffect(() => {
-    let resetTimeout: NodeJS.Timeout | null = null
-    const SCROLLS_REQUIRED = 3
+    if (!resetEventName) return
 
-    const handleWheel = (e: WheelEvent) => {
-      // Allow normal scrolling inside page content if it has scrollable area
-      const target = e.target as HTMLElement
-      const scrollable = target.closest(`.${styles.pageContent}`)
-      if (scrollable) {
-        if (e.deltaY > 0 && scrollable.scrollTop + scrollable.clientHeight < scrollable.scrollHeight) return
-        if (e.deltaY < 0 && scrollable.scrollTop > 0) return
-      }
-
-      if (isAnimating) return
-
-      // Determine scroll direction
-      const currentDirection = e.deltaY > 0 ? 'down' : 'up'
-
-      // Reset counter if direction changed or timeout expired
-      if (scrollDirectionRef.current !== currentDirection) {
-        scrollCountRef.current = 0
-        scrollDirectionRef.current = currentDirection
-      }
-
-      // Clear previous reset timeout
-      if (resetTimeout) clearTimeout(resetTimeout)
-
-      // Reset counter after 800ms of no scrolling
-      resetTimeout = setTimeout(() => {
-        scrollCountRef.current = 0
-        scrollDirectionRef.current = null
-      }, 800)
-
-      // Only count significant scroll events
-      if (Math.abs(e.deltaY) > 30) {
-        scrollCountRef.current++
-
-        // Change page after required number of scrolls
-        if (scrollCountRef.current >= SCROLLS_REQUIRED) {
-          scrollCountRef.current = 0
-          scrollDirectionRef.current = null
-
-          if (currentDirection === 'down') {
-            nextPage()
-          } else {
-            prevPage()
-          }
-        }
-      }
+    const handleReset = () => {
+      goToPage(0)
     }
 
-    const container = containerRef.current
-    if (container) {
-      container.addEventListener('wheel', handleWheel, { passive: false })
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener('wheel', handleWheel)
-      }
-      if (resetTimeout) clearTimeout(resetTimeout)
-    }
-  }, [nextPage, prevPage, isAnimating])
+    window.addEventListener(resetEventName, handleReset)
+    return () => window.removeEventListener(resetEventName, handleReset)
+  }, [goToPage, resetEventName])
 
   // Failsafe: Reset isAnimating if it gets stuck
   useEffect(() => {
@@ -190,6 +230,60 @@ export default function BookLayout({ pages }: BookLayoutProps) {
 
     return () => clearTimeout(failsafe)
   }, [isAnimating])
+
+  // Handle scrolling to section within a view group
+  useEffect(() => {
+    const page = pages[currentPage]
+    const scrollContainer = document.querySelector(`.${styles.pageContent}`)
+
+    if (page.scrollToId) {
+      setTimeout(() => {
+        // Skip programmatic scrolling if the user arrived here by scrolling
+        if (navigationSource.current === 'scroll') return
+
+        // Special check: If this is the first page of the group, force scroll to top
+        // This avoids layout alignment issues with scrollIntoView for the top section
+        const isFirstInGroup = page.viewGroupId
+          ? pages.find(p => p.viewGroupId === page.viewGroupId)?.id === page.id
+          : true
+
+        if (isFirstInGroup && scrollContainer) {
+          isProgrammaticScroll.current = true
+          scrollContainer.scrollTo({ top: 0, behavior: 'smooth' })
+          setTimeout(() => {
+            isProgrammaticScroll.current = false
+          }, 1000)
+          return
+        }
+
+        const element = document.getElementById(page.scrollToId!)
+        if (element) {
+          isProgrammaticScroll.current = true
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+          // Reset lock after scroll animation finishes (approx 800-1000ms)
+          setTimeout(() => {
+            isProgrammaticScroll.current = false
+          }, 1000)
+        } else {
+          // Retry once if not found (optional, but good for safety)
+          setTimeout(() => {
+            const retryEl = document.getElementById(page.scrollToId!)
+            if (retryEl) {
+              isProgrammaticScroll.current = true
+              retryEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              setTimeout(() => { isProgrammaticScroll.current = false }, 1000)
+            }
+          }, 300)
+        }
+      }, 300) // Increased from 100 to 300 for stability
+    } else {
+      // If no ID specified, ensure we are at the top (important for new pages)
+      if (scrollContainer) {
+        scrollContainer.scrollTop = 0
+      }
+    }
+  }, [currentPage, pages])
 
   // Get unique sections for navigation
   const sections = pages.reduce((acc, page) => {
@@ -204,6 +298,49 @@ export default function BookLayout({ pages }: BookLayoutProps) {
   // Calculate progress for the timeline line
   const activeSectionIndex = sections.findIndex(s => s.section === currentPageData?.section)
   const progressPercentage = ((activeSectionIndex) / (sections.length - 1)) * 100
+
+  // Handle scroll events for sidebar sync and header interaction
+  const handlePageScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget
+    const scrollTop = target.scrollTop
+
+    // 1. Dispatch custom event for global Header
+    window.dispatchEvent(new CustomEvent('book-scroll', { detail: { scrollTop } }))
+
+    // 2. Sync Sidebar with Scroll Position
+    if (isProgrammaticScroll.current) return
+
+    // Only proceed if we are in a view group
+    const currentPageData = pages[currentPage]
+    if (!currentPageData?.viewGroupId) return
+
+    // Find all pages in the current group
+    const groupPages = pages.filter(p => p.viewGroupId === currentPageData.viewGroupId)
+
+    // Find which section is currently most visible
+    // We assume sections are in order
+    for (const page of groupPages) {
+      if (!page.scrollToId) continue
+
+      const element = document.getElementById(page.scrollToId)
+      if (element) {
+        const rect = element.getBoundingClientRect()
+        // If the top of the element is within the viewport (or close to top)
+        // logic: if element top is < viewport height / 2 AND element bottom > 100
+        if (rect.top <= window.innerHeight / 2 && rect.bottom > 100) {
+          // This is the active section
+          const newIndex = pages.findIndex(p => p.id === page.id)
+          if (newIndex !== -1 && newIndex !== currentPage) {
+            // Update state without triggering scroll-to-element logic again ideally
+            // But for now, standard setState is fine as long as we guard the effect
+            navigationSource.current = 'scroll'
+            setCurrentPage(newIndex)
+          }
+          break
+        }
+      }
+    }
+  }, [currentPage, pages])
 
   return (
     <BookContext.Provider value={{ goToPage, pages, currentPage }}>
@@ -301,7 +438,7 @@ export default function BookLayout({ pages }: BookLayoutProps) {
               }}
             >
               <motion.div
-                key={currentPage}
+                key={currentPageData?.viewGroupId || currentPage}
                 custom={direction}
                 variants={pageVariants}
                 initial="enter"
@@ -314,7 +451,10 @@ export default function BookLayout({ pages }: BookLayoutProps) {
                 <div className={styles.pageCorner} />
 
                 {/* Page content */}
-                <div className={styles.pageContent}>
+                <div
+                  className={styles.pageContent}
+                  onScroll={handlePageScroll}
+                >
                   {currentPageData?.component}
                 </div>
 

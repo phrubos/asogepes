@@ -1,5 +1,7 @@
 // ModelSection.tsx - Redesign Layout
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
@@ -23,25 +25,11 @@ type ModelId = '38sx' | '38wx' | '40sx'
 
 interface ModelSectionProps {
   modelId: ModelId
-  onOpenModal?: () => void
 }
 
-export default function ModelSection({ modelId, onOpenModal }: ModelSectionProps) {
+export default function ModelSection({ modelId }: ModelSectionProps) {
   const model = modelDetails[modelId]
   const [lightboxOpen, setLightboxOpen] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
-  const [isInView, setIsInView] = useState(false)
-
-  const handleChartClick = () => {
-    if (onOpenModal) {
-      onOpenModal()
-    } else {
-      const element = document.getElementById('experiment-section');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  }
 
   return (
     <section className={styles.compactSection}>
@@ -129,102 +117,62 @@ export default function ModelSection({ modelId, onOpenModal }: ModelSectionProps
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          onClick={handleChartClick}
+        // Click removed from container
         >
-          {/* Left: Info */}
+          {/* Left: Info ... */}
           <div className={styles.resultsInfo}>
-            <div className={styles.resultsHeader}>
-              <MapPin size={24} /> Kísérleti eredmények
-            </div>
-
-            <div className={styles.infoCard}>
-              <div className={styles.infoList}>
-                {/* Location */}
-                <div className={styles.infoItem}>
-                  <div className={styles.infoIconBox}><MapPin size={18} /></div>
-                  <div className={styles.infoContent}>
-                    <span className={styles.infoLabel}>Helyszín</span>
-                    <span className={styles.infoValue}>Szentkirály</span>
-                  </div>
-                </div>
-
-                {/* Culture */}
-                <div className={styles.infoItem}>
-                  <div className={styles.infoIconBox}><Leaf size={18} /></div>
-                  <div className={styles.infoContent}>
-                    <span className={styles.infoLabel}>Kultúra</span>
-                    <span className={styles.infoValue}>{modelId === '38wx' ? 'Vöröshagyma' : 'Ipari paradicsom'}</span>
-                  </div>
-                </div>
-
-                {/* Duration */}
-                <div className={styles.infoItem}>
-                  <div className={styles.infoIconBox}><Calendar size={18} /></div>
-                  <div className={styles.infoContent}>
-                    <span className={styles.infoLabel}>Időszak</span>
-                    <span className={styles.infoValue}>{modelId === '38wx' ? 'Márc-Jún (4 hónap)' : 'Máj-Aug (4 hónap)'}</span>
-                  </div>
-                </div>
+            {/* ... content ... */}
+            <div>
+              <div className={styles.resultsHeader}>
+                <MapPin size={20} /> Kísérleti eredmények
               </div>
-
-              <div className={styles.quoteBox}>
-                <p className={styles.quoteText}>
-                  {modelId === '38sx' && "Lazítással, szántással alkalmazva 95%-os hatékonyság."}
-                  {modelId === '38wx' && "Optimális talajszerkezet fenntartás 3 hónapon túl."}
-                  {modelId === '40sx' && "Kedvezően laza talajszerkezet 40 cm mélységig"}
-                </p>
+              <div className={styles.resultsDesc}>
+                Szentkirály kísérlet: Vöröshagyma kultúra 4 hónapos mérési időszak.
+              </div>
+              <div className={styles.tagsRow}>
+                <span className={styles.resultTag}><Leaf /> {modelId === '38wx' ? 'Vöröshagyma' : 'Ipari paradicsom'}</span>
+                <span className={styles.resultTag}><Calendar /> {modelId === '38wx' ? 'Márc-Jún' : 'Máj-Aug'}</span>
               </div>
             </div>
+            {/* No link here */}
           </div>
 
           {/* Right: Chart and Link Side-by-Side */}
           <div className={styles.chartSection}>
             <div className={styles.chartHeader}>
-              <div className={styles.chartHeaderLeft}>
-                <BarChart3 size={24} /> Mérési Adatok
-              </div>
+              <BarChart3 size={20} /> Mérési Adatok
             </div>
 
-            <div
-              className={styles.chartContainer}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              <motion.div
-                className={styles.chartVisual}
-                initial="hidden"
-                animate={isHovered ? "static" : (isInView ? "floating" : "hidden")}
-                onViewportEnter={() => setIsInView(true)}
-                viewport={{ once: true, margin: "-50px" }}
-              >
-                {[0.3, 0.5, 0.7, 1].map((targetScale, i) => (
-                  <div key={i} className={styles.barContainer}>
-                    <motion.div
-                      className={`${styles.bar} ${i === 3 ? styles.gold : styles.gray}`}
-                      variants={{
-                        hidden: { height: '10%' },
-                        floating: {
-                          height: [`${targetScale * 40}%`, `${targetScale * 90}%`, `${targetScale * 30}%`, `${targetScale * 80}%`],
-                          transition: {
-                            duration: 2 + i * 0.5,
-                            repeat: Infinity,
-                            repeatType: "mirror",
-                            ease: "easeInOut"
-                          }
-                        },
-                        static: {
-                          height: `${targetScale * 80}%`,
-                          transition: { duration: 0.5, ease: "easeOut" }
-                        }
-                      }}
-                    />
+            <div className={styles.chartRow}>
+              <Link href="/kutatas?page=lakitelek-chart" style={{ display: 'block' }}>
+                <motion.div
+                  className={styles.chartVisual}
+                  whileHover="hover"
+                  initial="initial"
+                >
+                  {/* Simplified Visual Bars - Dynamic Abstract Icon */}
+                  <div className={styles.axisY} />
+                  <div className={styles.axisX} />
+                  <div className={styles.abstractBars}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className={`${styles.bar} ${styles.animBar}`}
+                        style={{
+                          animationDuration: `${1.2 + Math.random() * 1.5}s`,
+                          animationDelay: `-${Math.random() * 2}s`,
+                          width: '12px',
+                          background: i % 2 === 0 ? 'var(--color-gold)' : 'rgba(255,255,255,0.3)',
+                        }}
+                      />
+                    ))}
                   </div>
-                ))}
-              </motion.div>
+                </motion.div>
+              </Link>
 
-              <div className={styles.detailsLink}>
+              <Link href="/kutatas?page=lakitelek-chart" className={styles.detailsLink}>
                 Részletek <ArrowRight size={16} />
-              </div>
+              </Link>
             </div>
           </div>
         </motion.div>

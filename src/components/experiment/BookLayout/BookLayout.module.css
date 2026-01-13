@@ -290,6 +290,19 @@
   z-index: 0;
 }
 
+/* Bottom gradient overlay to hide content below nav bar */
+.bookContent::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  background: linear-gradient(to bottom, transparent 0%, var(--color-earth-900) 50%);
+  pointer-events: none;
+  z-index: 60;
+}
+
 .pageWrapper {
   flex: 1;
   position: relative;
@@ -340,7 +353,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 100px 0 60px 0;
+  padding: 100px 0 120px 0;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -352,7 +365,7 @@
 /* Compact padding for smaller viewports (125% zoom) */
 @media (max-height: 900px) {
   .pageContent {
-    padding: 70px 0 50px 0;
+    padding: 70px 0 120px 0;
   }
 }
 

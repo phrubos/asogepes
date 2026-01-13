@@ -1,0 +1,66 @@
+/* ============================================
+   COMBINED PAGE - Viewport-filling sections
+   Each section fills exactly one viewport height
+   ============================================ */
+
+.combinedWrapper {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  scroll-snap-type: y mandatory;
+}
+
+.section {
+  position: relative;
+  height: calc(100vh - 200px);
+  max-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  scroll-margin-top: 100px;
+  overflow: hidden;
+  scroll-snap-align: start;
+}
+
+/* First section doesn't need top spacing */
+.section:first-child {
+  padding-top: 0;
+}
+
+/* Ensure content within sections can grow/shrink appropriately */
+.section > * {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ============================================
+   RESPONSIVE - Adjust for smaller viewports
+   ============================================ */
+
+@media (max-height: 900px) {
+  .section {
+    height: calc(100vh - 170px);
+    max-height: calc(100vh - 170px);
+    scroll-margin-top: 70px;
+  }
+}
+
+@media (max-height: 700px) {
+  .section {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+}
+
+@media (max-width: 1024px) {
+  .section {
+    height: calc(100vh - 220px);
+    max-height: calc(100vh - 220px);
+  }
+}

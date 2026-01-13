@@ -35,6 +35,7 @@ export default function Navigation() {
   useEffect(() => {
     const index = navItems.findIndex(item => item.href === pathname)
     setActiveIndex(index >= 0 ? index : 0)
+    setScrolled(false) // Reset scrolled state on route change
   }, [pathname])
 
   // Update indicator position
@@ -64,11 +65,21 @@ export default function Navigation() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
     }
+
+    const handleCustomScroll = (e: Event) => {
+      const customEvent = e as CustomEvent
+      setScrolled(customEvent.detail.scrollTop > 50)
+    }
+
     if (mounted) {
       handleScroll()
       window.addEventListener('scroll', handleScroll)
+      window.addEventListener('book-scroll', handleCustomScroll)
     }
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('book-scroll', handleCustomScroll)
+    }
   }, [mounted])
 
   useEffect(() => {
@@ -115,7 +126,16 @@ export default function Navigation() {
               onMouseEnter={() => setHoverIndex(index)}
               onMouseLeave={() => setHoverIndex(null)}
               onClick={() => {
-                if (pathname !== item.href) startNavigating()
+                if (pathname !== item.href) {
+                  startNavigating()
+                } else if (item.href === '/problema') {
+                  // If clicking "Probléma" while already there, reset the book
+                  window.dispatchEvent(new CustomEvent('reset-problem-book'))
+                } else if (item.href === '/technologia') {
+                  window.dispatchEvent(new CustomEvent('reset-technology-book'))
+                } else if (item.href === '/kutatas') {
+                  window.dispatchEvent(new CustomEvent('reset-research-book'))
+                }
               }}
               aria-current={pathname === item.href ? 'page' : undefined}
             >

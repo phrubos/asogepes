@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import BookLayout, { BookPage } from '@/components/experiment/BookLayout/BookLayout' // Using the shared BookLayout
 import HeroPage from './pages/HeroPage'
 import OperationPrinciplePage from './pages/OperationPrinciplePage'
-import ModelPage from './pages/ModelPage'
+import ModelsCombinedPage from './pages/ModelsCombinedPage'
 import ApplicationGuidePage from './pages/ApplicationGuidePage'
 
 export default function TechnologyLayout() {
@@ -28,21 +28,27 @@ export default function TechnologyLayout() {
             section: 'Modellek',
             sectionIndex: 2,
             title: '38SX',
-            component: <ModelPage modelId="38sx" />,
+            component: <ModelsCombinedPage />,
+            scrollToId: 'model-38sx',
+            viewGroupId: 'models-group'
         },
         {
             id: 'models-38wx',
             section: 'Modellek',
             sectionIndex: 2,
             title: '38WX',
-            component: <ModelPage modelId="38wx" />,
+            component: <ModelsCombinedPage />,
+            scrollToId: 'model-38wx',
+            viewGroupId: 'models-group'
         },
         {
             id: 'models-40sx',
             section: 'Modellek',
             sectionIndex: 2,
             title: '40SX',
-            component: <ModelPage modelId="40sx" />,
+            component: <ModelsCombinedPage />,
+            scrollToId: 'model-40sx',
+            viewGroupId: 'models-group'
         },
         {
             id: 'application-guide',
@@ -53,5 +59,5 @@ export default function TechnologyLayout() {
         },
     ], [])
 
-    return <BookLayout pages={pages} />
+    return <BookLayout pages={pages} resetEventName="reset-technology-book" />
 }

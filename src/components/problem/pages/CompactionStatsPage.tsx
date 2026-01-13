@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Droplet, Weight, Layers } from 'lucide-react'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
@@ -73,29 +73,47 @@ function IrrigationBackground() {
     const surfaceY = 40; // Surface line at 40%
 
     // Raindrops falling to the surface - REDUCED COUNT FOR STABILITY
-    const drops = Array.from({ length: 25 }).map((_, i) => ({
+    const drops = useMemo(() => Array.from({ length: 25 }).map((_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
         delay: Math.random() * 2,
         duration: 0.4 + Math.random() * 0.4, // Faster
-    }))
+    })), [])
 
     // Plants positioned along the surface
-    const plants = [
+    const plants = useMemo(() => [
         { id: 1, left: '10%', variant: 1, scale: 1.4 },
         { id: 2, left: '30%', variant: 3, scale: 1.5 },
         { id: 3, left: '50%', variant: 2, scale: 1.7 },
         { id: 4, left: '70%', variant: 1, scale: 1.5 },
         { id: 5, left: '90%', variant: 3, scale: 1.4 },
-    ]
+    ], [])
 
     // Subsurface infiltration paths - REDUCED COUNT
-    const infiltrationPaths = Array.from({ length: 15 }).map((_, i) => ({
+    const infiltrationPaths = useMemo(() => Array.from({ length: 15 }).map((_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
         delay: Math.random() * 4,
         duration: 3 + Math.random() * 3, // Slower, more seeping
-    }))
+    })), [])
+
+    const subsurfaceParticles = useMemo(() => Array.from({ length: 20 }).map((_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        top: surfaceY + 5 + Math.random() * 50,
+        width: 2 + Math.random() * 3,
+        height: 2 + Math.random() * 3,
+        duration: 3 + Math.random() * 4,
+        isGold: i % 2 === 0
+    })), [surfaceY])
+
+    const seepingDroplets = useMemo(() => Array.from({ length: 8 }).map((_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        duration: 8 + Math.random() * 10,
+        delay: Math.random() * 10,
+        drift: (Math.random() - 0.5) * 50
+    })), [])
 
     return (
         <div style={{
@@ -236,17 +254,17 @@ function IrrigationBackground() {
             }} />
 
             {/* Subsurface Seeping "Particles" - REDUCED COUNT */}
-            {Array.from({ length: 20 }).map((_, i) => (
+            {subsurfaceParticles.map((p) => (
                 <motion.div
-                    key={`soil-p-${i}`}
+                    key={`soil-p-${p.id}`}
                     style={{
                         position: 'absolute',
-                        left: `${Math.random() * 100}%`,
-                        top: `${surfaceY + 5 + Math.random() * 50}%`,
-                        width: 2 + Math.random() * 3,
-                        height: 2 + Math.random() * 3,
+                        left: `${p.left}%`,
+                        top: `${p.top}%`,
+                        width: p.width,
+                        height: p.height,
                         borderRadius: '50%',
-                        background: i % 2 === 0 ? 'rgba(212, 168, 75, 0.15)' : 'rgba(107, 139, 94, 0.1)',
+                        background: p.isGold ? 'rgba(212, 168, 75, 0.15)' : 'rgba(107, 139, 94, 0.1)',
                         zIndex: 1,
                     }}
                     animate={{
@@ -254,7 +272,7 @@ function IrrigationBackground() {
                         opacity: [0.2, 0.5, 0.2]
                     }}
                     transition={{
-                        duration: 3 + Math.random() * 4,
+                        duration: p.duration,
                         repeat: Infinity,
                         ease: 'easeInOut'
                     }}
@@ -262,12 +280,12 @@ function IrrigationBackground() {
             ))}
 
             {/* Slow Seeping Droplets in Soil */}
-            {Array.from({ length: 8 }).map((_, i) => (
+            {seepingDroplets.map((d) => (
                 <motion.div
-                    key={`seep-d-${i}`}
+                    key={`seep-d-${d.id}`}
                     style={{
                         position: 'absolute',
-                        left: `${Math.random() * 100}%`,
+                        left: `${d.left}%`,
                         top: `${surfaceY}%`,
                         width: 2,
                         height: 4,
@@ -278,12 +296,12 @@ function IrrigationBackground() {
                     animate={{
                         y: [0, 200],
                         opacity: [0, 0.8, 0],
-                        x: [0, (Math.random() - 0.5) * 50] // Drift sideways
+                        x: [0, d.drift] // Drift sideways
                     }}
                     transition={{
-                        duration: 8 + Math.random() * 10,
+                        duration: d.duration,
                         repeat: Infinity,
-                        delay: Math.random() * 10,
+                        delay: d.delay,
                         ease: 'linear'
                     }}
                 />

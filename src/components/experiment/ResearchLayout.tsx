@@ -5,17 +5,10 @@ import BookLayout, { BookPage } from './BookLayout'
 import {
   HeroPage,
   MethodologyPage,
-  SzentkirályInfoPage,
-  SzentkirályTimelinePage,
-  SzentkirályTempPage,
-  SzentkirályPhotosPage,
-  KecskemétInfoPage,
-  KecskemétTimelinePage,
-  KecskemétPhotosPage,
-  LakitelekInfoPage,
-  LakitelekChartPage,
-  LakitelekPhotosPage
 } from './pages'
+import SzentkiralyCombinedPage from './pages/SzentkiralyCombinedPage'
+import KecskemetCombinedPage from './pages/KecskemetCombinedPage'
+import LakitelekCombinedPage from './pages/LakitelekCombinedPage'
 // import { locations } from '@/lib/data'
 // import LocationSection from './LocationSection'
 // import ScrollIndicator from './ScrollIndicator'
@@ -45,50 +38,64 @@ export default function ResearchLayout() {
       section: 'Szentkirály',
       sectionIndex: 2,
       title: 'Helyszín adatok',
-      component: <SzentkirályInfoPage />,
+      component: <SzentkiralyCombinedPage />,
+      viewGroupId: 'szentkiraly-group',
+      scrollToId: 'szentkiraly-info'
     },
     {
       id: 'szentkiraly-timeline',
       section: 'Szentkirály',
       sectionIndex: 2,
       title: 'A talajszerkezet változása',
-      component: <SzentkirályTimelinePage />,
+      component: <SzentkiralyCombinedPage />,
+      viewGroupId: 'szentkiraly-group',
+      scrollToId: 'szentkiraly-timeline'
     },
     {
       id: 'szentkiraly-temp',
       section: 'Szentkirály',
       sectionIndex: 2,
       title: 'Talajhőmérséklet',
-      component: <SzentkirályTempPage />,
+      component: <SzentkiralyCombinedPage />,
+      viewGroupId: 'szentkiraly-group',
+      scrollToId: 'szentkiraly-temp'
     },
     {
       id: 'szentkiraly-photos',
       section: 'Szentkirály',
       sectionIndex: 2,
       title: 'Fotók',
-      component: <SzentkirályPhotosPage />,
+      component: <SzentkiralyCombinedPage />,
+      viewGroupId: 'szentkiraly-group',
+      scrollToId: 'szentkiraly-photos'
     },
     // Kecskemét-Borbás pages
     {
       id: 'kecskemet-info',
-      section: 'Kecskemét',
+      section: 'KECSKEMÉT-BORBÁS',
       sectionIndex: 3,
-      title: 'KECSKEMÉT-BORBÁS',
-      component: <KecskemétInfoPage />,
+      title: 'Helyszín adatok',
+      component: <KecskemetCombinedPage />,
+      viewGroupId: 'kecskemet-group',
+      scrollToId: 'kecskemet-info'
     },
     {
       id: 'kecskemet-timeline',
-      section: 'Kecskemét',
+      section: 'KECSKEMÉT-BORBÁS',
       sectionIndex: 3,
       title: 'A talajszerkezet változása',
-      component: <KecskemétTimelinePage />,
+      component: <KecskemetCombinedPage />,
+      viewGroupId: 'kecskemet-group',
+      scrollToId: 'kecskemet-timeline'
     },
     {
       id: 'kecskemet-photos',
-      section: 'Kecskemét',
+      section: 'KECSKEMÉT-BORBÁS',
       sectionIndex: 3,
       title: 'Fotók',
-      component: <KecskemétPhotosPage />,
+      component: <KecskemetCombinedPage />,
+      viewGroupId: 'kecskemet-group',
+      scrollToId: 'kecskemet-photos'
     },
     // Lakitelek pages
     {
@@ -96,25 +103,31 @@ export default function ResearchLayout() {
       section: 'Lakitelek',
       sectionIndex: 4,
       title: 'Helyszín adatok',
-      component: <LakitelekInfoPage />,
+      component: <LakitelekCombinedPage />,
+      viewGroupId: 'lakitelek-group',
+      scrollToId: 'lakitelek-info'
     },
     {
       id: 'lakitelek-chart',
       section: 'Lakitelek',
       sectionIndex: 4,
       title: '7 művelési kombináció eredménye',
-      component: <LakitelekChartPage />,
+      component: <LakitelekCombinedPage />,
+      viewGroupId: 'lakitelek-group',
+      scrollToId: 'lakitelek-chart'
     },
     {
       id: 'lakitelek-photos',
       section: 'Lakitelek',
       sectionIndex: 4,
       title: 'Fotók',
-      component: <LakitelekPhotosPage />,
+      component: <LakitelekCombinedPage />,
+      viewGroupId: 'lakitelek-group',
+      scrollToId: 'lakitelek-photos'
     },
   ], [])
 
-  return <BookLayout pages={pages} />
+  return <BookLayout pages={pages} resetEventName="reset-research-book" />
 }
 
 /* OLD LAYOUT - Kept for reference
