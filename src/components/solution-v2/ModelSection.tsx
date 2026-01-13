@@ -23,18 +23,23 @@ type ModelId = '38sx' | '38wx' | '40sx'
 
 interface ModelSectionProps {
   modelId: ModelId
+  onOpenModal?: () => void
 }
 
-export default function ModelSection({ modelId }: ModelSectionProps) {
+export default function ModelSection({ modelId, onOpenModal }: ModelSectionProps) {
   const model = modelDetails[modelId]
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [isInView, setIsInView] = useState(false)
 
   const handleChartClick = () => {
-    const element = document.getElementById('experiment-section');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (onOpenModal) {
+      onOpenModal()
+    } else {
+      const element = document.getElementById('experiment-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   }
 
