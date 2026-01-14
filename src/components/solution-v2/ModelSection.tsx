@@ -184,9 +184,9 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
         src={model.image}
         alt={`${model.name} - ${model.type}`}
         images={[
-          { src: '/images/38SX.png', alt: '38SX Nagy szériás ásógép' },
-          { src: '/images/38WX.png', alt: '38WX Lazítókéses ásógép' },
-          { src: '/images/40SX.png', alt: '40SX Mélyásógép' }
+          { src: '/images/38SX_new.jpeg', alt: '38SX Nagy szériás ásógép' },
+          { src: '/images/38WX_new.jpeg', alt: '38WX Lazítókéses ásógép' },
+          { src: '/images/40SX_new.jpeg', alt: '40SX Mélyásógép' }
         ]}
         initialIndex={modelId === '38sx' ? 0 : modelId === '38wx' ? 1 : 2}
       />

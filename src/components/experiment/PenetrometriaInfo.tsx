@@ -40,10 +40,12 @@ export default function PenetrometriaInfo() {
         </div>
 
         <div className={styles.imagePlaceholder}>
-          <div className={styles.placeholderInner}>
-            <Gauge size={40} strokeWidth={1.5} />
-            <span>Penetrométer</span>
-            <span className={styles.placeholderSub}>Kép helye</span>
+          <div className={styles.imageWrapper}>
+            <img
+              src="/images/penetrometer_premium.png"
+              alt="Penetrométer"
+              className={styles.image}
+            />
           </div>
         </div>
       </div>

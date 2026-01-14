@@ -82,66 +82,42 @@ export default function ProblemHero({ onNavigate }: ProblemHeroProps) {
 
                 {/* Right Column: "Soil Threat Monitor" Visualization */}
                 <div className={styles.heroRight}>
-                    <div className={styles.monitorFrame}>
-                        {/* Background Grid & Decorative Elements */}
-                        <div className={styles.monitorGrid} />
-                        <div className={styles.monitorScanline} />
-                        <div className={styles.monitorHeader}>
-                            <div className={styles.monitorStatus}>
-                                <Activity size={14} className={styles.pulseIcon} />
-                                <span>TALAJ DIAGNOSZTIKA</span>
-                            </div>
-                            <div className={styles.monitorId}>SYS-2025-V2</div>
-                        </div>
+                    <div className={styles.flowStepsWrapper}>
+                        {/* The connecting flow line */}
+                        <div className={styles.flowLine} />
 
-                        <div className={styles.monitorContent}>
+                        <div className={styles.flowStepsContainer}>
                             {HERO_NAV_ITEMS.map((item, index) => (
-                                <motion.button
+                                <motion.div
                                     key={item.id}
-                                    className={`${styles.threatCard} ${hoveredId === item.id ? styles.threatCardActive : ''}`}
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.3 + (index * 0.1) }}
-                                    onClick={() => onNavigate(item.id)}
-                                    onMouseEnter={() => setHoveredId(item.id)}
-                                    onMouseLeave={() => setHoveredId(null)}
+                                    className={styles.stepCardWrapper}
+                                    initial={{ opacity: 0, y: 30, x: -10 }}
+                                    animate={{ opacity: 1, y: 0, x: 0 }}
+                                    transition={{ delay: 0.2 + (index * 0.15), type: 'spring', stiffness: 80 }}
                                 >
-                                    {/* Card Content */}
-                                    <div className={styles.threatCardInner}>
-                                        <div className={styles.threatIconBox}>
-                                            {item.icon}
-                                        </div>
-
-                                        <div className={styles.threatInfo}>
-                                            <div className={styles.threatMeta}>
-                                                <span className={styles.threatNumber}>{item.number}</span>
-                                                <span className={styles.threatDepth}>{item.stats}</span>
+                                    <div
+                                        className={`${styles.stepCard} ${hoveredId === item.id ? styles.stepCardActive : ''}`}
+                                        onClick={() => onNavigate(item.id)}
+                                        onMouseEnter={() => setHoveredId(item.id)}
+                                        onMouseLeave={() => setHoveredId(null)}
+                                        style={{ '--card-accent': item.accent } as React.CSSProperties}
+                                    >
+                                        {/* Un-skewed content container */}
+                                        <div className={styles.stepContent}>
+                                            <div className={styles.stepHeader}>
+                                                <span className={styles.stepNumber}>{item.number}</span>
+                                                <div className={styles.stepIcon}>{item.icon}</div>
                                             </div>
-                                            <h3 className={styles.threatTitle}>{item.title}</h3>
-                                        </div>
 
-                                        <div className={styles.threatAction}>
-                                            <ChevronRight size={18} />
+                                            <h3 className={styles.stepTitle}>{item.title}</h3>
+
+                                            <div className={styles.stepMeta}>
+                                                <span className={styles.metaBadge}>{item.stats}</span>
+                                                <ChevronRight size={16} className={styles.arrowIcon} />
+                                            </div>
                                         </div>
                                     </div>
-
-                                    {/* Hover visual effects */}
-                                    {hoveredId === item.id && (
-                                        <motion.div
-                                            className={styles.threatScanEffect}
-                                            layoutId="scanEffect"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                        />
-                                    )}
-
-                                    {/* Alert Tag on Hover */}
-                                    <div className={`${styles.alertTag} ${hoveredId === item.id ? styles.alertTagVisible : ''}`}>
-                                        <AlertOctagon size={12} />
-                                        {item.alertLevel}
-                                    </div>
-                                </motion.button>
+                                </motion.div>
                             ))}
                         </div>
                     </div>

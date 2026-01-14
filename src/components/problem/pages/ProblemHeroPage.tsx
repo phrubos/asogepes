@@ -14,8 +14,8 @@ const HERO_NAV_ITEMS = [
         title: 'Az öntözés okozta tömörödés',
         icon: <Layers size={24} />,
         color: '#A0846B',
-        accent: '#C9A227', // Gold
-        stats: '0-20 cm',
+        accent: '#FDD835', // Yellow (Warning)
+        stats: '0-20 cm', // Keeping data but not rendering
         alertLevel: 'Magas'
     },
     {
@@ -24,7 +24,7 @@ const HERO_NAV_ITEMS = [
         title: 'A szántóföldi nehézkultivátor korlátai',
         icon: <Shovel size={24} />,
         color: '#7D6B5A',
-        accent: '#C9A227', // Gold
+        accent: '#FB8C00', // Orange (Critical)
         stats: '20-35 cm',
         alertLevel: 'Kritikus'
     },
@@ -34,7 +34,7 @@ const HERO_NAV_ITEMS = [
         title: 'A szántás korlátai',
         icon: <Tractor size={24} />,
         color: '#5C4D3D',
-        accent: '#E57373', // Red for high danger
+        accent: '#E53935', // Red (Danger)
         stats: '35+ cm',
         alertLevel: 'Veszély'
     }
@@ -86,61 +86,50 @@ export default function ProblemHeroPage() {
                     </motion.p>
                 </div>
 
-                {/* Right Column: "Soil Threat Monitor" Visualization */}
                 <div className={styles.heroRight}>
-                    <div className={styles.monitorFrame}>
-                        {/* Background Grid & Decorative Elements */}
-                        <div className={styles.monitorGrid} />
-                        <div className={styles.monitorScanline} />
-                        <div className={styles.monitorHeader}>
-                            <div className={styles.monitorStatus}>
-                                <Activity size={14} className={styles.pulseIcon} />
-                            </div>
-                        </div>
+                    {/* Imants / Soil Blades Container */}
+                    <div className={styles.imantsContainer}>
+                        {/* The Soil Horizon Layer */}
+                        <div className={styles.soilHorizon} />
 
-                        <div className={styles.monitorContent}>
-                            {HERO_NAV_ITEMS.map((item, index) => (
-                                <motion.button
+                        <div className={styles.imantsOverlay} />
+
+                        {HERO_NAV_ITEMS.map((item, index) => {
+                            // Position logic for the 3 blades "in the soil"
+                            const positions = [
+                                { bottom: '20%', left: '10%' }, // Left Blade
+                                { bottom: '12%', left: '37%' }, // Center Blade (slightly lower/forward)
+                                { bottom: '20%', left: '64%' }  // Right Blade
+                            ]
+                            const pos = positions[index] || { bottom: '15%', left: '50%' }
+
+                            return (
+                                <motion.div
                                     key={item.id}
-                                    className={`${styles.threatCard} ${hoveredId === item.id ? styles.threatCardActive : ''}`}
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.3 + (index * 0.1) }}
-                                    onClick={() => handleNavigate(item.id)}
-                                    onMouseEnter={() => setHoveredId(item.id)}
-                                    onMouseLeave={() => setHoveredId(null)}
+                                    className={styles.spadeCardWrapper}
+                                    style={{
+                                        left: pos.left,
+                                        bottom: pos.bottom,
+                                        '--card-accent': item.accent,
+                                        zIndex: 10 + index // Natural layering
+                                    } as React.CSSProperties}
+                                    initial={{ opacity: 0, y: -50, scale: 0.9 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    transition={{ delay: 0.4 + (index * 0.15), type: 'spring', stiffness: 120, damping: 12 }}
                                 >
-                                    {/* Card Content */}
-                                    <div className={styles.threatCardInner}>
-                                        <div className={styles.threatIconBox}>
-                                            {item.icon}
-                                        </div>
-
-                                        <div className={styles.threatInfo}>
-                                            <div className={styles.threatMeta}>
-                                                <span className={styles.threatNumber}>{item.number}</span>
-                                            </div>
-                                            <h3 className={styles.threatTitle}>{item.title}</h3>
-                                        </div>
-
-                                        <div className={styles.threatAction}>
-                                            <ChevronRight size={18} />
-                                        </div>
+                                    <div
+                                        className={`${styles.spadeCard} ${hoveredId === item.id ? styles.spadeCardActive : ''}`}
+                                        onClick={() => handleNavigate(item.id)}
+                                        onMouseEnter={() => setHoveredId(item.id)}
+                                        onMouseLeave={() => setHoveredId(null)}
+                                    >
+                                        <span className={styles.spadeNumber}>{item.number}</span>
+                                        <div className={styles.spadeIcon}>{item.icon}</div>
+                                        <h3 className={styles.spadeTitle}>{item.title}</h3>
                                     </div>
-
-                                    {/* Hover visual effects */}
-                                    {hoveredId === item.id && (
-                                        <motion.div
-                                            className={styles.threatScanEffect}
-                                            layoutId="scanEffect"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                        />
-                                    )}
-                                </motion.button>
-                            ))}
-                        </div>
+                                </motion.div>
+                            )
+                        })}
                     </div>
                 </div>
             </div>

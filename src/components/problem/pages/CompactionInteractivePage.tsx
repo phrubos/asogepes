@@ -17,7 +17,6 @@ const timelineData = [
 export default function CompactionInteractivePage() {
     const progress = useMotionValue(0)
     const [isPlaying, setIsPlaying] = useState(true)
-    const [isHovered, setIsHovered] = useState(false)
     const [currentProgress, setCurrentProgress] = useState(0)
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
     const controlsRef = useRef<any>(null)
@@ -30,7 +29,7 @@ export default function CompactionInteractivePage() {
     }, [progress])
 
     useEffect(() => {
-        if (!isPlaying || isHovered) {
+        if (!isPlaying) {
             if (controlsRef.current) controlsRef.current.stop();
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
             return;
@@ -68,7 +67,7 @@ export default function CompactionInteractivePage() {
             if (controlsRef.current) controlsRef.current.stop();
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
         };
-    }, [isPlaying, isHovered]);
+    }, [isPlaying]);
 
 
     const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,8 +135,6 @@ export default function CompactionInteractivePage() {
                 >
                     <InteractiveSoil
                         progress={progress}
-                        isHovered={isHovered}
-                        setIsHovered={setIsHovered}
                     />
 
                     <motion.button

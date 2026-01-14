@@ -374,7 +374,7 @@ export const modelDetails = {
     name: '38SX',
     type: 'Nagy szériás',
     typeEn: 'Standard Spader',
-    image: '/images/38SX.png',
+    image: '/images/38SX_new.jpeg',
     specs: {
       depth: '15-35 cm',
       power: '90-150 LE',
@@ -419,7 +419,7 @@ export const modelDetails = {
     name: '38WX',
     type: 'Lazítókéses',
     typeEn: 'Spader with Subsoiler',
-    image: '/images/38WX.png',
+    image: '/images/38WX_new.jpeg',
     specs: {
       depth: '15-35 cm + 55 cm mélylazítás',
       power: '90-150 LE',
@@ -460,7 +460,7 @@ export const modelDetails = {
     name: '40SX',
     type: 'Mélyásógép',
     typeEn: 'Heavy Duty Spader',
-    image: '/images/40SX.png',
+    image: '/images/40SX_new.jpeg',
     specs: {
       depth: '20-50 cm',
       power: '110-160 LE',

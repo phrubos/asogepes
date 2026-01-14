@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Layers, Sprout, Grid3X3, Shovel } from 'lucide-react'
 import TiltCard from '@/components/ui/TiltCard'
+import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from '../ProblemNew.module.css'
 
 const cultivatorProblems = [
@@ -31,6 +32,7 @@ const cultivatorProblems = [
 
 export default function CultivatorProblemsPage() {
     const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
     const iconMap: Record<string, React.ReactNode> = {
         layers: <Layers size={24} />,
@@ -71,11 +73,14 @@ export default function CultivatorProblemsPage() {
                             className={styles.cultivatorImageContainer}
                             whileHover={{ scale: 1.01 }}
                             transition={{ duration: 0.4 }}
+                            onClick={() => setIsLightboxOpen(true)}
+                            style={{ cursor: 'pointer' }}
                         >
                             <img
-                                src="/images/nehezkultivator.png"
+                                src="/images/premium_cultivator_courtyard.png"
                                 alt="Nehézkultivátor"
                                 className={styles.cultivatorImage}
+                                loading="lazy"
                             />
 
                         </motion.div>
@@ -122,6 +127,13 @@ export default function CultivatorProblemsPage() {
                     </div>
                 </div>
             </div>
+
+            <ImageLightbox
+                isOpen={isLightboxOpen}
+                onClose={() => setIsLightboxOpen(false)}
+                src="/images/premium_cultivator_courtyard.png"
+                alt="Nehézkultivátor"
+            />
         </motion.div>
     )
 }

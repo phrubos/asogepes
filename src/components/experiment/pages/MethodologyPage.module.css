@@ -151,6 +151,23 @@
   height: 100%;
 }
 
+.imageWrapper {
+  width: 100%;
+  max-width: 450px;
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
 .imagePlaceholder {
   width: 100%;
   max-width: 450px;

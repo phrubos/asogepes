@@ -5,11 +5,9 @@ import { useEffect, useMemo } from 'react'
 
 interface InteractiveSoilProps {
   progress: number | MotionValue<number> // 0.0 to 4.0
-  isHovered: boolean
-  setIsHovered: (hover: boolean) => void
 }
 
-export default function InteractiveSoil({ progress, isHovered, setIsHovered }: InteractiveSoilProps) {
+export default function InteractiveSoil({ progress }: InteractiveSoilProps) {
   const progressMV = useMotionValue(0)
   const activeProgress = (typeof progress === 'number') ? progressMV : progress
 
@@ -133,10 +131,8 @@ export default function InteractiveSoil({ progress, isHovered, setIsHovered }: I
   return (
     <motion.div
       className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl border border-white/5"
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
       style={{
-        cursor: isHovered ? 'grab' : 'default',
+        cursor: 'default',
         background: 'radial-gradient(circle at 50% 30%, #2c3e50 0%, #1a1a1a 100%)' // Fallback bg
       }}
     >

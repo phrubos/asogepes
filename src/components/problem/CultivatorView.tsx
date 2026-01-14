@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Check, X, Layers, Sprout, Grid3X3, Shovel } from 'lucide-react'
 import TiltCard from '@/components/ui/TiltCard'
+import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from './ProblemNew.module.css'
 
 const seededRandom = (seed: number) => {
@@ -355,6 +356,7 @@ const SpadeVisual = () => {
 
 export default function CultivatorView() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
   const iconMap: Record<string, React.ReactNode> = {
     layers: <Layers size={24} />,
@@ -396,11 +398,14 @@ export default function CultivatorView() {
               className={styles.cultivatorImageContainer}
               whileHover={{ scale: 1.01 }}
               transition={{ duration: 0.4 }}
+              onClick={() => setIsLightboxOpen(true)}
+              style={{ cursor: 'pointer' }}
             >
               <img
-                src="/images/nehezkultivator.png"
+                src="/images/premium_cultivator_courtyard.png"
                 alt="Nehézkultivátor"
                 className={styles.cultivatorImage}
+                loading="lazy"
               />
               <div className={styles.imageOverlay}>
                 <div className={styles.imageLabels}>
@@ -409,6 +414,13 @@ export default function CultivatorView() {
               </div>
             </motion.div>
           </div>
+
+          <ImageLightbox
+            isOpen={isLightboxOpen}
+            onClose={() => setIsLightboxOpen(false)}
+            src="/images/premium_cultivator_courtyard.png"
+            alt="Nehézkultivátor"
+          />
 
           <div className={styles.cultivatorText}>
 

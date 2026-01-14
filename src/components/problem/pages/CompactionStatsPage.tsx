@@ -6,6 +6,7 @@ import { Droplet, Weight, Layers } from 'lucide-react'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
 import TiltCard from '@/components/ui/TiltCard'
 import { problemStatistics, compactionChallenges } from '@/lib/data'
+import { useResponsiveParticleCount, useReducedMotion } from '@/hooks/useMediaQuery'
 import styles from '../ProblemNew.module.css'
 
 // Simple SVG Tomato Plant
@@ -71,14 +72,21 @@ function TomatoPlant({ style, variant = 1 }: { style: React.CSSProperties, varia
 // Sophisticated background animation representing water infiltration
 function IrrigationBackground() {
     const surfaceY = 40; // Surface line at 40%
+    const prefersReducedMotion = useReducedMotion()
+    
+    // Performance-optimized particle counts
+    const dropCount = useResponsiveParticleCount(25) // 25 desktop → 8 mobile
+    const infiltrationCount = useResponsiveParticleCount(15) // 15 desktop → 5 mobile
+    const particleCount = useResponsiveParticleCount(20) // 20 desktop → 6 mobile
+    const seepingCount = useResponsiveParticleCount(8) // 8 desktop → 3 mobile
 
-    // Raindrops falling to the surface - REDUCED COUNT FOR STABILITY
-    const drops = useMemo(() => Array.from({ length: 25 }).map((_, i) => ({
+    // Raindrops falling to the surface - RESPONSIVE COUNT
+    const drops = useMemo(() => Array.from({ length: dropCount }).map((_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
         delay: Math.random() * 2,
-        duration: 0.4 + Math.random() * 0.4, // Faster
-    })), [])
+        duration: prefersReducedMotion ? 0.2 : 0.4 + Math.random() * 0.4,
+    })), [dropCount, prefersReducedMotion])
 
     // Plants positioned along the surface
     const plants = useMemo(() => [
@@ -89,25 +97,25 @@ function IrrigationBackground() {
         { id: 5, left: '90%', variant: 3, scale: 1.4 },
     ], [])
 
-    // Subsurface infiltration paths - REDUCED COUNT
-    const infiltrationPaths = useMemo(() => Array.from({ length: 15 }).map((_, i) => ({
+    // Subsurface infiltration paths - RESPONSIVE COUNT
+    const infiltrationPaths = useMemo(() => Array.from({ length: infiltrationCount }).map((_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
         delay: Math.random() * 4,
-        duration: 3 + Math.random() * 3, // Slower, more seeping
-    })), [])
+        duration: prefersReducedMotion ? 2 : 3 + Math.random() * 3,
+    })), [infiltrationCount, prefersReducedMotion])
 
-    const subsurfaceParticles = useMemo(() => Array.from({ length: 20 }).map((_, i) => ({
+    const subsurfaceParticles = useMemo(() => Array.from({ length: particleCount }).map((_, i) => ({
         id: i,
         left: Math.random() * 100,
         top: surfaceY + 5 + Math.random() * 50,
         width: 2 + Math.random() * 3,
         height: 2 + Math.random() * 3,
-        duration: 3 + Math.random() * 4,
+        duration: prefersReducedMotion ? 2 : 3 + Math.random() * 4,
         isGold: i % 2 === 0
-    })), [surfaceY])
+    })), [surfaceY, particleCount, prefersReducedMotion])
 
-    const seepingDroplets = useMemo(() => Array.from({ length: 8 }).map((_, i) => ({
+    const seepingDroplets = useMemo(() => Array.from({ length: seepingCount }).map((_, i) => ({
         id: i,
         left: Math.random() * 100,
         duration: 8 + Math.random() * 10,

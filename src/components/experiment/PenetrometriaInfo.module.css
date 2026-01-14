@@ -1,10 +1,8 @@
 /* Penetrometria Info Container */
 .container {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.03) 0%,
-    rgba(255, 255, 255, 0.01) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.01) 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   padding: var(--space-xl);
@@ -18,11 +16,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at 90% 50%,
-    rgba(212, 168, 75, 0.04) 0%,
-    transparent 50%
-  );
+  background: radial-gradient(circle at 90% 50%,
+      rgba(212, 168, 75, 0.04) 0%,
+      transparent 50%);
   pointer-events: none;
 }
 
@@ -101,14 +97,32 @@
 
 /* Image Placeholder */
 .imagePlaceholder {
-  width: 160px;
-  height: 120px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px dashed rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 180px;
+  height: 140px;
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.imagePlaceholder:hover {
+  transform: scale(1.02);
+  border-color: rgba(212, 168, 75, 0.3);
+}
+
+.imageWrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .placeholderInner {

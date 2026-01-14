@@ -5,11 +5,13 @@ import { motion } from 'framer-motion'
 import { Layers, Activity, Leaf, Thermometer, AlertTriangle } from 'lucide-react'
 import PloughingSoilComparison from '@/components/problem/PloughingSoilComparison'
 import TiltCard from '@/components/ui/TiltCard'
+import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import { ploughingProblems } from '@/lib/data'
 import styles from './ProblemNew.module.css'
 
 export default function PloughingView() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
   const iconMap: Record<string, JSX.Element> = {
     layers: <Layers size={24} />,
@@ -226,16 +228,26 @@ export default function PloughingView() {
             className={styles.ploughImageWrapper}
             whileHover={{ scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            onClick={() => setIsLightboxOpen(true)}
+            style={{ cursor: 'pointer' }}
           >
             <img
               src="/images/eke.jpg"
               alt="American mouldboard eke"
               className={styles.ploughImage}
+              loading="lazy"
             />
             <div className={styles.ploughImageOverlay}>
               <span className={styles.ploughImageLabel}>American mouldboard</span>
             </div>
           </motion.div>
+
+          <ImageLightbox
+            isOpen={isLightboxOpen}
+            onClose={() => setIsLightboxOpen(false)}
+            src="/images/eke.jpg"
+            alt="American mouldboard eke"
+          />
 
           <div className={styles.ploughIntroText}>
             <p className={styles.ploughIntroDesc}>

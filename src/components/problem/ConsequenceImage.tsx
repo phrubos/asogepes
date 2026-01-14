@@ -28,6 +28,7 @@ export default function ConsequenceImage() {
             fill
             className={styles.image}
             sizes="(max-width: 768px) 100vw, 800px"
+            loading="lazy"
           />
           <div className={styles.overlay}>
             <div className={styles.zoomIcon}>

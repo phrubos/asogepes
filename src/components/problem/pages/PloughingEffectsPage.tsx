@@ -4,10 +4,12 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Layers, Activity, Leaf, Thermometer, AlertTriangle, Worm, CloudFog, Quote } from 'lucide-react'
 import { ploughingProblems } from '@/lib/data'
+import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from './PloughingEffectsPage.module.css'
 
 export default function PloughingEffectsPage() {
     const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
     const iconMap: Record<string, JSX.Element> = {
         layers: <Layers size={20} />,
@@ -57,14 +59,25 @@ export default function PloughingEffectsPage() {
             <div className={styles.grid}>
                 {/* Left Column: Image */}
                 <motion.div className={styles.imageColumn} variants={itemVariants}>
-                    <div className={styles.imageWrapper}>
+                    <div
+                        className={styles.imageWrapper}
+                        onClick={() => setIsLightboxOpen(true)}
+                        style={{ cursor: 'pointer' }}
+                    >
                         <img
                             src="/images/premium_plough_head.png"
                             alt="American mouldboard eke"
                             className={styles.mainImage}
+                            loading="lazy"
                         />
 
                     </div>
+                    <ImageLightbox
+                        isOpen={isLightboxOpen}
+                        onClose={() => setIsLightboxOpen(false)}
+                        src="/images/premium_plough_head.png"
+                        alt="American mouldboard eke"
+                    />
                 </motion.div>
 
                 {/* Center Column: Quote */}

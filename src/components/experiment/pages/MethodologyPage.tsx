@@ -1,10 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Gauge, ImageIcon } from 'lucide-react'
+import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from './MethodologyPage.module.css'
 
 export default function MethodologyPage() {
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
   return (
     <div className={styles.methodologyPage}>
       <div className={styles.content}>
@@ -50,14 +53,25 @@ export default function MethodologyPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div className={styles.imagePlaceholder}>
-            <div className={styles.placeholderContent}>
-              <ImageIcon size={48} strokeWidth={1.5} />
-              <span className={styles.placeholderText}>Penetrométer</span>
-              <span className={styles.placeholderSubtext}>Kép helye</span>
-            </div>
+          <div
+            className={styles.imageWrapper}
+            onClick={() => setIsLightboxOpen(true)}
+            style={{ cursor: 'pointer' }}
+          >
+            <img
+              src="/images/penetrometer_premium.png"
+              alt="Penetrométer"
+              className={styles.image}
+            />
           </div>
         </motion.div>
+
+        <ImageLightbox
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          src="/images/penetrometer_premium.png"
+          alt="Penetrométer"
+        />
       </div>
     </div>
   )

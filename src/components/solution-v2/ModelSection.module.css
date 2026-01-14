@@ -62,7 +62,7 @@
 
 /* Image Card - White Background */
 .imageCard {
-  background: #F5F5F7;
+  background: transparent;
   /* Light gray/whiteish */
   border-radius: var(--radius-xl);
   display: flex;
@@ -70,15 +70,15 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
-  padding: var(--space-2xl);
+  padding: 0;
   cursor: pointer;
 }
 
 .machineImage {
   width: 100%;
-  height: auto;
-  max-height: 350px;
-  object-fit: contain;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
   filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
   transition: transform 0.5s ease;
 }

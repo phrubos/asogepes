@@ -16,9 +16,9 @@ interface HubFolderProps {
 }
 
 const modelData = [
-  { id: '38sx' as ModelId, name: '38SX', type: 'Nagy szériás', tag: 'Standard', color: 'brown' },
-  { id: '38wx' as ModelId, name: '38WX', type: 'Lazítókéses', tag: 'Hybrid', color: 'green' },
-  { id: '40sx' as ModelId, name: '40SX', type: 'Mélyásógép', tag: 'Deep', color: 'blue' },
+  { id: '38sx' as ModelId, name: '38SX', type: 'Nagy szériás', tag: 'Standard', color: 'brown', image: '/images/38SX_new.jpeg' },
+  { id: '38wx' as ModelId, name: '38WX', type: 'Lazítókéses', tag: 'Hybrid', color: 'green', image: '/images/38WX_new.jpeg' },
+  { id: '40sx' as ModelId, name: '40SX', type: 'Mélyásógép', tag: 'Deep', color: 'blue', image: '/images/40SX_new.jpeg' },
 ]
 
 // Demo sequence - simulates user interaction with dynamic, snappy timing
@@ -404,9 +404,10 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
                 <div className={styles.miniFolderFront}>
                   <div className={styles.miniFolderImageWrap}>
                     <img
-                      src={`/images/${model.name}.png`}
+                      src={model.image}
                       alt={model.name}
                       className={styles.miniFolderImage}
+                      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                     />
                   </div>
                   <span className={styles.miniFolderLabel}>{model.name}</span>
