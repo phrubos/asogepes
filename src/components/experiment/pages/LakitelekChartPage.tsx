@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Maximize2, X, CheckCircle, Award, Sparkles, TrendingUp, Layers } from 'lucide-react'
+import { MapPin, Maximize2, X, CheckCircle, Award, Sparkles, TrendingUp, Layers, Play } from 'lucide-react'
 import { locations } from '@/lib/data'
 import styles from './LakitelekChartPage.module.css'
 
@@ -16,10 +16,18 @@ const conclusions = data.conclusions
 
 export default function LakitelekChartPage() {
   const [isChartFullscreen, setIsChartFullscreen] = useState(false)
+  const [isChartLoaded, setIsChartLoaded] = useState(false)
   const [showResults, setShowResults] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const isBestResult = (num: string) => conclusions?.bestResults.includes(num)
+
+  // Auto-load chart on fullscreen
+  useEffect(() => {
+    if (isChartFullscreen && !isChartLoaded) {
+      setIsChartLoaded(true)
+    }
+  }, [isChartFullscreen, isChartLoaded])
 
   // Handle escape key
   useEffect(() => {
@@ -156,7 +164,48 @@ export default function LakitelekChartPage() {
           <div className={styles.mainContent}>
             <motion.div className={styles.visualizationArea}>
               <div className={styles.vizCanvas}>
-                <FieldChart3DCanvas parcels={parcels} conclusions={conclusions} />
+                <AnimatePresence mode="wait">
+                  {!isChartLoaded ? (
+                    <motion.div
+                      key="placeholder"
+                      className={styles.customPlaceholder}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                    >
+                      <div className={styles.fakeChartBlur} />
+                      <div className={styles.playButtonContainer}>
+                        <motion.button
+                          className={styles.playButton}
+                          onClick={() => setIsChartLoaded(true)}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Play size={40} className={styles.playIcon} fill="currentColor" />
+                        </motion.button>
+                        <motion.div
+                          className={styles.playLabel}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.2 }}
+                        >
+                          <span className={styles.playLabelTitle}>3D Modell Betöltése</span>
+                          <span className={styles.playLabelSubtitle}>Interaktív vizualizáció</span>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="chart"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 1 }}
+                      style={{ width: '100%', height: '100%' }}
+                    >
+                      <FieldChart3DCanvas parcels={parcels} conclusions={conclusions} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </motion.div>
 
