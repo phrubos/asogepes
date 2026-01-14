@@ -26,6 +26,22 @@
 
     --color-accent: #C45C3E;
 
+    /* Book Layout - Premium Earth & Gold */
+    --bg-book-dark: #1F1A16;
+    --bg-book-medium: #2F2822;
+    --bg-book-light: #3D342B;
+    --bg-book-deepest: #181410;
+
+    /* Gold glow variations for ambient lighting */
+    --gold-glow: rgba(212, 168, 75, 0.15);
+    --gold-subtle: rgba(212, 168, 75, 0.08);
+    --gold-ambient: rgba(232, 200, 122, 0.06);
+
+    /* Soil/earth texture colors */
+    --soil-warm: rgba(139, 90, 43, 0.12);
+    --soil-medium: rgba(120, 80, 40, 0.08);
+    --soil-deep: rgba(101, 67, 33, 0.10);
+
     /* Theme-aware colors */
     --bg-primary: var(--color-cream);
     --bg-secondary: var(--color-white);

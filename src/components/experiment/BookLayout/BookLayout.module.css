@@ -10,7 +10,7 @@
   right: 0;
   bottom: 0;
   display: flex;
-  background: var(--color-earth-900);
+  background: var(--bg-book-dark, #1F1A16);
   overflow: hidden;
   perspective: 2000px;
   z-index: 50;
@@ -29,11 +29,12 @@
   /* Wider for the expanded content */
   min-width: 280px;
   height: 100vh;
-  /* Glassmorphism background */
+  /* Rich gradient with subtle gold edge */
   background: linear-gradient(90deg,
-      rgba(14, 12, 10, 0.95) 0%,
-      rgba(20, 17, 14, 0.8) 60%,
-      rgba(20, 17, 14, 0) 100%);
+      rgba(14, 12, 10, 0.98) 0%,
+      rgba(25, 21, 17, 0.92) 50%,
+      rgba(31, 26, 22, 0) 100%);
+  border-right: 1px solid rgba(212, 168, 75, 0.08);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -275,18 +276,49 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--color-earth-800) 0%, var(--color-earth-900) 100%);
+  /* Clean warm gradient base */
+  background: linear-gradient(
+    165deg,
+    #342C24 0%,
+    #2A231C 25%,
+    #1F1A16 60%,
+    #171311 100%
+  );
 }
 
-/* Subtle paper texture */
+/* Clean gradient + ambient light system */
 .bookContent::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image:
-    url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.735-5.197-1.575-8.244-2.953-5.857-2.649-9.87-4.14-15.109-5.631-5.658-1.611-12.729-2.94-20.251-3.676V0h-2.5v7.26a86.13 86.13 0 0 0-14.28 1.488c-8.913 1.805-18.069 6.22-23.219 9.323l-3.35 1.93h4.333zM97.75 20h2.25v-2.35c-1.353-.263-2.614-.54-3.793-.835-7.525-1.884-14.596-3.213-22.118-3.95V5.12a86.13 86.13 0 0 0-14.28 1.488c-8.913 1.805-18.069 6.22-23.219 9.323l-3.35 1.93h4.333c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928C81.854 21.821 89.261 24.665 97.75 20zm-97.75 0h2.25v-2.35c-1.353-.263-2.614-.54-3.793-.835-7.525-1.884-14.596-3.213-22.118-3.95V5.12a86.13 86.13 0 0 0-14.28 1.488c-8.913 1.805-18.069 6.22-23.219 9.323l-3.35 1.93h4.333z' fill='%23D4A84B' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E"),
-    radial-gradient(circle at 20% 30%, rgba(212, 168, 75, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(212, 168, 75, 0.02) 0%, transparent 50%);
+  background:
+    /* Ambient gold glow - top center */
+    radial-gradient(ellipse 100% 40% at 50% 0%,
+      rgba(212, 168, 75, 0.12) 0%,
+      rgba(212, 168, 75, 0.04) 40%,
+      transparent 70%),
+
+    /* Warm accent - top right corner */
+    radial-gradient(circle at 95% 5%,
+      rgba(232, 200, 122, 0.15) 0%,
+      rgba(212, 168, 75, 0.05) 25%,
+      transparent 45%),
+
+    /* Subtle warm glow - bottom left */
+    radial-gradient(ellipse 50% 40% at 5% 95%,
+      rgba(212, 168, 75, 0.08) 0%,
+      transparent 60%),
+
+    /* Soft depth - center highlight */
+    radial-gradient(ellipse 80% 60% at 50% 50%,
+      rgba(47, 40, 34, 0.3) 0%,
+      transparent 60%),
+
+    /* Vignette for depth */
+    radial-gradient(ellipse 70% 60% at 50% 50%,
+      transparent 40%,
+      rgba(15, 12, 10, 0.5) 100%);
+
   pointer-events: none;
   z-index: 0;
 }
@@ -319,8 +351,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(14, 12, 10, 0.4);
-  backdrop-filter: blur(8px);
+  background: rgba(31, 26, 22, 0.5);
+  backdrop-filter: blur(12px);
   z-index: 100;
 }
 
@@ -385,14 +417,7 @@
 
 /* Page decorations */
 .pageCorner {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100px;
-  height: 100px;
-  background: linear-gradient(135deg, transparent 50%, rgba(212, 168, 75, 0.05) 50%);
-  pointer-events: none;
-  z-index: 10;
+  display: none;
 }
 
 .pageShadow {
@@ -400,8 +425,8 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 60px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.3), transparent);
+  width: 80px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.4), transparent);
   pointer-events: none;
   z-index: 5;
 }
@@ -602,8 +627,9 @@
     /* Short horizontal bar */
     flex-direction: row;
     padding: 0;
-    background: rgba(20, 17, 14, 0.95);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(31, 26, 22, 0.98);
+    border-top: 1px solid rgba(212, 168, 75, 0.15);
+    border-right: none;
     min-width: auto;
   }
 
