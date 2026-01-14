@@ -145,6 +145,25 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+/* Custom Scrollbar (Global) */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-earth-900);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-gold);
+    border-radius: 3px;
+    border: 1px solid var(--color-earth-800);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gold-light);
+}
+
 img {
     max-width: 100%;
     height: auto;

@@ -14,8 +14,8 @@
     .hero {
         min-height: 100vh;
         min-height: 100svh;
-        padding: 20px var(--space-2xl) 0;
-        /* Slightly less top padding */
+        padding: 20px var(--space-2xl) 80px;
+        /* Slightly less top padding, more bottom to clear badges */
     }
 
     .heroBadge {

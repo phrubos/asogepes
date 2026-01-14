@@ -45,12 +45,19 @@ export default function Navigation() {
       const targetIndex = hoverIndex !== null ? hoverIndex : activeIndex
       const links = navRef.current.querySelectorAll('a')
       const activeLink = links[targetIndex] as HTMLElement
+
       if (activeLink) {
         const navRect = navRef.current.getBoundingClientRect()
         const linkRect = activeLink.getBoundingClientRect()
+
+        // Measure padding to underline only the text
+        const computedStyle = window.getComputedStyle(activeLink)
+        const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0
+        const paddingRight = parseFloat(computedStyle.paddingRight) || 0
+
         setIndicatorStyle({
-          left: linkRect.left - navRect.left,
-          width: linkRect.width,
+          left: (linkRect.left - navRect.left) + paddingLeft,
+          width: linkRect.width - (paddingLeft + paddingRight),
         })
       }
     }
