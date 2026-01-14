@@ -71,10 +71,9 @@ export default function BookLayout({ pages, resetEventName }: BookLayoutProps) {
   }
 
   const pageTransition = {
-    type: 'spring',
-    stiffness: 300,
-    damping: 30,
-    mass: 0.8,
+    type: 'tween',
+    duration: 0.4,
+    ease: 'easeInOut',
   }
 
   // Initialize state from URL
@@ -176,6 +175,11 @@ export default function BookLayout({ pages, resetEventName }: BookLayoutProps) {
     setDirection(pageIndex > currentPage ? 1 : -1)
     setIsAnimating(true)
     setCurrentPage(pageIndex)
+
+    // Robustly reset animation state after duration + buffer
+    setTimeout(() => {
+      setIsAnimating(false)
+    }, 450)
   }, [currentPage, pages, isAnimating])
 
   // Navigation functions
@@ -219,14 +223,14 @@ export default function BookLayout({ pages, resetEventName }: BookLayoutProps) {
     return () => window.removeEventListener(resetEventName, handleReset)
   }, [goToPage, resetEventName])
 
-  // Failsafe: Reset isAnimating if it gets stuck
+  // Failsafe: Reset isAnimating if it gets stuck (reduced to 800ms for faster recovery)
   useEffect(() => {
     if (!isAnimating) return
 
     const failsafe = setTimeout(() => {
       console.warn('Animation failsafe triggered in BookLayout')
       setIsAnimating(false)
-    }, 3000)
+    }, 800)
 
     return () => clearTimeout(failsafe)
   }, [isAnimating])
@@ -431,10 +435,8 @@ export default function BookLayout({ pages, resetEventName }: BookLayoutProps) {
             <AnimatePresence
               initial={true}
               custom={direction}
-              mode="wait"
               onExitComplete={() => {
-                // Short delay to ensure the new page is ready and to show the loader meaningfully
-                setTimeout(() => setIsAnimating(false), 400)
+                // No-op: handled by robust timeout in goToPage
               }}
             >
               <motion.div
@@ -528,7 +530,7 @@ export default function BookLayout({ pages, resetEventName }: BookLayoutProps) {
             </button>
           </motion.div>
         </main>
-      </div>
-    </BookContext.Provider>
+      </div >
+    </BookContext.Provider >
   )
 }

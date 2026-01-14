@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import Link from 'next/link'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Shovel, Layers, Combine, Star, ChevronRight, ChevronsDown } from 'lucide-react'
 import styles from './ApplicationGuide.module.css'
@@ -276,20 +277,22 @@ function CardWithHover({
       </div>
 
       {/* Hover CTA sliding up */}
-      <motion.div
-        className={styles.hoverCta}
-        variants={ctaVariants}
-        initial="idle"
-        animate={isHovered ? "hover" : "idle"}
-      >
-        <span>Lásd a kísérletben</span>
-        <motion.span
-          animate={isHovered ? { x: [0, 4, 0] } : {}}
-          transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 0.5 }}
+      <Link href="/kutatas?page=lakitelek-chart" style={{ display: 'contents' }}>
+        <motion.div
+          className={styles.hoverCta}
+          variants={ctaVariants}
+          initial="idle"
+          animate={isHovered ? "hover" : "idle"}
         >
-          <ChevronRight size={16} />
-        </motion.span>
-      </motion.div>
+          <span>Lásd a kísérletben</span>
+          <motion.span
+            animate={isHovered ? { x: [0, 4, 0] } : {}}
+            transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 0.5 }}
+          >
+            <ChevronRight size={16} />
+          </motion.span>
+        </motion.div>
+      </Link>
     </motion.article>
   )
 }
