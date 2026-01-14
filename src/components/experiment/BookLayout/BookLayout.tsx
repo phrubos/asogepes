@@ -104,6 +104,18 @@ export default function BookLayout({ pages, resetEventName }: BookLayoutProps) {
     if (!page) return
 
     const url = new URL(window.location.href)
+
+    // GUARD: Prevent overwriting initial deep link with default page 0 (hero)
+    // If we are at page 0, but the URL has a different valid page ID, skip the sync
+    // This allows the initialization effect to pick up the correct page first
+    const urlPageId = url.searchParams.get('page')
+    if (currentPage === 0 && urlPageId && urlPageId !== page.id) {
+      const targetIndex = pages.findIndex(p => p.id === urlPageId)
+      if (targetIndex !== -1) {
+        return
+      }
+    }
+
     url.searchParams.set('page', page.id)
 
     if (navigationSource.current === 'manual') {
