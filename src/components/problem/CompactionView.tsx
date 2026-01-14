@@ -243,8 +243,6 @@ export default function CompactionView() {
             >
               <InteractiveSoil
                 progress={soilDayIndex}
-                isHovered={isSoilHovered}
-                setIsHovered={setIsSoilHovered}
               />
               <motion.p
                 className={styles.interactiveCaption}
