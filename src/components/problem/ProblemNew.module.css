@@ -1046,6 +1046,26 @@
   font-weight: 600;
 }
 
+/* ========================================
+   RESPONSIVE COMBINED SECTIONS
+   ======================================== */
+.combinedSection {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 100px;
+}
+
+@media (max-height: 900px) {
+  .combinedSection {
+    padding-top: 60px;
+  }
+
+  .sectionProblem {
+    padding-bottom: calc(var(--space-2xl) + 60px);
+  }
+}
+
 /* Problémák szekció */
 .problemsSection {
   margin-bottom: var(--space-4xl);
@@ -3186,6 +3206,7 @@
 .scannerCardActive .connectorDot {
   transform: translate(-50%, -50%) scale(1);
 }
+
 /* ========================================
    NEW TECH-FLOW STEPS LAYOUT (Final Design)
    ======================================== */
@@ -3208,12 +3229,11 @@
   left: 10%;
   right: 10%;
   height: 2px;
-  background: linear-gradient(90deg, 
-    rgba(255,255,255,0) 0%, 
-    rgba(212, 168, 75, 0.3) 20%, 
-    rgba(212, 168, 75, 0.3) 80%, 
-    rgba(255,255,255,0) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(212, 168, 75, 0.3) 20%,
+      rgba(212, 168, 75, 0.3) 80%,
+      rgba(255, 255, 255, 0) 100%);
   transform: rotate(-15deg);
   pointer-events: none;
   z-index: 0;
@@ -3221,10 +3241,12 @@
 
 .flowStepsContainer {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 Columns for 3 Steps */
+  grid-template-columns: repeat(3, 1fr);
+  /* 3 Columns for 3 Steps */
   gap: 2rem;
   width: 100%;
-  transform: rotate(-5deg); /* Slight overall tilt for dynamism */
+  transform: rotate(-5deg);
+  /* Slight overall tilt for dynamism */
 }
 
 /* Individual Card Wrapper */
@@ -3234,9 +3256,17 @@
 }
 
 /* Stagger cards vertically to create diagonal */
-.stepCardWrapper:nth-child(1) { transform: translateY(-40px); }
-.stepCardWrapper:nth-child(2) { transform: translateY(0px); }
-.stepCardWrapper:nth-child(3) { transform: translateY(40px); }
+.stepCardWrapper:nth-child(1) {
+  transform: translateY(-40px);
+}
+
+.stepCardWrapper:nth-child(2) {
+  transform: translateY(0px);
+}
+
+.stepCardWrapper:nth-child(3) {
+  transform: translateY(40px);
+}
 
 /* The Skewed Card Itself */
 .stepCard {
@@ -3244,7 +3274,8 @@
   background: rgba(30, 26, 22, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 2rem 1.5rem;
-  transform: skewX(-12deg); /* The machine look */
+  transform: skewX(-12deg);
+  /* The machine look */
   backdrop-filter: blur(12px);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -3270,25 +3301,29 @@
 }
 
 /* Hover States */
-.stepCard:hover, .stepCardActive {
+.stepCard:hover,
+.stepCardActive {
   background: rgba(45, 40, 35, 0.85);
   border-color: rgba(212, 168, 75, 0.4);
-  box-shadow: 
+  box-shadow:
     10px 20px 40px -5px rgba(0, 0, 0, 0.5),
     0 0 20px rgba(212, 168, 75, 0.1);
   transform: skewX(-12deg) translateY(-10px) scale(1.02);
 }
 
-.stepCard:hover::before, .stepCardActive::before {
+.stepCard:hover::before,
+.stepCardActive::before {
   opacity: 1;
-  width: 100%; /* Fill effect? No, let's keep it as a side bar or top bar */
+  width: 100%;
+  /* Fill effect? No, let's keep it as a side bar or top bar */
   width: 6px;
   box-shadow: 0 0 15px var(--card-accent);
 }
 
 /* Un-skew content so text is readable */
 .stepContent {
-  transform: skewX(12deg); /* Counter-skew */
+  transform: skewX(12deg);
+  /* Counter-skew */
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
@@ -3312,19 +3347,21 @@
   transition: color 0.3s ease;
 }
 
-.stepCard:hover .stepNumber, .stepCardActive .stepNumber {
+.stepCard:hover .stepNumber,
+.stepCardActive .stepNumber {
   color: var(--card-accent);
 }
 
 .stepIcon {
   color: rgba(255, 255, 255, 0.5);
   transition: all 0.3s ease;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   padding: 8px;
   border-radius: 8px;
 }
 
-.stepCard:hover .stepIcon, .stepCardActive .stepIcon {
+.stepCard:hover .stepIcon,
+.stepCardActive .stepIcon {
   color: var(--card-accent);
   background: rgba(212, 168, 75, 0.1);
   transform: rotate(-10deg);
@@ -3363,7 +3400,8 @@
   color: var(--card-accent);
 }
 
-.stepCard:hover .arrowIcon, .stepCardActive .arrowIcon {
+.stepCard:hover .arrowIcon,
+.stepCardActive .arrowIcon {
   opacity: 1;
   transform: translateX(0);
 }
@@ -3374,21 +3412,23 @@
     transform: none;
     gap: 1.5rem;
   }
-  
+
   .stepCardWrapper:nth-child(n) {
     transform: none;
   }
-  
-  .stepCard, .stepCard:hover, .stepCardActive {
-    transform: none; /* Remove skew on mobile for simpler stacking */
+
+  .stepCard,
+  .stepCard:hover,
+  .stepCardActive {
+    transform: none;
+    /* Remove skew on mobile for simpler stacking */
   }
-  
+
   .stepContent {
     transform: none;
   }
-  
+
   .flowLine {
     display: none;
   }
 }
-

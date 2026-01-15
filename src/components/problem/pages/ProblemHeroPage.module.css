@@ -532,6 +532,10 @@
    SOIL PENETRATING BLADES LAYOUT
    ======================================== */
 
+/* ========================================
+   SOIL PENETRATING BLADES LAYOUT
+   ======================================== */
+
 .imantsContainer {
   position: relative;
   width: 100%;
@@ -548,9 +552,18 @@
   justify-content: center;
   /* Center the blades group */
   overflow: visible;
-  perspectiva: 1000px;
+  perspective: 1000px;
+  z-index: 1;
 }
 
+.imantsOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* The Soil Cross-Section (Background Layer) */
 /* The Soil Cross-Section (Background Layer) */
 .soilHorizon {
   position: absolute;
@@ -576,7 +589,7 @@
   mask-composite: intersect;
 
   z-index: 0;
-  /* Behind everything now */
+  pointer-events: none;
 }
 
 /* Texture overlay for the soil */
@@ -604,12 +617,16 @@
 .spadeCardWrapper {
   position: absolute;
   width: 26%;
-  /* z-index must be higher than soil (0) so they stand out, 
-     but we want the TIP to look buried? 
-     Visual trick: The cards are ON TOP (z-index 10), but we use a gradient mask 
-     on the bottom of the card itself to simulate fading into the earth.
-  */
+  /* Ensure clickable elements are above soil */
   z-index: 10;
+  transition: z-index 0s linear 0.1s;
+  /* Delay z-index drop to allow smooth exit */
+}
+
+/* When hovering, boost z-index of the wrapper to bring it to front */
+.spadeCardWrapper:hover {
+  z-index: 50;
+  transition-delay: 0s;
 }
 
 /* The Blade itself */
@@ -640,6 +657,9 @@
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
   transform-origin: center 90%;
+
+  /* Ensure it captures clicks */
+  pointer-events: auto;
 }
 
 /* "Buried" Effect: Gradient mask at bottom of the card to blend into soil */
@@ -649,32 +669,26 @@
   inset: 0;
   background: linear-gradient(to bottom, transparent 60%, rgba(42, 33, 24, 0.9) 100%);
   pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 /* Interaction: "Pulling" out of the ground */
 .spadeCard:hover,
 .spadeCardActive {
-  transform: translateY(-20px) scale(1.05);
+  transform: translateY(-40px) scale(1.1);
+  /* Increased lift */
   background: linear-gradient(135deg, #5c4d3e 0%, #3e332a 100%);
   filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.7));
-
-  /* When pulled up, it should go ABOVE the soil horizon visually? 
-     Actually, if Z-index is 10 and soil is 15, it stays behind. 
-     We need to switch z-index on hover OR assume it's "coming out" but still behind the foreground dirt mound on the View.
-     Let's try lifting it enough that the text clears. 
-  */
-
-  /* Force visual prominence */
   z-index: 20;
+  /* Local priority */
 }
 
 /* When active/hovered, remove the "buried" mask so it looks pulled out */
 .spadeCard:hover::after,
 .spadeCardActive::after {
-  opacity: 0.3;
-  /* Fade out the dirt overlay */
-  transition: opacity 0.3s ease;
+  opacity: 0;
 }
+
 
 .spadeNumber {
   font-family: var(--font-display);

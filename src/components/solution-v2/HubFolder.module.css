@@ -14,6 +14,107 @@
   transition: all 0.4s ease;
 }
 
+@media (max-height: 900px) {
+  .hubScene {
+    min-height: 450px;
+    padding: 1rem;
+    transform: scale(0.9);
+  }
+
+  .hubFolder {
+    width: 220px !important;
+    height: 340px !important;
+  }
+
+  .miniFolder {
+    width: 105px !important;
+    height: 136px !important;
+  }
+
+  .miniFolderImageWrap {
+    width: 55px !important;
+    height: 44px !important;
+    margin-bottom: 0.15rem !important;
+  }
+
+  .miniFolderIcon {
+    width: 36px !important;
+    height: 36px !important;
+    margin-bottom: 0.15rem !important;
+  }
+
+  /* Compacter tabs */
+  .miniFolderTab {
+    padding: 3px 8px !important;
+    top: -14px !important;
+    font-size: 0.45rem !important;
+  }
+
+  /* Adjust Nav Group Positions for smaller scale */
+  .navLeft {
+    right: calc(50% + 180px) !important;
+  }
+
+  .navRight {
+    left: calc(50% + 180px) !important;
+    gap: 0.4rem !important;
+    /* Tighter gap for stack */
+  }
+
+  .navLeftLower {
+    right: calc(50% + 180px) !important;
+  }
+
+  /* Adjust SVG lines */
+  .connectionSvgLeft,
+  .connectionSvgLeftLower {
+    right: calc(50% + 110px) !important;
+    width: 80px !important;
+  }
+
+  .connectionSvgRight {
+    left: calc(50% + 110px) !important;
+    width: 80px !important;
+  }
+
+  /* Compact content for smaller folder */
+  .hubContent {
+    padding: 1rem !important;
+  }
+
+  .hubHeader {
+    margin-bottom: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  .hubOptions {
+    gap: 0.5rem !important;
+  }
+
+  .hubOption {
+    padding: 0.75rem !important;
+  }
+
+  /* Text scaling for tighter spaces */
+  .hubTitle {
+    font-size: 1.25rem !important;
+  }
+
+  .optionTitle {
+    font-size: 0.75rem !important;
+  }
+
+  .miniFolderLabel {
+    font-size: 0.7rem !important;
+    /* Even smaller */
+    white-space: nowrap;
+  }
+
+  .miniFolderDesc {
+    font-size: 0.5rem !important;
+  }
+}
+
 .hubSceneActive .hubFolder {
   filter: none;
 }
@@ -32,20 +133,27 @@
   transform: translate(-50%, -50%);
   width: 350px;
   height: 350px;
-  background: radial-gradient(
-    circle,
-    rgba(212, 168, 75, 0.12) 0%,
-    rgba(212, 168, 75, 0.05) 30%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(212, 168, 75, 0.12) 0%,
+      rgba(212, 168, 75, 0.05) 30%,
+      transparent 70%);
   pointer-events: none;
   z-index: 0;
   animation: glowPulse 4s ease-in-out infinite;
 }
 
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
 }
 
 .particles {
@@ -66,25 +174,53 @@
   animation: particleFloat 6s ease-in-out infinite;
 }
 
-.particle:nth-child(1) { left: 30%; top: 60%; }
-.particle:nth-child(2) { left: 70%; top: 40%; }
-.particle:nth-child(3) { left: 20%; top: 30%; }
-.particle:nth-child(4) { left: 80%; top: 70%; }
-.particle:nth-child(5) { left: 50%; top: 20%; }
-.particle:nth-child(6) { left: 40%; top: 80%; }
+.particle:nth-child(1) {
+  left: 30%;
+  top: 60%;
+}
+
+.particle:nth-child(2) {
+  left: 70%;
+  top: 40%;
+}
+
+.particle:nth-child(3) {
+  left: 20%;
+  top: 30%;
+}
+
+.particle:nth-child(4) {
+  left: 80%;
+  top: 70%;
+}
+
+.particle:nth-child(5) {
+  left: 50%;
+  top: 20%;
+}
+
+.particle:nth-child(6) {
+  left: 40%;
+  top: 80%;
+}
 
 @keyframes particleFloat {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0;
     transform: translateY(0) scale(0.5);
   }
+
   20% {
     opacity: 0.6;
   }
+
   50% {
     opacity: 0.8;
     transform: translateY(-30px) scale(1);
   }
+
   80% {
     opacity: 0.4;
   }
@@ -120,10 +256,13 @@
 }
 
 @keyframes orbitPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.3;
     transform: translate(-50%, -50%) scale(1);
   }
+
   50% {
     opacity: 0.6;
     transform: translate(-50%, -50%) scale(1.05);
@@ -134,6 +273,7 @@
   from {
     transform: translate(-50%, -50%) rotate(0deg);
   }
+
   to {
     transform: translate(-50%, -50%) rotate(360deg);
   }
@@ -219,7 +359,7 @@
   overflow: hidden;
   transform: translateZ(0);
   transform-origin: left center;
-  box-shadow: 
+  box-shadow:
     0 25px 50px -10px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   will-change: transform;
@@ -237,14 +377,12 @@
   left: -150%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(212, 168, 75, 0.08) 40%,
-    rgba(212, 168, 75, 0.15) 50%,
-    rgba(212, 168, 75, 0.08) 60%,
-    transparent 100%
-  );
+  background: linear-gradient(120deg,
+      transparent 0%,
+      rgba(212, 168, 75, 0.08) 40%,
+      rgba(212, 168, 75, 0.15) 50%,
+      rgba(212, 168, 75, 0.08) 60%,
+      transparent 100%);
   pointer-events: none;
   z-index: 10;
 }
@@ -257,6 +395,7 @@
   0% {
     left: -150%;
   }
+
   100% {
     left: 150%;
   }
@@ -267,9 +406,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
   background-size: 20px 20px;
   pointer-events: none;
 }
@@ -297,7 +436,7 @@
 .hubHeader {
   text-align: center;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   margin-bottom: 1.25rem;
 }
 
@@ -311,7 +450,7 @@
 
 .hubSubtitle {
   font-size: 0.65rem;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -330,8 +469,8 @@
   align-items: center;
   gap: 0.875rem;
   padding: 1rem;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
@@ -403,16 +542,16 @@
 .optionDesc {
   display: block;
   font-size: 0.6rem;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .optionCount {
   padding: 0.25rem 0.5rem;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   font-size: 0.55rem;
   font-weight: 600;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   transition: all 0.3s ease;
 }
 
@@ -426,7 +565,7 @@
 .hubFooter {
   margin-top: auto;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255,255,255,0.04);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -434,7 +573,7 @@
 
 .hubMeta {
   font-size: 0.5rem;
-  color: rgba(255,255,255,0.25);
+  color: rgba(255, 255, 255, 0.25);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -610,7 +749,7 @@
   gap: 0.5rem;
   transform: translateZ(0);
   transform-origin: left center;
-  box-shadow: 
+  box-shadow:
     0 20px 40px -8px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   transition: all 0.35s ease;
@@ -626,9 +765,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
   background-size: 12px 12px;
   pointer-events: none;
 }
@@ -708,7 +847,7 @@
 /* Mini Folder Description */
 .miniFolderDesc {
   font-size: 0.6rem;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.06em;

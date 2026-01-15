@@ -92,7 +92,7 @@ export default function ProblemHeroPage() {
                         {/* The Soil Horizon Layer */}
                         <div className={styles.soilHorizon} />
 
-                        <div className={styles.imantsOverlay} />
+
 
                         {HERO_NAV_ITEMS.map((item, index) => {
                             // Position logic for the 3 blades "in the soil"
