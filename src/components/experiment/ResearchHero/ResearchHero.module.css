@@ -636,3 +636,59 @@
     font-size: 1.5rem;
   }
 }
+
+@media (max-height: 900px) {
+  .hero {
+    min-height: 100vh;
+    padding-top: 60px;
+    /* Reduced for better fit */
+    gap: 2rem;
+  }
+
+  .heroTitle {
+    font-size: 2.2rem;
+    /* Significantly smaller */
+    margin: var(--space-sm) 0;
+  }
+
+  .heroDescription {
+    font-size: 1rem;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .statsRow {
+    margin-top: var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .statValue {
+    font-size: 2.2rem;
+    /* Smaller stats */
+  }
+
+  .statLabel {
+    font-size: 0.75rem;
+    margin-top: 2px;
+  }
+
+  .statDetail {
+    font-size: 0.75rem;
+  }
+
+  .penetrometerTrigger {
+    margin-top: var(--space-md);
+    padding: 6px 16px;
+  }
+
+  /* Map sizing adjustments */
+  .heroMap,
+  .mapContainer {
+    min-height: 350px;
+    /* Reduced specific to this view */
+  }
+
+  .mapContainer {
+    padding: var(--space-md);
+  }
+}

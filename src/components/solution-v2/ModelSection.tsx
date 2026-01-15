@@ -31,6 +31,12 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
   const model = modelDetails[modelId]
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
+  const experimentDescriptions: Record<ModelId, string> = {
+    '38wx': 'Szentkirály kísérlet: Vöröshagyma kultúra 4 hónapos mérési időszak.',
+    '38sx': 'Lakitelek kísérlet: III. és VII. parcella eredményei ipari paradicsom kultúrában.',
+    '40sx': 'Kecskemét-Borbás kísérlet: Ipari paradicsom 45 cm mélységű műveléssel.'
+  }
+
   return (
     <section className={styles.compactSection}>
       {/* Header */}
@@ -127,7 +133,7 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
                 <MapPin size={20} /> Kísérleti eredmények
               </div>
               <div className={styles.resultsDesc}>
-                Szentkirály kísérlet: Vöröshagyma kultúra 4 hónapos mérési időszak.
+                {experimentDescriptions[modelId]}
               </div>
               <div className={styles.tagsRow}>
                 <span className={styles.resultTag}><Leaf /> {modelId === '38wx' ? 'Vöröshagyma' : 'Ipari paradicsom'}</span>

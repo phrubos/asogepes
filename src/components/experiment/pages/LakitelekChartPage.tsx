@@ -230,7 +230,7 @@ export default function LakitelekChartPage() {
             <div className={styles.fullscreenHeader}>
               <div className={styles.fullscreenHeaderLeft}>
                 <div className={styles.fullscreenTitleGroup}>
-                  <h3 className={styles.fullscreenTitle}>Lakitelek - 3D Talajszerkezet Vizualizáció</h3>
+                  <h3 className={styles.fullscreenTitle}>Lakitelek</h3>
                   <span className={styles.fullscreenSubtitle}>Részletes elemzés és összehasonlítás</span>
                 </div>
               </div>
