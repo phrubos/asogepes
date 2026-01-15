@@ -5,13 +5,16 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    padding: var(--space-xl) var(--space-2xl);
+    padding: var(--space-4xl) var(--space-2xl) 0;
+    margin-top: 0;
+    /* Lift content */
     overflow: hidden;
 }
 
 .header {
     text-align: center;
-    margin-bottom: var(--space-3xl);
+    margin-bottom: var(--space-lg);
+    margin-top: 0;
     position: relative;
     z-index: 10;
 }
@@ -35,23 +38,32 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1.3fr;
     gap: var(--space-3xl);
+    gap: var(--space-3xl);
     height: 100%;
-    align-items: center;
+    align-items: stretch;
+    /* Equal height columns */
     max-width: 1600px;
     margin: 0 auto;
     width: 100%;
+    padding-top: 0;
+    /* Removed extra padding */
 }
 
 /* Left Column: Image */
 .imageColumn {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
-    height: 100%;
+    align-items: center;
+    height: auto;
+    /* Let content drive height */
+    /* Removed margin-top */
 }
 
 .imageWrapper {
-    width: 100%;
+    width: auto;
+    height: auto;
+    /* Fit to image */
     position: relative;
     border-radius: var(--radius-xl);
     overflow: hidden;
@@ -65,8 +77,9 @@
 }
 
 .mainImage {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 55vh;
+    /* Reduced from 70vh */
     display: block;
     aspect-ratio: 4/5;
     object-fit: cover;
@@ -96,6 +109,7 @@
     justify-content: center;
     align-items: center;
     padding: 0 var(--space-xl);
+    /* Removed margin-top */
 }
 
 .quoteWrapper {
@@ -141,17 +155,24 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
-    justify-content: center;
-    height: 100%;
+    justify-content: start;
+    /* Align to top */
+    /* Removed margin-top */
+    height: auto;
+    /* Stretch with grid */
     perspective: 1000px;
 }
 
 .cardContainer {
     position: relative;
     width: 100%;
+    flex: 1;
+    /* Share space equally */
 }
 
 .interactiveCard {
+    height: 100%;
+    /* Fill the container */
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-lg);
@@ -172,8 +193,8 @@
 .cardHeader {
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
-    padding: var(--space-lg);
+    gap: var(--space-md);
+    padding: var(--space-md);
 }
 
 .cardIconBox {
@@ -198,7 +219,8 @@
 .cardTitle {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 1.125rem;
+    font-size: 1rem;
+    /* Reduced from 1.125rem */
     color: rgba(255, 255, 255, 0.7);
     margin: 0;
     transition: color 0.3s ease;
@@ -214,12 +236,13 @@
 }
 
 .cardBody {
-    padding: 0 var(--space-lg) var(--space-lg) calc(var(--space-lg) + 42px + var(--space-lg));
+    padding: 0 var(--space-md) var(--space-md) calc(var(--space-md) + 42px + var(--space-md));
 }
 
 .cardDesc {
-    font-size: 0.9375rem;
-    line-height: 1.6;
+    font-size: 0.875rem;
+    /* Reduced from 0.9375rem */
+    line-height: 1.5;
     color: rgba(255, 255, 255, 0.8);
     margin: 0;
     padding-bottom: var(--space-sm);

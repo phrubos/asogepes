@@ -516,15 +516,15 @@
 
   .problemItem,
   .benefitItem {
-    padding: 0.1rem 0.2rem;
-    border-radius: 2px;
-    gap: 0.2rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    gap: 0.4rem;
     min-height: 0;
   }
 
   .itemText {
-    font-size: 0.65rem;
-    line-height: 1.15;
+    font-size: 0.825rem;
+    line-height: 1.35;
   }
 
   .itemDetail {

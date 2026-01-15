@@ -9,14 +9,14 @@ export default function PloughingCombinedPage() {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
             {/* Hatások szekció */}
-            <div id="ploughing-effects" className={styles.combinedSection}>
+            <div id="ploughing-effects" className={styles.combinedSectionCompact}>
                 <PloughingEffectsPage />
             </div>
 
-            <div style={{ height: '0px' }} />
+            <div style={{ height: '15vh' }} />
 
             {/* Struktúra összehasonlítás szekció */}
-            <div id="ploughing-structure" className={styles.combinedSection}>
+            <div id="ploughing-structure" className={styles.combinedSectionCompact}>
                 <PloughingStructurePage />
             </div>
         </div>

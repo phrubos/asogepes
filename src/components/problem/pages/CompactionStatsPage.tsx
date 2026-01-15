@@ -73,7 +73,7 @@ function TomatoPlant({ style, variant = 1 }: { style: React.CSSProperties, varia
 function IrrigationBackground() {
     const surfaceY = 40; // Surface line at 40%
     const prefersReducedMotion = useReducedMotion()
-    
+
     // Performance-optimized particle counts
     const dropCount = useResponsiveParticleCount(25) // 25 desktop → 8 mobile
     const infiltrationCount = useResponsiveParticleCount(15) // 15 desktop → 5 mobile
@@ -367,7 +367,7 @@ export default function CompactionStatsPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className={styles.contentWrapper}
+            className={styles.compactionPageWrapper}
         >
             <div className={styles.statsPageGrid}>
                 <motion.div

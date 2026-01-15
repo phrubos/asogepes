@@ -69,6 +69,13 @@
   min-height: 600px;
 }
 
+.compactionPageWrapper {
+  margin-top: -1.5rem;
+  /* Lift content */
+  padding-top: 0;
+  min-height: 600px;
+}
+
 .footer {
   text-align: center;
   margin-top: var(--space-4xl);
@@ -1056,6 +1063,14 @@
   padding-top: 100px;
 }
 
+.combinedSectionCompact {
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  padding-top: 0;
+  gap: var(--space-4xl);
+}
+
 @media (max-height: 900px) {
   .combinedSection {
     padding-top: 60px;
@@ -1133,13 +1148,27 @@
   line-height: 1.5;
 }
 
+.cultivatorPageWrapper {
+  padding: 0 var(--space-2xl) 4vh;
+  margin-top: -1.5rem;
+  /* Fine-tune lift */
+  height: 100%;
+}
+
+.cultivatorGrid {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: var(--space-md);
+  height: 100%;
+}
+
 @media (max-height: 900px) {
   .cultivatorPageWrapper {
-    padding: 4vh var(--space-2xl) 6vh;
+    padding: 0 var(--space-2xl) 4vh;
   }
 
   .cultivatorGrid {
-    gap: 2vh;
+    gap: var(--space-md);
   }
 
   .cultivatorVisualSide {
@@ -1405,7 +1434,7 @@
   flex-direction: column;
   height: 100%;
   padding: 40px 3% 60px;
-  margin-top: -50px;
+  margin-top: 0;
   justify-content: center;
   position: relative;
   z-index: 1;
