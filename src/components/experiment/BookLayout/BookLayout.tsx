@@ -159,6 +159,18 @@ export default function BookLayout({ pages, resetEventName }: BookLayoutProps) {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [pages, currentPage])
 
+  // Disable browser auto-scroll restoration as we handle it manually
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+    return () => {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'auto'
+      }
+    }
+  }, [])
+
   // Navigate to page
   const goToPage = useCallback((pageIndex: number) => {
     if (isAnimating || pageIndex === currentPage) return

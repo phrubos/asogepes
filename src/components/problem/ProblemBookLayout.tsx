@@ -44,15 +44,7 @@ export default function ProblemBookLayout() {
             viewGroupId: 'compaction-group',
             scrollToId: 'compaction-stats'
         },
-        {
-            id: 'compaction-interactive',
-            section: 'Öntözés és Tömörödés',
-            sectionIndex: 1,
-            title: 'Talajszerkezet',
-            component: <PageContent><CompactionCombinedPage /></PageContent>,
-            viewGroupId: 'compaction-group',
-            scrollToId: 'compaction-interactive'
-        },
+
 
         // 02. Kultivátor - COMBINED VIEW
         {

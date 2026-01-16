@@ -5,9 +5,11 @@ import { useEffect, useMemo } from 'react'
 
 interface InteractiveSoilProps {
   progress: number | MotionValue<number> // 0.0 to 4.0
+  onProgressChange?: (val: number) => void
+  onInteractionStart?: () => void
 }
 
-export default function InteractiveSoil({ progress }: InteractiveSoilProps) {
+export default function InteractiveSoil({ progress, onProgressChange, onInteractionStart }: InteractiveSoilProps) {
   const progressMV = useMotionValue(0)
   const activeProgress = (typeof progress === 'number') ? progressMV : progress
 
@@ -54,26 +56,26 @@ export default function InteractiveSoil({ progress }: InteractiveSoilProps) {
 
   // 3. ROOTS - Complex, fibrous network
   const rootMassPaths = [
-    // 0: Deep, Extensive System
-    "M300,150 C300,200 280,300 240,430 M300,150 C300,220 320,300 360,430 M300,150 C290,250 260,350 250,450 M300,150 C310,250 340,350 350,450 M300,150 C300,180 220,200 210,250 M300,150 C300,180 380,200 390,250",
+    // 0: Deep, Extensive System - Adjusted to ~33cm (y=380)
+    "M300,150 C300,200 280,280 240,380 M300,150 C300,220 320,280 360,380 M300,150 C290,250 260,320 250,375 M300,150 C310,250 340,320 350,375 M300,150 C300,180 220,200 210,250 M300,150 C300,180 380,200 390,250",
 
-    // 1: Good but slight restrict
-    "M300,150 C300,200 280,300 240,400 M300,150 C300,220 320,300 360,400 M300,150 C290,250 260,350 250,420 M300,150 C310,250 340,350 350,420 M300,150 C300,180 220,200 210,250 M300,150 C300,180 380,200 390,250",
+    // 1: Good but slight restrict - Adjusted to ~30cm (y=350) - MUST BE < 380
+    "M300,150 C300,200 280,300 240,350 M300,150 C300,220 320,300 360,350 M300,150 C290,250 260,340 250,360 M300,150 C310,250 340,340 350,360 M300,150 C300,180 220,200 210,250 M300,150 C300,180 380,200 390,250",
 
-    // 2: Hitting Pan
+    // 2: Hitting Pan - y=330 (Fine)
     "M300,150 C300,200 280,280 250,330 M300,150 C300,220 320,280 350,330 M300,150 C290,250 270,300 260,340 M300,150 C310,250 330,300 340,340 M300,150 C300,180 220,200 210,250 M300,150 C300,180 380,200 390,250",
 
-    // 3: J-Hook / Horizontal deflection
+    // 3: J-Hook / Horizontal deflection - y=230 (Fine)
     "M300,150 C290,190 270,215 220,220 M300,150 C310,190 330,215 380,220 M300,150 C295,200 260,210 240,230 M300,150 C305,200 340,210 360,230 M300,150 C300,180 250,190 240,200 M300,150 C300,180 350,190 360,200",
 
-    // 4: Shallow Surface Mat
+    // 4: Shallow Surface Mat - y=185 (Fine)
     "M300,150 C290,170 250,175 200,180 M300,150 C310,170 350,175 400,180 M300,150 C280,165 240,170 220,185 M300,150 C320,165 360,170 380,185 M300,150 C290,160 260,165 250,170 M300,150 C310,160 340,165 350,170"
   ]
 
   // 4. TAP ROOT - The main anchor - FIX: Remains straight and penetrates INTO the pan
   const tapRootPaths = [
-    "M300,150 L300,450", // 0
-    "M300,150 L300,420", // 1
+    "M300,150 L300,380", // 0 - Adjusted to 33cm (y=380)
+    "M300,150 L300,360", // 1 - Adjusted to 31cm (y=360) - WAS 420
     "M300,150 L300,300", // 2 
     "M300,150 L300,230", // 3 - Stuck deep in the layer (Start 190, End 230)
     "M300,150 L300,210"  // 4 - Stuck shallow in the layer (Start 190, End 210)
@@ -121,6 +123,7 @@ export default function InteractiveSoil({ progress }: InteractiveSoilProps) {
     dur: 1.5 + Math.random() // varied speed
   })), [])
 
+
   const soilDrops = useMemo(() => Array.from({ length: 60 }, (_, i) => ({
     id: i,
     x: Math.random() * 600,
@@ -133,10 +136,10 @@ export default function InteractiveSoil({ progress }: InteractiveSoilProps) {
       className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl border border-white/5"
       style={{
         cursor: 'default',
-        background: 'radial-gradient(circle at 50% 30%, #2c3e50 0%, #1a1a1a 100%)' // Fallback bg
+        background: 'transparent' // Transparent background as requested
       }}
     >
-      <div className="w-full h-full relative select-none" style={{ pointerEvents: 'none' }}>
+      <div className="w-full h-full relative select-none">
         <svg viewBox="0 0 600 500" className="w-full h-full absolute inset-0">
           <defs>
             {/* 1. SKY GRADIENT - Atmospheric */}
@@ -144,6 +147,13 @@ export default function InteractiveSoil({ progress }: InteractiveSoilProps) {
               <stop offset="0%" stopColor="#0288D1" />
               <stop offset="50%" stopColor="#81D4FA" />
               <stop offset="100%" stopColor="#E1F5FE" />
+            </linearGradient>
+
+            {/* MANOMETER GRADIENT */}
+            <linearGradient id="gaugeGradient" x1="0" y1="1" x2="1" y2="1">
+              <stop offset="0%" stopColor="#4CAF50" />
+              <stop offset="50%" stopColor="#FFC107" />
+              <stop offset="100%" stopColor="#D32F2F" />
             </linearGradient>
 
             {/* 2. SOIL TEXTURE - Realistic Noise */}
@@ -194,9 +204,7 @@ export default function InteractiveSoil({ progress }: InteractiveSoilProps) {
           {/* === SKY === */}
           <rect x="0" y="0" width="600" height="150" fill="url(#skyGradientPremium)" />
 
-          {/* Subtle clouds/atmosphere could go here */}
-
-          {/* === RAIN (Atmospheric) === */}
+          {/* === RAIN (Restored) === */}
           <g>
             {skyRain.map(p => (
               <line
@@ -223,12 +231,6 @@ export default function InteractiveSoil({ progress }: InteractiveSoilProps) {
                 />
               </line>
             ))}
-          </g>
-
-          {/* === SUN === */}
-          <g transform="translate(520, 60)">
-            <circle r="40" fill="#FFF176" opacity="0.2" filter="url(#glow)" />
-            <circle r="25" fill="#FDD835" />
           </g>
 
           {/* === SOIL === */}
@@ -390,6 +392,163 @@ export default function InteractiveSoil({ progress }: InteractiveSoilProps) {
                 </text>
               </g>
             ))}
+          </g>
+
+          {/* === MANOMETER GAUGE (Moved to Front for visibility over Soil) === */}
+          <g transform="translate(480, 80)">
+            {/* 1. Stem (Probe) extending into soil */}
+            <line x1="0" y1="20" x2="0" y2="140" stroke="#546E7A" strokeWidth="4" />
+            <line x1="0" y1="20" x2="0" y2="140" stroke="rgba(0,0,0,0.3)" strokeWidth="2" transform="translate(1,0)" />
+
+            {/* Probe Tip */}
+            <path d="M-2,140 L0,145 L2,140 Z" fill="#546E7A" />
+
+            {/* 2. Gauge Body */}
+            <circle r="48" fill="#ECEFF1" stroke="#CFD8DC" strokeWidth="2" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.3))" />
+            <circle r="40" fill="none" stroke="#B0BEC5" strokeWidth="1" strokeDasharray="1 2" />
+
+            {/* 3. Scale Arc (0 - 20 Bar)
+                 Start at 160 deg (Left-Bottomish) -> End at 20 deg (Right-Bottomish).
+             */}
+            <path
+              d="M-37.6,13.7 A40,40 0 1,1 37.6,13.7"
+              fill="none"
+              stroke="url(#gaugeGradient)"
+              strokeWidth="8"
+              strokeLinecap="round"
+            />
+
+            {/* 4. Ticks & Labels (Internal - Pressure) */}
+            <g fontSize="7px" fontFamily="monospace" fill="#546E7A" textAnchor="middle" fontWeight="bold">
+              {/* 0 Bar - approx 160 deg */}
+              <text x="-28" y="10">0</text>
+
+              {/* 5 Bar - approx 125 deg */}
+              <text x="-22" y="-18">5</text>
+
+              {/* 10 Bar - approx 90 deg (Top) */}
+              <text x="0" y="-28">10</text>
+
+              {/* 15 Bar - approx 55 deg */}
+              <text x="22" y="-18">15</text>
+
+              {/* 20 Bar - approx 20 deg */}
+              <text x="28" y="10">20</text>
+
+              <text x="0" y="25" fontSize="6px">BAR</text>
+            </g>
+
+            {/* 5. Needle 
+                 Mapping: 0 bar -> 160 deg. 20 bar -> 380 deg (20 deg).
+                 11 deg/bar.
+                 Needle reflects progress 0->0 bar, 4->20 bar.
+             */}
+            <motion.g
+              style={{
+                rotate: useTransform(activeProgress, p => {
+                  const pressure = p * 5;
+                  return 160 + (pressure * 11);
+                })
+              }}
+            >
+              {/* Invisible circle to center the transform origin (BBox center) at 0,0 */}
+              <circle r="50" fill="none" />
+              <rect x="-4" y="-2" width="50" height="4" rx="2" fill="#D32F2F" filter="drop-shadow(1px 1px 2px rgba(0,0,0,0.3))" />
+              <circle r="6" fill="#37474F" />
+              <circle r="3" fill="#546E7A" />
+            </motion.g>
+
+            {/* 6. External Day Labels 
+                Standardized coordinates (R=52-60 for lines, R=72 for text).
+                Angles: 160, 215, 270, 325, 20 deg.
+            */}
+            {/* 0 nap (160 deg) x=-67, y=24 */}
+            <text x="-67" y="27" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="end" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">0 nap</text>
+            <line x1="-48" y1="17" x2="-56" y2="20" stroke="#fff" strokeWidth="1" opacity="0.6" />
+
+            {/* 30 nap (215 deg) x=-59, y=-41 */}
+            <text x="-59" y="-41" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="end" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">30 nap</text>
+            <line x1="-42" y1="-29" x2="-49" y2="-34" stroke="#fff" strokeWidth="1" opacity="0.6" />
+
+            {/* 60 nap (270 deg) x=0, y=-72 */}
+            <text x="0" y="-65" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="middle" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">60 nap</text>
+            <line x1="0" y1="-52" x2="0" y2="-60" stroke="#fff" strokeWidth="1" opacity="0.6" />
+
+            {/* 90 nap (325 deg) x=59, y=-41 */}
+            <text x="59" y="-41" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="start" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">90 nap</text>
+            <line x1="42" y1="-29" x2="49" y2="-34" stroke="#fff" strokeWidth="1" opacity="0.6" />
+
+            {/* 120 nap (20 deg) x=67, y=24 */}
+            <text x="67" y="27" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="start" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">120 nap</text>
+            <line x1="48" y1="17" x2="56" y2="20" stroke="#fff" strokeWidth="1" opacity="0.6" />
+
+            {/* === INTERACTIVE OVERLAY === */}
+            <circle
+              cx="0" cy="0" r="100"
+              fill="transparent"
+              style={{ cursor: 'grab', touchAction: 'none' }}
+              onPointerDown={(e) => {
+                if (onInteractionStart) onInteractionStart();
+                e.currentTarget.setPointerCapture(e.pointerId);
+
+                // Calculate initial click
+                const svg = e.currentTarget.closest('svg');
+                if (svg) {
+                  const pt = svg.createSVGPoint();
+                  pt.x = e.clientX;
+                  pt.y = e.clientY;
+                  const svgP = pt.matrixTransform(svg.getScreenCTM()?.inverse());
+                  // Gauge Center is at (480, 80)
+                  const dx = svgP.x - 480;
+                  const dy = svgP.y - 80;
+                  let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+                  // Normalize angle: 0 is Right (3 o'clock). 
+                  // Gauge scale: 160 deg (Start) -> 20 deg (End).
+                  // Clockwise logic: 160 -> 180/-180 -> 20.
+
+                  // Shift logic to start from 160
+                  let logicAngle = angle;
+                  if (logicAngle < 20) logicAngle += 360; // 20 -> 380
+
+                  // Range: 160 (0 bar) to 380 (20 bar). Width = 220 deg.
+                  // Constrain interaction range slightly wider
+                  if (logicAngle >= 140 && logicAngle <= 400) {
+                    const percent = (logicAngle - 160) / 220; // 0.0 to 1.0
+                    const newProgress = Math.max(0, Math.min(4, percent * 4));
+                    if (onProgressChange) onProgressChange(newProgress);
+                  }
+                }
+              }}
+              onPointerMove={(e) => {
+                if (e.buttons === 1) { // Left click drag
+                  const svg = e.currentTarget.closest('svg');
+                  if (svg) {
+                    const pt = svg.createSVGPoint();
+                    pt.x = e.clientX;
+                    pt.y = e.clientY;
+                    const svgP = pt.matrixTransform(svg.getScreenCTM()?.inverse());
+
+                    const dx = svgP.x - 480;
+                    const dy = svgP.y - 80;
+                    let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+                    let logicAngle = angle;
+                    if (logicAngle < 100) logicAngle += 360; // 20 -> 380, but careful with discontinuity
+
+                    // Range: 160 to 380.
+                    if (logicAngle >= 140 && logicAngle <= 400) {
+                      const percent = (logicAngle - 160) / 220;
+                      const newProgress = Math.max(0, Math.min(4, percent * 4));
+                      if (onProgressChange) onProgressChange(newProgress);
+                    }
+                  }
+                }
+              }}
+              onPointerUp={(e) => {
+                e.currentTarget.releasePointerCapture(e.pointerId);
+              }}
+            />
+
           </g>
 
         </svg>

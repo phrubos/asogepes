@@ -2,7 +2,7 @@
 
 import React from 'react'
 import CompactionStatsPage from './CompactionStatsPage'
-import CompactionInteractivePage from './CompactionInteractivePage'
+
 import styles from '../ProblemNew.module.css'
 
 export default function CompactionCombinedPage() {
@@ -12,11 +12,7 @@ export default function CompactionCombinedPage() {
                 <CompactionStatsPage />
             </div>
 
-            <div style={{ height: '0px' }} />
 
-            <div id="compaction-interactive" className={styles.combinedSection}>
-                <CompactionInteractivePage />
-            </div>
         </div>
     )
 }
