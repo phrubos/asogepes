@@ -255,7 +255,6 @@ export default function PloughingEffectsPage() {
                             isOpen={expandedCardId === index}
                             onToggle={() => setExpandedCardId(expandedCardId === index ? null : index)}
                             isAnyOpen={expandedCardId !== null}
-                            isAnyOpen={expandedCardId !== null}
                         />
                     ))}
                 </motion.div>
