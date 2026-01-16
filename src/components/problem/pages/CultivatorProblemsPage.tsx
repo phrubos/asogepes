@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Layers, Sprout, Grid3X3, Shovel } from 'lucide-react'
-import TiltCard from '@/components/ui/TiltCard'
+
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from '../ProblemNew.module.css'
 
@@ -31,7 +31,6 @@ const cultivatorProblems = [
 ]
 
 export default function CultivatorProblemsPage() {
-    const [hoveredCard, setHoveredCard] = useState<number | null>(null)
     const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
     const iconMap: Record<string, React.ReactNode> = {
@@ -98,30 +97,19 @@ export default function CultivatorProblemsPage() {
                     <div className={styles.cultivatorProblemsGrid}>
                         {cultivatorProblems.map((problem, index) => (
                             <motion.div key={index} variants={itemVariants} style={{ height: '100%' }}>
-                                <TiltCard
-                                    tiltAmount={3}
-                                    glowColor="rgba(212, 168, 75, 0.15)"
-                                    className={styles.problemCard}
-                                >
+                                <div className={styles.problemCard}>
                                     <div
-                                        onMouseEnter={() => setHoveredCard(index)}
-                                        onMouseLeave={() => setHoveredCard(null)}
                                         className={styles.problemCardContent}
                                     >
                                         <motion.div
                                             className={styles.problemIcon}
-                                            animate={hoveredCard === index
-                                                ? { scale: 1.05, backgroundColor: 'var(--color-gold)', color: 'var(--color-earth-900)' }
-                                                : { scale: 1, backgroundColor: 'rgba(212, 168, 75, 0.15)', color: 'var(--color-gold)' }
-                                            }
-                                            transition={{ duration: 0.3 }}
                                         >
                                             {iconMap[problem.icon]}
                                         </motion.div>
                                         <h4 className={styles.problemCardTitle}>{problem.title}</h4>
                                         <p className={styles.problemCardDesc}>{problem.description}</p>
                                     </div>
-                                </TiltCard>
+                                </div>
                             </motion.div>
                         ))}
                     </div>
