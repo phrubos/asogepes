@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Droplet, Weight, Layers } from 'lucide-react'
+import { Droplet, Weight, Layers, ArrowDownNarrowWide } from 'lucide-react'
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
 import TiltCard from '@/components/ui/TiltCard'
@@ -59,6 +59,7 @@ export default function CompactionView() {
     droplet: <Droplet size={24} />,
     weight: <Weight size={24} />,
     layers: <Layers size={24} />,
+    'arrow-down-narrow-wide': <ArrowDownNarrowWide size={24} />,
   }
 
   const containerVariants = {

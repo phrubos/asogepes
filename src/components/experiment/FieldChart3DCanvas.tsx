@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { Rotate3d } from 'lucide-react'
+import { Rotate3d, Info, X, Eye, EyeOff } from 'lucide-react'
 
 interface ParcelData {
     num: string
@@ -23,11 +23,15 @@ interface FieldChart3DCanvasProps {
         summary: string
         bestResults: string[]
     }
+    isFullscreen?: boolean
 }
 
-export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3DCanvasProps) {
+export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen = false }: FieldChart3DCanvasProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
+    const keysPressed = useRef<{ [key: string]: boolean }>({})
+    const [showInfo, setShowInfo] = useState(false)
+    const [showMachines, setShowMachines] = useState(true)
 
     useEffect(() => {
         if (!containerRef.current) return
@@ -42,8 +46,17 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
 
         // Camera - Zoomed out, looking from above-front
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
-        camera.position.set(0, 18, 34)
-        camera.lookAt(0, -6, 0) // Look slightly down into the "earth"
+
+        // Adjust camera based on fullscreen mode
+        if (isFullscreen) {
+            // Zoomed IN for fullscreen details, but ensuring Roman numerals are visible
+            camera.position.set(0, 14, 28)
+        } else {
+            // Default zoomed out view
+            camera.position.set(0, 18, 34)
+        }
+
+        camera.lookAt(0, 0, 0) // Look at center
 
         // Renderer
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
@@ -148,6 +161,28 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
         const looseColor = 0x81C784
         const looseColorDark = 0x4a6741
 
+        // Load machine textures
+        const textureLoader = new THREE.TextureLoader()
+        const machineTextures = {
+            melyasogep: textureLoader.load('/images/chart_icons/melyasogep.png'),
+            lazito: textureLoader.load('/images/chart_icons/lazito.png'),
+            asogep: textureLoader.load('/images/chart_icons/asogep.png'),
+            szantas: textureLoader.load('/images/chart_icons/szantas.png'),
+            kombinator: textureLoader.load('/images/chart_icons/kombinator.png')
+        }
+
+        // Helper to get machine keys from treatment string
+        const getMachinesForTreatment = (treatment: string) => {
+            if (treatment.includes('Mélyásógép')) return ['melyasogep']
+            if (treatment === 'Ásógép') return ['asogep']
+            if (treatment === 'Szántás + Ásógép') return ['szantas', 'asogep']
+            if (treatment === 'Lazítás + Ásógép') return ['lazito', 'asogep']
+            if (treatment === 'Szántás + Kombinátor') return ['szantas', 'kombinator']
+            if (treatment === 'Lazítás + Szántás + Ásógép') return ['lazito', 'szantas', 'asogep']
+            if (treatment === 'Lazítás + Szántás + Kombinátor') return ['lazito', 'szantas', 'kombinator']
+            return []
+        }
+
         // Calculate spacing
         const spacingX = 4.5
         const parcelWidth = 3.8
@@ -179,7 +214,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
             })
             const parcelGround = new THREE.Mesh(parcelGeometry, parcelMaterial)
             parcelGround.rotation.x = -Math.PI / 2
-            parcelGround.position.set(xPos, 0.01, 0)
+            // Parcel Ground - Shifted North
+            parcelGround.position.set(xPos, 0.01, -5)
             scene.add(parcelGround)
 
             // Add border/edge around each parcel
@@ -193,7 +229,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
             })
             const border = new THREE.Mesh(borderGeometry, borderMaterial)
             border.rotation.x = -Math.PI / 2
-            border.position.set(xPos, 0.005, 0)
+            border.position.set(xPos, 0.005, -5)
             scene.add(border)
 
             // Edge markers (ridges)
@@ -206,21 +242,21 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                     opacity: 0.4
                 })
                 const ridge = new THREE.Mesh(ridgeGeometry, ridgeMaterial)
-                ridge.position.set(xPos + spacingX / 2, 0.02, 0)
+                ridge.position.set(xPos + spacingX / 2, 0.02, -5)
                 scene.add(ridge)
             }
 
-            // Month positions (Z axis) - Inverted: May closest to user (+Z)
+            // Month positions (Z axis) - Inverted: May closest to user (+Z) -> Shifted North by 5 (-3, -5, -7)
             const months = [
-                { value: parcel.may, z: 2, label: 'Máj' },  // +2 (Front)
-                { value: parcel.jun, z: 0, label: 'Jún' },  // 0
-                { value: parcel.aug, z: -2, label: 'Aug' }  // -2 (Back)
+                { value: parcel.may, z: -3, label: 'Máj' },  // +2 - 5 = -3
+                { value: parcel.jun, z: -5, label: 'Jún' },  // 0 - 5 = -5
+                { value: parcel.aug, z: -7, label: 'Aug' }   // -2 - 5 = -7
             ]
 
             months.forEach(({ value, z }) => {
                 const height = value * 0.12 // Height is magnitude
 
-                // Create cylinder - Going DOWN
+                // Create cylinder - Going UP
                 const geometry = new THREE.CylinderGeometry(0.4, 0.4, height, 32)
                 const material = new THREE.MeshStandardMaterial({
                     color: looseColor,
@@ -230,12 +266,12 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                     emissiveIntensity: 0.2
                 })
                 const cylinder = new THREE.Mesh(geometry, material)
-                // Position: Center is at -height/2
-                cylinder.position.set(xPos, -height / 2, z)
+                // Position: Center is at height/2
+                cylinder.position.set(xPos, height / 2, z)
                 cylinder.castShadow = true
                 scene.add(cylinder)
 
-                // Add a subtle ring at the surface (top of bar)
+                // Add a subtle ring at the TOP
                 const ringGeometry = new THREE.RingGeometry(0.42, 0.52, 32)
                 const ringMaterial = new THREE.MeshBasicMaterial({
                     color: 0x81C784,
@@ -245,7 +281,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                 })
                 const ring = new THREE.Mesh(ringGeometry, ringMaterial)
                 ring.rotation.x = -Math.PI / 2
-                ring.position.set(xPos, -0.05, z)
+                ring.position.set(xPos, 0.05, z)
                 scene.add(ring)
 
                 // Value label - At the BOTTOM
@@ -275,8 +311,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                 const texture = new THREE.CanvasTexture(canvas)
                 const spriteMaterial = new THREE.SpriteMaterial({ map: texture })
                 const sprite = new THREE.Sprite(spriteMaterial)
-                // Position: Below the bar
-                sprite.position.set(xPos, -height - 1, z)
+                // Position: Above the bar
+                sprite.position.set(xPos, height + 1, z)
                 sprite.scale.set(1.8, 0.9, 1)
                 scene.add(sprite)
             })
@@ -304,9 +340,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
             const numTexture = new THREE.CanvasTexture(numCanvas)
             const numSpriteMaterial = new THREE.SpriteMaterial({ map: numTexture })
             const numSprite = new THREE.Sprite(numSpriteMaterial)
-            // Position: Above grid at the back? Or front?
-            // Let's put slightly above surface at z=-5 (Back)
-            numSprite.position.set(xPos, 1.5, -5)
+            // Position: Forward, outside soil - Leaning off into the void
+            numSprite.position.set(xPos, 0, 13)
             numSprite.scale.set(2, 2, 1)
             scene.add(numSprite)
 
@@ -316,22 +351,15 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                 const starCtx = starCanvas.getContext('2d')!
                 starCanvas.width = 96
                 starCanvas.height = 48
-                starCtx.fillStyle = 'rgba(212, 168, 75, 0.2)'
-                starCtx.roundRect(4, 4, 88, 40, 8)
-                starCtx.fill()
-                starCtx.strokeStyle = 'rgba(212, 168, 75, 0.4)'
-                starCtx.lineWidth = 1
-                starCtx.roundRect(4, 4, 88, 40, 8)
-                starCtx.stroke()
                 starCtx.fillStyle = '#d4a84b'
-                starCtx.font = 'bold 16px system-ui, sans-serif'
+                starCtx.font = 'bold 24px system-ui, sans-serif'
                 starCtx.textAlign = 'center'
                 starCtx.textBaseline = 'middle'
-                starCtx.fillText('★ 95%', 48, 24)
+                starCtx.fillText('★', 48, 24)
                 const starTexture = new THREE.CanvasTexture(starCanvas)
                 const starSpriteMaterial = new THREE.SpriteMaterial({ map: starTexture })
                 const starSprite = new THREE.Sprite(starSpriteMaterial)
-                starSprite.position.set(xPos, 3, 0) // Floating above
+                starSprite.position.set(xPos, 3, -5) // Floating above center shifted
                 starSprite.scale.set(2, 1, 1)
                 scene.add(starSprite)
             }
@@ -357,16 +385,60 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
             const nameTexture = new THREE.CanvasTexture(nameCanvas)
             const nameSpriteMaterial = new THREE.SpriteMaterial({ map: nameTexture })
             const nameSprite = new THREE.Sprite(nameSpriteMaterial)
-            // Position: Front, slightly above surface
-            nameSprite.position.set(xPos, 1, 6)
+            // Position: Front, shifted North (5.5 - 5 = 0.5)
+            nameSprite.position.set(xPos, 1, 0.5)
             nameSprite.scale.set(4.5, 0.9, 1)
             scene.add(nameSprite)
+
+            // Machine schematic icons
+            if (showMachines) {
+                const machines = getMachinesForTreatment(parcel.treatment)
+
+                // Positioning Logic (Z-axis) - User Request: March=9, April=4
+                // Midpoint: 6.5
+
+                let machineZPos: number[] = []
+
+                if (machines.length === 1) {
+                    // 1 machine: Between (6.5)
+                    machineZPos = [6.5]
+                } else if (machines.length === 2) {
+                    // 2 machines: First at March (9), second Between (6.5)
+                    machineZPos = [9, 6.5]
+                } else if (machines.length === 3) {
+                    // 3 machines: First at March (9), Second Between (6.5), Third at April (4)
+                    machineZPos = [9, 6.5, 4]
+                } else {
+                    machineZPos = [9, 6.5, 4]
+                }
+
+                machines.forEach((machineKey, mIdx) => {
+                    const tex = machineTextures[machineKey as keyof typeof machineTextures]
+                    if (tex) {
+                        const mat = new THREE.SpriteMaterial({
+                            map: tex,
+                            color: 0xffffff,
+                            transparent: true,
+                            opacity: 0.95,
+                            blending: THREE.AdditiveBlending,
+                            depthWrite: false
+                        })
+                        const sprite = new THREE.Sprite(mat)
+                        // Position at z corresponding to month start
+                        // Y = 1.0 (floating slightly above ground)
+                        sprite.position.set(xPos, 1.2, machineZPos[mIdx])
+                        sprite.scale.set(2.2, 2.2, 1) // Increased scale to 2.2
+                        scene.add(sprite)
+                    }
+                })
+            }
         })
 
         // Month labels - Inverted Z
+        // Shifted North by 5 units, but March/April pulled back South to fill space
         const monthLabels = ['Március', 'Április', 'Május', 'Június', 'Augusztus']
-        // Large gap between April (10) and May (2) to show time jump
-        const monthZPositions = [10, 8, 2, 0, -2]
+        // New Requested: 9, 4, -3, -5, -7
+        const monthZPositions = [9, 4, -3, -5, -7]
         monthLabels.forEach((label, i) => {
             const canvas = document.createElement('canvas')
             const ctx = canvas.getContext('2d')!
@@ -402,10 +474,53 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
             scene.add(sprite)
         })
 
+
+
+        // Movement Speed
+        const MOVEMENT_SPEED = 0.5
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            keysPressed.current[e.key.toLowerCase()] = true
+        }
+
+        const handleKeyUp = (e: KeyboardEvent) => {
+            keysPressed.current[e.key.toLowerCase()] = false
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        window.addEventListener('keyup', handleKeyUp)
+
         // Animation loop
         let animationId: number
         const animate = () => {
             animationId = requestAnimationFrame(animate)
+
+            // Handle Movement
+            if (keysPressed.current['w'] || keysPressed.current['a'] || keysPressed.current['s'] || keysPressed.current['d']) {
+                // Get Forward Vector (projected on XZ plane)
+                const forward = new THREE.Vector3()
+                camera.getWorldDirection(forward)
+                forward.y = 0
+                forward.normalize()
+
+                // Get Right Vector
+                const right = new THREE.Vector3()
+                right.crossVectors(forward, camera.up).normalize()
+
+                const moveVector = new THREE.Vector3()
+
+                if (keysPressed.current['w']) moveVector.add(forward)
+                if (keysPressed.current['s']) moveVector.sub(forward)
+                if (keysPressed.current['d']) moveVector.add(right)
+                if (keysPressed.current['a']) moveVector.sub(right)
+
+                if (moveVector.length() > 0) {
+                    moveVector.normalize().multiplyScalar(MOVEMENT_SPEED)
+                    camera.position.add(moveVector)
+                    controls.target.add(moveVector)
+                }
+            }
+
             controls.update()
             renderer.render(scene, camera)
         }
@@ -427,6 +542,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
 
         // Cleanup
         return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+            window.removeEventListener('keyup', handleKeyUp)
             cancelAnimationFrame(animationId)
             resizeObserver.disconnect()
             controls.dispose()
@@ -435,7 +552,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                 container.removeChild(renderer.domElement)
             }
         }
-    }, [parcels, conclusions])
+    }, [parcels, conclusions, showMachines, isFullscreen])
 
     // Prevent page scroll when mouse is over the 3D canvas
     useEffect(() => {
@@ -448,8 +565,12 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
         }
 
         container.addEventListener('wheel', preventScroll, { passive: false })
-        return () => container.removeEventListener('wheel', preventScroll)
+
+        return () => {
+            container.removeEventListener('wheel', preventScroll)
+        }
     }, [])
+
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '400px', borderRadius: '12px', overflow: 'hidden' }}>
@@ -475,30 +596,87 @@ export default function FieldChart3DCanvas({ parcels, conclusions }: FieldChart3
                 <Rotate3d size={24} color="#d4a84b" style={{ opacity: 0.9 }} />
             </div>
 
-            {/* Legend overlay matching 2D design */}
-            <div style={{
-                position: 'absolute',
-                bottom: '20px',
-                left: '20px',
-                pointerEvents: 'none',
-                zIndex: 10,
-                background: 'rgba(26, 23, 20, 0.9)',
-                padding: '12px 16px',
-                borderRadius: '12px',
-                border: '1px solid rgba(255, 255, 255, 0.08)'
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px' }}>
-                    <span style={{ width: '16px', height: '16px', background: 'linear-gradient(180deg, rgba(129, 199, 132, 0.8) 0%, rgba(74, 103, 65, 0.9) 100%)', borderRadius: '4px', display: 'inline-block' }}></span>
-                    <span>Optimális szerkezetű talaj mélysége</span>
+            {/* Info Toggle Button - Top Left */}
+            <button
+                onClick={() => setShowInfo(!showInfo)}
+                style={{
+                    position: 'absolute',
+                    top: '20px',
+                    left: '20px',
+                    zIndex: 20,
+                    background: 'rgba(26, 23, 20, 0.8)',
+                    backdropFilter: 'blur(4px)',
+                    border: '1px solid rgba(212, 168, 75, 0.3)',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#d4a84b',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+                }}
+                title={showInfo ? "Rejtsd el az információkat" : "Mutasd az információkat"}
+            >
+                {showInfo ? <X size={20} /> : <Info size={20} />}
+            </button>
+
+            {/* Machine Toggle Button - Below Info */}
+            <button
+                onClick={() => setShowMachines(!showMachines)}
+                style={{
+                    position: 'absolute',
+                    top: '70px',
+                    left: '20px',
+                    zIndex: 20,
+                    background: 'rgba(26, 23, 20, 0.8)',
+                    backdropFilter: 'blur(4px)',
+                    border: '1px solid rgba(212, 168, 75, 0.3)',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#d4a84b',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+                }}
+                title={showMachines ? "Rejtsd el a gépeket" : "Mutasd a gépeket"}
+            >
+                {showMachines ? <Eye size={20} /> : <EyeOff size={20} />}
+            </button>
+
+            {/* Legend overlay matching 2D design - Toggled */}
+            {showInfo && (
+                <div style={{
+                    position: 'absolute',
+                    bottom: '20px',
+                    left: '20px',
+                    pointerEvents: 'none',
+                    zIndex: 10,
+                    background: 'rgba(26, 23, 20, 0.9)',
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    animation: 'fadeIn 0.3s ease'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px' }}>
+                        <span style={{ width: '16px', height: '16px', background: 'linear-gradient(180deg, rgba(129, 199, 132, 0.8) 0%, rgba(74, 103, 65, 0.9) 100%)', borderRadius: '4px', display: 'inline-block' }}></span>
+                        <span>Optimális szerkezetű talaj mélysége</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px', marginTop: '8px' }}>
+                        <span style={{ color: '#d4a84b', fontSize: '14px' }}>★</span>
+                        <span>Legnagyobb hatékonyság</span>
+                    </div>
+                    <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', color: 'rgba(255, 255, 255, 0.4)', fontSize: '11px' }}>
+                        WASD: Mozgás | Bal klikk: Forgatás | Jobb klikk: Mozgatás | Görgő: Zoom
+                    </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px', marginTop: '8px' }}>
-                    <span style={{ color: '#d4a84b', fontSize: '14px' }}>★</span>
-                    <span>Legnagyobb hatékonyság</span>
-                </div>
-                <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', color: 'rgba(255, 255, 255, 0.4)', fontSize: '11px' }}>
-                    Bal klikk: Forgatás | Jobb klikk: Mozgatás | Görgő: Zoom
-                </div>
-            </div>
+            )}
         </div>
     )
 }

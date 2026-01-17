@@ -20,7 +20,7 @@ const features: FeatureItem[] = [
   {
     icon: <Sprout size={24} />,
     title: 'Optimális magágy',
-    description: 'Az elmunkáló henger egyenletes, vetésre ültetésre kész felületet hagy'
+    description: 'Az elmunkáló henger egyenletes, vetésre vagy ültetésre kész felületet hagy'
   }
 ]
 

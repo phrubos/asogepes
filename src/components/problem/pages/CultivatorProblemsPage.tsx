@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Layers, Sprout, Grid3X3, Shovel } from 'lucide-react'
+import { Sprout, Webhook, RefreshCcwDot, SquareKanban } from 'lucide-react'
 
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from '../ProblemNew.module.css'
@@ -11,7 +11,7 @@ const cultivatorProblems = [
     {
         title: 'Csekély mértékű átkeverés',
         description: 'A nehézkultivátor jól lazít, de nem tudja bedolgozni a szármaradványokat és sok esetben rögösít. Az árvakelés és a gyomnövények magjai a felszín közelében maradnak, ahogy a herbicidek szermaradékai is.',
-        icon: 'layers',
+        icon: 'refresh-cw-off',
     },
     {
         title: 'A tarló zöldülése csak részleges',
@@ -21,12 +21,12 @@ const cultivatorProblems = [
     {
         title: 'Egyenletlen lazítás',
         description: 'A lazítás képe egyenletlen, főként a kapák nyomában laza csak megfelelő mértékben.',
-        icon: 'grid',
+        icon: 'square-kanban',
     },
     {
-        title: 'Ültetés előtt elmarkolás szükséges',
+        title: 'Ültetés előtt elmunkálás szükséges',
         description: 'Ültetésre csak kombinátoros művelés után alkalmas.',
-        icon: 'shovel',
+        icon: 'webhook',
     },
 ]
 
@@ -34,10 +34,10 @@ export default function CultivatorProblemsPage() {
     const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
     const iconMap: Record<string, React.ReactNode> = {
-        layers: <Layers size={24} />,
+        'refresh-cw-off': <RefreshCcwDot size={24} />,
         sprout: <Sprout size={24} />,
-        grid: <Grid3X3 size={24} />,
-        shovel: <Shovel size={24} />,
+        'square-kanban': <SquareKanban size={24} />,
+        webhook: <Webhook size={24} />,
     }
 
     const containerVariants = {

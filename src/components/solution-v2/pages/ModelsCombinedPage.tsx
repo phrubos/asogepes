@@ -16,8 +16,8 @@ export default function ModelsCombinedPage() {
                         minHeight: '100vh',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'center',
-                        padding: 'var(--space-2xl) var(--space-xl)',
+                        justifyContent: 'flex-start',
+                        padding: 'var(--space-1xl) var(--space-xl) var(--space-xl)',
                         // Add separator border except for last item
                         borderBottom: index < models.length - 1 ? '1px solid rgba(255,255,255,0.1)' : 'none'
                     }}

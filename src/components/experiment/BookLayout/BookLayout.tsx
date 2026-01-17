@@ -6,6 +6,7 @@ import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import SoilLoader from '@/components/ui/SoilLoader'
 import styles from './BookLayout.module.css'
+import ScrollProgressIndicator from './ScrollProgressIndicator'
 
 export interface BookPage {
   id: string
@@ -553,6 +554,9 @@ export default function BookLayout({ pages, resetEventName }: BookLayoutProps) {
               <ChevronRight size={24} />
             </button>
           </motion.div>
+
+          {/* New Scroll Progress Indicator */}
+          <ScrollProgressIndicator />
         </main>
       </div >
     </BookContext.Provider >

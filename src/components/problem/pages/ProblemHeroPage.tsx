@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Layers, Shovel, Tractor, ChevronRight, Activity } from 'lucide-react'
+import { ChevronRight, Activity, Droplet, UnfoldHorizontal, Redo } from 'lucide-react'
 import PageBadge from '@/components/ui/PageBadge'
 import styles from './ProblemHeroPage.module.css'
 import { useBookNav } from '@/components/experiment/BookLayout/BookLayout'
@@ -12,7 +12,7 @@ const HERO_NAV_ITEMS = [
         id: 'compaction-stats',
         number: '01',
         title: 'Az öntözés okozta tömörödés',
-        icon: <Layers size={24} />,
+        icon: <Droplet size={24} />,
         color: '#A0846B',
         accent: '#FDD835', // Yellow (Warning)
         stats: '0-20 cm', // Keeping data but not rendering
@@ -22,7 +22,7 @@ const HERO_NAV_ITEMS = [
         id: 'cultivator-problems',
         number: '02',
         title: 'A szántóföldi nehézkultivátor korlátai',
-        icon: <Shovel size={24} />,
+        icon: <UnfoldHorizontal size={24} />,
         color: '#7D6B5A',
         accent: '#FB8C00', // Orange (Critical)
         stats: '20-35 cm',
@@ -32,7 +32,7 @@ const HERO_NAV_ITEMS = [
         id: 'ploughing-effects',
         number: '03',
         title: 'A szántás korlátai',
-        icon: <Tractor size={24} />,
+        icon: <Redo size={24} />,
         color: '#5C4D3D',
         accent: '#E53935', // Red (Danger)
         stats: '35+ cm',

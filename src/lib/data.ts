@@ -218,7 +218,7 @@ export const compactionChallenges = [
   {
     title: 'Szerkezetromlás üteme',
     description: 'A tárcsázott vagy kombinátorozott talajon már 30 nap alatt jelentős szerkezetromlás mérhető intenzív öntözés mellett.',
-    icon: 'layers',
+    icon: 'arrow-down-narrow-wide',
   },
 ]
 
@@ -227,21 +227,21 @@ export const ploughingProblems = [
   {
     title: 'Eketalp képződés',
     description: 'A szántás 25-30 cm mélységben tömör réteget (eketalpat) gyúr, ami akadályozza a gyökerek és a víz mélyebb behatolását.',
-    icon: 'layers',
+    icon: 'arrow-down-to-line',
     dataBadge: '20+ bar nyomás',
     source: 'Szakdolgozat 7. oldal',
   },
   {
     title: 'Rétegek felcserélése',
     description: 'A forgatás során az aerob (oxigéndús) és anaerob (oxigénszegény) rétegek felcserélődnek, ami károsítja a talajéletet.',
-    icon: 'worm',
+    icon: 'shuffle',
     dataBadge: 'Talajélet károsodás',
     source: 'Szakdolgozat 7. oldal',
   },
   {
     title: 'Széntartalom oxidálódása',
     description: 'A forgatás hatására a mélyebb rétegek szerves anyaga a felszínre kerül és gyorsabban oxidálódik, csökkentve a humusztartalmat.',
-    icon: 'co2',
+    icon: 'trending-up',
     dataBadge: 'Humusz veszteség',
     source: 'Szakdolgozat 7. oldal',
   },

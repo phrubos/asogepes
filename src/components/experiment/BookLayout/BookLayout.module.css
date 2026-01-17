@@ -277,13 +277,11 @@
   position: relative;
   overflow: hidden;
   /* Clean warm gradient base */
-  background: linear-gradient(
-    165deg,
-    #342C24 0%,
-    #2A231C 25%,
-    #1F1A16 60%,
-    #171311 100%
-  );
+  background: linear-gradient(165deg,
+      #342C24 0%,
+      #2A231C 25%,
+      #1F1A16 60%,
+      #171311 100%);
 }
 
 /* Clean gradient + ambient light system */
@@ -698,7 +696,6 @@
 @media (max-width: 768px) {
   .sectionLabel {
     display: none;
-    /* Icon only on really small screens if crowded */
   }
 
   .sectionGroup.active .sectionLabel {
@@ -710,5 +707,146 @@
     background: rgba(0, 0, 0, 0.8);
     padding: 2px 8px;
     border-radius: 4px;
+  }
+}
+
+/* ============================================
+   SCROLL PROGRESS INDICATOR
+   ============================================ */
+
+.scrollIndicator {
+  position: fixed;
+  bottom: 24px;
+  right: 60px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  background: rgba(20, 17, 14, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 168, 75, 0.25);
+  border-radius: 100px;
+  color: var(--color-gold);
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  max-width: 300px;
+}
+
+.scrollIndicator:hover {
+  background: rgba(31, 26, 22, 0.95);
+  border-color: rgba(212, 168, 75, 0.6);
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(212, 168, 75, 0.1);
+}
+
+.pulseContainer {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulseDot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-gold);
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 0 10px var(--color-gold);
+}
+
+.pulseRing {
+  position: absolute;
+  inset: -6px;
+  border: 1px solid var(--color-gold);
+  border-radius: 50%;
+  opacity: 0;
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.pulseRing:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.indicatorText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.indicatorLabel {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.indicatorTitle {
+  font-family: var(--font-display, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.indicatorIcon {
+  color: var(--color-gold);
+  animation: bounce-vertical 2s infinite;
+  opacity: 0.8;
+}
+
+@keyframes bounce-vertical {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@media (max-width: 768px) {
+  .scrollIndicator {
+    bottom: 90px;
+    right: 20px;
+    padding: 8px 16px;
+  }
+
+  .indicatorLabel {
+    display: none;
+  }
+
+  .indicatorTitle {
+    font-size: 0.75rem;
   }
 }

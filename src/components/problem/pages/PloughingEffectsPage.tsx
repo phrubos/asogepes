@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Layers, Activity, Leaf, Thermometer, AlertTriangle, Worm, CloudFog, Quote, Plus, Minus } from 'lucide-react'
+import { Activity, Leaf, Thermometer, AlertTriangle, ArrowDownToLine, Shuffle, TrendingUp, Quote, Plus, Minus } from 'lucide-react'
 import { ploughingProblems } from '@/lib/data'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from './PloughingEffectsPage.module.css'
@@ -162,12 +162,12 @@ export default function PloughingEffectsPage() {
     const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
     const iconMap: Record<string, JSX.Element> = {
-        layers: <Layers size={20} />,
+        'arrow-down-to-line': <ArrowDownToLine size={20} />,
         activity: <Activity size={20} />,
         leaf: <Leaf size={20} />,
         thermometer: <Thermometer size={20} />,
-        worm: <Worm size={20} />,
-        co2: <CloudFog size={20} />,
+        shuffle: <Shuffle size={20} />,
+        'trending-up': <TrendingUp size={20} />,
     }
 
     const containerVariants = {

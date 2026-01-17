@@ -983,3 +983,28 @@
   color: rgba(255, 255, 255, 0.6);
   font-weight: 500;
 }
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0.4);
+  }
+
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 15px rgba(212, 168, 75, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0);
+  }
+}
+
+.playButtonPulse {
+  animation: pulse 2s infinite;
+}
+
+.playButtonPulse:hover {
+  animation: none;
+}

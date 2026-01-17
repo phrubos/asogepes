@@ -35,7 +35,7 @@ const applicationModes: ApplicationMode[] = [
     title: 'Lazítás + Ásógép',
     subtitle: 'Mélylazítás után ásógép',
     icon: <Layers size={32} />,
-    when: 'Tömör eketalpas talaj',
+    when: 'Tömör, eketalpas talaj',
     soilType: 'Középkötött, kötött talajok',
     rating: 3,
     isBest: false,
@@ -46,7 +46,7 @@ const applicationModes: ApplicationMode[] = [
     title: 'Mélyásógép',
     subtitle: 'Csak mélyásógép, más eszköz nélkül',
     icon: <ChevronsDown size={32} />,
-    when: 'Szántóföldi, intenzíven öntözött, nagy gyökértömegű kertészeti kultúrákra',
+    when: 'Intenzíven öntözött, nagy gyökértömegű kultúrák',
     soilType: 'Középkötött, kötött talaj',
     rating: 5,
     isBest: false,
@@ -57,10 +57,10 @@ const applicationModes: ApplicationMode[] = [
     title: 'Lazítás + Szántás + Ásógép',
     subtitle: 'Őszi szántás után tavaszi ásógép',
     icon: <Combine size={32} />,
-    when: 'Hagyományos gazdálkodásba illeszkedve',
+    when: 'Ősszel nagy tömegű szármaradvány vagy szervestrágya',
     soilType: 'Bármely talajtípus',
     rating: 5,
-    isBest: true,
+    isBest: false,
     color: '#5A7A8B'
   }
 ]

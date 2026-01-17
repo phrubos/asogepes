@@ -32,9 +32,9 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
   const experimentDescriptions: Record<ModelId, string> = {
-    '38wx': 'Szentkirály kísérlet: Vöröshagyma kultúra 4 hónapos mérési időszak.',
-    '38sx': 'Lakitelek kísérlet: III. és VII. parcella eredményei ipari paradicsom kultúrában.',
-    '40sx': 'Kecskemét-Borbás kísérlet: Ipari paradicsom 45 cm mélységű műveléssel.'
+    '38wx': 'Szentkirály kísérleti hely: Vöröshagyma kultúra, 4 hónapos mérési időszak.',
+    '38sx': 'Lakitelek kísérleti hely: III. és VII. parcella eredményei, ipari paradicsom kultúrában.',
+    '40sx': 'Kecskemét-Borbás kísérleti hely: Ipari paradicsom kultúra, 45 cm mélységű műveléssel.'
   }
 
   return (

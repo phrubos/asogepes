@@ -89,7 +89,7 @@ export default function LakitelekChartPage() {
                     />
                   </div>
                   <span className={`${styles.resultRating} ${parcel.rating >= 90 ? styles.resultRatingGood : ''}`}>
-                    {parcel.rating}%
+                    {/* Percentage removed */}
                   </span>
                 </div>
               </motion.div>
@@ -176,7 +176,7 @@ export default function LakitelekChartPage() {
                       <div className={styles.fakeChartBlur} />
                       <div className={styles.playButtonContainer}>
                         <motion.button
-                          className={styles.playButton}
+                          className={`${styles.playButton} ${styles.playButtonPulse}`}
                           onClick={() => setIsChartLoaded(true)}
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
@@ -252,14 +252,12 @@ export default function LakitelekChartPage() {
 
             <div className={styles.fullscreenContent}>
               <div className={styles.fullscreenVisualization}>
-                <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 10 }}>
-                  <div className={styles.headerBadge}>
-                    <MapPin size={10} />
-                    <span>Lakitelek</span>
-                  </div>
-                </div>
                 <div className={styles.vizCanvas}>
-                  <FieldChart3DCanvas parcels={parcels} conclusions={conclusions} />
+                  <FieldChart3DCanvas
+                    parcels={parcels}
+                    conclusions={conclusions}
+                    isFullscreen={true}
+                  />
                 </div>
               </div>
 

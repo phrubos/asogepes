@@ -406,7 +406,7 @@ export default function PloughingSoilComparison() {
               <X size={14} strokeWidth={3} />
               <span>Szántott talaj</span>
             </div>
-            <span className={styles.badge} style={{ fontSize: '0.65rem', padding: '0.2rem 0.4rem' }}>Hagyományos</span>
+
           </div>
 
           <div className={styles.visualContainer}>
@@ -462,7 +462,7 @@ export default function PloughingSoilComparison() {
               <Check size={14} strokeWidth={3} />
               <span>Ásógépezett talaj</span>
             </div>
-            <span className={styles.badgeGood} style={{ fontSize: '0.65rem', padding: '0.2rem 0.4rem' }}>Ajánlott</span>
+
           </div>
 
           <div className={styles.visualContainer}>
