@@ -68,14 +68,17 @@ export default function Hero() {
   return (
     <header className={styles.hero}>
       <div className={styles.heroBg} style={parallaxStyle}>
-        <Image
-          src="/images/hero_2026.jpeg"
-          alt="Ásógép munkában - kontrasztos mezőgazdasági tájkép"
-          fill
-          priority
-          className={styles.heroImage}
-          sizes="100vw"
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className={styles.heroVideo}
+          poster="/images/hero_poster_start.jpg"
+        >
+          <source src="/videos/hero_background_4.mp4" type="video/mp4" />
+          {/* Fallback for browsers that don't support video */}
+        </video>
         <div className={styles.heroOverlay}></div>
       </div>
       <div className={styles.heroContent}>
