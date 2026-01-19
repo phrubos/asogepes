@@ -76,7 +76,7 @@ export default function Hero() {
           className={styles.heroVideo}
           poster="/images/hero_poster_start.jpg"
         >
-          <source src="/videos/hero_background_4.mp4" type="video/mp4" />
+          <source src="/videos/hero_background_8.mp4" type="video/mp4" />
           {/* Fallback for browsers that don't support video */}
         </video>
         <div className={styles.heroOverlay}></div>

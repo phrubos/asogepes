@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Check, X, Layers, Sprout, Grid3X3, Shovel } from 'lucide-react'
 import TiltCard from '@/components/ui/TiltCard'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
+import HeavyCultivatorSVG from './visualizations/HeavyCultivatorSVG'
 import styles from './ProblemNew.module.css'
 
 const seededRandom = (seed: number) => {
@@ -105,179 +106,9 @@ const DepthMarkers = () => (
   </g>
 )
 
-const CultivatorVisual = () => {
-  const trackLeft = { center: 90, bottom: 130 }
-  const trackRight = { center: 210, bottom: 130 }
 
-  // Morzsák CSAK a V-árok ALJÁN - a csúcs körül
-  const crumbsLeftTrack = useMemo(() => {
-    const crumbs = []
-    for (let i = 0; i < 20; i++) {
-      // Csak a legalján: y=125-136 között
-      const depth = 78 + seededRandom(i) * 11
-      // Nagyon keskeny eloszlás a csúcsnál
-      const spread = 8
-      const offsetX = (seededRandom(i + 100) - 0.5) * spread
-      crumbs.push({
-        cx: trackLeft.center + offsetX,
-        cy: depth,
-        rx: 1.5 + seededRandom(i + 300) * 2,
-        ry: 1.5 + seededRandom(i + 400) * 1.5,
-        delay: 0.4 + i * 0.02
-      })
-    }
-    return crumbs
-  }, [])
 
-  const crumbsRightTrack = useMemo(() => {
-    const crumbs = []
-    for (let i = 0; i < 20; i++) {
-      const depth = 78 + seededRandom(i + 500) * 11
-      const spread = 8
-      const offsetX = (seededRandom(i + 600) - 0.5) * spread
-      crumbs.push({
-        cx: trackRight.center + offsetX,
-        cy: depth,
-        rx: 1.5 + seededRandom(i + 800) * 2,
-        ry: 1.5 + seededRandom(i + 900) * 1.5,
-        delay: 0.5 + i * 0.02
-      })
-    }
-    return crumbs
-  }, [])
 
-  const compactBlocks = useMemo(() => [
-    { cx: 30, cy: 75, rx: 22, ry: 18, delay: 0.2 },
-    { cx: 25, cy: 105, rx: 18, ry: 14, delay: 0.25 },
-    { cx: 40, cy: 130, rx: 16, ry: 12, delay: 0.3 },
-    { cx: 150, cy: 70, rx: 28, ry: 20, delay: 0.35 },
-    { cx: 145, cy: 100, rx: 22, ry: 16, delay: 0.4 },
-    { cx: 155, cy: 125, rx: 20, ry: 14, delay: 0.45 },
-    { cx: 135, cy: 115, rx: 15, ry: 12, delay: 0.5 },
-    { cx: 270, cy: 75, rx: 22, ry: 18, delay: 0.55 },
-    { cx: 265, cy: 105, rx: 18, ry: 14, delay: 0.6 },
-    { cx: 275, cy: 130, rx: 16, ry: 12, delay: 0.65 },
-  ], [])
-
-  return (
-    <svg viewBox="0 0 300 150" className={styles.soilSvg}>
-      <defs>
-        <linearGradient id="cultivatorSoilGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#5D4037" />
-          <stop offset="100%" stopColor="#3E2723" />
-        </linearGradient>
-        <radialGradient id="blockGradient" cx="30%" cy="30%">
-          <stop offset="0%" stopColor="#6D4C41" />
-          <stop offset="100%" stopColor="#4E342E" />
-        </radialGradient>
-        <radialGradient id="crumbGradient" cx="40%" cy="40%">
-          <stop offset="0%" stopColor="#D7CCC8" />
-          <stop offset="100%" stopColor="#BCAAA4" />
-        </radialGradient>
-      </defs>
-
-      <motion.rect
-        x="0" y="45" width="300" height="105"
-        fill="url(#cultivatorSoilGradient)"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      />
-
-      {/* Nincs felszín vonal - a V-árkok nyíltak */}
-
-      <motion.path
-        d={`M60,45 Q90,138 120,45`}
-        fill="#F5F0EB"
-        initial={{ opacity: 0, scaleY: 0 }}
-        animate={{ opacity: 1, scaleY: 1 }}
-        style={{ transformOrigin: '90px 45px' }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      />
-
-      <motion.path
-        d={`M180,45 Q210,138 240,45`}
-        fill="#F5F0EB"
-        initial={{ opacity: 0, scaleY: 0 }}
-        animate={{ opacity: 1, scaleY: 1 }}
-        style={{ transformOrigin: '210px 45px' }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-      />
-
-      {compactBlocks.map((block, i) => (
-        <motion.ellipse
-          key={`block-${i}`}
-          cx={block.cx}
-          cy={block.cy}
-          rx={block.rx}
-          ry={block.ry}
-          fill="url(#blockGradient)"
-          stroke="#2D1F1A"
-          strokeWidth="1"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: block.delay, type: "spring", stiffness: 120, damping: 15 }}
-          style={{ filter: 'drop-shadow(2px 2px 3px rgba(0,0,0,0.4))' }}
-        />
-      ))}
-
-      <g>
-        {crumbsLeftTrack.map((c, i) => (
-          <motion.ellipse
-            key={`lt-${i}`}
-            cx={c.cx}
-            cy={c.cy}
-            rx={c.rx}
-            ry={c.ry}
-            fill="url(#crumbGradient)"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.9 }}
-            transition={{ delay: c.delay, type: "spring", stiffness: 200, damping: 20 }}
-          />
-        ))}
-      </g>
-
-      <g>
-        {crumbsRightTrack.map((c, i) => (
-          <motion.ellipse
-            key={`rt-${i}`}
-            cx={c.cx}
-            cy={c.cy}
-            rx={c.rx}
-            ry={c.ry}
-            fill="url(#crumbGradient)"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.9 }}
-            transition={{ delay: c.delay, type: "spring", stiffness: 200, damping: 20 }}
-          />
-        ))}
-      </g>
-
-      <motion.path
-        d={`M60,45 Q90,138 120,45`}
-        fill="none"
-        stroke="#6D4C41"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 1, delay: 0.5 }}
-      />
-      <motion.path
-        d={`M180,45 Q210,138 240,45`}
-        fill="none"
-        stroke="#6D4C41"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 1, delay: 0.6 }}
-      />
-
-      <DepthMarkers />
-    </svg>
-  )
-}
 
 const SpadeVisual = () => {
   const clods = useMemo(() => {
@@ -493,7 +324,7 @@ export default function CultivatorView() {
             </div>
 
             <div className={styles.soilProfileVisual} style={{ cursor: 'default' }}>
-              <CultivatorVisual />
+              <HeavyCultivatorSVG />
 
               <div className={styles.soilProfileCaption}>
                 <p>
