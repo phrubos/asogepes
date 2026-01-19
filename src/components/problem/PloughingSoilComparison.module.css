@@ -167,8 +167,8 @@
 .scaleLeft {
   position: absolute;
   left: 0.5rem;
-  top: 18%;
-  /* Starts below sky (approx 45px/250px) */
+  top: 30%;
+  /* Starts below sky (approx 45px/250px) adjusted for alignment */
   bottom: 1rem;
   width: 12px;
   display: flex;
@@ -179,7 +179,7 @@
 .scaleRight {
   position: absolute;
   right: 0.5rem;
-  top: 18%;
+  top: 30%;
   /* Starts below sky */
   bottom: 0.5rem;
   width: 40px;

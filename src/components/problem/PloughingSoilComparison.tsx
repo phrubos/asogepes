@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Check, Droplets, Bug, Sprout, ThermometerSun, ArrowDown } from 'lucide-react'
 import styles from './PloughingSoilComparison.module.css'
+import PloughedSoilSVG from './visualizations/PloughedSoilSVG'
 
 // Determinisztikus random generátor
 const seededRandom = (seed: number) => {
@@ -43,7 +44,14 @@ const ScaleOverlays = ({ type }: { type: 'ploughed' | 'spaded' }) => (
             position: 'absolute',
             inset: 0,
             background: type === 'ploughed'
-              ? 'linear-gradient(180deg, #4CAF50 0%, #8BC34A 40%, #F44336 45%, #F44336 55%, #FF9800 60%, #FF5722 100%)'
+              // Soil Surface starts at 0% of this container (which is 30% of image)
+              // Total Container Height = 105px (70% of 150px)
+              // Eketalp starts at y=96. Relative to soil surface y=45: 96-45 = 51px.
+              // 51px / 105px = 48.5%
+              // Eketalp ends at y=120. Relative: 120-45 = 75px. 
+              // 75px / 105px = 71.4%
+              // Scale: Green 0-48%, Red 48-71%, Orange/Green >71%
+              ? 'linear-gradient(180deg, #4CAF50 0%, #8BC34A 41.5%, #D32F2F 53%, #D32F2F 75%, #FF9800 78%, #FF5722 100%)'
               : 'linear-gradient(180deg, #4CAF50 0%, #66BB6A 100%)'
           }}
         />
@@ -69,200 +77,192 @@ const ScaleOverlays = ({ type }: { type: 'ploughed' | 'spaded' }) => (
   </div>
 )
 
-// Szántott talaj SVG vizualizáció - 600px széles
-const PloughedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
-  const clods = useMemo(() => {
-    const data: Array<{ cx: number; cy: number; rx: number; ry: number; type: string }> = []
-    let seed = 100
 
-    // Felső művelt réteg - nagyobb rögök - Szélesebb terület (0-600)
-    for (let i = 0; i < 50; i++) {
-      const cx = 20 + seededRandom(seed++) * 560
-      const cy = 50 + seededRandom(seed++) * 70
-      const size = 8 + seededRandom(seed++) * 12
-      data.push({ cx, cy, rx: size, ry: size * 0.7, type: 'large' })
-    }
+// Generate organic clod shape (irregular polygon)
+const generateClodPath = (cx: number, cy: number, r: number, seed: number) => {
+  const points = []
+  const numPoints = 8 + Math.floor(seededRandom(seed) * 4) // 8-12 points
+  const angleStep = (Math.PI * 2) / numPoints
 
-    // Eketalp réteg alatt - nagyon tömör
-    for (let i = 0; i < 30; i++) {
-      const cx = 20 + seededRandom(seed++) * 560
-      const cy = 170 + seededRandom(seed++) * 50
-      const size = 15 + seededRandom(seed++) * 10
-      data.push({ cx, cy, rx: size, ry: size * 0.5, type: 'compact' })
-    }
-
-    return data
-  }, [])
-
-  // Roots removed
-  const blockedRoots: Array<{ x: number; path: string }> = []
-
-  // Víz részecskék - pangóvíz az eketalp felett
-  const waterParticles = useMemo(() => {
-    const particles: Array<{ x: number; delay: number }> = []
-    for (let i = 0; i < 16; i++) {
-      particles.push({ x: 40 + i * 35, delay: i * 0.2 })
-    }
-    return particles
-  }, [])
-
-  return (
-    <svg viewBox="0 0 600 250" className={styles.soilSvg} preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="ploughedSoilGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#8D6E63" />
-          <stop offset="40%" stopColor="#6D4C41" />
-          <stop offset="45%" stopColor="#4E342E" />
-          <stop offset="100%" stopColor="#3E2723" />
-        </linearGradient>
-        <linearGradient id="eketalpGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#5D4037" />
-          <stop offset="50%" stopColor="#3E2723" />
-          <stop offset="100%" stopColor="#5D4037" />
-        </linearGradient>
-        <filter id="soilTexture">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" />
-          <feColorMatrix type="saturate" values="0" />
-          <feComponentTransfer>
-            <feFuncA type="linear" slope="0.15" />
-          </feComponentTransfer>
-          <feBlend in="SourceGraphic" mode="overlay" />
-        </filter>
-      </defs>
-
-      {/* Ég háttér - világos kék */}
-      <rect x="0" y="0" width="600" height="45" fill="#7B8FAD" />
-
-      {/* Talaj háttér */}
-      <rect x="0" y="45" width="600" height="205" fill="url(#ploughedSoilGradient)" />
-
-      {/* Textúra overlay */}
-      <rect x="0" y="45" width="600" height="205" fill="url(#ploughedSoilGradient)" filter="url(#soilTexture)" opacity="0.3" />
-
-      {/* Talajfelszín vonal */}
-      <line x1="0" y1="45" x2="600" y2="45" stroke="#8B7355" strokeWidth="2" />
-
-      {/* Eketalp réteg - kiemelt */}
-      <motion.g
-        animate={{ opacity: isHovered ? 1 : 0.8 }}
-        transition={{ duration: 0.3 }}
-      >
-        <rect x="0" y="130" width="600" height="25" fill="url(#eketalpGradient)" />
-        <motion.rect
-          x="0" y="130" width="600" height="25"
-          fill="#B71C1C"
-          opacity={0.3}
-          animate={{ opacity: isHovered ? [0.3, 0.5, 0.3] : 0.3 }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        />
-        {/* Eketalp vonalak */}
-        <line x1="0" y1="130" x2="600" y2="130" stroke="#B71C1C" strokeWidth="2" strokeDasharray="8,4" />
-        <line x1="0" y1="155" x2="600" y2="155" stroke="#B71C1C" strokeWidth="2" strokeDasharray="8,4" />
-      </motion.g>
-
-      {/* Rögök */}
-      {clods.map((clod, i) => (
-        <motion.ellipse
-          key={i}
-          cx={clod.cx}
-          cy={clod.cy}
-          rx={clod.rx}
-          ry={clod.ry}
-          fill={clod.type === 'large' ? '#A1887F' : '#4E342E'}
-          stroke={clod.type === 'compact' ? '#3E2723' : 'none'}
-          strokeWidth={1}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: clod.type === 'large' ? 0.8 : 0.9 }}
-          transition={{ delay: i * 0.01, type: 'spring', stiffness: 150 }}
-        />
-      ))}
-
-
-
-      {/* Pangóvíz az eketalp felett */}
-      {waterParticles.map((p, i) => (
-        <motion.ellipse
-          key={i}
-          cx={p.x}
-          cy={125}
-          rx={8}
-          ry={3}
-          fill="#64B5F6"
-          opacity={0.6}
-          animate={{
-            cx: [p.x, p.x + (i % 2 === 0 ? 15 : -15), p.x],
-            opacity: [0.4, 0.7, 0.4],
-          }}
-          transition={{
-            duration: 3,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      ))}
-
-      {/* Eketalp címke - Középen */}
-      <motion.g
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.8 }}
-      >
-        <rect x="230" y="135" width="140" height="22" rx="4" fill="#B71C1C" />
-        <text x="300" y="150" fill="white" fontSize="12" fontWeight="700" textAnchor="middle">
-          EKETALP (20+ bar)
-        </text>
-      </motion.g>
-    </svg>
-  )
+  for (let i = 0; i < numPoints; i++) {
+    const angle = i * angleStep
+    const rVar = r * (0.8 + seededRandom(seed + i) * 0.3)
+    const px = cx + Math.cos(angle) * rVar
+    const py = cy + Math.sin(angle) * rVar
+    points.push(`${px},${py}`)
+  }
+  return `M${points.join(' L')} Z`
 }
 
 // Ásógépezett talaj SVG vizualizáció - 600px széles
 const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
+  // Color palette matching PloughedSoilSVG style exactly
+  const darkPalette = [
+    '#4E342E', // Darkest (Subsoil)
+    '#5D4037', // Medium Dark
+    '#6D4C41'  // Lightest Dark
+  ]
+
+  const lightPalette = [
+    '#6B5344', // Darkest Light
+    '#795548', // Medium Light
+    '#8B7355'  // Lightest (Topsoil base)
+  ]
+
+  const soilBgColor = '#3E2723' // Deep brown background
+
   const clods = useMemo(() => {
-    const data: Array<{ cx: number; cy: number; rx: number; ry: number; type: string; delay: number }> = []
+    const data: Array<{ id: string; cx: number; cy: number; path: string; isDark: boolean; variantIndex: number; delay: number }> = []
     let seed = 500
+    const width = 600
+    // ViewBox Y geometry - soil starts at y=30 (0cm mark)
+    const soilSurface = 75
+    const maxDepth = 250 // Bottom of SVG
 
-    // Egyenletes, apró rögök az egész szelvényben - Szélesebb rács
-    for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 24; col++) { // 12 helyett 24 oszlop
-        const baseX = 15 + col * 24
-        const baseY = 55 + row * 23
-        const cx = baseX + (seededRandom(seed++) - 0.5) * 12
-        const cy = baseY + (seededRandom(seed++) - 0.5) * 10
+    // Depth zones (scaled for 600x250 viewBox):
+    // 0-30cm scale corresponds to 30y to 250y (220 units = 30cm)
+    // Pure light zone: 0-12cm -> y = 30 to 118
+    // Transition zone: 12-20cm -> y = 118 to 176 (gradual dark clod introduction)
+    // Pure dark zone: 20-30cm -> y = 176 to 250
+    const transitionStart = 118
+    const transitionEnd = 176
 
-        const rand = seededRandom(seed++)
-        let type = 'small'
-        let size = 4 + seededRandom(seed++) * 3
+    // 1. TOP LAYER (0-20 cm) -> Small Light Clods with gradual dark mixing
+    for (let y = soilSurface + 8; y < transitionEnd; y += 12) {
+      for (let x = -10; x < width + 10; x += 12) {
+        // Jitter
+        const jx = x + (seededRandom(seed++) - 0.5) * 10
+        const jy = y + (seededRandom(seed++) - 0.5) * 10
 
-        if (rand > 0.85) {
-          type = 'medium'
-          size = 6 + seededRandom(seed++) * 4
-        } else if (rand > 0.95) {
-          type = 'large'
-          size = 8 + seededRandom(seed++) * 3
+        // Calculate transition progress (0 = pure light, 1 = transition end)
+        let darkProbability = 0
+        let darkSizeMultiplier = 0.5
+
+        if (jy >= transitionStart && jy < transitionEnd) {
+          // In transition zone: gradually increase dark clod probability
+          const progress = (jy - transitionStart) / (transitionEnd - transitionStart)
+          darkProbability = progress * 0.6 // Max 60% dark at transition end
+          darkSizeMultiplier = 0.5 + progress * 0.5 // Size grows from 50% to 100%
         }
 
+        // Decide if this clod should be dark (in transition zone)
+        const shouldBeDark = seededRandom(seed++) < darkProbability
+
+        if (shouldBeDark) {
+          // Dark clod in transition zone (smaller than bottom layer)
+          const rRand = seededRandom(seed++)
+          let variant = 2
+          let r = 6
+
+          if (rRand > 0.7) {
+            variant = 1 // Medium dark
+            r = (8 + seededRandom(seed++) * 2) * darkSizeMultiplier
+          } else {
+            variant = 2 // Small dark
+            r = (6 + seededRandom(seed++) * 2) * darkSizeMultiplier
+          }
+
+          const path = generateClodPath(jx, jy, r, seed++)
+
+          data.push({
+            id: `trans-dark-${data.length}`,
+            cx: jx, cy: jy, path,
+            isDark: true,
+            variantIndex: variant,
+            delay: (y * width + x) * 0.00005
+          })
+        } else {
+          // Light clod (normal behavior)
+          const rRand = seededRandom(seed++)
+          let variant = 2
+          let r = 5
+
+          if (rRand > 0.8) {
+            variant = 0 // Large Light
+            r = 7.5 + seededRandom(seed++) * 2
+          } else if (rRand > 0.4) {
+            variant = 1 // Medium Light
+            r = 6 + seededRandom(seed++) * 2
+          } else {
+            variant = 2 // Small Light
+            r = 4.5 + seededRandom(seed++) * 2
+          }
+
+          const path = generateClodPath(jx, jy, r, seed++)
+
+          data.push({
+            id: `top-${data.length}`,
+            cx: jx, cy: jy, path,
+            isDark: false,
+            variantIndex: variant,
+            delay: (y * width + x) * 0.00005
+          })
+        }
+      }
+    }
+
+    // 2. BOTTOM LAYER (> 20 cm) -> Large Dark Clods with some light mixing at top
+    for (let y = transitionEnd; y < maxDepth; y += 16) {
+      for (let x = -10; x < width + 10; x += 16) {
+        const jx = x + (seededRandom(seed++) - 0.5) * 14
+        const jy = y + (seededRandom(seed++) - 0.5) * 14
+
+        // Near the transition, add occasional smaller/lighter clods
+        const distFromTransition = jy - transitionEnd
+        const lightProbability = Math.max(0, 0.3 - distFromTransition * 0.008)
+        const addLightClod = seededRandom(seed++) < lightProbability
+
+        if (addLightClod) {
+          // Add a light clod for smoother transition
+          const variant = seededRandom(seed++) > 0.5 ? 0 : 1
+          const r = 5 + seededRandom(seed++) * 2
+
+          const path = generateClodPath(jx, jy, r, seed++)
+
+          data.push({
+            id: `bottom-light-${data.length}`,
+            cx: jx, cy: jy, path,
+            isDark: false,
+            variantIndex: variant,
+            delay: 0.2 + (y * width + x) * 0.00005
+          })
+        }
+
+        // Always add dark clod
+        const rRand = seededRandom(seed++)
+        let variant = 0
+        let r = 10
+
+        if (rRand > 0.6) {
+          variant = 0 // Large
+          r = 14 + seededRandom(seed++) * 4
+        } else if (rRand > 0.3) {
+          variant = 1 // Med
+          r = 11 + seededRandom(seed++) * 3
+        } else {
+          variant = 2 // Small
+          r = 8 + seededRandom(seed++) * 3
+        }
+
+        const path = generateClodPath(jx, jy, r, seed++)
+
         data.push({
-          cx: cx > 585 ? 585 : cx, // Boundary check
-          cy,
-          rx: size,
-          ry: size * 0.75,
-          type,
-          delay: (row * 24 + col) * 0.004 // Gyorsabb stagger
+          id: `bottom-${data.length}`,
+          cx: jx, cy: jy, path,
+          isDark: true,
+          variantIndex: variant,
+          delay: 0.2 + (y * width + x) * 0.00005
         })
       }
     }
-    return data
-  }, [])
 
-  // Roots removed
-  const healthyRoots: Array<{ x: number; path: string }> = []
+    return data.sort((a, b) => a.cy - b.cy)
+  }, [])
 
   // Víz részecskék - egyenletesen szivárognak le
   const waterParticles = useMemo(() => {
     const particles: Array<{ x: number; delay: number }> = []
-    for (let i = 0; i < 12; i++) { // 6 helyett 12
+    for (let i = 0; i < 12; i++) {
       const x = 50 + i * 45
       particles.push({ x, delay: i * 0.2 })
     }
@@ -272,11 +272,6 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
   return (
     <svg viewBox="0 0 600 250" className={styles.soilSvg} preserveAspectRatio="none">
       <defs>
-        <linearGradient id="spadedSoilGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#8D6E63" />
-          <stop offset="50%" stopColor="#795548" />
-          <stop offset="100%" stopColor="#6D4C41" />
-        </linearGradient>
         <filter id="soilTextureSpaded">
           <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" />
           <feColorMatrix type="saturate" values="0" />
@@ -287,32 +282,25 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
         </filter>
       </defs>
 
-      {/* Ég háttér - világos kék */}
-      <rect x="0" y="0" width="600" height="45" fill="#7B8FAD" />
+      {/* Ég háttér - világos kék - 0cm-nél kezdődik a talaj */}
+      <rect x="0" y="0" width="600" height="90" fill="#7B8FAD" />
 
-      {/* Talaj háttér - egyenletesebb */}
-      <rect x="0" y="45" width="600" height="205" fill="url(#spadedSoilGradient)" />
-      <rect x="0" y="45" width="600" height="205" fill="url(#spadedSoilGradient)" filter="url(#soilTextureSpaded)" opacity="0.2" />
+      {/* Talaj háttér - 0cm-től indul */}
+      <rect x="0" y="78" width="600" height="180" fill={soilBgColor} />
 
-      {/* Talajfelszín vonal */}
-      <line x1="0" y1="45" x2="600" y2="45" stroke="#8B7355" strokeWidth="2" />
-
-      {/* Egyenletes rögök */}
-      {clods.map((clod, i) => (
-        <motion.ellipse
-          key={i}
-          cx={clod.cx}
-          cy={clod.cy}
-          rx={clod.rx}
-          ry={clod.ry}
-          fill={clod.type === 'small' ? '#BCAAA4' : clod.type === 'medium' ? '#A1887F' : '#8D6E63'}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.85 }}
-          transition={{ delay: clod.delay, type: 'spring', stiffness: 200 }}
+      {/* Rögök */}
+      {clods.map((clod) => (
+        <path
+          key={clod.id}
+          d={clod.path}
+          fill={clod.isDark ? darkPalette[clod.variantIndex] : lightPalette[clod.variantIndex]}
+          stroke="rgba(0,0,0,0.4)"
+          strokeWidth={0.5}
         />
       ))}
 
-
+      {/* Filter Overlay */}
+      <rect x="0" y="72" width="600" height="180" fill="none" filter="url(#soilTextureSpaded)" opacity="0.2" pointerEvents="none" />
 
       {/* Víz egyenletesen szivárog */}
       {waterParticles.map((p, i) => (
@@ -321,9 +309,9 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
           cx={p.x}
           r={4}
           fill="#64B5F6"
-          initial={{ cy: 50, opacity: 0 }}
+          initial={{ cy: 55, opacity: 0 }}
           animate={{
-            cy: [50, 220],
+            cy: [55, 240],
             opacity: [0, 0.8, 0.8, 0],
           }}
           transition={{
@@ -335,27 +323,20 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
         />
       ))}
 
-      {/* Felszín vonal */}
-      <motion.line
-        x1="0" y1="45" x2="600" y2="45"
-        stroke="#A1887F"
+      {/* Felszín vonal - 0cm-nél
+      <line
+        x1="0" y1="72" x2="600" y2="72"
+        stroke="#5D4037"
         strokeWidth="2"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 0.8 }}
-      />
+      /> */}
 
       {/* "Nincs eketalp" címke */}
-      <motion.g
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.8 }}
-      >
-        <rect x="230" y="135" width="140" height="22" rx="4" fill="#4CAF50" />
-        <text x="300" y="150" fill="white" fontSize="12" fontWeight="700" textAnchor="middle">
+      <g>
+        <rect x="230" y="165" width="140" height="22" rx="4" fill="#4CAF50" />
+        <text x="300" y="180" fill="white" fontSize="12" fontWeight="700" textAnchor="middle">
           NINCS EKETALP ✓
         </text>
-      </motion.g>
+      </g>
     </svg>
   )
 }
@@ -409,8 +390,8 @@ export default function PloughingSoilComparison() {
 
           </div>
 
-          <div className={styles.visualContainer}>
-            <PloughedSoilVisual isHovered={hoveredSide === 'ploughed'} />
+          <div className={styles.visualContainer} style={{ padding: '0.5rem', position: 'relative' }}>
+            <PloughedSoilSVG />
             <ScaleOverlays type="ploughed" />
           </div>
 
