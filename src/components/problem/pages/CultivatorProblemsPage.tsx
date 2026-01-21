@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Sprout, Webhook, RefreshCcwDot, SquareKanban } from 'lucide-react'
+import { Sprout, Webhook, RefreshCwOff, SquareKanban } from 'lucide-react'
 import Image from 'next/image'
 
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
@@ -35,7 +35,7 @@ export default function CultivatorProblemsPage() {
     const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
     const iconMap: Record<string, React.ReactNode> = {
-        'refresh-cw-off': <RefreshCcwDot size={24} />,
+        'refresh-cw-off': <RefreshCwOff size={24} />,
         sprout: <Sprout size={24} />,
         'square-kanban': <SquareKanban size={24} />,
         webhook: <Webhook size={24} />,

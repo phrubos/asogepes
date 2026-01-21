@@ -44,14 +44,11 @@ const ScaleOverlays = ({ type }: { type: 'ploughed' | 'spaded' }) => (
             position: 'absolute',
             inset: 0,
             background: type === 'ploughed'
-              // Soil Surface starts at 0% of this container (which is 30% of image)
-              // Total Container Height = 105px (70% of 150px)
-              // Eketalp starts at y=96. Relative to soil surface y=45: 96-45 = 51px.
-              // 51px / 105px = 48.5%
-              // Eketalp ends at y=120. Relative: 120-45 = 75px. 
-              // 75px / 105px = 71.4%
-              // Scale: Green 0-48%, Red 48-71%, Orange/Green >71%
-              ? 'linear-gradient(180deg, #4CAF50 0%, #8BC34A 41.5%, #D32F2F 53%, #D32F2F 75%, #FF9800 78%, #FF5722 100%)'
+              // Soil Depth scales: 0-30cm.
+              // Top 20cm (0-66%) is Green.
+              // Bottom 10cm (66-100%) is Red (Compacted).
+              // Hard stop at 66% to match the dashed line exactly.
+              ? 'linear-gradient(180deg, #4CAF50 0%, #8BC34A 66%, #D32F2F 68%, #D32F2F 100%)'
               : 'linear-gradient(180deg, #4CAF50 0%, #66BB6A 100%)'
           }}
         />
@@ -117,62 +114,46 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
     const width = 600
     // ViewBox Y geometry - soil starts at y=30 (0cm mark)
     const soilSurface = 75
-    const maxDepth = 250 // Bottom of SVG
+    const maxDepth = 250 // Bottom of SVG - corresponds to 30cm
 
-    // Depth zones (scaled for 600x250 viewBox):
-    // 0-30cm scale corresponds to 30y to 250y (220 units = 30cm)
-    // Pure light zone: 0-12cm -> y = 30 to 118
-    // Transition zone: 12-20cm -> y = 118 to 176 (gradual dark clod introduction)
-    // Pure dark zone: 20-30cm -> y = 176 to 250
-    const transitionStart = 118
-    const transitionEnd = 176
+    // Uniform Spaded Soil Structure (0-30cm)
+    // Random mixing of light and dark clods, but uniform size distribution (loose structure)
 
-    // 1. TOP LAYER (0-20 cm) -> Small Light Clods with gradual dark mixing
-    for (let y = soilSurface + 8; y < transitionEnd; y += 12) {
+    for (let y = soilSurface + 8; y < maxDepth; y += 12) {
       for (let x = -10; x < width + 10; x += 12) {
         // Jitter
         const jx = x + (seededRandom(seed++) - 0.5) * 10
         const jy = y + (seededRandom(seed++) - 0.5) * 10
 
-        // Calculate transition progress (0 = pure light, 1 = transition end)
-        let darkProbability = 0
-        let darkSizeMultiplier = 0.5
+        // Uniform mixing probability - Spading machine mixes everything nicely
+        // ~30% dark clods (from subsoil mixing), ~70% light clods
+        const isDark = seededRandom(seed++) < 0.3
 
-        if (jy >= transitionStart && jy < transitionEnd) {
-          // In transition zone: gradually increase dark clod probability
-          const progress = (jy - transitionStart) / (transitionEnd - transitionStart)
-          darkProbability = progress * 0.6 // Max 60% dark at transition end
-          darkSizeMultiplier = 0.5 + progress * 0.5 // Size grows from 50% to 100%
-        }
-
-        // Decide if this clod should be dark (in transition zone)
-        const shouldBeDark = seededRandom(seed++) < darkProbability
-
-        if (shouldBeDark) {
-          // Dark clod in transition zone (smaller than bottom layer)
+        if (isDark) {
+          // Mixed Dark Clod (Small/Medium)
           const rRand = seededRandom(seed++)
           let variant = 2
           let r = 6
 
           if (rRand > 0.7) {
             variant = 1 // Medium dark
-            r = (8 + seededRandom(seed++) * 2) * darkSizeMultiplier
+            r = 7 + seededRandom(seed++) * 2
           } else {
             variant = 2 // Small dark
-            r = (6 + seededRandom(seed++) * 2) * darkSizeMultiplier
+            r = 5 + seededRandom(seed++) * 2
           }
 
           const path = generateClodPath(jx, jy, r, seed++)
 
           data.push({
-            id: `trans-dark-${data.length}`,
+            id: `mixed-dark-${data.length}`,
             cx: jx, cy: jy, path,
             isDark: true,
             variantIndex: variant,
             delay: (y * width + x) * 0.00005
           })
         } else {
-          // Light clod (normal behavior)
+          // Light Clod (Loose topsoil structure)
           const rRand = seededRandom(seed++)
           let variant = 2
           let r = 5
@@ -198,61 +179,6 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
             delay: (y * width + x) * 0.00005
           })
         }
-      }
-    }
-
-    // 2. BOTTOM LAYER (> 20 cm) -> Large Dark Clods with some light mixing at top
-    for (let y = transitionEnd; y < maxDepth; y += 16) {
-      for (let x = -10; x < width + 10; x += 16) {
-        const jx = x + (seededRandom(seed++) - 0.5) * 14
-        const jy = y + (seededRandom(seed++) - 0.5) * 14
-
-        // Near the transition, add occasional smaller/lighter clods
-        const distFromTransition = jy - transitionEnd
-        const lightProbability = Math.max(0, 0.3 - distFromTransition * 0.008)
-        const addLightClod = seededRandom(seed++) < lightProbability
-
-        if (addLightClod) {
-          // Add a light clod for smoother transition
-          const variant = seededRandom(seed++) > 0.5 ? 0 : 1
-          const r = 5 + seededRandom(seed++) * 2
-
-          const path = generateClodPath(jx, jy, r, seed++)
-
-          data.push({
-            id: `bottom-light-${data.length}`,
-            cx: jx, cy: jy, path,
-            isDark: false,
-            variantIndex: variant,
-            delay: 0.2 + (y * width + x) * 0.00005
-          })
-        }
-
-        // Always add dark clod
-        const rRand = seededRandom(seed++)
-        let variant = 0
-        let r = 10
-
-        if (rRand > 0.6) {
-          variant = 0 // Large
-          r = 14 + seededRandom(seed++) * 4
-        } else if (rRand > 0.3) {
-          variant = 1 // Med
-          r = 11 + seededRandom(seed++) * 3
-        } else {
-          variant = 2 // Small
-          r = 8 + seededRandom(seed++) * 3
-        }
-
-        const path = generateClodPath(jx, jy, r, seed++)
-
-        data.push({
-          id: `bottom-${data.length}`,
-          cx: jx, cy: jy, path,
-          isDark: true,
-          variantIndex: variant,
-          delay: 0.2 + (y * width + x) * 0.00005
-        })
       }
     }
 

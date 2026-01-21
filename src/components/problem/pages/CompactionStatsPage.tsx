@@ -323,7 +323,8 @@ interface CollapsibleChallengeCardProps {
     title: string;
     children: React.ReactNode;
     isOpen: boolean;
-    onToggle: () => void;
+    onHoverStart: () => void;
+    onHoverEnd: () => void;
     isAnyOpen: boolean;
 }
 
@@ -332,175 +333,134 @@ function CollapsibleChallengeCard({
     title,
     children,
     isOpen,
-    onToggle,
+    onHoverStart,
+    onHoverEnd,
     isAnyOpen
 }: CollapsibleChallengeCardProps) {
     // If ANY card is open, but NOT this one -> Blue/Fade it
     const isInactive = isAnyOpen && !isOpen;
 
     return (
-        <motion.div
-            layout
+        <div
             className={styles.challengeItem}
-            onClick={() => !isOpen && onToggle()}
             style={{
-                position: 'absolute', // Break out of flow to overlap
-                top: 0,
-                left: 0,
+                position: 'relative',
                 width: '100%',
-                height: isOpen ? 'auto' : '100%',
-                transition: 'box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)', // layout handles transform/size
-
-                // Flex logic - REMOVED (Handled by wrapper)
-                // flexGrow: isOpen ? 3 : 1,
-                // minHeight: '80px', 
-
-                // Active Enhancement
-                zIndex: isOpen ? 50 : (isInactive ? 1 : 10),
-                // transform: isOpen ? 'scale(1.02)' : (isInactive ? 'scale(0.98)' : 'scale(1)'), // Layout animates scale via flex, avoiding explicit transform usually better for flow
-
-                // Blur / Fade Inactive
-                filter: isInactive ? 'blur(4px) grayscale(60%)' : 'none',
-                opacity: isInactive ? 0.4 : 1,
-
-                // Visuals
-                borderRadius: '16px',
-                border: isOpen ? '1px solid var(--color-gold)' : '1px solid rgba(255, 255, 255, 0.08)',
-                background: isOpen ? '#1c1917' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%)',
-                boxShadow: isOpen ? '0 25px 50px -12px rgba(0, 0, 0, 0.5)' : undefined,
-                backdropFilter: 'blur(10px)',
-
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'stretch', // Override CSS class
-                overflow: 'hidden',
-                cursor: isOpen ? 'default' : 'pointer'
+                height: '100%', // FORCE HEIGHT to fill the parent wrapper
+                flex: 1,
+                zIndex: isOpen ? 50 : 1,
+                overflow: 'visible'
             }}
-            transition={{ layout: { duration: 0.4, type: "spring", stiffness: 100, damping: 15 } }}
         >
             <motion.div
-                layout="position"
-                className={styles.iconBox}
+                onMouseEnter={onHoverStart}
+                onMouseLeave={onHoverEnd}
                 style={{
-                    background: 'rgba(212, 168, 75, 0.1)',
-                    color: 'var(--color-gold)',
-                    transition: 'all 0.3s ease',
-                    position: 'absolute', // Keep icon pinned top-left
-                    top: '1rem',
-                    left: '1rem',
-                    zIndex: 25
-                }}
-            >
-                {icon}
-            </motion.div>
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    width: '100%',
+                    height: isOpen ? 'auto' : '100%',
+                    minHeight: '100%',
 
-            <motion.div layout="position" style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: 'calc(40px + 1rem)' }}>
-                {/* Header Row */}
+                    // Active Enhancement
+                    zIndex: isOpen ? 50 : (isInactive ? 1 : 10),
+
+                    // Blur / Fade Inactive
+                    filter: isInactive ? 'blur(4px) grayscale(60%)' : 'none',
+                    opacity: isInactive ? 0.4 : 1,
+
+                    // Visuals
+                    borderRadius: '16px',
+                    border: isOpen ? '1px solid var(--color-gold)' : '1px solid rgba(255, 255, 255, 0.08)',
+                    background: isOpen ? '#1c1917' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%)',
+                    boxShadow: isOpen ? '0 25px 50px -12px rgba(0, 0, 0, 0.5)' : undefined,
+                    backdropFilter: 'blur(10px)',
+
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'stretch',
+                    overflow: 'hidden',
+                    cursor: 'pointer'
+                }}
+                transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+            >
                 <div
+                    className={styles.iconBox}
                     style={{
+                        background: 'rgba(212, 168, 75, 0.1)',
+                        color: 'var(--color-gold)',
+                        transition: 'all 0.3s ease',
+                        position: 'absolute',
+                        top: '1rem',
+                        left: '1rem',
+                        zIndex: 25,
                         display: 'flex',
-                        justifyContent: 'space-between',
                         alignItems: 'center',
-                        // cursor: 'pointer', // Handled by parent
-                        position: 'relative',
-                        zIndex: 20,
-                        minHeight: '40px', // Align with icon
-                        width: '100%', // FORCE FULL WIDTH
-                        flexShrink: 0 // Prevent header from collapsing
+                        justifyContent: 'center',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '8px'
                     }}
                 >
-                    <h3 style={{
-                        fontSize: '1rem',
-                        margin: '0 16px 0 0',
-                        fontWeight: 700,
-                        fontFamily: 'var(--font-display)',
-                        color: isOpen ? 'white' : 'rgba(255, 255, 255, 0.7)',
-                        transition: 'color 0.3s ease',
-                        flex: 1,
-                        alignSelf: 'center'
-                    }}>
-                        {title}
-                    </h3>
-
-                    {/* Animated Button */}
-                    <div style={{ position: 'relative', flexShrink: 0 }}>
-                        {!isOpen && (
-                            <motion.div
-                                animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0, 0.3] }}
-                                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                                style={{
-                                    position: 'absolute',
-                                    top: -4, left: -4, right: -4, bottom: -4,
-                                    borderRadius: '50%',
-                                    border: '1px solid var(--color-gold)',
-                                    pointerEvents: 'none'
-                                }}
-                            />
-                        )}
-
-                        <motion.button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onToggle();
-                            }}
-                            whileHover={{ scale: 1.05, backgroundColor: 'rgba(212, 168, 75, 0.15)' }}
-                            whileTap={{ scale: 0.95 }}
-                            style={{
-                                width: 36, height: 36,
-                                borderRadius: '50%',
-                                border: '1px solid rgba(212, 168, 75, 0.5)',
-                                background: isOpen ? 'rgba(212, 168, 75, 0.2)' : 'transparent',
-                                color: 'var(--color-gold)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                position: 'relative',
-                                zIndex: 20,
-                                backdropFilter: 'blur(4px)',
-                                transition: 'background-color 0.3s'
-                            }}
-                        >
-                            <motion.div
-                                key={isOpen ? 'minus' : 'plus'}
-                                initial={{ scale: 0.5, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                {isOpen ? <Minus size={18} /> : <Plus size={18} />}
-                            </motion.div>
-                        </motion.button>
-                    </div>
+                    {icon}
                 </div>
 
-                {/* Content - Collapsible */}
-                <AnimatePresence mode="wait">
-                    {isOpen && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3, delay: 0.1 }}
-                            style={{
-                                flexGrow: 1, // Fill remaining space
-                                overflowY: 'auto', // Allow scroll
-                                borderTop: '1px solid rgba(255,255,255,0.1)',
-                                marginTop: '12px',
-                                paddingTop: '12px'
-                            }}
-                        >
-                            {/* Inner content wrapper with spacing/separator */}
-                            <div style={{
-                                padding: '0 1rem 1rem 1rem',
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: 'calc(36px + 2rem)' }}>
+                    {/* Header Row */}
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            position: 'relative',
+                            zIndex: 20,
+                            minHeight: '36px', // Align with icon height + margins roughly
+                            width: '100%',
+                            flexShrink: 0,
+                            paddingTop: '1rem',
+                            paddingRight: '1rem'
+                        }}
+                    >
+                        <h3 style={{
+                            fontSize: '1rem',
+                            margin: '0',
+                            fontWeight: 700,
+                            fontFamily: 'var(--font-display)',
+                            color: isOpen ? 'white' : 'rgba(255, 255, 255, 0.7)',
+                            transition: 'color 0.3s ease',
+                            lineHeight: '36px' // Vertically center with icon
+                        }}>
+                            {title}
+                        </h3>
+                    </div>
 
-                            }}>
-                                {children}
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                    {/* Content - Collapsible */}
+                    <AnimatePresence mode="wait">
+                        {isOpen && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                style={{
+                                    borderTop: '1px solid rgba(255,255,255,0.1)',
+                                    marginTop: '12px',
+                                    paddingTop: '12px'
+                                }}
+                            >
+                                <div style={{
+                                    padding: '0 1rem 1rem 0',
+                                }}>
+                                    {children}
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </motion.div>
-        </motion.div>
+        </div>
     )
 }
 
@@ -847,7 +807,8 @@ export default function CompactionStatsPage() {
                                 icon={<Droplet size={24} />}
                                 title="Gyakori öntözés hatása"
                                 isOpen={expandedCardId === 1}
-                                onToggle={() => setExpandedCardId(expandedCardId === 1 ? null : 1)}
+                                onHoverStart={() => setExpandedCardId(1)}
+                                onHoverEnd={() => setExpandedCardId(null)}
                                 isAnyOpen={expandedCardId !== null}
                             >
                                 <div className={styles.itemContent}>
@@ -871,7 +832,8 @@ export default function CompactionStatsPage() {
                                 icon={<Layers size={24} />}
                                 title="Szerkezetromlás üteme"
                                 isOpen={expandedCardId === 2}
-                                onToggle={() => setExpandedCardId(expandedCardId === 2 ? null : 2)}
+                                onHoverStart={() => setExpandedCardId(2)}
+                                onHoverEnd={() => setExpandedCardId(null)}
                                 isAnyOpen={expandedCardId !== null}
                             >
                                 <div className={styles.itemContent}>
@@ -895,7 +857,8 @@ export default function CompactionStatsPage() {
                                 icon={<span style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'monospace' }}>O₂</span>}
                                 title="Oxigénhiány"
                                 isOpen={expandedCardId === 3}
-                                onToggle={() => setExpandedCardId(expandedCardId === 3 ? null : 3)}
+                                onHoverStart={() => setExpandedCardId(3)}
+                                onHoverEnd={() => setExpandedCardId(null)}
                                 isAnyOpen={expandedCardId !== null}
                             >
                                 <div className={styles.itemContent}>

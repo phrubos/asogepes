@@ -70,19 +70,22 @@ const HeavyCultivatorSVG = () => {
         const uCenters = [50, 150, 250]
         const uOuterWidth = 96
         const uInnerWidth = 50
-        const uBottom = 96 // Approx 15cm (Half of 100 unit soil depth)
+        const uBottom = 125 // Slightly deeper as requested (was 115)
 
         const getZone = (x: number, y: number): 'outline' | 'inside' | 'outside' => {
             for (const center of uCenters) {
                 const dx = Math.abs(x - center)
                 const dy = y - soilSurface
                 if (dy < 0) continue
-                if (y > uBottom + 10) continue
+                // Zone logic typically stops around uBottom
+                // We want "outline" logic to potentially continue for the walls, but below uBottom is "outside" (bedrock/compact)
+                // actually if we want "dark clods" everywhere below, 'outside' is fine if we handle it.
 
                 if (dx < uInnerWidth / 2 && y < uBottom - 10) return 'inside'
 
                 const inOuter = dx < uOuterWidth / 2
                 const inInner = dx < uInnerWidth / 2
+                // Bottom curve of the U
                 const isBottom = (y > uBottom - 15 && y < uBottom + 10 && dx < uOuterWidth / 2)
 
                 if ((inOuter && !inInner) || isBottom) return 'outline'
@@ -96,15 +99,17 @@ const HeavyCultivatorSVG = () => {
         // - Large: r=8-10, Color 0
         // - Med:   r=6-7, Color 1
         // - Small: r=4-5, Color 2
-        for (let y = soilSurface + 10; y < maxDepth; y += 8) {
-            // Extended bounds to ensure edges are filled (-10 to width + 10)
-            for (let x = -10; x < width + 10; x += 8) {
+        for (let y = soilSurface; y < maxDepth + 10; y += 8.3) { // Start at soilSurface to fill top gap
+            for (let x = -10; x < width + 10; x += 8.3) {
                 const zone = getZone(x, y)
                 if (zone === 'inside') continue // handled in next pass
 
                 // Scale jitter
                 const jx = x + (seededRandom(seed++) - 0.5) * 8
                 const jy = y + (seededRandom(seed++) - 0.5) * 8
+
+                // Skip if below maxDepth (visually bounded)
+                if (jy > maxDepth + 5) continue;
 
                 // Randomly select one of the 3 dark variants
                 // Bias towards Larger ones in Outline?
@@ -140,12 +145,20 @@ const HeavyCultivatorSVG = () => {
                     }
                 }
 
-                // NEW REQUEST: 15-20cm layer should be emphatically large dark rocks
-                // 15cm ~ y=95, 20cm ~ y=112. Let's cover 95 to 115.
-                if (y >= 95 && y <= 118) {
-                    variant = 0
-                    r = 10 + seededRandom(seed++) * 2 // Force very large
+                // USER REQUEST: Only the bottom of the "pits" (U-patterns) should be the darkest clods
+                // Check if we are physically below a U-shape
+                for (const center of uCenters) {
+                    const dx = Math.abs(x - center)
+                    // If we are somewhat aligned with the pit (width 50) and at the bottom depth
+                    if (dx < uInnerWidth / 2 + 5 && y >= uBottom - 5 && y <= uBottom + 20) {
+                        variant = 0; // Force Largest/Darkest
+                        r = 10 + seededRandom(seed++) * 1.5;
+                        break;
+                    }
                 }
+
+                // Removed forced "large dark" block for y >= uBottom to allow natural mixed texture
+                // similar to SpadingMachine bottom layer.
 
                 if (zone === 'outline' && variant === 2) {
                     // Upgrade small ones in outer shell to medium occasionally
@@ -171,7 +184,7 @@ const HeavyCultivatorSVG = () => {
         // - Large: r=4.5-5.5, Color 0
         // - Med:   r=3.5-4.5, Color 1
         // - Small: r=2-3.5, Color 2
-        for (let y = soilSurface + 10; y < uBottom - 5; y += 6) {
+        for (let y = soilSurface; y < uBottom - 5; y += 6) { // Start at soilSurface
             for (let x = 10; x < width - 10; x += 6) {
                 const jx = x + (seededRandom(seed++) - 0.5) * 4
                 const jy = y + (seededRandom(seed++) - 0.5) * 4
@@ -242,15 +255,17 @@ const HeavyCultivatorSVG = () => {
                 )
             })}
 
-            {/* Surface Line */}
-            <rect x="0" y="44" width="300" height="2" fill="#3E2723" opacity={0.5} />
+
 
             {/* Depth Scale */}
             <g style={{ pointerEvents: 'none' }}>
-                <line x1="292" y1="45" x2="292" y2="145" stroke="rgba(255,255,255,0.4)" strokeWidth="1" strokeDasharray="4,3" />
+                <line x1="292" y1="45" x2="292" y2="115" stroke="rgba(255,255,255,0.4)" strokeWidth="1" strokeDasharray="4,3" />
                 <rect x="268" y="32" width="28" height="14" rx="3" fill="rgba(0,0,0,0.3)" />
                 <text x="282" y="43" fill="#FFFFFF" fontSize="9" fontWeight="600" textAnchor="middle">0 cm</text>
-                <text x="287" y="148" fill="rgba(255, 255, 255, 0.95)" fontSize="9" fontWeight="600" textAnchor="end" style={{ textShadow: '0px 1px 2px rgba(0,0,0,0.5)' }}>30 cm</text>
+
+                {/* 30cm label moved to align with U-pattern bottom (approx 20-22cm visual depth before compaction starts) */}
+                <rect x="250" y="108" width="46" height="14" rx="3" fill="rgba(0,0,0,0.4)" />
+                <text x="273" y="119" fill="#FFFFFF" fontSize="9" fontWeight="600" textAnchor="middle">30 cm</text>
             </g>
         </svg>
     )

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Activity, Leaf, Thermometer, AlertTriangle, ArrowDownToLine, Shuffle, TrendingUp, Quote, Plus, Minus } from 'lucide-react'
+import { Activity, Leaf, Thermometer, AlertTriangle, ArrowDownToLine, Shuffle, TrendingUp, Quote } from 'lucide-react'
 import Image from 'next/image'
 import { ploughingProblems } from '@/lib/data'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
@@ -14,7 +14,8 @@ interface CollapsiblePloughingCardProps {
     description: string;
     badge: string;
     isOpen: boolean;
-    onToggle: () => void;
+    onHoverStart: () => void;
+    onHoverEnd: () => void;
     isAnyOpen: boolean;
 }
 
@@ -24,47 +25,56 @@ function CollapsiblePloughingCard({
     description,
     badge,
     isOpen,
-    onToggle,
+    onHoverStart,
+    onHoverEnd,
     isAnyOpen
 }: CollapsiblePloughingCardProps) {
     // If ANY card is open, but NOT this one -> Blue/Fade it
     const isInactive = isAnyOpen && !isOpen;
 
     return (
-        <motion.div
-            layout
+        <div
             className={styles.cardContainer}
-            onClick={() => !isOpen && onToggle()} // Optional: Allow clicking body to open
             style={{
-                // Flex logic: Open takes more space, Closed takes less
-                flexGrow: isOpen ? 3 : 1,
-                // flexShrink: 1, // Default
-                // flexBasis: 'auto',
-
-                // Visuals
-                zIndex: isOpen ? 50 : (isInactive ? 1 : 10),
-                transform: isOpen ? 'scale(1.02)' : (isInactive ? 'scale(0.98)' : 'scale(1)'),
-                // Blur / Fade Inactive
-                filter: isInactive ? 'blur(4px) grayscale(60%)' : 'none',
-                opacity: isInactive ? 0.4 : 1,
-
-                cursor: isOpen ? 'default' : 'pointer'
+                // Static layout props - maintains the "slot" in the list
+                position: 'relative',
+                flex: 1,
+                width: '100%',
+                zIndex: isOpen ? 50 : 1, // Ensure active slot is on top
+                overflow: 'visible' // Allow overlay
             }}
-            transition={{ layout: { duration: 0.4, type: "spring", stiffness: 100, damping: 15 } }}
         >
             <motion.div
-                layout="position"
+                onMouseEnter={onHoverStart}
+                onMouseLeave={onHoverEnd}
                 style={{
-                    height: '100%',
+                    // Absolute positioning to allow "overlay" expansion without pushing siblings
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    width: '100%',
+                    height: isOpen ? 'auto' : '100%',
+                    minHeight: '100%',
+
+                    // Visual Styling
                     background: isOpen ? '#1c1917' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%)',
                     border: isOpen ? '1px solid var(--color-gold)' : '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '16px',
                     boxShadow: isOpen ? '0 25px 50px -12px rgba(0, 0, 0, 0.5)' : 'none',
                     backdropFilter: 'blur(10px)',
-                    overflow: 'hidden', // Contain content
+                    overflow: 'hidden', // Contain content inside the rounded corners
                     display: 'flex',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+
+                    // States
+                    transform: isOpen ? 'scale(1.02)' : (isInactive ? 'scale(0.98)' : 'scale(1)'),
+                    filter: isInactive ? 'blur(4px) grayscale(60%)' : 'none',
+                    opacity: isInactive ? 0.4 : 1,
+                    cursor: 'pointer',
+                    zIndex: isOpen ? 50 : 2
                 }}
+                transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
             >
                 <div className={styles.cardHeader} style={{ padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
@@ -79,57 +89,6 @@ function CollapsiblePloughingCard({
                             {title}
                         </h3>
                     </div>
-
-                    {/* Animated Button */}
-                    <div style={{ position: 'relative', flexShrink: 0, marginLeft: '12px' }}>
-                        {/* Pulse Effect - Subtle Ring */}
-                        {!isOpen && (
-                            <motion.div
-                                animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0, 0.3] }}
-                                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                                style={{
-                                    position: 'absolute',
-                                    top: -4, left: -4, right: -4, bottom: -4,
-                                    borderRadius: '50%',
-                                    border: '1px solid var(--color-gold)',
-                                    pointerEvents: 'none'
-                                }}
-                            />
-                        )}
-
-                        <motion.button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onToggle();
-                            }}
-                            whileHover={{ scale: 1.05, backgroundColor: 'rgba(212, 168, 75, 0.15)' }}
-                            whileTap={{ scale: 0.95 }}
-                            style={{
-                                width: 36, height: 36,
-                                borderRadius: '50%',
-                                border: '1px solid rgba(212, 168, 75, 0.5)',
-                                background: isOpen ? 'rgba(212, 168, 75, 0.2)' : 'transparent',
-                                color: 'var(--color-gold)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                position: 'relative',
-                                zIndex: 20,
-                                backdropFilter: 'blur(4px)',
-                                transition: 'background-color 0.3s'
-                            }}
-                        >
-                            <motion.div
-                                key={isOpen ? 'minus' : 'plus'}
-                                initial={{ scale: 0.5, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                {isOpen ? <Minus size={18} /> : <Plus size={18} />}
-                            </motion.div>
-                        </motion.button>
-                    </div>
                 </div>
 
                 {/* Content - Collapsible (Relative Flow) */}
@@ -139,12 +98,12 @@ function CollapsiblePloughingCard({
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3, delay: 0.1 }}
+                            transition={{ duration: 0.3 }}
                             style={{
                                 padding: '0 1rem 1rem 1rem',
                                 borderTop: '1px solid rgba(255,255,255,0.1)',
                                 paddingTop: '12px',
-                                flexGrow: 1, // Fill remaining space in card
+                                // flexGrow: 1, // Not needed in auto height
                                 overflowY: 'auto' // Scroll if genuinely too small
                             }}
                         >
@@ -154,7 +113,7 @@ function CollapsiblePloughingCard({
                     )}
                 </AnimatePresence>
             </motion.div>
-        </motion.div>
+        </div>
     )
 }
 
@@ -203,9 +162,7 @@ export default function PloughingEffectsPage() {
             whileInView="visible"
             viewport={{ once: true }}
         >
-            <motion.div className={styles.header} variants={itemVariants}>
-                <span className={styles.pillBadge}>Szántás hatásai</span>
-            </motion.div>
+            {/* Header moved to right column */}
 
             <div className={styles.grid}>
                 {/* Left Column: Image */}
@@ -246,8 +203,12 @@ export default function PloughingEffectsPage() {
                     </div>
                 </motion.div>
 
-                {/* Right Column: Interactive Cards */}
+                {/* Right Column: Title + Interactive Cards */}
                 <motion.div className={styles.cardsColumn} variants={containerVariants}>
+                    <motion.div className={styles.header} variants={itemVariants} style={{ textAlign: 'left', marginBottom: '1rem' }}>
+                        <span className={styles.pillBadge}>Szántás hatásai</span>
+                    </motion.div>
+
                     {ploughingProblems.map((problem, index) => (
                         <CollapsiblePloughingCard
                             key={index}
@@ -256,7 +217,8 @@ export default function PloughingEffectsPage() {
                             description={problem.description}
                             badge={problem.dataBadge}
                             isOpen={expandedCardId === index}
-                            onToggle={() => setExpandedCardId(expandedCardId === index ? null : index)}
+                            onHoverStart={() => setExpandedCardId(index)}
+                            onHoverEnd={() => setExpandedCardId(null)}
                             isAnyOpen={expandedCardId !== null}
                         />
                     ))}

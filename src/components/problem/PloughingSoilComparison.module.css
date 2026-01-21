@@ -167,9 +167,9 @@
 .scaleLeft {
   position: absolute;
   left: 0.5rem;
-  top: 30%;
-  /* Starts below sky (approx 45px/250px) adjusted for alignment */
-  bottom: 1rem;
+  top: 33%;
+  /* Starts below sky (approx 50px/150px) adjusted for alignment */
+  bottom: 0.5rem;
   width: 12px;
   display: flex;
   flex-direction: column;
@@ -179,7 +179,7 @@
 .scaleRight {
   position: absolute;
   right: 0.5rem;
-  top: 30%;
+  top: 33%;
   /* Starts below sky */
   bottom: 0.5rem;
   width: 40px;
@@ -210,11 +210,8 @@
 .gradPloughed {
   background: linear-gradient(180deg,
       #4CAF50 0%,
-      #8BC34A 40%,
-      #F44336 45%,
-      #F44336 55%,
-      #FF9800 60%,
-      #FF5722 100%);
+      #8BC34A 50%,
+      #F44336 100%);
 }
 
 .gradSpaded {
