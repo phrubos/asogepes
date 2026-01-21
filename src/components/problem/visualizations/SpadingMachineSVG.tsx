@@ -69,7 +69,7 @@ const SpadingMachineSVG = () => {
         const transitionEnd = 112
 
         // 1. TOP LAYER (0-20 cm) -> Small Light Clods with gradual dark mixing
-        for (let y = soilSurface + 8; y < transitionEnd; y += 7) {
+        for (let y = soilSurface; y < transitionEnd; y += 7) {
             for (let x = -10; x < width + 10; x += 7) {
                 // Jitter
                 const jx = x + (seededRandom(seed++) - 0.5) * 6
@@ -78,7 +78,7 @@ const SpadingMachineSVG = () => {
                 // Calculate transition progress (0 = pure light, 1 = transition end)
                 let darkProbability = 0
                 let darkSizeMultiplier = 0.5
-                
+
                 if (jy >= transitionStart && jy < transitionEnd) {
                     // In transition zone: gradually increase dark clod probability
                     const progress = (jy - transitionStart) / (transitionEnd - transitionStart)
@@ -118,7 +118,12 @@ const SpadingMachineSVG = () => {
                     let variant = 2
                     let r = 3
 
-                    if (rRand > 0.8) {
+                    // USER REQUEST: Force small clods at the very surface line to ensure good fill
+                    // "kicsit kevesebbet" -> Reduced range from +8 to +5 effectively ensuring only the very top row is forced small
+                    if (y < soilSurface + 5) {
+                        variant = 2 // Small Light specifically requested
+                        r = 3 + seededRandom(seed++) * 1.2
+                    } else if (rRand > 0.8) {
                         variant = 0 // Large Light
                         r = 4.5 + seededRandom(seed++) * 1
                     } else if (rRand > 0.4) {
@@ -229,15 +234,17 @@ const SpadingMachineSVG = () => {
                 )
             })}
 
-            {/* Surface Line */}
-            <rect x="0" y="44" width="300" height="2" fill="#3E2723" opacity={0.5} />
+
 
             {/* Depth Scale */}
             <g style={{ pointerEvents: 'none' }}>
-                <line x1="292" y1="45" x2="292" y2="145" stroke="rgba(255,255,255,0.4)" strokeWidth="1" strokeDasharray="4,3" />
+                <line x1="292" y1="45" x2="292" y2="115" stroke="rgba(255,255,255,0.4)" strokeWidth="1" strokeDasharray="4,3" />
                 <rect x="268" y="32" width="28" height="14" rx="3" fill="rgba(0,0,0,0.3)" />
                 <text x="282" y="43" fill="#FFFFFF" fontSize="9" fontWeight="600" textAnchor="middle">0 cm</text>
-                <text x="287" y="148" fill="rgba(255, 255, 255, 0.95)" fontSize="9" fontWeight="600" textAnchor="end" style={{ textShadow: '0px 1px 2px rgba(0,0,0,0.5)' }}>30 cm</text>
+
+                {/* 30cm label at y=125 */}
+                <rect x="250" y="108" width="46" height="14" rx="3" fill="rgba(0,0,0,0.4)" />
+                <text x="273" y="119" fill="#FFFFFF" fontSize="9" fontWeight="600" textAnchor="middle">30 cm</text>
             </g>
         </svg>
     )

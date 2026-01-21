@@ -717,7 +717,8 @@
 .scrollIndicator {
   position: fixed;
   bottom: 24px;
-  right: 60px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 16px;

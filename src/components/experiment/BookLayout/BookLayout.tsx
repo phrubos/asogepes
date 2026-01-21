@@ -516,44 +516,7 @@ export default function BookLayout({ pages, resetEventName }: BookLayoutProps) {
           </div>
 
 
-          {/* Premium Interactive Navigation Control Bar */}
-          <motion.div
-            className={styles.navControlBar}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, type: 'spring', stiffness: 120, damping: 20 }}
-          >
-            <button
-              className={styles.navBtn}
-              onClick={prevPage}
-              disabled={currentPage === 0 || isAnimating}
-              aria-label="Előző oldal"
-              title="Előző oldal"
-            >
-              <ChevronLeft size={24} />
-            </button>
 
-            <div className={styles.navDivider} />
-
-            <div className={styles.navInfo}>
-              <span className={styles.navLabel}>OLDAL</span>
-              <span className={styles.navCounter}>
-                {currentPage + 1} / {pages.length}
-              </span>
-            </div>
-
-            <div className={styles.navDivider} />
-
-            <button
-              className={styles.navBtn}
-              onClick={nextPage}
-              disabled={currentPage === pages.length - 1 || isAnimating}
-              aria-label="Következő oldal"
-              title="Következő oldal"
-            >
-              <ChevronRight size={24} />
-            </button>
-          </motion.div>
 
           {/* New Scroll Progress Indicator */}
           <ScrollProgressIndicator />

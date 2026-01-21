@@ -247,7 +247,7 @@ export const ploughingProblems = [
   },
   {
     title: 'Rögösebb talajfelszín és lassabb felmelegedés',
-    description: 'A rögösebb és nehezebben elmunkálható talajfelszín megnehezíti a precíz magvetést és palántaültetést, ezen felül tavasszal lassabban és egyenetlenül melegszik fel az ilyen talajfelszín, lassítva a tavasszal vetett vagy ültetett kultúrnövények csírázását, kezdeti vegetatív fejlődését.',
+    description: 'A rögösebb és nehezebben elmunkálható talajfelszín megnehezíti a precíz magvetést és palántaültetést, ezen felül tavasszal lassabban és egyenetlenül melegszik fel az ilyen talajfelszín, lassítva a vetett vagy ültetett kultúrnövények csírázását, kezdeti vegetatív fejlődését.',
     icon: 'thermometer',
     dataBadge: '2-4°C különbség',
     source: '14., 16. ábra',
