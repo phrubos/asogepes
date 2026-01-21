@@ -31,7 +31,6 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
     const keysPressed = useRef<{ [key: string]: boolean }>({})
     const [showInfo, setShowInfo] = useState(false)
-    const [showMachines, setShowMachines] = useState(true)
 
     useEffect(() => {
         if (!containerRef.current) return
@@ -50,10 +49,10 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
         // Adjust camera based on fullscreen mode
         if (isFullscreen) {
             // Zoomed IN for fullscreen details, but ensuring Roman numerals are visible
-            camera.position.set(0, 14, 28)
+            camera.position.set(0, 12, 17)
         } else {
-            // Default zoomed out view
-            camera.position.set(0, 18, 34)
+            // Default zoomed out view - corrected to prevent clipping
+            camera.position.set(0, 16, 26)
         }
 
         camera.lookAt(0, 0, 0) // Look at center
@@ -140,7 +139,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
         soilTexture.repeat.set(4, 4)
 
         // transparent ground plane - The "Surface"
-        const groundGeometry = new THREE.PlaneGeometry(35, 20)
+        const groundGeometry = new THREE.PlaneGeometry(35, 18) // Increased depth to cover back area
         const groundMaterial = new THREE.MeshStandardMaterial({
             map: soilTexture,
             roughness: 0.95,
@@ -154,6 +153,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
         const ground = new THREE.Mesh(groundGeometry, groundMaterial)
         ground.rotation.x = -Math.PI / 2
         ground.position.y = 0
+        ground.position.z = -4 // Shifted further back to provide background behind parcels
         ground.receiveShadow = true
         scene.add(ground)
 
@@ -161,26 +161,13 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
         const looseColor = 0x81C784
         const looseColorDark = 0x4a6741
 
-        // Load machine textures
-        const textureLoader = new THREE.TextureLoader()
-        const machineTextures = {
-            melyasogep: textureLoader.load('/images/chart_icons/melyasogep.png'),
-            lazito: textureLoader.load('/images/chart_icons/lazito.png'),
-            asogep: textureLoader.load('/images/chart_icons/asogep.png'),
-            szantas: textureLoader.load('/images/chart_icons/szantas.png'),
-            kombinator: textureLoader.load('/images/chart_icons/kombinator.png')
-        }
-
-        // Helper to get machine keys from treatment string
-        const getMachinesForTreatment = (treatment: string) => {
-            if (treatment.includes('Mélyásógép')) return ['melyasogep']
-            if (treatment === 'Ásógép') return ['asogep']
-            if (treatment === 'Szántás + Ásógép') return ['szantas', 'asogep']
-            if (treatment === 'Lazítás + Ásógép') return ['lazito', 'asogep']
-            if (treatment === 'Szántás + Kombinátor') return ['szantas', 'kombinator']
-            if (treatment === 'Lazítás + Szántás + Ásógép') return ['lazito', 'szantas', 'asogep']
-            if (treatment === 'Lazítás + Szántás + Kombinátor') return ['lazito', 'szantas', 'kombinator']
-            return []
+        // Helper to get machine type text
+        const getMachineType = (parcelNum: string, treatment: string) => {
+            if (treatment.toLowerCase().includes('ásógép')) {
+                if (parcelNum === 'I.') return ' (40SX)'
+                if (['II.', 'III.', 'VI.', 'VII.'].includes(parcelNum)) return ' (38SX)'
+            }
+            return ''
         }
 
         // Calculate spacing
@@ -341,7 +328,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             const numSpriteMaterial = new THREE.SpriteMaterial({ map: numTexture })
             const numSprite = new THREE.Sprite(numSpriteMaterial)
             // Position: Forward, outside soil - Leaning off into the void
-            numSprite.position.set(xPos, 0, 13)
+            // Moved much closer from Z=13 to Z=7
+            numSprite.position.set(xPos, 0, 7)
             numSprite.scale.set(2, 2, 1)
             scene.add(numSprite)
 
@@ -367,78 +355,87 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             // Treatment name label
             const nameCanvas = document.createElement('canvas')
             const nameCtx = nameCanvas.getContext('2d')!
-            nameCanvas.width = 420
-            nameCanvas.height = 80
-            nameCtx.fillStyle = 'rgba(30, 27, 24, 0.9)'
-            nameCtx.roundRect(8, 4, 404, 72, 10)
-            nameCtx.fill()
-            nameCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)'
-            nameCtx.lineWidth = 2
-            nameCtx.roundRect(8, 4, 404, 72, 10)
-            nameCtx.stroke()
-            nameCtx.fillStyle = 'rgba(255, 255, 255, 0.9)'
-            nameCtx.font = 'bold 24px system-ui, sans-serif'
+            // Aspect ratio will be set by sprite scale (3.8 x 1.7)
+            // Resolution: high density
+            nameCanvas.width = 760
+            nameCanvas.height = 340
+
+            // Special styling for I., VI., VII.
+            const isHighlighted = ['I.', 'VI.', 'VII.'].includes(parcel.num)
+
+            // Draw Background
+            if (isHighlighted) {
+                nameCtx.fillStyle = 'rgba(212, 168, 75, 0.25)' // Gold hint background
+                nameCtx.roundRect(8, 8, 744, 324, 24)
+                nameCtx.fill()
+                nameCtx.strokeStyle = 'rgba(212, 168, 75, 0.6)'
+                nameCtx.lineWidth = 6
+                nameCtx.roundRect(8, 8, 744, 324, 24)
+                nameCtx.stroke()
+                nameCtx.fillStyle = '#d4a84b' // Gold text
+            } else {
+                // High contrast dark background
+                nameCtx.fillStyle = 'rgba(15, 12, 10, 1.0)' // Fully opaque dark
+                nameCtx.roundRect(8, 8, 744, 324, 24)
+                nameCtx.fill()
+                nameCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)' // Brighter border
+                nameCtx.lineWidth = 6
+                nameCtx.roundRect(8, 8, 744, 324, 24)
+                nameCtx.stroke()
+                nameCtx.fillStyle = '#ffffff' // Pure white text
+            }
+
+            // Text Configuration
             nameCtx.textAlign = 'center'
             nameCtx.textBaseline = 'middle'
-            nameCtx.fillText(parcel.treatment, 210, 40)
+
+            // Text Processing splitting by " + "
+            const machineType = getMachineType(parcel.num, parcel.treatment)
+            const fullText = parcel.treatment + machineType
+            // Split by " + " but keep the plus signs or just split? 
+            // User requested separating machines. replacing " + " with newline effectively
+            // But we need to handle the " + " character itself. 
+            // Strategy: "Lazítás + Ásógép" -> ["Lazítás", "+ Ásógép"] for clarity? 
+            // Or just lines. Let's do Lines.
+
+            let lines = fullText.split(' + ')
+            if (lines.length > 1) {
+                // Add the plus back to subsequent lines for clarity
+                for (let i = 1; i < lines.length; i++) {
+                    lines[i] = '+ ' + lines[i]
+                }
+            }
+
+            // Font sizing based on line count - Maximized
+            const baseFontSize = lines.length > 2 ? 60 : 72 // Significantly larger (was 48/56)
+            nameCtx.font = `bold ${baseFontSize}px system-ui, sans-serif`
+            const lineHeight = baseFontSize * 1.25
+
+            // Calculate total text height
+            const totalTextHeight = lines.length * lineHeight
+            const startY = (340 - totalTextHeight) / 2 + (lineHeight / 2) // Vertically centered
+
+            lines.forEach((line, i) => {
+                nameCtx.fillText(line, 380, startY + (i * lineHeight))
+            })
 
             const nameTexture = new THREE.CanvasTexture(nameCanvas)
             const nameSpriteMaterial = new THREE.SpriteMaterial({ map: nameTexture })
             const nameSprite = new THREE.Sprite(nameSpriteMaterial)
-            // Position: Front, shifted North (5.5 - 5 = 0.5)
-            nameSprite.position.set(xPos, 1, 0.5)
-            nameSprite.scale.set(4.5, 0.9, 1)
+
+            // Position: 
+            // Width: 3.8 (match parcel)
+            // Height: 1.7 (proportional to canvas 760/340 = 2.23 -> 3.8 / 2.23 = 1.7)
+            nameSprite.position.set(xPos, 1.2, 2.5)
+            nameSprite.scale.set(3.8, 1.7, 1)
             scene.add(nameSprite)
-
-            // Machine schematic icons
-            if (showMachines) {
-                const machines = getMachinesForTreatment(parcel.treatment)
-
-                // Positioning Logic (Z-axis) - User Request: March=9, April=4
-                // Midpoint: 6.5
-
-                let machineZPos: number[] = []
-
-                if (machines.length === 1) {
-                    // 1 machine: Between (6.5)
-                    machineZPos = [6.5]
-                } else if (machines.length === 2) {
-                    // 2 machines: First at March (9), second Between (6.5)
-                    machineZPos = [9, 6.5]
-                } else if (machines.length === 3) {
-                    // 3 machines: First at March (9), Second Between (6.5), Third at April (4)
-                    machineZPos = [9, 6.5, 4]
-                } else {
-                    machineZPos = [9, 6.5, 4]
-                }
-
-                machines.forEach((machineKey, mIdx) => {
-                    const tex = machineTextures[machineKey as keyof typeof machineTextures]
-                    if (tex) {
-                        const mat = new THREE.SpriteMaterial({
-                            map: tex,
-                            color: 0xffffff,
-                            transparent: true,
-                            opacity: 0.95,
-                            blending: THREE.AdditiveBlending,
-                            depthWrite: false
-                        })
-                        const sprite = new THREE.Sprite(mat)
-                        // Position at z corresponding to month start
-                        // Y = 1.0 (floating slightly above ground)
-                        sprite.position.set(xPos, 1.2, machineZPos[mIdx])
-                        sprite.scale.set(2.2, 2.2, 1) // Increased scale to 2.2
-                        scene.add(sprite)
-                    }
-                })
-            }
         })
 
         // Month labels - Inverted Z
         // Shifted North by 5 units, but March/April pulled back South to fill space
-        const monthLabels = ['Március', 'Április', 'Május', 'Június', 'Augusztus']
-        // New Requested: 9, 4, -3, -5, -7
-        const monthZPositions = [9, 4, -3, -5, -7]
+        // Month labels - Compact depth
+        const monthLabels = ['Május', 'Június', 'Augusztus'] // March/April removed as requested implicitly by "not so deep"
+        const monthZPositions = [-3, -5, -7]
         monthLabels.forEach((label, i) => {
             const canvas = document.createElement('canvas')
             const ctx = canvas.getContext('2d')!
@@ -552,7 +549,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
                 container.removeChild(renderer.domElement)
             }
         }
-    }, [parcels, conclusions, showMachines, isFullscreen])
+    }, [parcels, conclusions, isFullscreen])
 
     // Prevent page scroll when mouse is over the 3D canvas
     useEffect(() => {
@@ -623,32 +620,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
                 {showInfo ? <X size={20} /> : <Info size={20} />}
             </button>
 
-            {/* Machine Toggle Button - Below Info */}
-            <button
-                onClick={() => setShowMachines(!showMachines)}
-                style={{
-                    position: 'absolute',
-                    top: '70px',
-                    left: '20px',
-                    zIndex: 20,
-                    background: 'rgba(26, 23, 20, 0.8)',
-                    backdropFilter: 'blur(4px)',
-                    border: '1px solid rgba(212, 168, 75, 0.3)',
-                    borderRadius: '50%',
-                    width: '40px',
-                    height: '40px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#d4a84b',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
-                }}
-                title={showMachines ? "Rejtsd el a gépeket" : "Mutasd a gépeket"}
-            >
-                {showMachines ? <Eye size={20} /> : <EyeOff size={20} />}
-            </button>
+            {/* Machine Toggle Button REMOVED */}
 
             {/* Legend overlay matching 2D design - Toggled */}
             {showInfo && (

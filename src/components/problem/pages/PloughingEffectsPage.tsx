@@ -76,11 +76,11 @@ function CollapsiblePloughingCard({
                 }}
                 transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
             >
-                <div className={styles.cardHeader} style={{ padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+                <div className={styles.cardHeader} style={{ padding: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
                         <div className={styles.cardIconBox} style={{
-                            background: isOpen ? 'var(--color-gold)' : 'rgba(255, 255, 255, 0.05)',
-                            color: isOpen ? 'var(--color-earth-900)' : 'rgba(255, 255, 255, 0.6)',
+                            background: isOpen ? 'var(--color-gold)' : 'rgba(212, 168, 75, 0.1)',
+                            color: isOpen ? 'var(--color-earth-900)' : 'var(--color-gold)',
                             transform: isOpen ? 'scale(1.1)' : 'scale(1)'
                         }}>
                             {icon}

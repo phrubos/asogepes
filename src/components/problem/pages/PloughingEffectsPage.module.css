@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    padding: var(--space-4xl) var(--space-2xl) 0;
+    padding: var(--space-xl) var(--space-2xl) 0;
     margin-top: 0;
     /* Lift content */
     /* overflow: hidden; - Removed to allow card overlay expansion */
@@ -63,7 +63,7 @@
 
 .imageWrapper {
     width: auto;
-    height: 55vh;
+    height: 50vh;
     aspect-ratio: 4/5;
     position: relative;
     border-radius: var(--radius-xl);
@@ -106,7 +106,7 @@
     justify-content: center;
     align-items: flex-start;
     /* Anchored to top to prevent jumping */
-    padding-top: var(--space-4xl);
+    padding-top: var(--space-xl);
     padding-left: var(--space-xl);
     padding-right: var(--space-xl);
     /* Removed margin-top */
@@ -154,7 +154,7 @@
 .cardsColumn {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: 0.5rem;
     justify-content: flex-start;
     /* Match height of the grid row (determined by image column) */
     height: 100%;
@@ -169,7 +169,7 @@
     width: 100%;
     /* Default flex behavior - will be overridden inline for dynamic resizing */
     flex: 1;
-    min-height: 80px;
+    min-height: 64px;
     /* Ensure headers don't disappear */
     overflow: visible;
     /* Allow absolute overlay to escape bounds */
@@ -204,8 +204,8 @@
 }
 
 .cardIconBox {
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
     border-radius: var(--radius-md);
     background: rgba(255, 255, 255, 0.05);
     display: flex;
@@ -225,8 +225,7 @@
 .cardTitle {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 1rem;
-    /* Reduced from 1.125rem */
+    font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.7);
     margin: 0;
     transition: color 0.3s ease;
@@ -242,7 +241,7 @@
 }
 
 .cardBody {
-    padding: 0 var(--space-md) var(--space-md) calc(var(--space-md) + 42px + var(--space-md));
+    padding: 0 0.75rem 0.75rem calc(0.75rem + 36px + 1rem);
 }
 
 .cardDesc {

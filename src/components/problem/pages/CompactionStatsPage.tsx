@@ -349,7 +349,11 @@ function CollapsibleChallengeCard({
                 height: '100%', // FORCE HEIGHT to fill the parent wrapper
                 flex: 1,
                 zIndex: isOpen ? 50 : 1,
-                overflow: 'visible'
+                overflow: 'visible',
+                background: 'transparent', // Override CSS class background
+                border: 'none', // Override CSS class border
+                boxShadow: 'none', // Override CSS class shadow
+                padding: 0 // Override CSS class padding
             }}
         >
             <motion.div
@@ -389,12 +393,13 @@ function CollapsibleChallengeCard({
                 <div
                     className={styles.iconBox}
                     style={{
-                        background: 'rgba(212, 168, 75, 0.1)',
-                        color: 'var(--color-gold)',
+                        background: isOpen ? 'var(--color-gold)' : 'rgba(212, 168, 75, 0.1)',
+                        color: isOpen ? 'var(--color-earth-900)' : 'var(--color-gold)',
+                        transform: isOpen ? 'scale(1.1)' : 'scale(1)',
                         transition: 'all 0.3s ease',
                         position: 'absolute',
-                        top: '1rem',
-                        left: '1rem',
+                        top: '0.75rem',
+                        left: '0.75rem',
                         zIndex: 25,
                         display: 'flex',
                         alignItems: 'center',
@@ -407,7 +412,7 @@ function CollapsibleChallengeCard({
                     {icon}
                 </div>
 
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: 'calc(36px + 2rem)' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: 'calc(36px + 1.5rem)' }}>
                     {/* Header Row */}
                     <div
                         style={{
@@ -419,12 +424,12 @@ function CollapsibleChallengeCard({
                             minHeight: '36px', // Align with icon height + margins roughly
                             width: '100%',
                             flexShrink: 0,
-                            paddingTop: '1rem',
-                            paddingRight: '1rem'
+                            paddingTop: '0.75rem',
+                            paddingRight: '0.75rem'
                         }}
                     >
                         <h3 style={{
-                            fontSize: '1rem',
+                            fontSize: '0.95rem',
                             margin: '0',
                             fontWeight: 700,
                             fontFamily: 'var(--font-display)',
@@ -788,7 +793,7 @@ export default function CompactionStatsPage() {
 
                 {/* Right Column Wrapper - Flex Column for Challenges + Info */}
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0, justifyContent: 'space-between' }}>
-                    <div className={styles.challengesList} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+                    <div className={styles.challengesList} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                         <div style={{ textAlign: 'left', marginBottom: 'var(--space-xs)' }}>
                             <span className={styles.pillBadge}>Talajállapot és kockázatok</span>
                         </div>
@@ -800,7 +805,7 @@ export default function CompactionStatsPage() {
                                 flex: 1,
                                 position: 'relative',
                                 zIndex: expandedCardId === 1 ? 50 : 1,
-                                minHeight: '80px' // Prevent collapse
+                                minHeight: '64px' // Compact height
                             }}
                         >
                             <CollapsibleChallengeCard
@@ -825,7 +830,7 @@ export default function CompactionStatsPage() {
                                 flex: 1,
                                 position: 'relative',
                                 zIndex: expandedCardId === 2 ? 50 : 1,
-                                minHeight: '80px'
+                                minHeight: '64px'
                             }}
                         >
                             <CollapsibleChallengeCard
@@ -850,7 +855,7 @@ export default function CompactionStatsPage() {
                                 flex: 1,
                                 position: 'relative',
                                 zIndex: expandedCardId === 3 ? 50 : 1,
-                                minHeight: '80px'
+                                minHeight: '64px'
                             }}
                         >
                             <CollapsibleChallengeCard

@@ -254,6 +254,8 @@
   flex-direction: column;
   gap: var(--space-md);
   flex-shrink: 0;
+  height: 100%;
+  /* Fill container height */
 }
 
 .bestGridStar {
@@ -483,6 +485,8 @@
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   overflow: hidden;
+  height: 100%;
+  /* Force fill */
 }
 
 .resultsPanelHeader {
@@ -528,6 +532,9 @@
   flex: 1;
   overflow-y: auto;
   padding: var(--space-sm);
+  display: flex;
+  /* Allow content to stretch */
+  flex-direction: column;
 }
 
 .resultsTableWrapper::-webkit-scrollbar {
@@ -547,6 +554,8 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
+  /* Stretch to fill wrapper */
 }
 
 .resultRow {
@@ -559,6 +568,10 @@
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 10px;
   transition: all 0.25s ease;
+  flex: 1;
+  /* Distribute height evenly */
+  min-height: 60px;
+  /* Minimum useful height */
 }
 
 .resultRow:hover {

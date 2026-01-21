@@ -211,7 +211,7 @@ export default function LakitelekChartPage() {
 
             <div className={styles.sidePanel}>
               <ResultsContent />
-              <ConclusionContent />
+              {/* Conclusion hidden in embedded view per user request */}
             </div>
           </div>
         )}

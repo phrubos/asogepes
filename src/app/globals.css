@@ -150,11 +150,14 @@ textarea:focus-visible {
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
+    overflow-x: hidden;
     font-family: var(--font-body);
-    font-size: 16px;
+    /* Use 1rem so it respects the html font-size scaling */
+    font-size: 1rem;
     line-height: 1.6;
     color: var(--color-earth-900);
     background: var(--color-cream);
@@ -439,12 +442,14 @@ em {
    125% SCALING FIX (LAPTOP OPTIMIZATION)
    =========================================== */
 /* 
-   Detects 125% OS scaling (approx 1.25dppx) and scales the 
-   interface down to 0.8x to simulate 100% appearance.
-   Valid for Chrome/Edge on Windows.
+   Detects 125% OS scaling (approx 1.25dppx).
+   We reduce the root font size to ~13px (from default 16px).
+   This scales down all rem-based sizes (padding, gaps, fonts)
+   so the layout fits comfortably on the effectively smaller viewport (1536x864).
 */
-@media (min-resolution: 1.20dppx) and (max-resolution: 1.30dppx) {
+@media (min-resolution: 1.20dppx) and (max-resolution: 1.35dppx),
+(min-width: 1200px) and (max-height: 900px) {
     html {
-        zoom: 0.8;
+        font-size: 13px;
     }
 }
