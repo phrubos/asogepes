@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -8,6 +9,7 @@ import { heroStats } from '@/lib/data'
 import { useParallax } from '@/hooks/useParallax'
 import { useTypewriter } from '@/hooks/useTypewriter'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
+import LoadingScreen from '@/components/ui/LoadingScreen'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 import { useNavigation } from '../providers/NavigationContext'
 
@@ -24,16 +26,30 @@ export default function Hero() {
     pauseBeforeRestart: 500
   })
 
+  const [isVideoReady, setIsVideoReady] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    if (videoRef.current && videoRef.current.readyState >= 3) {
+      setIsVideoReady(true)
+    }
+  }, [])
+
   return (
     <header className={styles.hero}>
+      <LoadingScreen isLoading={!isVideoReady} />
       <div className={styles.heroBg} style={parallaxStyle}>
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
           className={styles.heroVideo}
           poster="/images/hero-bg-final.png"
+          onCanPlay={() => setIsVideoReady(true)}
+          onLoadedData={() => setIsVideoReady(true)}
+          onError={() => setIsVideoReady(true)} // Fallback to show content if video fails
         >
           <source src="/videos/hero_background_8.mp4" type="video/mp4" />
           {/* Fallback for browsers that don't support video */}
