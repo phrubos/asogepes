@@ -50,3 +50,6 @@ Thumbs.db
 /playwright/.auth/
 
 /superdesign/design_iterations
+
+# Agent
+.agent/
