@@ -62,8 +62,8 @@
 
 .imageWrapper {
     width: auto;
-    height: auto;
-    /* Fit to image */
+    height: 55vh;
+    aspect-ratio: 4/5;
     position: relative;
     border-radius: var(--radius-xl);
     overflow: hidden;
@@ -77,11 +77,7 @@
 }
 
 .mainImage {
-    width: auto;
-    height: 55vh;
-    /* Reduced from 70vh */
-    display: block;
-    aspect-ratio: 4/5;
+    /* Width/Height handled by fill + parent */
     object-fit: cover;
 }
 

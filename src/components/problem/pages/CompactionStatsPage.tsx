@@ -3,7 +3,7 @@ import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion'
 import { Droplet, Weight, Layers, Plus, Minus, Play, Pause, Info, Sprout, Droplets } from 'lucide-react'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
-// import TiltCard from '@/components/ui/TiltCard'
+
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
 import { problemStatistics } from '@/lib/data'
 import { useResponsiveParticleCount, useReducedMotion } from '@/hooks/useMediaQuery'
@@ -693,11 +693,8 @@ export default function CompactionStatsPage() {
     // Interactive Soil Logic
     const progress = useMotionValue(0)
     const [isPlaying, setIsPlaying] = useState(true)
-    // REMOVED: const [currentProgress, setCurrentProgress] = useState(0) - Moved to CompactionStatsDisplay
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
     const controlsRef = useRef<any>(null)
-
-    // REMOVED: Sync effect - Moved to CompactionStatsDisplay
 
     useEffect(() => {
         if (!isPlaying) {

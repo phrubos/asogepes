@@ -434,3 +434,17 @@ em {
 [aria-hidden="true"] {
     pointer-events: none;
 }
+
+/* ===========================================
+   125% SCALING FIX (LAPTOP OPTIMIZATION)
+   =========================================== */
+/* 
+   Detects 125% OS scaling (approx 1.25dppx) and scales the 
+   interface down to 0.8x to simulate 100% appearance.
+   Valid for Chrome/Edge on Windows.
+*/
+@media (min-resolution: 1.20dppx) and (max-resolution: 1.30dppx) {
+    html {
+        zoom: 0.8;
+    }
+}

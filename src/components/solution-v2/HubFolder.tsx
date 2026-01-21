@@ -3,10 +3,12 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Settings, Folder, Play, HelpCircle, Sparkles } from 'lucide-react'
+import Image from 'next/image'
+import { modelData, ModelId } from '@/lib/technology-data'
 import styles from './HubFolder.module.css'
 
 type HoveredOption = 'operation' | 'models' | 'guide' | null
-type ModelId = '38sx' | '38wx' | '40sx'
+// ModelId imported from shared data
 type DemoState = 'idle' | 'hub' | 'operation' | 'models' | 'guide'
 
 interface HubFolderProps {
@@ -15,11 +17,7 @@ interface HubFolderProps {
   onScrollToGuide: () => void
 }
 
-const modelData = [
-  { id: '38sx' as ModelId, name: '38SX', type: 'Nagy szériás', tag: 'Standard', color: 'brown', image: '/images/38SX_new.jpeg' },
-  { id: '38wx' as ModelId, name: '38WX', type: 'Lazítókéses', tag: 'Hybrid', color: 'green', image: '/images/38WX_new.jpeg' },
-  { id: '40sx' as ModelId, name: '40SX', type: 'Mélyásógép', tag: 'Deep', color: 'blue', image: '/images/40SX_new.jpeg' },
-]
+// modelData imported from @/lib/technology-data
 
 // Demo sequence - simulates user interaction with dynamic, snappy timing
 const DEMO_SEQUENCE: { state: DemoState; duration: number }[] = [
@@ -403,11 +401,13 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
                 </div>
                 <div className={styles.miniFolderFront}>
                   <div className={styles.miniFolderImageWrap}>
-                    <img
+                    <Image
                       src={model.image}
                       alt={model.name}
+                      fill
                       className={styles.miniFolderImage}
-                      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                      sizes="(max-width: 768px) 100px, 150px"
+                      style={{ objectFit: 'cover' }}
                     />
                   </div>
                   <span className={styles.miniFolderLabel}>{model.name}</span>

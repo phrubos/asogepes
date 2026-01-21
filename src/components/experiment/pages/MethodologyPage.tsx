@@ -3,11 +3,13 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Gauge, ImageIcon } from 'lucide-react'
+import Image from 'next/image'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from './MethodologyPage.module.css'
 
 export default function MethodologyPage() {
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null)
+
   return (
     <div className={styles.methodologyPage}>
       <div className={styles.content}>
@@ -34,15 +36,35 @@ export default function MethodologyPage() {
             A talaj szerkezete <strong>20 bar nyomásig</strong> tekinthető optimálisnak, tömörödésmentesnek.
           </p>
 
-          <div className={styles.scaleBar}>
-            <div className={styles.scaleOptimal}>
-              <span className={styles.scaleLabel}>Optimális</span>
-              <span className={styles.scaleValue}>0-20 bar</span>
+          <div className={styles.dashboardContainer}>
+            <div className={styles.measurementDashboard}>
+              <div className={styles.scaleBar}>
+                <div className={styles.scaleOptimal}>
+                  <span className={styles.scaleLabel}>Optimális</span>
+                  <span className={styles.scaleValue}>0-20 bar</span>
+                </div>
+                <div className={styles.scaleCompacted}>
+                  <span className={styles.scaleLabel}>Tömörödött</span>
+                  <span className={styles.scaleValue}>&gt;20 bar</span>
+                </div>
+              </div>
+
+              <div
+                className={styles.manometerWrapper}
+                onClick={() => setLightboxImage('/images/manometer_200_v2.png')}
+                style={{ cursor: 'pointer' }}
+              >
+                <Image
+                  src="/images/manometer_200_v2.png"
+                  alt="Manométer"
+                  fill
+                  className={styles.manometerImage}
+                  sizes="140px"
+                />
+              </div>
             </div>
-            <div className={styles.scaleCompacted}>
-              <span className={styles.scaleLabel}>Tömörödött</span>
-              <span className={styles.scaleValue}>&gt;20 bar</span>
-            </div>
+
+            <div className={styles.dashboardLabel}>Műszerfal</div>
           </div>
         </motion.div>
 
@@ -55,22 +77,25 @@ export default function MethodologyPage() {
         >
           <div
             className={styles.imageWrapper}
-            onClick={() => setIsLightboxOpen(true)}
+            onClick={() => setLightboxImage('/images/penetrometer_rotated_view.png')}
             style={{ cursor: 'pointer' }}
           >
-            <img
-              src="/images/penetrometer_premium.png"
+            <Image
+              src="/images/penetrometer_rotated_view.png"
               alt="Penetrométer"
+              fill
               className={styles.image}
+              sizes="(max-width: 768px) 100vw, 450px"
+              priority
             />
           </div>
         </motion.div>
 
         <ImageLightbox
-          isOpen={isLightboxOpen}
-          onClose={() => setIsLightboxOpen(false)}
-          src="/images/penetrometer_premium.png"
-          alt="Penetrométer"
+          isOpen={!!lightboxImage}
+          onClose={() => setLightboxImage(null)}
+          src={lightboxImage || ''}
+          alt="Nagyított kép"
         />
       </div>
     </div>

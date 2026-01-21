@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Activity, Leaf, Thermometer, AlertTriangle, ArrowDownToLine, Shuffle, TrendingUp, Quote, Plus, Minus } from 'lucide-react'
+import Image from 'next/image'
 import { ploughingProblems } from '@/lib/data'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from './PloughingEffectsPage.module.css'
@@ -214,11 +215,13 @@ export default function PloughingEffectsPage() {
                         onClick={() => setIsLightboxOpen(true)}
                         style={{ cursor: 'pointer' }}
                     >
-                        <img
+                        <Image
                             src="/images/premium_plough_head.png"
                             alt="American mouldboard eke"
+                            fill
                             className={styles.mainImage}
-                            loading="lazy"
+                            sizes="(max-width: 1024px) 100vw, 40vw"
+                            priority
                         />
 
                     </div>

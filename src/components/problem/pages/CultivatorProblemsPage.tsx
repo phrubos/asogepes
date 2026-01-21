@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Sprout, Webhook, RefreshCcwDot, SquareKanban } from 'lucide-react'
+import Image from 'next/image'
 
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from '../ProblemNew.module.css'
@@ -75,11 +76,13 @@ export default function CultivatorProblemsPage() {
                             onClick={() => setIsLightboxOpen(true)}
                             style={{ cursor: 'pointer' }}
                         >
-                            <img
+                            <Image
                                 src="/images/premium_cultivator_courtyard.png"
                                 alt="Nehézkultivátor"
+                                fill
                                 className={styles.cultivatorImage}
-                                loading="lazy"
+                                sizes="(max-width: 1024px) 100vw, 50vw"
+                                priority
                             />
 
                         </motion.div>

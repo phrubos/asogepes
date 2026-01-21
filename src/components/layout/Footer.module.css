@@ -68,3 +68,15 @@
         background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.3), transparent);
     }
 }
+
+.link {
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.link:hover {
+    opacity: 0.8;
+}

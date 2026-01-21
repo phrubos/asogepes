@@ -7,10 +7,7 @@ import HeavyCultivatorSVG from '../visualizations/HeavyCultivatorSVG'
 import SpadingMachineSVG from '../visualizations/SpadingMachineSVG'
 import styles from '../ProblemNew.module.css'
 
-const seededRandom = (seed: number) => {
-    const x = Math.sin(seed) * 10000
-    return Math.round((x - Math.floor(x)) * 10000) / 10000
-}
+
 
 const comparisonData = {
     cultivator: {
