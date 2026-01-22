@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Inter, Fraunces } from 'next/font/google'
 import { Suspense } from 'react'
 import './globals.css'
 import Navigation from '@/components/layout/Navigation'
@@ -9,16 +8,6 @@ import BackToTop from '@/components/ui/BackToTop'
 import RouteLoadingProvider from '@/components/providers/RouteLoadingProvider'
 import { NavigationProvider } from '@/components/providers/NavigationContext'
 import { HydrationErrorBoundary } from '@/components/error/HydrationErrorBoundary'
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-})
-
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-fraunces',
-})
 
 export const metadata: Metadata = {
   title: 'Ásógépes Talajművelés | Tudományos Kutatás 2025',
@@ -31,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="hu" className={`${inter.variable} ${fraunces.variable}`}>
+    <html lang="hu">
       <HydrationErrorBoundary>
         <body>
           <Suspense fallback={null}>
