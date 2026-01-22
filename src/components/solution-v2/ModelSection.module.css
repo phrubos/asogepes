@@ -482,3 +482,120 @@
     flex-wrap: wrap;
   }
 }
+
+/* ===========================================
+   125% SCALING FIX (LAPTOP OPTIMIZATION)
+   =========================================== */
+@media (max-height: 900px) {
+  .compactSection {
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .sectionHeader {
+    margin-bottom: 0.25rem;
+  }
+
+  .modelName {
+    font-size: 2rem;
+  }
+
+  .topRow {
+    min-height: 250px;
+    /* Force shorter height */
+    grid-template-columns: 1fr 1fr;
+    /* Equal split to give text more width if needed, or keep 1.2 0.8 */
+    gap: 0.75rem;
+  }
+
+  .specsPanel {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .panelHeader {
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .specRow {
+    padding: 0.5rem;
+    gap: 0.75rem;
+  }
+
+  .specIconBox {
+    width: 32px;
+    height: 32px;
+  }
+
+  .specIconBox svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .specValue {
+    font-size: 0.9rem;
+  }
+
+  .specLabel {
+    font-size: 0.6rem;
+  }
+
+  .featuresList {
+    gap: 2px;
+  }
+
+  .featureItem {
+    font-size: 0.8rem;
+  }
+
+  /* Image specific adjustment: "Make it smaller but don't crop" 
+     By reducing min-height of topRow, we constrained the container.
+     Now we ensure the image doesn't get cropped awkwardly.
+  */
+  .machineImage {
+    object-fit: contain;
+    /* Ensure full image is visible without cropping */
+    max-height: 100%;
+    width: auto;
+    /* Let width adjust to maintain aspect ratio */
+    max-width: 100%;
+    margin: 0 auto;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
+    /* Smaller shadow */
+  }
+
+  .imageCard {
+    background: rgba(255, 255, 255, 0.02);
+    /* Slight background to show container bounds if image fits inside */
+  }
+
+  /* Results Card Compact */
+  .resultsCard {
+    padding: 0.75rem;
+    gap: 1rem;
+    /* Reduce height impact */
+  }
+
+  .resultsHeader {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .resultsDesc {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* Limit lines if text is too long */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .chartVisual {
+    height: 60px;
+    width: 100px;
+  }
+}

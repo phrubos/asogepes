@@ -68,7 +68,8 @@
 }
 
 .headerInner {
-    max-width: 1400px;
+    /* max-width: 1400px -> 87.5rem */
+    max-width: 87.5rem;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -148,8 +149,9 @@
 /* Mobile Toggle Button */
 .menuToggle {
     display: none;
-    width: 44px;
-    height: 44px;
+    width: 2.75rem;
+    /* 44px */
+    height: 2.75rem;
     padding: 0;
     border: none;
     background: transparent;
@@ -196,13 +198,14 @@
     right: 0;
     background: var(--color-earth-800);
     z-index: 105;
-    padding-top: 100px;
+    padding-top: 6.25rem;
+    /* 100px */
     padding-bottom: var(--space-3xl);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .mobileNavInner {
-    max-width: 1400px;
+    max-width: 87.5rem;
     margin: 0 auto;
     padding: 0 var(--space-xl);
     display: flex;

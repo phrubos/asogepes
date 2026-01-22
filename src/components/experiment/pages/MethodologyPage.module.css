@@ -382,3 +382,93 @@
     max-width: 280px;
   }
 }
+
+/* ===========================================
+   125% SCALING FIX (LAPTOP OPTIMIZATION)
+   =========================================== */
+@media (max-height: 900px) {
+  .methodologyPage {
+    /* Ensure page respects height */
+    padding: 0.5rem 0;
+  }
+
+  .content {
+    gap: 1.5rem;
+    /* Reduce gap between columns */
+    max-width: 90%;
+  }
+
+  /* Compact Text Column */
+  .textColumn {
+    gap: 0.75rem;
+  }
+
+  .header {
+    gap: 0.5rem;
+  }
+
+  .iconWrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .iconWrapper svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 2px;
+  }
+
+  .badge {
+    padding: 2px 8px;
+    font-size: 0.65rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    max-width: 60ch;
+  }
+
+  /* Compact Dashboard */
+  .dashboardContainer {
+    padding: 1rem;
+    min-height: auto;
+    max-height: 220px;
+    /* Force shorter dashboard */
+  }
+
+  .measurementDashboard {
+    gap: 1rem;
+  }
+
+  .manometerWrapper {
+    width: 130px;
+    height: 130px;
+  }
+
+  /* Compact Scale Bar */
+  .scaleBar {
+    height: 60px;
+  }
+
+  .scaleValue {
+    font-size: 0.9rem;
+  }
+
+  .scaleLabel {
+    font-size: 0.6rem;
+  }
+
+  /* Compact Image */
+  .imageWrapper {
+    max-width: 320px;
+    /* Constrain image width */
+    aspect-ratio: 3 / 4;
+    margin: 0 auto;
+  }
+}

@@ -350,7 +350,6 @@ export default function PloughingSoilComparison() {
             viewport={{ once: true }}
             transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.3 }}
             whileHover={{ scale: 1.1, rotate: 10 }}
-            style={{ width: '40px', height: '40px', fontSize: '0.8rem' }}
           >
             VS
           </motion.div>
