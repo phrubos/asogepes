@@ -65,7 +65,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
   // Custom scroll offsets per section (lower = appears higher on screen)
   const sectionOffsets: Record<string, number> = {
     // Probléma page
-    'compaction': -20,            // Öntözés és Tömörödés - OK
+    'compaction': -40,            // Öntözés és Tömörödés - OK
     'cultivator-comparison': -20, // Kultivátorozott vs. ásógépezett - OK
     'ploughing-effects': 150,      // Szántás hatásai - lejjebb
     'ploughing-structure': -20,   // Szántott vs. ásógépezett - OK
