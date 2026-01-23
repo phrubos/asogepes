@@ -77,7 +77,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
     'application': -10,            // Alkalmazás - lejjebb
     'application-guide': -10,
     // Kutatás page
-    'methodology': -40,           // Módszertan - feljebb (1 scroll)
+    'methodology': -60,           // Módszertan - feljebb (1 scroll)
   }
 
   // Get scroll offset based on target
@@ -91,7 +91,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
     if (!section) return
 
     isProgrammaticScroll.current = true
-    
+
     // Set active states - main section + first subsection if exists
     setActiveSection(sectionId)
     const firstSubsection = section.subsections?.[0]
@@ -100,7 +100,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
     // Determine scroll target: first subsection element if exists, otherwise section wrapper
     const targetId = firstSubsection?.id || sectionId
     const element = document.getElementById(targetId)
-    
+
     if (element) {
       // Dynamic offset - some sections need to appear higher
       const scrollOffset = getScrollOffset(targetId)
@@ -121,7 +121,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
   // Handle subsection click - scroll to subsection content
   const handleSubsectionClick = useCallback((subsectionId: string, parentSectionId: string) => {
     isProgrammaticScroll.current = true
-    
+
     setActiveSection(parentSectionId)
     setActiveSubsection(subsectionId)
 
@@ -176,7 +176,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
       const intersecting = entries.filter(e => e.isIntersecting)
       if (intersecting.length === 0) return
 
-      const bestEntry = intersecting.reduce((best, current) => 
+      const bestEntry = intersecting.reduce((best, current) =>
         current.intersectionRatio > best.intersectionRatio ? current : best
       )
 
@@ -251,45 +251,86 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Calculate progress for timeline - including subsections
   const activeSectionIndex = sections.findIndex(s => s.id === activeSection)
-  
-  // Calculate total "steps" (each section counts as 1, we track which section we're on)
-  // The progress should be based on section position in the nav
-  const progressPercentage = useMemo(() => {
-    if (sections.length <= 1) return 0
-    
-    // Base progress from section index
-    const sectionProgress = activeSectionIndex / (sections.length - 1)
-    
-    // Add subsection progress within current section
-    const currentSection = sections[activeSectionIndex]
-    const subsections = currentSection?.subsections || []
-    
-    if (subsections.length > 0 && activeSubsection) {
-      const subIndex = subsections.findIndex(s => s.id === activeSubsection)
-      if (subIndex > 0) {
-        // Add fractional progress for subsections (small increment within section)
-        const subProgress = (subIndex / subsections.length) * (1 / (sections.length - 1)) * 0.5
-        return Math.min((sectionProgress + subProgress) * 100, 100)
+
+  // Ref for the sidebar content container to verify positions relative to it
+  const sidebarContentRef = useRef<HTMLDivElement>(null)
+  const [progressHeight, setProgressHeight] = useState(0)
+
+  // Calculate progress bar height based on active element position
+  useEffect(() => {
+    const calculateProgress = () => {
+      if (!sidebarContentRef.current) return
+
+      const containerRect = sidebarContentRef.current.getBoundingClientRect()
+      let targetTop = 0
+
+      // If we have an active subsection, target it
+      if (activeSubsection) {
+        const subBtn = document.querySelector(`[data-sidebar-subsection="${activeSubsection}"]`)
+        if (subBtn) {
+          const rect = subBtn.getBoundingClientRect()
+          // Target middle of the subsection button
+          targetTop = rect.top + (rect.height / 2) - containerRect.top
+        }
+      }
+      // Otherwise fallback to main section marker
+      else if (activeSection) {
+        // Find the marker wrapper within the active section group
+        const sectionGroup = document.querySelector(`[data-sidebar-section="${activeSection}"]`)
+        if (sectionGroup) {
+          // The marker is usually vertically centered or at a specific spot. 
+          // We can try to find the marker element itself if possible, or assume center.
+          // Looking at CSS, .markerWrapper is top: 50% translateY(-50%)
+          // So center of sectionGroup should be correct IF the section group only contains the header?
+          // BUT, sectionGroup grows when subsections expand?
+          // No, .subPages is inside .sectionGroup (lines 325 in original file).
+          // So top: 50% of sectionGroup moves down as height increases!
+          // We need specifically the marker's position.
+          // Let's rely on finding the marker element or calculating based on known structure.
+          // The markerWrapper is the first child div usually? 
+          // Let's add a data attribute to markerWrapper to be safe? 
+          // Or just querySelector('.markerWrapper') inside the group.
+          const marker = sectionGroup.querySelector('[class*="markerWrapper"]')
+          if (marker) {
+            const rect = marker.getBoundingClientRect()
+            targetTop = rect.top + (rect.height / 2) - containerRect.top
+          }
+        }
+      }
+
+      if (targetTop > 0) {
+        setProgressHeight(targetTop)
       }
     }
-    
-    return sectionProgress * 100
-  }, [activeSectionIndex, activeSubsection, sections])
+
+    // Run calculation
+    calculateProgress()
+
+    // Re-calculate on resize
+    window.addEventListener('resize', calculateProgress)
+
+    // Also re-calculate after a short delay to allow for animations (like subpages expanding)
+    const timeoutId = setTimeout(calculateProgress, 350)
+
+    return () => {
+      window.removeEventListener('resize', calculateProgress)
+      clearTimeout(timeoutId)
+    }
+  }, [activeSection, activeSubsection, sections])
 
   return (
     <ScrollContext.Provider value={{ scrollToSection, activeSection, activeSubsection, sections }}>
       <div ref={containerRef} className={styles.scrollContainer}>
         {/* Left Sidebar Navigation (Timeline) */}
         <nav className={styles.sidebar}>
-          <div className={styles.sidebarContent}>
+          <div className={styles.sidebarContent} ref={sidebarContentRef}>
             {/* Timeline Track Line */}
             <div className={styles.timelineTrack}>
               <motion.div
                 className={styles.timelineProgress}
                 initial={{ height: 0 }}
-                animate={{ height: `${progressPercentage}%` }}
+                animate={{ height: progressHeight }}
                 transition={{ type: "spring", stiffness: 100, damping: 20 }}
               />
             </div>
@@ -303,6 +344,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
                 return (
                   <div
                     key={section.id}
+                    data-sidebar-section={section.id}
                     className={`${styles.sectionGroup} ${isActive ? styles.active : ''} ${isPast ? styles.past : ''}`}
                     onClick={() => handleSectionClick(section.id)}
                     role="button"
@@ -329,6 +371,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
                           return (
                             <button
                               key={sub.id}
+                              data-sidebar-subsection={sub.id}
                               className={`${styles.subPageBtn} ${isSubActive ? styles.activeBtn : ''}`}
                               onClick={(e) => {
                                 e.stopPropagation()
