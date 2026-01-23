@@ -1,4 +1,4 @@
-import TechnologyLayout from '@/components/solution-v2/TechnologyLayout'
+import TechnologyScrollLayout from '@/components/solution-v2/TechnologyScrollLayout'
 
 export const metadata = {
   title: 'Technológia | Ásógépes Talajművelés',
@@ -6,5 +6,5 @@ export const metadata = {
 }
 
 export default function TechnologiaPage() {
-  return <TechnologyLayout />
+  return <TechnologyScrollLayout />
 }

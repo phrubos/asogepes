@@ -1,4 +1,4 @@
-import ResearchLayout from '@/components/experiment/ResearchLayout'
+import ResearchScrollLayout from '@/components/experiment/ResearchScrollLayout'
 
 export const metadata = {
   title: 'Kutatás | Ásógépes Talajművelés',
@@ -6,5 +6,5 @@ export const metadata = {
 }
 
 export default function KutatasPage() {
-  return <ResearchLayout />
+  return <ResearchScrollLayout />
 }

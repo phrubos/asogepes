@@ -4,7 +4,6 @@ import './globals.css'
 import Navigation from '@/components/layout/Navigation'
 import Footer from '@/components/layout/Footer'
 import ScrollProgress from '@/components/ui/ScrollProgress'
-import BackToTop from '@/components/ui/BackToTop'
 import RouteLoadingProvider from '@/components/providers/RouteLoadingProvider'
 import { NavigationProvider } from '@/components/providers/NavigationContext'
 import { HydrationErrorBoundary } from '@/components/error/HydrationErrorBoundary'
@@ -33,7 +32,6 @@ export default function RootLayout({
                 <Navigation />
                 {children}
                 <Footer />
-                <BackToTop threshold={400} />
               </RouteLoadingProvider>
             </NavigationProvider>
           </Suspense>

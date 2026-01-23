@@ -136,12 +136,12 @@ export default function Navigation() {
                 if (pathname !== item.href) {
                   startNavigating()
                 } else if (item.href === '/problema') {
-                  // If clicking "Probléma" while already there, reset the book
-                  window.dispatchEvent(new CustomEvent('reset-problem-book'))
+                  // If clicking "Probléma" while already there, reset to top
+                  window.dispatchEvent(new CustomEvent('reset-problem-scroll'))
                 } else if (item.href === '/technologia') {
-                  window.dispatchEvent(new CustomEvent('reset-technology-book'))
+                  window.dispatchEvent(new CustomEvent('reset-technology-scroll'))
                 } else if (item.href === '/kutatas') {
-                  window.dispatchEvent(new CustomEvent('reset-research-book'))
+                  window.dispatchEvent(new CustomEvent('reset-research-scroll'))
                 }
               }}
               aria-current={pathname === item.href ? 'page' : undefined}

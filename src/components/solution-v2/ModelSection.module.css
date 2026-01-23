@@ -435,6 +435,42 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+/* Bar color variants for SSR-safe rendering */
+.barGold {
+  background: var(--color-gold);
+  width: 12px;
+}
+
+.barLight {
+  background: rgba(255, 255, 255, 0.3);
+  width: 12px;
+}
+
+/* Staggered animation delays using nth-child for SSR compatibility */
+.animBar:nth-child(1) {
+  animation-duration: 1.4s;
+  animation-delay: -0.2s;
+}
+
+.animBar:nth-child(2) {
+  animation-duration: 1.8s;
+  animation-delay: -1.1s;
+}
+
+.animBar:nth-child(3) {
+  animation-duration: 2.2s;
+  animation-delay: -0.5s;
+}
+
+.animBar:nth-child(4) {
+  animation-duration: 1.6s;
+  animation-delay: -1.5s;
+}
+
+.animBar:nth-child(5) {
+  animation-duration: 2.0s;
+  animation-delay: -0.8s;
+}
 
 .detailsLink {
   display: flex;

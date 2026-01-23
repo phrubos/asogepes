@@ -163,13 +163,7 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
                     {Array.from({ length: 5 }).map((_, i) => (
                       <div
                         key={i}
-                        className={`${styles.bar} ${styles.animBar}`}
-                        style={{
-                          animationDuration: `${1.2 + Math.random() * 1.5}s`,
-                          animationDelay: `-${Math.random() * 2}s`,
-                          width: '12px',
-                          background: i % 2 === 0 ? 'var(--color-gold)' : 'rgba(255,255,255,0.3)',
-                        }}
+                        className={`${styles.bar} ${styles.animBar} ${i % 2 === 0 ? styles.barGold : styles.barLight}`}
                       />
                     ))}
                   </div>

@@ -1,4 +1,4 @@
-import ProblemBookLayout from '@/components/problem/ProblemBookLayout'
+import ProblemScrollLayout from '@/components/problem/ProblemScrollLayout'
 
 export const metadata = {
   title: 'A Probléma | Ásógépes Technológia',
@@ -6,5 +6,5 @@ export const metadata = {
 }
 
 export default function ProblemaPage() {
-  return <ProblemBookLayout />
+  return <ProblemScrollLayout />
 }

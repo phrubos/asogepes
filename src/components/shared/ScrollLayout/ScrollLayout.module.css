@@ -1,0 +1,691 @@
+/* ============================================
+   SCROLL LAYOUT - Continuous Scrolling Experience
+   Full viewport hero + scrolling sections with sidebar navigation
+   ============================================ */
+
+.scrollContainer {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  background: var(--bg-book-dark, #1F1A16);
+}
+
+/* ============================================
+   LEFT SIDEBAR NAVIGATION (Timeline)
+   ============================================ */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  min-width: 280px;
+  height: 100vh;
+  /* Rich gradient with subtle gold edge */
+  background: linear-gradient(90deg,
+      rgba(14, 12, 10, 0.98) 0%,
+      rgba(25, 21, 17, 0.92) 50%,
+      rgba(31, 26, 22, 0) 100%);
+  border-right: 1px solid rgba(212, 168, 75, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 0 80px var(--space-xl);
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.sidebarContent {
+  display: flex;
+  flex-direction: column;
+  height: 65%;
+  position: relative;
+}
+
+/* Timeline Track */
+.timelineTrack {
+  position: absolute;
+  left: 24px;
+  transform: translateX(-50%);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  z-index: 0;
+}
+
+.timelineProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--color-gold);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(212, 168, 75, 0.4);
+  transform-origin: top center;
+}
+
+/* Section Navigation */
+.sectionNav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.sectionGroup {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-left: 60px;
+  min-height: 60px;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Timeline Markers */
+.markerWrapper {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.marker {
+  width: 12px;
+  height: 12px;
+  background: var(--color-earth-900);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.marker::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  transition: all 0.4s ease;
+}
+
+.sectionGroup:hover .marker {
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.2);
+}
+
+.sectionGroup.active .marker {
+  width: 32px;
+  height: 32px;
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  box-shadow: 0 0 20px rgba(212, 168, 75, 0.4);
+}
+
+.sectionGroup.past .marker {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  width: 14px;
+  height: 14px;
+}
+
+/* Labels and Content */
+.sectionHeader {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+  transform: translateX(0);
+}
+
+.sectionGroup:hover .sectionHeader {
+  opacity: 0.8;
+  transform: translateX(4px);
+}
+
+.sectionGroup.active .sectionHeader {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sectionNumber {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.sectionLabel {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+  line-height: 1.2;
+  white-space: pre-line;
+}
+
+.sectionGroup.active .sectionLabel {
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Sub-page Navigation */
+.subPages {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 16px;
+  margin-left: 4px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.subPageBtn {
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.825rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  font-family: var(--font-body);
+}
+
+.subPageBtn:hover {
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateX(4px);
+}
+
+.subPageBtn.activeBtn {
+  color: var(--color-gold);
+  font-weight: 600;
+  transform: translateX(4px);
+}
+
+.subPageBtn.activeBtn::before {
+  content: '';
+  position: absolute;
+  left: -21px;
+  top: 50%;
+  width: 9px;
+  height: 1px;
+  background: var(--color-gold);
+}
+
+/* ============================================
+   MAIN CONTENT AREA
+   ============================================ */
+
+.mainContent {
+  flex: 1;
+  margin-left: 280px;
+  position: relative;
+  /* Clean warm gradient base */
+  background: linear-gradient(165deg,
+      #342C24 0%,
+      #2A231C 25%,
+      #1F1A16 60%,
+      #171311 100%);
+}
+
+/* Clean gradient + ambient light system */
+.mainContent::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 280px;
+  background:
+    /* Ambient gold glow - top center */
+    radial-gradient(ellipse 100% 40% at 50% 0%,
+      rgba(212, 168, 75, 0.12) 0%,
+      rgba(212, 168, 75, 0.04) 40%,
+      transparent 70%),
+    /* Warm accent - top right corner */
+    radial-gradient(circle at 95% 5%,
+      rgba(232, 200, 122, 0.15) 0%,
+      rgba(212, 168, 75, 0.05) 25%,
+      transparent 45%),
+    /* Subtle warm glow - bottom left */
+    radial-gradient(ellipse 50% 40% at 5% 95%,
+      rgba(212, 168, 75, 0.08) 0%,
+      transparent 60%),
+    /* Soft depth - center highlight */
+    radial-gradient(ellipse 80% 60% at 50% 50%,
+      rgba(47, 40, 34, 0.3) 0%,
+      transparent 60%),
+    /* Vignette for depth */
+    radial-gradient(ellipse 70% 60% at 50% 50%,
+      transparent 40%,
+      rgba(15, 12, 10, 0.5) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Page shadow on left edge */
+.mainContent::after {
+  content: '';
+  position: fixed;
+  left: 280px;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.4), transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.section {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin: 0 auto;
+  padding-left: 3%;
+  padding-right: 3%;
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 100px;
+  padding-bottom: 120px; /* Space above scroll indicator (indicator height ~60px + margin) */
+}
+
+/* Section content wrapper - centers content in the safe zone */
+.section > * {
+  width: 100%;
+  max-width: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1600px) {
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    padding-left: var(--space-lg);
+    padding-top: 100px;
+  }
+
+  .mainContent {
+    margin-left: 240px;
+  }
+
+  .mainContent::before,
+  .mainContent::after {
+    left: 240px;
+  }
+
+  .sectionGroup {
+    padding-left: 45px;
+    min-height: 50px;
+  }
+
+  .timelineTrack {
+    left: 18px;
+  }
+
+  .markerWrapper {
+    left: 4px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .marker {
+    width: 10px;
+    height: 10px;
+  }
+
+  .sectionGroup.active .marker {
+    width: 28px;
+    height: 28px;
+  }
+
+  .sectionLabel {
+    font-size: 0.85rem;
+  }
+
+  .sectionNumber {
+    font-size: 0.7rem;
+    margin-bottom: 2px;
+  }
+
+  .subPages {
+    margin-top: 8px;
+    gap: 4px;
+    padding-left: 12px;
+  }
+
+  .subPageBtn {
+    font-size: 0.75rem;
+    padding: 2px 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    flex-direction: row;
+    padding: 0;
+    background: rgba(31, 26, 22, 0.98);
+    border-top: 1px solid rgba(212, 168, 75, 0.15);
+    border-right: none;
+    min-width: auto;
+  }
+
+  .sidebarContent {
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+  }
+
+  .timelineTrack {
+    display: none;
+  }
+
+  .sectionNav {
+    flex-direction: row;
+    width: auto;
+    padding: 0 20px;
+    gap: 20px;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .sectionGroup {
+    padding-left: 0;
+    min-height: auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .markerWrapper {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin-bottom: 5px;
+  }
+
+  .subPages {
+    display: none;
+  }
+
+  .sectionLabel {
+    font-size: 0.7rem;
+    display: block;
+  }
+
+  .sectionNumber {
+    display: none;
+  }
+
+  .mainContent {
+    margin-left: 0;
+    margin-bottom: 80px;
+  }
+
+  .section {
+    padding-left: 4%;
+    padding-right: 4%;
+    padding-top: 80px;
+    padding-bottom: 180px; /* More space for mobile bottom nav + indicator */
+  }
+
+  .mainContent::before,
+  .mainContent::after {
+    left: 0;
+  }
+
+  .mainContent::after {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .sectionLabel {
+    display: none;
+  }
+
+  .sectionGroup.active .sectionLabel {
+    display: block;
+    position: absolute;
+    bottom: -20px;
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+}
+
+/* ============================================
+   NEXT SECTION SCROLL INDICATOR
+   ============================================ */
+
+.scrollIndicator {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  background: rgba(20, 17, 14, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 168, 75, 0.25);
+  border-radius: 100px;
+  color: var(--color-gold);
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  max-width: 300px;
+}
+
+.scrollIndicator:hover {
+  background: rgba(31, 26, 22, 0.95);
+  border-color: rgba(212, 168, 75, 0.6);
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(212, 168, 75, 0.1);
+}
+
+.pulseContainer {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulseDot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-gold);
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 0 10px var(--color-gold);
+}
+
+.pulseRing {
+  position: absolute;
+  inset: -6px;
+  border: 1px solid var(--color-gold);
+  border-radius: 50%;
+  opacity: 0;
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.pulseRing:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.indicatorText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.indicatorLabel {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.indicatorTitle {
+  font-family: var(--font-display, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.indicatorTitleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.indicatorSection {
+  font-family: var(--font-display, sans-serif);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.indicatorDivider {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 300;
+}
+
+.indicatorSubsection {
+  font-family: var(--font-display, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.01em;
+}
+
+.indicatorIcon {
+  color: var(--color-gold);
+  animation: bounce-vertical 2s infinite;
+  opacity: 0.8;
+}
+
+@keyframes bounce-vertical {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@media (max-width: 768px) {
+  .scrollIndicator {
+    bottom: 90px;
+    padding: 8px 16px;
+    max-width: 280px;
+  }
+
+  .indicatorLabel {
+    display: none;
+  }
+
+  .indicatorTitle {
+    font-size: 0.75rem;
+  }
+
+  .indicatorSection {
+    font-size: 0.7rem;
+  }
+
+  .indicatorSubsection {
+    font-size: 0.75rem;
+  }
+
+  .indicatorTitleWrapper {
+    gap: 4px;
+  }
+}

@@ -325,7 +325,7 @@ export default function ApplicationGuide() {
   }
 
   return (
-    <section ref={sectionRef} id="application-guide" className={styles.section}>
+    <section ref={sectionRef} className={styles.section}>
       <motion.div
         className={styles.header}
         initial={{ opacity: 0, y: 20 }}

@@ -23,6 +23,11 @@
   scroll-margin-top: 100px;
   overflow: hidden;
   scroll-snap-align: start;
+  margin-bottom: 110px; /* Space between subsections */
+}
+
+.section:last-child {
+  margin-bottom: 0;
 }
 
 /* First section doesn't need top spacing */
