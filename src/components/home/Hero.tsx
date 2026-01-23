@@ -30,7 +30,8 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    if (videoRef.current && videoRef.current.readyState >= 3) {
+    // Check if video is already playing (e.g. from cache)
+    if (videoRef.current && !videoRef.current.paused && !videoRef.current.ended && videoRef.current.readyState > 2) {
       setIsVideoReady(true)
     }
   }, [])
@@ -45,10 +46,10 @@ export default function Hero() {
           loop
           muted
           playsInline
+          preload="auto"
           className={styles.heroVideo}
-          poster="/images/hero-bg-final.png"
-          onCanPlay={() => setIsVideoReady(true)}
-          onLoadedData={() => setIsVideoReady(true)}
+          poster="/images/hero-bg-final-optimized.jpg"
+          onPlaying={() => setIsVideoReady(true)}
           onError={() => setIsVideoReady(true)} // Fallback to show content if video fails
         >
           <source src="/videos/hero_background_optimized.mp4" type="video/mp4" />
