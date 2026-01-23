@@ -17,7 +17,7 @@ export default function NextSectionIndicator() {
         const subsections = currentSection.subsections || []
 
         // Find current subsection index within current section
-        const currentSubIndex = activeSubsection 
+        const currentSubIndex = activeSubsection
             ? subsections.findIndex(s => s.id === activeSubsection)
             : -1
 
@@ -51,7 +51,7 @@ export default function NextSectionIndicator() {
     // Hide indicator when on hero sections (Bevezető)
     if (activeSection === 'hero') return null
 
-    const displayTitle = nextInfo.subsectionName 
+    const displayTitle = nextInfo.subsectionName
         ? `${nextInfo.sectionName} · ${nextInfo.subsectionName}`
         : nextInfo.sectionName
 
@@ -77,12 +77,12 @@ export default function NextSectionIndicator() {
                     <div className={styles.indicatorText}>
                         <span className={styles.indicatorLabel}>Görgess lejjebb</span>
                         <div className={styles.indicatorTitleWrapper}>
-                            <span className={styles.indicatorSection}>{nextInfo.sectionName}</span>
+                            <span className={styles.indicatorSection}>
+                                {nextInfo.sectionName}
+                                {nextInfo.subsectionName && <span className={styles.indicatorDivider}> ›</span>}
+                            </span>
                             {nextInfo.subsectionName && (
-                                <>
-                                    <span className={styles.indicatorDivider}>›</span>
-                                    <span className={styles.indicatorSubsection}>{nextInfo.subsectionName}</span>
-                                </>
+                                <span className={styles.indicatorSubsection}>{nextInfo.subsectionName}</span>
                             )}
                         </div>
                     </div>
