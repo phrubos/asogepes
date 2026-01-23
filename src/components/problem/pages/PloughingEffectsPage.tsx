@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Activity, Leaf, Thermometer, AlertTriangle, ArrowDownToLine, Shuffle, TrendingUp, Quote } from 'lucide-react'
+import { Activity, Leaf, Thermometer, AlertTriangle, ArrowDownToLine, Shuffle, TrendingUp, Quote, ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import { ploughingProblems } from '@/lib/data'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
@@ -89,6 +89,39 @@ function CollapsiblePloughingCard({
                             {title}
                         </h3>
                     </div>
+
+                    {/* Pulsating Arrow for usability - ONLY when closed */}
+                    {!isOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            style={{
+                                width: '32px',
+                                height: '32px',
+                                borderRadius: '50%',
+                                background: 'linear-gradient(180deg, rgba(255,255,255,0.05), rgba(212, 168, 75, 0.1))',
+                                border: '1px solid rgba(212, 168, 75, 0.3)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                boxShadow: '0 0 15px rgba(212, 168, 75, 0.1)',
+                            }}
+                        >
+                            <motion.div
+                                animate={{
+                                    y: [2, 5, 2],
+                                    opacity: [0.5, 1, 0.5]
+                                }}
+                                transition={{
+                                    duration: 2,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }}
+                            >
+                                <ChevronDown size={18} color="var(--color-gold)" />
+                            </motion.div>
+                        </motion.div>
+                    )}
                 </div>
 
                 {/* Content - Collapsible (Relative Flow) */}
@@ -112,8 +145,8 @@ function CollapsiblePloughingCard({
                         </motion.div>
                     )}
                 </AnimatePresence>
-            </motion.div>
-        </div>
+            </motion.div >
+        </div >
     )
 }
 

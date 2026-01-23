@@ -1,7 +1,7 @@
 
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion'
-import { Droplet, Weight, Layers, Plus, Minus, Play, Pause, Info, Sprout, Droplets } from 'lucide-react'
+import { Droplet, Weight, Layers, Plus, Minus, Play, Pause, Info, Sprout, Droplets, ChevronDown } from 'lucide-react'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
 
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
@@ -439,6 +439,39 @@ function CollapsibleChallengeCard({
                         }}>
                             {title}
                         </h3>
+
+                        {/* Pulsating Arrow for usability - ONLY when closed */}
+                        {!isOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                style={{
+                                    width: '32px',
+                                    height: '32px',
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(180deg, rgba(255,255,255,0.05), rgba(212, 168, 75, 0.1))',
+                                    border: '1px solid rgba(212, 168, 75, 0.3)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    boxShadow: '0 0 15px rgba(212, 168, 75, 0.1)',
+                                }}
+                            >
+                                <motion.div
+                                    animate={{
+                                        y: [2, 5, 2],
+                                        opacity: [0.5, 1, 0.5]
+                                    }}
+                                    transition={{
+                                        duration: 2,
+                                        repeat: Infinity,
+                                        ease: "easeInOut"
+                                    }}
+                                >
+                                    <ChevronDown size={18} color="var(--color-gold)" />
+                                </motion.div>
+                            </motion.div>
+                        )}
                     </div>
 
                     {/* Content - Collapsible */}
@@ -764,30 +797,33 @@ export default function CompactionStatsPage() {
                             progress={progress}
                             onProgressChange={(val) => {
                                 progress.set(val)
-                                setIsPlaying(false) // Stop auto-loop on manual interaction
+                                // Remove auto-stop here to allow "scrubbing" without killing ability to resume
                             }}
                             onInteractionStart={() => setIsPlaying(false)}
+                            onInteractionEnd={() => setIsPlaying(true)}
                         />
 
-                        <motion.button
-                            onClick={togglePlay}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            style={{
-                                position: 'absolute',
-                                top: '15px',
-                                left: '15px',
-                                zIndex: 20,
-                                background: 'rgba(255, 255, 255, 0.2)',
-                                color: 'white', border: 'none', borderRadius: '50%',
-                                width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                cursor: 'pointer',
-                                backdropFilter: 'blur(4px)',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-                            }}
-                        >
-                            {isPlaying ? <Pause size={16} fill="white" /> : <Play size={16} fill="white" />}
-                        </motion.button>
+                        <div style={{
+                            position: 'absolute',
+                            top: '15px',
+                            left: '20px',
+                            zIndex: 20,
+                            maxWidth: '80%',
+                            color: 'rgba(255, 255, 255, 0.95)',
+                            fontSize: '0.9rem',
+                            fontWeight: 500,
+                            lineHeight: 1.5,
+                            pointerEvents: 'none',
+                            background: 'rgba(20, 20, 20, 0.2)',
+                            backdropFilter: 'blur(6px)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '12px',
+                            padding: '10px 16px',
+                            boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+                        }}>
+                            Rendszeres öntözés, folyamatos tömörödés,<br />
+                            amit a penetrométer jól mutat.
+                        </div>
                     </div>
                 </motion.div >
 
@@ -817,7 +853,7 @@ export default function CompactionStatsPage() {
                                 isAnyOpen={expandedCardId !== null}
                             >
                                 <div className={styles.itemContent}>
-                                    <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>Intenzív öntözéses kertészeti kultúrákban 4-7 naponként 20-40 mm víz kijuttatása történik, ami fokozatosan tömöríti a talajt.</p>
+                                    <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>Intenzíven öntözött kertészeti kultúrákban 4-7 naponként 20-40 mm víz kijuttatása történik, ami fokozatosan tömöríti a talajt.</p>
                                     <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-gold)', marginTop: '0.75rem' }}>350-450 mm/szezon</p>
                                 </div>
                             </CollapsibleChallengeCard>

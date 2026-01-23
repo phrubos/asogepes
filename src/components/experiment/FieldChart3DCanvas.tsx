@@ -324,6 +324,13 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             numCtx.textBaseline = 'middle'
             numCtx.fillText(parcel.num, 48, 28)
 
+            // Add star superscript for specific parcels
+            if (['I.', 'VI.', 'VII.'].includes(parcel.num)) {
+                numCtx.fillStyle = '#d4a84b'
+                numCtx.font = 'bold 16px system-ui, sans-serif'
+                numCtx.fillText('★', 82, 14) // Top right corner
+            }
+
             const numTexture = new THREE.CanvasTexture(numCanvas)
             const numSpriteMaterial = new THREE.SpriteMaterial({ map: numTexture })
             const numSprite = new THREE.Sprite(numSpriteMaterial)
@@ -593,37 +600,39 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
                 <Rotate3d size={24} color="#d4a84b" style={{ opacity: 0.9 }} />
             </div>
 
-            {/* Info Toggle Button - Top Left */}
-            <button
-                onClick={() => setShowInfo(!showInfo)}
-                style={{
-                    position: 'absolute',
-                    top: '20px',
-                    left: '20px',
-                    zIndex: 20,
-                    background: 'rgba(26, 23, 20, 0.8)',
-                    backdropFilter: 'blur(4px)',
-                    border: '1px solid rgba(212, 168, 75, 0.3)',
-                    borderRadius: '50%',
-                    width: '40px',
-                    height: '40px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#d4a84b',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
-                }}
-                title={showInfo ? "Rejtsd el az információkat" : "Mutasd az információkat"}
-            >
-                {showInfo ? <X size={20} /> : <Info size={20} />}
-            </button>
+            {/* Info Toggle Button - HIDE in Fullscreen */}
+            {!isFullscreen && (
+                <button
+                    onClick={() => setShowInfo(!showInfo)}
+                    style={{
+                        position: 'absolute',
+                        top: '20px',
+                        left: '20px',
+                        zIndex: 20,
+                        background: 'rgba(26, 23, 20, 0.8)',
+                        backdropFilter: 'blur(4px)',
+                        border: '1px solid rgba(212, 168, 75, 0.3)',
+                        borderRadius: '50%',
+                        width: '40px',
+                        height: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#d4a84b',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+                    }}
+                    title={showInfo ? "Rejtsd el az információkat" : "Mutasd az információkat"}
+                >
+                    {showInfo ? <X size={20} /> : <Info size={20} />}
+                </button>
+            )}
 
             {/* Machine Toggle Button REMOVED */}
 
-            {/* Legend overlay matching 2D design - Toggled */}
-            {showInfo && (
+            {/* Legend overlay matching 2D design - Toggled - HIDDEN in Fullscreen */}
+            {(!isFullscreen && showInfo) && (
                 <div style={{
                     position: 'absolute',
                     bottom: '20px',

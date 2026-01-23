@@ -64,7 +64,7 @@ export default function MethodologyPage() {
               </div>
             </div>
 
-            <div className={styles.dashboardLabel}>Műszerfal</div>
+
           </div>
         </motion.div>
 

@@ -132,6 +132,20 @@
   color: #81C784;
 }
 
+.pillBadge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: rgba(212, 168, 75, 0.1);
+  border: 1px solid rgba(212, 168, 75, 0.3);
+  border-radius: 100px;
+  color: var(--color-gold);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  backdrop-filter: blur(4px);
+}
+
 /* Visual Container */
 .visualContainer {
   padding: var(--space-sm);
@@ -201,11 +215,12 @@
 
 .penetrometerLabel {
   position: absolute;
-  top: -16px;
+  top: -20px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
 }
 
@@ -248,8 +263,9 @@
 
 .depthText {
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
 }
 

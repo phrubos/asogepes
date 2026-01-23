@@ -51,7 +51,7 @@ export default function Hero() {
           onLoadedData={() => setIsVideoReady(true)}
           onError={() => setIsVideoReady(true)} // Fallback to show content if video fails
         >
-          <source src="/videos/hero_background_8.mp4" type="video/mp4" />
+          <source src="/videos/hero_background_optimized.mp4" type="video/mp4" />
           {/* Fallback for browsers that don't support video */}
         </video>
         <div className={styles.heroOverlay}></div>

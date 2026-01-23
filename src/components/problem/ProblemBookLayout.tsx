@@ -60,7 +60,7 @@ export default function ProblemBookLayout() {
             id: 'cultivator-comparison',
             section: 'Kultivátor korlátai',
             sectionIndex: 2,
-            title: 'Összehasonlítás',
+            title: 'Kultivátorozott vs. ásógépezett talaj',
             component: <PageContent><CultivatorCombinedPage /></PageContent>,
             viewGroupId: 'cultivator-group',
             scrollToId: 'cultivator-comparison'

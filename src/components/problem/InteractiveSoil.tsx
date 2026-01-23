@@ -7,9 +7,10 @@ interface InteractiveSoilProps {
   progress: number | MotionValue<number> // 0.0 to 4.0
   onProgressChange?: (val: number) => void
   onInteractionStart?: () => void
+  onInteractionEnd?: () => void
 }
 
-export default function InteractiveSoil({ progress, onProgressChange, onInteractionStart }: InteractiveSoilProps) {
+export default function InteractiveSoil({ progress, onProgressChange, onInteractionStart, onInteractionEnd }: InteractiveSoilProps) {
   const progressMV = useMotionValue(0)
   const activeProgress = (typeof progress === 'number') ? progressMV : progress
 
@@ -545,6 +546,7 @@ export default function InteractiveSoil({ progress, onProgressChange, onInteract
                 }
               }}
               onPointerUp={(e) => {
+                if (onInteractionEnd) onInteractionEnd();
                 e.currentTarget.releasePointerCapture(e.pointerId);
               }}
             />

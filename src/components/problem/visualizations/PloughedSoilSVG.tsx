@@ -103,8 +103,6 @@ const PloughedSoilSVG = () => {
         return items.sort((a, b) => a.cy - b.cy)
     }, [])
 
-    // Water Pockets Removed in favor of Band
-
     return (
         <svg viewBox="0 0 300 150" style={{ width: '100%', height: 'auto', borderRadius: '8px', overflow: 'hidden' }} preserveAspectRatio="xMidYMid slice">
             <defs>
@@ -135,6 +133,28 @@ const PloughedSoilSVG = () => {
                     />
                 )
             })}
+
+            {/* Falling Water Drops - Stagnating at the Pan */}
+            {Array.from({ length: 8 }).map((_, i) => (
+                <motion.circle
+                    key={`drop-${i}`}
+                    cx={30 + i * 35} // Spread across width
+                    r={2}
+                    fill="#64B5F6"
+                    initial={{ cy: 0, opacity: 0 }}
+                    animate={{
+                        cy: [0, 112], // Fall to just above the pan (116)
+                        opacity: [0, 0.8, 0.8, 0] // Fade out after stopping
+                    }}
+                    transition={{
+                        duration: 3 + Math.random(), // Varied speed
+                        delay: Math.random() * 2,
+                        repeat: Infinity,
+                        ease: "easeIn", // Accelerate down
+                        times: [0, 0.8, 0.9, 1] // Spend time "sitting" at the bottom
+                    }}
+                />
+            ))}
 
             {/* Water Accumulation Band (Pulsating Blue Layer) */}
             <motion.rect

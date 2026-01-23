@@ -486,7 +486,7 @@
 /* ===========================================
    125% SCALING FIX (LAPTOP OPTIMIZATION)
    =========================================== */
-@media (max-height: 900px) {
+@media (max-height: 1100px) {
   .compactSection {
     gap: 0.5rem;
     padding-bottom: 0.5rem;
@@ -555,12 +555,12 @@
      Now we ensure the image doesn't get cropped awkwardly.
   */
   .machineImage {
-    object-fit: contain;
-    /* Ensure full image is visible without cropping */
+    object-fit: cover;
+    object-position: center;
+    /* Crop height to fit container as requested */
     max-height: 100%;
-    width: auto;
-    /* Let width adjust to maintain aspect ratio */
-    max-width: 100%;
+    width: 100%;
+    /* Fill width, crop height */
     margin: 0 auto;
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
     /* Smaller shadow */

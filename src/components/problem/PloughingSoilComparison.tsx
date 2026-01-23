@@ -296,7 +296,11 @@ export default function PloughingSoilComparison() {
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
     >
-      {/* Fejléc REMOVED */}
+      <motion.div className={styles.header} variants={itemVariants}>
+        <span className={styles.pillBadge}>
+          TALAJSZELVÉNY ÖSSZEHASONLÍTÁS
+        </span>
+      </motion.div>
 
       {/* Összehasonlító vizualizáció */}
       <motion.div className={styles.comparisonGrid} variants={itemVariants} style={{ gap: '1rem', flex: 1, minHeight: 0 }}>

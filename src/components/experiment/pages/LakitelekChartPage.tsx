@@ -234,6 +234,28 @@ export default function LakitelekChartPage() {
                   <span className={styles.fullscreenSubtitle}>Részletes elemzés és összehasonlítás</span>
                 </div>
               </div>
+
+              {/* Fullscreen Legend - Centered */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '24px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                padding: '6px 16px',
+                borderRadius: '100px',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                margin: '0 32px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+                  <span style={{ width: '12px', height: '12px', background: 'linear-gradient(180deg, rgba(129, 199, 132, 0.8) 0%, rgba(74, 103, 65, 0.9) 100%)', borderRadius: '3px' }}></span>
+                  <span>Optimális szerkezetű talaj mélysége</span>
+                </div>
+                <div style={{ width: '1px', height: '14px', background: 'rgba(255, 255, 255, 0.15)' }}></div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+                  <span style={{ color: '#d4a84b', fontSize: '14px', lineHeight: 1 }}>★</span>
+                  <span>Legnagyobb hatékonyság</span>
+                </div>
+              </div>
               <div style={{ display: 'flex', gap: '16px' }}>
                 <motion.button
                   className={styles.actionButton}
