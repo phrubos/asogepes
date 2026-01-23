@@ -277,7 +277,7 @@ function CardWithHover({
       </div>
 
       {/* Hover CTA sliding up */}
-      <Link href="/kutatas?page=lakitelek-info" style={{ display: 'contents' }}>
+      <Link href="/kutatas?section=lakitelek" style={{ display: 'contents' }}>
         <motion.div
           className={styles.hoverCta}
           variants={ctaVariants}

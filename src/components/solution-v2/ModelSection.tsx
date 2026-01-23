@@ -150,7 +150,7 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
             </div>
 
             <div className={styles.chartRow}>
-              <Link href="/kutatas?page=lakitelek-info" style={{ display: 'block' }}>
+              <Link href="/kutatas?section=lakitelek" style={{ display: 'block' }}>
                 <motion.div
                   className={styles.chartVisual}
                   whileHover="hover"
@@ -170,7 +170,7 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
                 </motion.div>
               </Link>
 
-              <Link href="/kutatas?page=lakitelek-info" className={styles.detailsLink}>
+              <Link href="/kutatas?section=lakitelek" className={styles.detailsLink}>
                 Részletek <ArrowRight size={16} />
               </Link>
             </div>
