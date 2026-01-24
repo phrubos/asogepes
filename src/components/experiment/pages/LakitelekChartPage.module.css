@@ -436,6 +436,7 @@
   background: rgba(239, 83, 80, 0.15);
   border-color: rgba(239, 83, 80, 0.3);
   color: #ef5350;
+  transform: rotate(90deg);
 }
 
 /* Fullscreen Content - Split Layout */
@@ -464,14 +465,20 @@
   transition: all 0.3s ease;
 }
 
-/* Right: Results Panel - Flexible width handled by JS animation */
+/* Right: Results Panel - Absolute Layout to prevent canvas resize */
 .fullscreenSidePanel {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
   overflow: hidden;
-  flex-shrink: 0;
-  /* Width and Margin controlled by inline motion styles */
+  position: absolute;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  bottom: var(--space-lg);
+  width: 400px;
+  z-index: 20;
+  pointer-events: auto;
+  /* Width and Margin controlled by inline motion styles - NO, now fixed width, animates x transform */
 }
 
 /* Results Panel reused styles */

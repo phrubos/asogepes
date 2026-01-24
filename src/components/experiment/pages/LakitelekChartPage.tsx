@@ -100,31 +100,7 @@ export default function LakitelekChartPage() {
     </div>
   )
 
-  // Common Conclusion Box
-  const ConclusionContent = () => (
-    conclusions && (
-      <motion.div
-        className={styles.conclusionBox}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7 }}
-      >
-        <div className={styles.conclusionHeader}>
-          <Award size={18} />
-          <span>Következtetés</span>
-        </div>
-        <p className={styles.conclusionText}>{conclusions.summary}</p>
-        <div className={styles.conclusionBestList}>
-          <span className={styles.conclusionBestLabel}>Legnagyobb hatékonyság:</span>
-          <div className={styles.conclusionBestItems}>
-            {conclusions.bestResults.map((num) => (
-              <span key={num} className={styles.conclusionBestItem}>{num}</span>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-    )
-  )
+
 
   return (
     <>
@@ -142,7 +118,7 @@ export default function LakitelekChartPage() {
               <span>Lakitelek</span>
             </div>
             <div className={styles.titleGroup}>
-              <h3 className={styles.headerTitle}>A laza talajréteg mélységének változása 3 hónap alatt</h3>
+              <h3 className={styles.headerTitle}>A laza talajréteg mélységének változása 4 hónap alatt</h3>
               <span className={styles.headerSubtitle}>7 művelési kombináció összehasonlítása</span>
             </div>
           </div>
@@ -287,13 +263,12 @@ export default function LakitelekChartPage() {
                 {showResults && (
                   <motion.div
                     className={styles.fullscreenSidePanel}
-                    initial={{ width: 0, opacity: 0, marginLeft: 0 }}
-                    animate={{ width: 400, opacity: 1, marginLeft: 20 }}
-                    exit={{ width: 0, opacity: 0, marginLeft: 0 }}
+                    initial={{ x: 420, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: 420, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   >
                     <ResultsContent />
-                    <ConclusionContent />
                   </motion.div>
                 )}
               </AnimatePresence>

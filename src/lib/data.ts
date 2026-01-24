@@ -35,7 +35,7 @@ export const locations = {
     },
     evaluations: {
       control: 'A szerkezet egyenletlen, a kultivátorkapák között sekély a laza réteg, a 4. hónapra már 6 cm-től tömörödött a talaj.',
-      spade: 'A laza talajszerkezet 3 hónapig stabil maradt, a 4. hónapra 11 cm mélységig még mindig optimális a talaj.',
+      spade: 'A laza talajszerkezet 3 hónapig stabil maradt, a 4. hónapra 11 cm mélységig még mindig optimális szerkezetű a talaj.',
       summary: 'A tenyészidő során az öntözés hatására erőteljesen tömörödik a talaj.',
     },
     highlight: {

@@ -267,7 +267,6 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
         <div className={styles.summaryCards}>
           <motion.div
             className={`${styles.summaryItem} ${styles.summaryControl}`}
-            whileHover={{ scale: 1.02, y: -2 }}
           >
             <div className={styles.summaryHeader}>
               <span className={styles.summaryDot} />
@@ -280,7 +279,6 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
 
           <motion.div
             className={`${styles.summaryItem} ${styles.summarySpade}`}
-            whileHover={{ scale: 1.02, y: -2 }}
           >
             <div className={styles.summaryHeader}>
               <span className={styles.summaryDot} />
