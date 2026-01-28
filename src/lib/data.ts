@@ -42,6 +42,20 @@ export const locations = {
       title: 'Látható különbség',
       text: 'A júniusi helyszíni bejáráson szemmel látható volt: az ásógépezett parcellán jelentősen kevesebb gyom fejlődött, mint a hagyományos művelésű területen.',
     },
+    photos: [
+      {
+        src: '/images/kutatás_pics/Szentkirály/01_szentkirály_termal_0307.png',
+        alt: 'Szentkirály Hőkamera - Március 7.',
+        title: 'Márciusi Hőtérkép',
+        description: 'A kora tavaszi hőtérkép felvétel a talajfelszín hőmérsékleti viszonyait tükrözi.'
+      },
+      {
+        src: '/images/kutatás_pics/Szentkirály/02_szentkirály_ortho_0307.png',
+        alt: 'Szentkirály Ortofotó - Március 7.',
+        title: 'Márciusi Állapot (Ortofotó)',
+        description: 'A kísérleti terület madártávlatból március elején.'
+      }
+    ]
   },
   kecskemet: {
     name: 'Kecskemét-Borbás',
@@ -80,6 +94,44 @@ export const locations = {
       title: 'Szembetűnő növekedési különbség',
       text: 'A júniusi fotón jól látható: a kép bal oldalára eső sorok a kontroll, a középső és a tőle jobbra eső sorok az ásógépezett parcellán fejlődtek. A lombtömeg és a hajtáshossz átlagosan 20%-kal nagyobb az ásógépezett területen.',
     },
+    photos: [
+      {
+        src: '/images/kutatás_pics/kecskemet_borbas/01_kecskemét_0516_ortho.png',
+        alt: 'Kecskemét Ortofotó - Május 16.',
+        title: 'Májusi Állapot (Ortofotó)',
+        description: 'A kísérleti terület madártávlatból május közepén. A parcellák közötti különbségek már ebben a korai stádiumban is kezdenek kirajzolódni.'
+      },
+      {
+        src: '/images/kutatás_pics/kecskemet_borbas/02_kecskemét_0516_termal_cut.png',
+        alt: 'Kecskemét Hőkamera - Május 16.',
+        title: 'Májusi Hőtérkép',
+        description: 'A hőkamerás felvétel mutatja a növényállomány és a talajfelszín hőmérsékleti különbségeit. A sötétebb (hidegebb) területek aktívabb párologtatást jeleznek.'
+      },
+      {
+        src: '/images/kutatás_pics/kecskemet_borbas/03_detail_termal_kecskemet_0516.jpg',
+        alt: 'Kecskemét Hőkamera Részlet',
+        title: 'Hőtérkép Részlet',
+        description: 'Nagyított nézet a hőtérképről, amely pontosabban mutatja az egyes művelési sávok közötti mikroklimatikus eltéréseket.'
+      },
+      {
+        src: '/images/kutatás_pics/kecskemet_borbas/04_kecskemét_0619_ortho.png',
+        alt: 'Kecskemét Ortofotó - Június 19.',
+        title: 'Júniusi Állapot (Ortofotó)',
+        description: 'Június közepére a növényállomány jelentős fejlődésen ment keresztül. A kezelések közötti különbségek szabad szemmel is jól láthatóvá váltak.'
+      },
+      {
+        src: '/images/kutatás_pics/kecskemet_borbas/05_kecskemét_0619_termal.png',
+        alt: 'Kecskemét Hőkamera - Június 19.',
+        title: 'Júniusi Hőtérkép',
+        description: 'A nyári hőségben készült hőkamerás felvétel kiemeli a vízháztartásbeli különbségeket. Az ásógépezett területek alacsonyabb hőmérséklete jobb vízellátottságra utal.'
+      },
+      {
+        src: '/images/kutatás_pics/kecskemet_borbas/06_kecskemét_0619_ortho_zoomed.png',
+        alt: 'Kecskemét Ortofotó Zoom - Június 19.',
+        title: 'Részletes Növényállomány',
+        description: 'Nagyított felvétel a júniusi állapotról. A lombtömeg sűrűsége és a sorok záródása egyértelműen mutatja a technológiai hatásokat.'
+      }
+    ]
   },
   lakitelek: {
     name: 'Lakitelek',
@@ -174,6 +226,32 @@ export const locations = {
       summary: 'Ezen a talajon önmagában csak a mélyásógép javasolható. A kombinációk közül a szántott és normál mélységben ásógépezett variációk bizonyultak a legtartósabbnak.',
       bestResults: ['I.', 'VI.', 'VII.'],
     },
+    photos: [
+      {
+        src: '/images/kutatás_pics/Lakitelek/01_Lakitelek_0502_ortho.png',
+        alt: 'Lakitelek Ortofotó - Május 2.',
+        title: 'Májusi Állapot (Ortofotó)',
+        description: 'A kísérleti terület madártávlatból május elején. A különböző talajművelési változatok hatása már ebben a korai stádiumban is kezd megmutatkozni.'
+      },
+      {
+        src: '/images/kutatás_pics/Lakitelek/02_Lakitelek_0502_termal.png',
+        alt: 'Lakitelek Hőkamera - Május 2.',
+        title: 'Májusi Hőtérkép',
+        description: 'A tavaszi hőtérkép felvétel a talajfelszín és a fiatal állomány hőmérsékleti viszonyait tükrözi, utalva a vízháztartásbeli eltérésekre.'
+      },
+      {
+        src: '/images/kutatás_pics/Lakitelek/03_Lakitelek_0606_ortho.png',
+        alt: 'Lakitelek Ortofotó - Június 6.',
+        title: 'Júniusi Állapot (Ortofotó)',
+        description: 'Nyár elejére a növényállomány jelentős fejlődésen ment keresztül. A parcellák közötti különbségek szabad szemmel is jól láthatóvá váltak.'
+      },
+      {
+        src: '/images/kutatás_pics/Lakitelek/04_Lakitelek_0606_termal.png',
+        alt: 'Lakitelek Hőkamera - Június 6.',
+        title: 'Júniusi Hőtérkép',
+        description: 'A júniusi hőkamerás felvétel kiemeli a parcellák közötti mikroklimatikus különbségeket. A hűvösebb területek jobb vízellátottságot és intenzívebb párologtatást jeleznek.'
+      }
+    ]
   },
 }
 

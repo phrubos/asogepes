@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
 import { locations } from '@/lib/data'
 import styles from './KecskemétPhotosPage.module.css'
+import PhotoViewer from '@/components/shared/PhotoViewer/PhotoViewer'
 
 const data = locations.kecskemet
 
@@ -25,31 +26,15 @@ export default function KecskemétPhotosPage() {
             </motion.div>
 
             {/* Content */}
-            {data.highlight && (
-                <motion.div
-                    className={styles.highlight}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                >
-                    <div className={styles.highlightImage}>
-                        <div className={styles.imagePlaceholder}>
-                            <span>Összehasonlító fotó</span>
-                            <span className={styles.placeholderSub}>Növekedési különbség</span>
-                        </div>
-                    </div>
-                    {/* Description */}
-                    <motion.div
-                        className={styles.highlightContent}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 0.3 }}
-                    >
-                        <h4 className={styles.highlightTitle}>{data.highlight.title}</h4>
-                        <p className={styles.highlightText}>{data.highlight.text}</p>
-                    </motion.div>
-                </motion.div>
-            )}
+            <motion.div
+                className={styles.content}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+            >
+                {/* @ts-expect-error - photos is newly added */}
+                <PhotoViewer items={data.photos || []} />
+            </motion.div>
         </div>
     )
 }

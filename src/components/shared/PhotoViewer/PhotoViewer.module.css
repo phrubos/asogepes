@@ -1,0 +1,335 @@
+/* PhotoViewer.module.css */
+
+/* Core Layout */
+.container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+/* Image Container */
+.imageWrapper {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    /* Compact view - limit height so description fits */
+    max-height: 45vh;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    /* Rounded to match other components */
+    border-radius: 12px;
+    cursor: zoom-in;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+.imageWrapper:hover {
+    border-color: rgba(212, 168, 75, 0.4);
+    /* Gold hint on hover */
+}
+
+.image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+/* Navigation Buttons (Overlay) */
+.navButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    /* Slightly rounded buttons */
+    width: 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+}
+
+.navButton:hover {
+    background: rgba(212, 168, 75, 0.2);
+    /* Gold hover */
+    border-color: rgba(212, 168, 75, 0.6);
+    color: var(--color-gold, #d4a84b);
+}
+
+.prevButton {
+    left: 1rem;
+}
+
+.nextButton {
+    right: 1rem;
+}
+
+/* Indicators */
+.indicators {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.indicator {
+    width: 30px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    transition: background 0.3s ease;
+}
+
+.activeIndicator {
+    background: var(--color-gold, #d4a84b);
+    /* Gold active indicator */
+}
+
+/* Description Area */
+.descriptionArea {
+    margin-top: 1rem;
+    padding: 1rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    /* Split layout: Title Left, Desc Right */
+    display: grid;
+    grid-template-columns: 35% 1fr;
+    gap: 2rem;
+    align-items: baseline;
+    text-align: left;
+}
+
+.textContainer {
+    display: contents;
+    /* Allows children to use grid */
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-gold, #d4a84b);
+    margin: 0;
+    font-family: var(--font-display, sans-serif);
+    line-height: 1.4;
+}
+
+.description {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    /* Ensure high contrast on dark bg */
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Responsive Text */
+@media (max-width: 768px) {
+    .descriptionArea {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+}
+
+/* Modal Styles */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /* Fullscreen, cover sidebar */
+    z-index: 9999;
+    /* Highest priority */
+    background: rgba(10, 8, 6, 0.98);
+    /* Methodology Lightbox background */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overscroll-behavior: contain;
+    /* Prevent scroll chaining to parent */
+    touch-action: none;
+    /* Disable browser handling of gestures */
+}
+
+.modalContent {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    /* Image Area | Text Panel */
+    gap: 0;
+    background: transparent;
+    border: none;
+    overflow: hidden;
+}
+
+/* Modal Image Area */
+.modalImageArea {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* No border, clean separation */
+    padding: 0;
+    /* Let image fill comfortably */
+    overflow: hidden;
+}
+
+.modalImage {
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    /* Lifted effect */
+}
+
+/* Modal Info Panel */
+.modalInfoPanel {
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    justify-content: center;
+    background: rgba(10, 8, 6, 0.95);
+    /* distinct background for text panel */
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.modalHeader {
+    margin-bottom: 2rem;
+}
+
+.modalTitle {
+    font-size: 1.5rem;
+    /* Larger title */
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--color-gold, #d4a84b);
+    font-family: var(--font-display);
+}
+
+.modalMeta {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: var(--font-mono, monospace);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.modalDescription {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.9);
+    /* High contrast */
+    font-weight: 300;
+}
+
+/* Zoom Controls */
+.zoomControls {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    z-index: 20;
+}
+
+.zoomBtn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.zoomBtn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.zoomBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.zoomLevel {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    min-width: 40px;
+    text-align: center;
+}
+
+/* Close/Nav Button refinements for fullscreen */
+.closeButton {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+    z-index: 20;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.closeButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .modalContent {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+        gap: 1rem;
+        height: auto;
+        max-height: 95vh;
+    }
+
+    .modalInfoPanel {
+        padding: 1.5rem;
+        background: transparent;
+        border: none;
+    }
+}

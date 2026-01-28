@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
 import { locations } from '@/lib/data'
 import styles from './SzentkirályPhotosPage.module.css'
+import PhotoViewer from '@/components/shared/PhotoViewer/PhotoViewer'
 
 const data = locations.szentkiraly
 
@@ -25,22 +26,15 @@ export default function SzentkirályPhotosPage() {
             </motion.div>
 
             {/* Content */}
-            {data.highlight && (
-                <motion.div
-                    className={styles.highlight}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                >
-                    <div className={styles.highlightImage}>
-                        <div className={styles.imagePlaceholder}>
-                            <span>Összehasonlító fotó</span>
-                            <span className={styles.placeholderSub}>Gyomborítottság különbsége</span>
-                        </div>
-                    </div>
-                    {/* Text content removed as requested */}
-                </motion.div>
-            )}
+            <motion.div
+                className={styles.content}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+            >
+                {/* @ts-expect-error - photos is newly added in data.ts */}
+                <PhotoViewer items={data.photos || []} />
+            </motion.div>
         </div>
     )
 }

@@ -197,12 +197,11 @@
     min-width: auto;
 }
 
-.stat:hover {
+/* .stat:hover {
     background: transparent;
     border-color: transparent;
-    /* Removed translateY transform for smoother feel */
     opacity: 0.8;
-}
+} */
 
 .statNumber {
     display: block;

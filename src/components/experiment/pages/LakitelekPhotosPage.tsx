@@ -2,7 +2,11 @@
 
 import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
+import { locations } from '@/lib/data'
 import styles from './LakitelekPhotosPage.module.css'
+import PhotoViewer from '@/components/shared/PhotoViewer/PhotoViewer'
+
+const data = locations.lakitelek
 
 export default function LakitelekPhotosPage() {
   return (
@@ -21,47 +25,16 @@ export default function LakitelekPhotosPage() {
         <h3 className={styles.headerTitle}>Fotók</h3>
       </motion.div>
 
-      {/* Photos Grid */}
+      {/* Content */}
       <motion.div
-        className={styles.photosGrid}
+        className={styles.content}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
       >
-        {/* Photo 1 - Main comparison */}
-        <div className={styles.photoMain}>
-          <div className={styles.imagePlaceholder}>
-            <span>Összehasonlító fotó</span>
-            <span className={styles.placeholderSub}>7 parcella felülnézetből</span>
-          </div>
-        </div>
-
-        {/* Photo 2 - Detail */}
-        <div className={styles.photoSecondary}>
-          <div className={styles.imagePlaceholder}>
-            <span>Részlet fotó</span>
-            <span className={styles.placeholderSub}>Növényfejlődés különbsége</span>
-          </div>
-        </div>
-
-        {/* Photo 3 - Detail */}
-        <div className={styles.photoSecondary}>
-          <div className={styles.imagePlaceholder}>
-            <span>Talajmintázás</span>
-            <span className={styles.placeholderSub}>Penetrométeres mérés</span>
-          </div>
-        </div>
+        {/* @ts-expect-error - photos is newly added in data.ts */}
+        <PhotoViewer items={data.photos || []} />
       </motion.div>
-
-      {/* Caption */}
-      <motion.p
-        className={styles.caption}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
-        A fotók a 2025-ös tenyészidőszak során készültek a lakiteleki kísérleti parcellán.
-      </motion.p>
     </div>
   )
 }
