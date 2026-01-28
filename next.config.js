@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   serverExternalPackages: [],
+  images: {
+    formats: ['image/avif', 'image/webp'],
+  },
   // Suppress hydration mismatch warnings for browser extensions
   onDemandEntries: {
     maxInactiveAge: 25 * 1000,
