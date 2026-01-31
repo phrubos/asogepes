@@ -18,15 +18,21 @@ interface ThermalOverlay {
         label: string
         value: string
         hideRing?: boolean
+        alwaysVisible?: boolean
     }[]
     lines?: {
         y: number
         label?: string
+        xStart?: number // Percentage
+        xEnd?: number   // Percentage
+        color?: string
+        alwaysVisible?: boolean
     }[]
     verticalLines?: {
         x: number
         label?: string
         style?: 'dashed' | 'solid'
+        alwaysVisible?: boolean
     }[]
     arrows?: {
         x: number
@@ -34,6 +40,7 @@ interface ThermalOverlay {
         direction: 'left' | 'right'
         label: string
         subLabel?: string
+        alwaysVisible?: boolean
     }[]
 }
 
@@ -49,8 +56,11 @@ interface BeforeAfterSliderProps {
     watermark?: {
         lines: string[]
     }
+    onSliderChange?: (position: number) => void
+    onLoad?: () => void
     objectFit?: React.CSSProperties['objectFit']
     sizes?: string
+    initialSliderPosition?: number
 }
 
 export default function BeforeAfterSlider({
@@ -63,11 +73,37 @@ export default function BeforeAfterSlider({
     overlays,
     leftOverlays,
     watermark,
+    onSliderChange,
+    onLoad,
     objectFit,
-    sizes = '100vw'
+    sizes = '100vw',
+    initialSliderPosition = 50
 }: BeforeAfterSliderProps) {
-    const [sliderPosition, setSliderPosition] = useState(50) // Percentage of container
+    const [sliderPosition, setSliderPosition] = useState(initialSliderPosition) // Percentage of container
     const [isDragging, setIsDragging] = useState(false)
+    const loadedImagesRef = useRef(new Set<string>())
+
+    const handleImageLoaded = useCallback((src: string) => {
+        if (!onLoad) return
+
+        loadedImagesRef.current.add(src)
+        // Check if both current images are loaded
+        if (loadedImagesRef.current.has(leftImage) && loadedImagesRef.current.has(rightImage)) {
+            onLoad()
+        }
+    }, [leftImage, rightImage, onLoad])
+
+    // Reset loaded state when images change
+    useEffect(() => {
+        loadedImagesRef.current.clear()
+    }, [leftImage, rightImage])
+
+    // Notify parent of slider position changes
+    useEffect(() => {
+        if (onSliderChange) {
+            onSliderChange(sliderPosition)
+        }
+    }, [sliderPosition, onSliderChange])
     const containerRef = useRef<HTMLDivElement>(null)
     const [imageRatio, setImageRatio] = useState<number | null>(null)
     const [containerRect, setContainerRect] = useState<{ width: number; height: number } | null>(null)
@@ -260,7 +296,10 @@ export default function BeforeAfterSlider({
                         className={styles.rightImage}
                         priority
                         sizes={sizes}
-                        onLoad={handleImageLoad} // Use this ONE load to set the ratio
+                        onLoad={(e) => {
+                            handleImageLoad(e)
+                            handleImageLoaded(rightImage)
+                        }}
                     />
 
                     {/* Right Overlays */}
@@ -269,47 +308,63 @@ export default function BeforeAfterSlider({
                         <div className={styles.overlayContainer}>
                             {/* Scale moved to HUD layer */}
                             {overlays.points?.map((point, idx) => (
-                                <div
-                                    key={idx}
-                                    className={styles.thermalPoint}
-                                    style={{ left: `${point.x}%`, top: `${point.y}%` }}
-                                >
-                                    {!point.hideRing && (
-                                        <div
-                                            className={styles.pointRing}
-                                            style={{
-                                                opacity: sliderPosition < 45 ? 1 : 0,
-                                                transition: 'opacity 0.3s ease'
-                                            }}
-                                        />
-                                    )}
-                                    <div className={styles.pointLabel}>
-                                        <span className={styles.pointTitle}>{point.label}</span>
-                                        {point.value && (
-                                            <span
-                                                className={styles.pointValue}
+                                !point.alwaysVisible && (
+                                    <div
+                                        key={idx}
+                                        className={styles.thermalPoint}
+                                        style={{ left: `${point.x}%`, top: `${point.y}%` }}
+                                    >
+                                        {point.value && !point.hideRing && (
+                                            <div
+                                                className={styles.pointRing}
                                                 style={{
                                                     opacity: sliderPosition < 45 ? 1 : 0,
-                                                    transition: 'opacity 0.3s ease',
-                                                    height: sliderPosition < 45 ? 'auto' : 0,
-                                                    overflow: 'hidden',
-                                                    display: 'block'
+                                                    transition: 'opacity 0.3s ease'
                                                 }}
-                                            >
-                                                {point.value}
-                                            </span>
+                                            />
                                         )}
+                                        {!point.value && !point.hideRing && (
+                                            <div className={styles.pointRing} />
+                                        )}
+                                        <div
+                                            className={styles.pointLabel}
+                                            style={point.value ? {
+                                                opacity: sliderPosition < 45 ? 1 : 0,
+                                                transition: 'opacity 0.3s ease'
+                                            } : undefined}
+                                        >
+                                            <span className={styles.pointTitle}>{point.label}</span>
+                                            {point.value && (
+                                                <span
+                                                    className={styles.pointValue}
+                                                    style={{
+                                                        display: 'block'
+                                                    }}
+                                                >
+                                                    {point.value}
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
+                                )
                             ))}
                             {overlays.lines?.map((line, idx) => (
-                                <div
-                                    key={`line-${idx}`}
-                                    className={styles.overlayLine}
-                                    style={{ top: `${line.y}%` }}
-                                >
-                                    {line.label && <span className={styles.overlayLineLabel}>{line.label}</span>}
-                                </div>
+                                !line.alwaysVisible && (
+                                    <div
+                                        key={`line-${idx}`}
+                                        className={styles.overlayLine}
+                                        style={{
+                                            top: `${line.y}%`,
+                                            left: line.xStart !== undefined ? `${line.xStart}%` : 0,
+                                            width: line.xEnd !== undefined && line.xStart !== undefined
+                                                ? `${line.xEnd - line.xStart}%`
+                                                : (line.xEnd !== undefined ? `${line.xEnd}%` : '100%'),
+                                            borderColor: line.color || 'rgba(255, 255, 255, 1)'
+                                        }}
+                                    >
+                                        {line.label && <span className={styles.overlayLineLabel}>{line.label}</span>}
+                                    </div>
+                                )
                             ))}
                             {overlays.verticalLines?.map((line, idx) => (
                                 <div
@@ -357,6 +412,7 @@ export default function BeforeAfterSlider({
                         className={styles.leftImage}
                         priority
                         sizes={sizes}
+                        onLoad={() => handleImageLoaded(leftImage)}
                     />
 
                     {/* Left Overlays */}
@@ -379,7 +435,14 @@ export default function BeforeAfterSlider({
                                 <div
                                     key={`line-${idx}`}
                                     className={styles.overlayLine}
-                                    style={{ top: `${line.y}%` }}
+                                    style={{
+                                        top: `${line.y}%`,
+                                        left: line.xStart !== undefined ? `${line.xStart}%` : 0,
+                                        width: line.xEnd !== undefined && line.xStart !== undefined
+                                            ? `${line.xEnd - line.xStart}%`
+                                            : (line.xEnd !== undefined ? `${line.xEnd}%` : '100%'),
+                                        borderColor: line.color || 'rgba(255, 255, 255, 1)'
+                                    }}
                                 >
                                     {line.label && <span className={styles.overlayLineLabel}>{line.label}</span>}
                                 </div>
@@ -403,6 +466,95 @@ export default function BeforeAfterSlider({
                 <div className={styles.handleButton}>
                     <ChevronLeft size={16} />
                     <ChevronRight size={16} />
+                </div>
+            </div>
+
+            {/* Static (HUD) Layer - Contains alwaysVisible elements scaled with the image */}
+            <div style={wrapperStyle}>
+                <div className={styles.staticOverlayContainer}>
+                    {/* Parcell Labels and lines from overlays */}
+                    {overlays?.points?.map((point, idx) => (
+                        point.alwaysVisible && (
+                            <div
+                                key={`static-point-${idx}`}
+                                className={styles.thermalPoint}
+                                style={{ left: `${point.x}%`, top: `${point.y}%`, zIndex: 15 }}
+                            >
+                                {point.value && !point.hideRing && (
+                                    <div
+                                        className={styles.pointRing}
+                                        style={{
+                                            opacity: sliderPosition < 45 ? 1 : 0,
+                                            transition: 'opacity 0.3s ease'
+                                        }}
+                                    />
+                                )}
+                                {!point.value && !point.hideRing && (
+                                    <div className={styles.pointRing} />
+                                )}
+                                <div className={styles.pointLabel}>
+                                    <span className={styles.pointTitle}>{point.label}</span>
+                                    {/* Values for static points are only shown if slider reveals analysis side */}
+                                    {point.value && (
+                                        <span
+                                            className={styles.pointValue}
+                                            style={{
+                                                opacity: sliderPosition < 45 ? 1 : 0,
+                                                display: sliderPosition < 45 ? 'block' : 'none'
+                                            }}
+                                        >
+                                            {point.value}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        )
+                    ))}
+                    {overlays?.lines?.map((line, idx) => (
+                        line.alwaysVisible && (
+                            <div
+                                key={`static-line-${idx}`}
+                                className={styles.overlayLine}
+                                style={{
+                                    top: `${line.y}%`,
+                                    left: line.xStart !== undefined ? `${line.xStart}%` : 0,
+                                    width: line.xEnd !== undefined && line.xStart !== undefined
+                                        ? `${line.xEnd - line.xStart}%`
+                                        : (line.xEnd !== undefined ? `${line.xEnd}%` : '100%'),
+                                    borderColor: line.color || 'rgba(255, 255, 255, 1)',
+                                    zIndex: 14
+                                }}
+                            >
+                                {line.label && <span className={styles.overlayLineLabel}>{line.label}</span>}
+                            </div>
+                        )
+                    ))}
+                    {overlays?.verticalLines?.map((line, idx) => (
+                        line.alwaysVisible && (
+                            <div
+                                key={`static-vline-${idx}`}
+                                className={`${styles.overlayVerticalLine} ${line.style === 'solid' ? styles.solid : styles.dashed}`}
+                                style={{ left: `${line.x}%`, zIndex: 14 }}
+                            >
+                                {line.label && <span className={styles.overlayVerticalLineLabel}>{line.label}</span>}
+                            </div>
+                        )
+                    ))}
+                    {overlays?.arrows?.map((arrow, idx) => (
+                        arrow.alwaysVisible && (
+                            <div
+                                key={`static-arrow-${idx}`}
+                                className={`${styles.overlayArrow} ${arrow.direction === 'left' ? styles.arrowLeft : styles.arrowRight}`}
+                                style={{ left: `${arrow.x}%`, top: `${arrow.y}%`, zIndex: 16 }}
+                            >
+                                <div className={styles.arrowLabelGroup}>
+                                    <span className={styles.arrowLabel}>{arrow.label}</span>
+                                    {arrow.subLabel && <span className={styles.arrowSubLabel}>{arrow.subLabel}</span>}
+                                </div>
+                                {arrow.direction === 'left' ? <ArrowLeft size={24} /> : <ArrowRight size={24} />}
+                            </div>
+                        )
+                    ))}
                 </div>
             </div>
 

@@ -11,7 +11,7 @@ import styles from '../ProblemNew.module.css'
 const cultivatorProblems = [
     {
         title: 'Csekély mértékű átkeverés',
-        description: 'A nehézkultivátor jól lazít, de nem tudja bedolgozni a szármaradványokat és sok esetben rögösít. Az árvakelés és a gyomnövények magjai a felszín közelében maradnak, ahogy a herbicidek szermaradékai is.',
+        description: 'A nehézkultivátor jól lazít, de nem tudja bedolgozni a szármaradványokat és sok esetben rögösít. A majdani árvakelés és a gyomnövények magjai a felszín közelében maradnak, ahogy a herbicidek szermaradékai is.',
         icon: 'refresh-cw-off',
     },
     {
