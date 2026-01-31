@@ -1,0 +1,407 @@
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    user-select: none;
+    cursor: pointer;
+}
+
+.imageWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.rightImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.leftImageContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow: hidden;
+    /* Remove white border, we'll use a better indicator */
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 5;
+    transition: border-color 0.2s;
+}
+
+.container:hover .leftImageContainer {
+    border-color: rgba(212, 168, 75, 0.6);
+}
+
+.sliderHandle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    /* Wider hit area */
+    transform: translateX(-50%);
+    /* Centered on the line */
+    background: transparent;
+    cursor: ew-resize;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* No shadow on the line itself, just the button */
+}
+
+.handleButton {
+    width: 44px;
+    height: 44px;
+    background: #0a0a0a;
+    border: 2px solid var(--color-gold, #d4a84b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    color: var(--color-gold, #d4a84b);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sliderHandle:hover .handleButton {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(212, 168, 75, 0.4);
+    background: #151515;
+}
+
+.label {
+    position: absolute;
+    top: 20px;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 12px;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 15;
+    font-weight: 500;
+}
+
+.labelLeft {
+    left: 20px;
+}
+
+.labelRight {
+    right: 20px;
+}
+
+/* Thermal Overlays */
+.overlayContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    container-type: size;
+    /* Enables container queries for children */
+}
+
+.thermalScale {
+    position: absolute;
+    right: 30px;
+    top: 20%;
+    bottom: 20%;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.scaleBar {
+    width: 12px;
+    flex: 1;
+    background: linear-gradient(to bottom, #ff0000, #ffff00, #00ff00, #0000ff);
+    margin: 8px 0;
+    border: 1px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.scaleMax,
+.scaleMin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.scaleValue {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 4px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.scaleMarker {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+.scaleMax .scaleMarker {
+    border-top: 5px solid red;
+    margin-top: 2px;
+}
+
+.scaleMin .scaleMarker {
+    border-bottom: 5px solid blue;
+    margin-bottom: 2px;
+}
+
+.thermalPoint {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pointRing {
+    width: 12cqmin;
+    /* Scales with the smaller dimension of the container */
+    height: 12cqmin;
+    min-width: 40px;
+    /* Minimum size for visibility */
+    min-height: 40px;
+    max-width: 100px;
+    /* Cap size so it doesn't get absurd */
+    max-height: 100px;
+    border: 2px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.pointLabel {
+    /* Absolute position to decouple size from centering logic */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    /* Pin the Center of the TITLE (approx 30px height / 2 = 15px offset) to the point center.
+       This ensures content growing downwards (Value) doesn't push the Title up. */
+    transform: translate(-50%, -15px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 4px 8px;
+    border-radius: 6px;
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: max-content;
+    /* Ensure it doesn't wrap unnecessarily */
+    z-index: 10;
+}
+
+.regionBadge {
+    background: rgba(20, 20, 20, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 8px 20px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    /* Gold tint border */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transform: translate(-50%, -50%);
+    position: absolute;
+    min-width: 180px;
+    transition: all 0.3s ease;
+}
+
+.regionBadge:hover {
+    background: rgba(20, 20, 20, 0.85);
+    border-color: rgba(255, 215, 0, 0.6);
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.regionBadge .pointTitle {
+    color: #ffd700;
+    /* Gold */
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    text-shadow: none;
+}
+
+.pointTitle {
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.pointValue {
+    color: #ffd700 !important;
+    /* Gold */
+    font-weight: 700;
+    font-size: 14px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+
+/* Watermark */
+.watermark {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    pointer-events: none;
+    z-index: 20;
+    transform: translateZ(0);
+    /* Hardware acceleration hint */
+}
+
+.watermarkLine {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    font-family: system-ui, -apple-system, sans-serif;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 1);
+    -webkit-font-smoothing: antialiased;
+}
+
+.overlayLine {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    border-bottom: 3px dashed rgba(255, 255, 255, 1);
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.overlayLineLabel {
+    position: absolute;
+    right: 10px;
+    top: -24px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+/* Vertical Lines */
+.overlayVerticalLine {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.overlayVerticalLine.dashed {
+    border-left: 3px dashed rgba(255, 255, 255, 0.9);
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.6));
+}
+
+.overlayVerticalLine.solid {
+    border-left: 3px solid rgba(255, 255, 255, 0.9);
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.6));
+}
+
+.overlayVerticalLineLabel {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+/* Arrows */
+.overlayArrow {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+    z-index: 10;
+}
+
+.arrowLeft {
+    flex-direction: row-reverse;
+    /* Icon on left, text on right */
+}
+
+.arrowRight {
+    flex-direction: row;
+    /* Text on left, icon on right */
+}
+
+.arrowLabelGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.arrowRight .arrowLabelGroup {
+    align-items: flex-end;
+    /* Text aligned to arrow */
+    text-align: right;
+}
+
+.arrowLabel {
+    font-weight: 800;
+    font-size: 18px;
+    color: #ffd700;
+    /* Gold */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    backdrop-filter: blur(2px);
+}
+
+.arrowSubLabel {
+    font-weight: 500;
+    font-size: 13px;
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 4px;
+    max-width: 180px;
+    white-space: pre-wrap;
+    text-align: inherit;
+}

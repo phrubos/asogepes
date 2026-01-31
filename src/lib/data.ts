@@ -96,41 +96,105 @@ export const locations = {
     },
     photos: [
       {
-        src: '/images/kutatás_pics/kecskemet_borbas/01_kecskemét_0516_ortho.png',
-        alt: 'Kecskemét Ortofotó - Május 16.',
-        title: 'Májusi Állapot (Ortofotó)',
-        description: 'A kísérleti terület madártávlatból május közepén. A parcellák közötti különbségek már ebben a korai stádiumban is kezdenek kirajzolódni.'
+        src: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
+        alt: 'Kecskemét Összehasonlítás',
+        title: 'Ortofotó és Hőtérkép Összehasonlítás (05.16)',
+        description: 'A képen szereplő, felső 11 m széles ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. A drónos légifelvételen jól látszik, hogy a lazább szerkezetű, ásógépezett felület már felszáradt, mert gyorsabban felmelegedett, az alsó, kontroll sáv ugyanakkor még nedves.',
+        type: 'comparison',
+        leftSrc: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
+        rightSrc: '/images/kutatás_pics/kecskemet_borbas/02_termal_cut.jpeg',
+        leftLabel: 'Ortofotó',
+        rightLabel: 'Hőkamera',
+        overlays: {
+          scale: {
+            min: 11.7,
+            max: 24.2,
+            unit: '°C',
+            gradient: 'linear-gradient(to top, #000000, #008080, #ffff00, #ff0000)'
+          },
+          points: [
+            { x: 30, y: 75, label: 'Kontroll (ásóborona)', value: 'átl. hőmérséklet 13.2°C' },
+            { x: 55, y: 25, label: 'Ásógépezett (Imants - 40SX)', value: 'átl. hőmérséklet 20.1°C' }
+          ]
+        },
+        leftOverlays: {
+          points: [
+            { x: 30, y: 75, label: 'Kontroll (ásóborona)', value: '' },
+            { x: 55, y: 25, label: 'Ásógépezett (Imants - 40SX)', value: '' }
+          ]
+        },
+        watermark: {
+          lines: ['szoftver: Pix4D', 'fotó: DJI MAVIC 3 Thermal']
+        }
       },
       {
-        src: '/images/kutatás_pics/kecskemet_borbas/02_kecskemét_0516_termal_cut.png',
-        alt: 'Kecskemét Hőkamera - Május 16.',
-        title: 'Májusi Hőtérkép',
-        description: 'A hőkamerás felvétel mutatja a növényállomány és a talajfelszín hőmérsékleti különbségeit. A sötétebb (hidegebb) területek aktívabb párologtatást jeleznek.'
+        src: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_cut_orto.jpeg',
+        alt: 'Kecskemét Összehasonlítás 2',
+        title: 'Ortofotó és TGI index Összehasonlítás (06.19)',
+        description: 'A képen szereplő felső 11 m széles felület ásógépezve volt, az alsó 11 m széles csak ásóboronázva. Mindkét parcellán 9 sor ipari paradicsom volt. Szemmel is jó látható, hogy a felső mezőben nagyobb a lombfelület borítottság mint az alsóban. Az alkalmazott térinformatikai szoftver szerint a kontroll mezőben 35,9%-os az ásógépezett mezőben 41,5%-os a levélfelület borítás. Látható tehát, hogy az ásógépezett területen gyorsabb ütemben fejlődnek a növények.',
+        type: 'comparison',
+        leftSrc: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_cut_orto.jpeg',
+        rightSrc: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_tgi_cut.jpeg',
+        leftLabel: 'Ortofotó',
+        rightLabel: 'TGI Index',
+        overlays: {
+          points: [
+            { x: 50, y: 25, label: 'Ásógépezett (9 sor)', value: 'levélfelület borítás: 41,5%', hideRing: true },
+            { x: 50, y: 75, label: 'Kontroll (9 sor)', value: 'levélfelület borítás: 35,9%', hideRing: true }
+          ],
+          lines: [{ y: 50 }]
+        },
+        leftOverlays: {
+          points: [
+            { x: 50, y: 25, label: 'Ásógépezett (9 sor)', value: '' },
+            { x: 50, y: 75, label: 'Kontroll (9 sor)', value: '' }
+          ],
+          lines: [{ y: 50 }]
+        },
+        watermark: {
+          lines: ['szoftver: Pix4D', 'fotó: DJI MAVIC 3 Thermal']
+        }
       },
       {
-        src: '/images/kutatás_pics/kecskemet_borbas/03_detail_termal_kecskemet_0516.jpg',
-        alt: 'Kecskemét Hőkamera Részlet',
-        title: 'Hőtérkép Részlet',
-        description: 'Nagyított nézet a hőtérképről, amely pontosabban mutatja az egyes művelési sávok közötti mikroklimatikus eltéréseket.'
+        src: '/images/kutatás_pics/kecskemet_borbas/20250617_115254.jpg',
+        alt: 'Kecskemét Paradicsom Állapot',
+        title: 'Paradicsom állapot (06.19)',
+        description: 'A júniusi fotón jól látható: a kép bal oldalára eső sorok a kontroll, a középső és a tőle jobbra eső sorok az ásógépezett parcellán fejlődtek. A lombtömeg és a hajtáshossz átlagosan 15%-kal nagyobb az ásógépezett területen.',
+        type: 'comparison',
+        leftSrc: '/images/kutatás_pics/kecskemet_borbas/20250617_115254.jpg',
+        rightSrc: '/images/kutatás_pics/kecskemet_borbas/20250617_115254.jpg',
+        leftLabel: 'Kontroll',
+        rightLabel: 'Ásógépezett',
+        overlays: {
+          verticalLines: [
+            { x: 50, style: 'dashed' }
+          ],
+          arrows: [
+            {
+              x: 37,
+              y: 25,
+              direction: 'left',
+              label: 'Kontroll',
+            },
+            {
+              x: 67,
+              y: 25,
+              direction: 'right',
+              label: 'Ásógépezett',
+              subLabel: 'Lombtömeg és hajtáshossz\nátlagosan +15%'
+            }
+          ]
+        },
+        leftOverlays: {
+          // Empty or specific if needed, but per request, left image (clean) has no labels.
+          // Actually user said: "bal oldali képen nincsenek labalek a jobb oldalin vannak"
+          // The "Right" image is the one REVEALED by sliding (usually background?).
+          // In BeforeAfterSlider, `rightImage` is the background (layer 1), `leftImage` is foreground (layer 2, clipped).
+          // If we pull slider LEFT (reveal background, rightImage), we see overlays.
+          // So overlays should be on `overlays` (for rightImage).
+          // `leftOverlays` should be empty or undefined.
+        }
       },
-      {
-        src: '/images/kutatás_pics/kecskemet_borbas/04_kecskemét_0619_ortho.png',
-        alt: 'Kecskemét Ortofotó - Június 19.',
-        title: 'Júniusi Állapot (Ortofotó)',
-        description: 'Június közepére a növényállomány jelentős fejlődésen ment keresztül. A kezelések közötti különbségek szabad szemmel is jól láthatóvá váltak.'
-      },
-      {
-        src: '/images/kutatás_pics/kecskemet_borbas/05_kecskemét_0619_termal.png',
-        alt: 'Kecskemét Hőkamera - Június 19.',
-        title: 'Júniusi Hőtérkép',
-        description: 'A nyári hőségben készült hőkamerás felvétel kiemeli a vízháztartásbeli különbségeket. Az ásógépezett területek alacsonyabb hőmérséklete jobb vízellátottságra utal.'
-      },
-      {
-        src: '/images/kutatás_pics/kecskemet_borbas/06_kecskemét_0619_ortho_zoomed.png',
-        alt: 'Kecskemét Ortofotó Zoom - Június 19.',
-        title: 'Részletes Növényállomány',
-        description: 'Nagyított felvétel a júniusi állapotról. A lombtömeg sűrűsége és a sorok záródása egyértelműen mutatja a technológiai hatásokat.'
-      }
     ]
   },
   lakitelek: {

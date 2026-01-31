@@ -7,12 +7,55 @@ import Image from 'next/image'
 import styles from './PhotoViewer.module.css'
 import { usePhotoNavigation } from './usePhotoNavigation'
 import { PhotoViewerModal } from './PhotoViewerModal'
+import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
 
 export interface PhotoItem {
     src: string
     alt: string
     description: string
     title?: string
+    type?: 'image' | 'comparison'
+    leftSrc?: string
+    rightSrc?: string
+    leftLabel?: string
+    rightLabel?: string
+    altLeft?: string
+    altRight?: string
+    overlays?: {
+        scale?: {
+            min: number
+            max: number
+            unit: string
+        }
+        points?: {
+            x: number
+            y: number
+            label: string
+            value: string
+        }[]
+        points?: {
+            x: number
+            y: number
+            label: string
+            value: string
+        }[]
+    }
+    leftOverlays?: {
+        scale?: {
+            min: number
+            max: number
+            unit: string
+        }
+        points?: {
+            x: number
+            y: number
+            label: string
+            value: string
+        }[]
+    }
+    watermark?: {
+        lines: string[]
+    }
 }
 
 interface PhotoViewerProps {
@@ -49,44 +92,77 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.4 }}
-                        style={{ width: '100%', height: '100%', position: 'absolute' }}
+                        className={styles.contentContainer}
                     >
-                        <Image
-                            src={currentItem.src}
-                            alt={currentItem.alt}
-                            fill
-                            className={styles.image}
-                            priority
-                            sizes="(max-width: 768px) 100vw, 800px"
-                        />
+                        {/* Ambient Background Layer */}
+                        <div className={styles.ambientBackground}>
+                            <Image
+                                src={currentItem.type === 'comparison' ? currentItem.leftSrc! : currentItem.src}
+                                alt="Ambient background"
+                                fill
+                                className={styles.ambientImage}
+                                priority
+                            />
+                            <div className={styles.ambientOverlay} />
+                        </div>
+
+                        {/* Main Content Layer */}
+                        <div className={styles.mainContent}>
+                            {currentItem.type === 'comparison' && currentItem.leftSrc && currentItem.rightSrc ? (
+                                <BeforeAfterSlider
+                                    leftImage={currentItem.leftSrc}
+                                    rightImage={currentItem.rightSrc}
+                                    altLeft={currentItem.leftLabel || 'Before'}
+                                    altRight={currentItem.rightLabel || 'After'}
+                                    leftLabel={currentItem.leftLabel}
+                                    rightLabel={currentItem.rightLabel}
+                                    overlays={currentItem.overlays}
+                                    leftOverlays={currentItem.leftOverlays}
+                                    watermark={currentItem.watermark}
+                                    objectFit="cover"
+                                />
+                            ) : (
+                                <Image
+                                    src={currentItem.src}
+                                    alt={currentItem.alt}
+                                    fill
+                                    className={styles.image}
+                                    priority
+                                    sizes="(max-width: 768px) 100vw, 800px"
+                                    style={{ objectFit: 'cover' }}
+                                />
+                            )}
+                        </div>
                     </motion.div>
                 </AnimatePresence>
 
                 {/* Navigation Overlay */}
-                <button
-                    className={`${styles.navButton} ${styles.prevButton}`}
-                    onClick={(e) => { e.stopPropagation(); prev(); }}
-                    aria-label="Previous image"
-                >
-                    <ChevronLeft size={24} />
-                </button>
+                {/* Bottom Navigation Controls */}
+                <div className={styles.bottomControls} onClick={(e) => e.stopPropagation()}>
+                    <button
+                        className={styles.navButton}
+                        onClick={prev}
+                        aria-label="Previous image"
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
 
-                <button
-                    className={`${styles.navButton} ${styles.nextButton}`}
-                    onClick={(e) => { e.stopPropagation(); next(); }}
-                    aria-label="Next image"
-                >
-                    <ChevronRight size={24} />
-                </button>
+                    <div className={styles.indicators}>
+                        {items.map((_, idx) => (
+                            <div
+                                key={idx}
+                                className={`${styles.indicator} ${idx === currentIndex ? styles.activeIndicator : ''}`}
+                            />
+                        ))}
+                    </div>
 
-                {/* Indicators */}
-                <div className={styles.indicators}>
-                    {items.map((_, idx) => (
-                        <div
-                            key={idx}
-                            className={`${styles.indicator} ${idx === currentIndex ? styles.activeIndicator : ''}`}
-                        />
-                    ))}
+                    <button
+                        className={styles.navButton}
+                        onClick={next}
+                        aria-label="Next image"
+                    >
+                        <ChevronRight size={20} />
+                    </button>
                 </div>
             </div>
 

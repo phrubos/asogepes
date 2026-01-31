@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
 import Image from 'next/image'
 import styles from './PhotoViewer.module.css'
+import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
 
 interface PhotoViewerModalProps {
     isOpen: boolean
@@ -13,6 +14,26 @@ interface PhotoViewerModalProps {
         alt: string
         title?: string
         description: string
+        type?: 'image' | 'comparison'
+        leftSrc?: string
+        rightSrc?: string
+        leftLabel?: string
+        rightLabel?: string
+        altLeft?: string
+        altRight?: string
+        overlays?: {
+            scale?: {
+                min: number
+                max: number
+                unit: string
+            }
+            points?: {
+                x: number
+                y: number
+                label: string
+                value: string
+            }[]
+        }
     }
     currentIndex: number
     totalItems: number
@@ -44,6 +65,8 @@ export function PhotoViewerModal({
     const dragStart = useRef({ x: 0, y: 0 })
     const positionStart = useRef({ x: 0, y: 0 })
 
+    const isComparison = currentImage.type === 'comparison'
+
     // Reset zoom and position on image change
     useEffect(() => {
         setZoom(1)
@@ -67,7 +90,7 @@ export function PhotoViewerModal({
     // Native Wheel Handler for smooth, non-chained Zoom
     useEffect(() => {
         const element = imageAreaRef.current
-        if (!element || !isOpen) return
+        if (!element || !isOpen || isComparison) return
 
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault() // Stop page scroll
@@ -83,7 +106,7 @@ export function PhotoViewerModal({
         return () => {
             element.removeEventListener('wheel', handleWheel)
         }
-    }, [isOpen])
+    }, [isOpen, isComparison])
 
 
     // Escape key handler
@@ -109,15 +132,15 @@ export function PhotoViewerModal({
 
     // Mouse event handlers for drag-to-pan
     const handleMouseDown = useCallback((e: React.MouseEvent) => {
-        if (zoom <= 1) return
+        if (zoom <= 1 || isComparison) return
         e.preventDefault()
         setIsDragging(true)
         dragStart.current = { x: e.clientX, y: e.clientY }
         positionStart.current = { ...position }
-    }, [zoom, position])
+    }, [zoom, position, isComparison])
 
     const handleMouseMove = useCallback((e: React.MouseEvent) => {
-        if (!isDragging || zoom <= 1) return
+        if (!isDragging || zoom <= 1 || isComparison) return
         e.preventDefault()
 
         const deltaX = e.clientX - dragStart.current.x
@@ -134,7 +157,7 @@ export function PhotoViewerModal({
         const newY = Math.max(-maxY, Math.min(maxY, positionStart.current.y + deltaY))
 
         setPosition({ x: newX, y: newY })
-    }, [isDragging, zoom])
+    }, [isDragging, zoom, isComparison])
 
     const handleMouseUp = useCallback(() => {
         setIsDragging(false)
@@ -167,79 +190,108 @@ export function PhotoViewerModal({
                         exit={{ opacity: 0 }}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* Close Button Area - Top Right of Content? Or Fixed? 
-                            With 2-column layout, button should probably be on the text panel side or fixed to screen.
-                            Let's keep it generally top-right.
-                        */}
-
                         {/* Image Area (Left) */}
                         <div
                             ref={imageAreaRef}
                             className={styles.modalImageArea}
                         // onWheel removed in favor of native listener
                         >
-                            <button className={`${styles.navButton} ${styles.prevButton}`} onClick={(e) => { e.stopPropagation(); onPrev(); }}>
-                                <ChevronLeft size={24} />
-                            </button>
-
-                            <motion.div
-                                key={currentImage.src}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ duration: 0.3 }}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'relative',
-                                    overflow: 'hidden',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                                onMouseDown={handleMouseDown}
-                                onMouseMove={handleMouseMove}
-                                onMouseUp={handleMouseUp}
-                                onMouseLeave={handleMouseLeave}
-                            >
-                                <div
+                            {/* Zoom Wrapper handles clipping */}
+                            <div className={styles.zoomWrapper}>
+                                <motion.div
+                                    key={currentImage.src}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.3 }}
                                     style={{
-                                        transform: `scale(${zoom}) translate(${position.x / zoom}px, ${position.y / zoom}px)`,
-                                        cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
-                                        transition: isDragging ? 'none' : 'transform 0.1s ease-out',
-                                        userSelect: 'none',
-                                        pointerEvents: 'auto'
+                                        width: '100%',
+                                        height: '100%',
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
                                     }}
+                                    onMouseDown={handleMouseDown}
+                                    onMouseMove={handleMouseMove}
+                                    onMouseUp={handleMouseUp}
+                                    onMouseLeave={handleMouseLeave}
                                 >
-                                    <Image
-                                        src={currentImage.src}
-                                        alt={currentImage.alt}
-                                        width={1600}
-                                        height={1200}
-                                        className={styles.modalImage}
-                                        priority
-                                        draggable={false}
-                                    />
+                                    {isComparison && currentImage.leftSrc && currentImage.rightSrc ? (
+                                        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                                            <BeforeAfterSlider
+                                                leftImage={currentImage.leftSrc}
+                                                rightImage={currentImage.rightSrc}
+                                                objectFit="contain"
+                                                watermark={currentImage.watermark}
+                                                altLeft={currentImage.altLeft || currentImage.alt}
+                                                altRight={currentImage.altRight || currentImage.alt}
+                                                leftLabel={currentImage.leftLabel}
+                                                rightLabel={currentImage.rightLabel}
+                                                overlays={currentImage.overlays}
+                                                leftOverlays={currentImage.leftOverlays}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div
+                                            style={{
+                                                transform: `scale(${zoom}) translate(${position.x / zoom}px, ${position.y / zoom}px)`,
+                                                cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
+                                                transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+                                                userSelect: 'none',
+                                                pointerEvents: 'auto'
+                                            }}
+                                        >
+                                            <Image
+                                                src={currentImage.src}
+                                                alt={currentImage.alt}
+                                                width={1600}
+                                                height={1200}
+                                                className={styles.modalImage}
+                                                priority
+                                                draggable={false}
+                                            />
+                                        </div>
+                                    )}
+                                </motion.div>
+                            </div>
+
+                            {/* Modal Navigation (Bottom Center) */}
+                            <div className={styles.modalBottomControls}>
+                                <button className={styles.navButton} onClick={(e) => { e.stopPropagation(); onPrev(); }}>
+                                    <ChevronLeft size={24} />
+                                </button>
+
+                                <div className={styles.indicators}>
+                                    {Array.from({ length: totalItems }).map((_, idx) => (
+                                        <div
+                                            key={idx}
+                                            className={`${styles.indicator} ${idx === currentIndex ? styles.activeIndicator : ''}`}
+                                        />
+                                    ))}
                                 </div>
-                            </motion.div>
 
-                            <button className={`${styles.navButton} ${styles.nextButton}`} onClick={(e) => { e.stopPropagation(); onNext(); }}>
-                                <ChevronRight size={24} />
-                            </button>
-
-                            {/* Zoom Controls Overlay on Image Area */}
-                            <div className={styles.zoomControls} onClick={(e) => e.stopPropagation()}>
-                                <button className={styles.zoomBtn} onClick={handleZoomOut} disabled={zoom <= 0.5}>
-                                    <ZoomOut size={18} />
-                                </button>
-                                <span className={styles.zoomLevel}>{Math.round(zoom * 100)}%</span>
-                                <button className={styles.zoomBtn} onClick={handleZoomIn} disabled={zoom >= 4}>
-                                    <ZoomIn size={18} />
-                                </button>
-                                <button className={styles.zoomBtn} onClick={handleReset}>
-                                    <RotateCcw size={18} />
+                                <button className={styles.navButton} onClick={(e) => { e.stopPropagation(); onNext(); }}>
+                                    <ChevronRight size={24} />
                                 </button>
                             </div>
+
+                            {/* Zoom Controls Overlay on Image Area - Hide for comparison */}
+                            {!isComparison && (
+                                <div className={styles.zoomControls} onClick={(e) => e.stopPropagation()}>
+                                    <button className={styles.zoomBtn} onClick={handleZoomOut} disabled={zoom <= 0.5}>
+                                        <ZoomOut size={18} />
+                                    </button>
+                                    <span className={styles.zoomLevel}>{Math.round(zoom * 100)}%</span>
+                                    <button className={styles.zoomBtn} onClick={handleZoomIn} disabled={zoom >= 4}>
+                                        <ZoomIn size={18} />
+                                    </button>
+                                    <button className={styles.zoomBtn} onClick={handleReset}>
+                                        <RotateCcw size={18} />
+                                    </button>
+                                </div>
+                            )}
                         </div>
 
                         {/* Info Panel (Right) */}
@@ -250,7 +302,7 @@ export function PhotoViewerModal({
 
                             <div className={styles.modalHeader}>
                                 <div className={styles.modalMeta}>
-                                    IMAGE {currentIndex + 1} / {totalItems}
+                                    KÉP {currentIndex + 1} / {totalItems}
                                 </div>
                                 <h2 className={styles.modalTitle}>{currentImage.title || 'Foto Részletek'}</h2>
                             </div>
