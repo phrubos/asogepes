@@ -160,13 +160,13 @@ export const locations = {
         }
       },
       {
-        src: '/images/kutatás_pics/kecskemet_borbas/20250617_115254.jpg',
+        src: '/images/kutatás_pics/kecskemet_borbas/paradicsom_sáringer.webp',
         alt: 'Kecskemét Paradicsom Állapot',
         title: 'Paradicsom állapot (06.19)',
         description: 'A júniusi fotón jól látható: a kép bal oldalára eső sorok a kontroll, a középső és a tőle jobbra eső sorok az ásógépezett parcellán fejlődtek. A lombtömeg és a hajtáshossz átlagosan 15%-kal nagyobb az ásógépezett területen.',
         type: 'comparison' as const,
-        leftSrc: '/images/kutatás_pics/kecskemet_borbas/20250617_115254.jpg',
-        rightSrc: '/images/kutatás_pics/kecskemet_borbas/20250617_115254.jpg',
+        leftSrc: '/images/kutatás_pics/kecskemet_borbas/paradicsom_sáringer.webp',
+        rightSrc: '/images/kutatás_pics/kecskemet_borbas/paradicsom_sáringer.webp',
         leftLabel: 'Kontroll',
         rightLabel: 'Ásógépezett',
         overlays: {

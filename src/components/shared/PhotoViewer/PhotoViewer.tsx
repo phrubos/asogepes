@@ -120,6 +120,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                                     leftOverlays={currentItem.leftOverlays}
                                     watermark={currentItem.watermark}
                                     objectFit="cover"
+                                    sizes="(max-width: 768px) 100vw, 800px"
                                 />
                             ) : (
                                 <Image

@@ -50,6 +50,7 @@ interface BeforeAfterSliderProps {
         lines: string[]
     }
     objectFit?: React.CSSProperties['objectFit']
+    sizes?: string
 }
 
 export default function BeforeAfterSlider({
@@ -62,8 +63,8 @@ export default function BeforeAfterSlider({
     overlays,
     leftOverlays,
     watermark,
-    objectFit // We will ignore this prop for internal layout as we enforce 'cover' logic manually, or use it to decide mode?
-    // Actually, user wants 'fill space' so we assume cover.
+    objectFit,
+    sizes = '100vw'
 }: BeforeAfterSliderProps) {
     const [sliderPosition, setSliderPosition] = useState(50) // Percentage of container
     const [isDragging, setIsDragging] = useState(false)
@@ -258,6 +259,7 @@ export default function BeforeAfterSlider({
                         fill
                         className={styles.rightImage}
                         priority
+                        sizes={sizes}
                         onLoad={handleImageLoad} // Use this ONE load to set the ratio
                     />
 
@@ -354,7 +356,7 @@ export default function BeforeAfterSlider({
                         fill
                         className={styles.leftImage}
                         priority
-                        sizes="100vw"
+                        sizes={sizes}
                     />
 
                     {/* Left Overlays */}
