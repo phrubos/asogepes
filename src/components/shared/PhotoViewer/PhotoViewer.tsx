@@ -26,6 +26,10 @@ interface ThermalOverlay {
     lines?: {
         y: number
         label?: string
+        xStart?: number
+        xEnd?: number
+        color?: string
+        alwaysVisible?: boolean
     }[]
     verticalLines?: {
         x: number
