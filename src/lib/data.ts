@@ -46,17 +46,37 @@ export const locations = {
     },
     photos: [
       {
-        src: '/images/kutatás_pics/Szentkirály/01_szentkirály_termal_0307.png',
+        src: '/images/kutatás_pics/Szentkirály/ernő_termal_0307_cut.jpeg',
         alt: 'Szentkirály Hőkamera - Március 7.',
-        title: 'Márciusi Hőtérkép',
-        description: 'A kora tavaszi hőtérkép felvétel a talajfelszín hőmérsékleti viszonyait tükrözi.',
-        type: 'image' as const
+        title: 'Márciusi Hőtérkép (03.07)',
+        objectFit: 'contain',
+        aspectRatio: '16/9',
+        description: 'Hőkamerás felvétel az ásógépezés napjáról (dél körül). "A": Kombinátorozott kontroll (magasabb hőm.). "B": Friss ásógépezés (nedvesebb, hűvösebb). "C-D": Ásógépezés után ~1 órával a laza talaj gyorsan felmelegszik, eléri a kontroll hőmérsékletét. "E": Vetés után a bolygatott felszín újra hűvösebb.',
+        overlays: {
+          scale: {
+            min: 5.0,
+            max: 20.0,
+            unit: '°C',
+            position: 'left',
+            gradient: 'linear-gradient(to top, #000000, #008080, #ffff00, #ff0000)'
+          },
+          points: [
+            { x: 23, y: 38, label: 'A', value: 'átl. hőm. 18.5°C', alwaysVisible: true },
+            { x: 29, y: 50, label: 'B', value: 'átl. hőm. 6.5°C', alwaysVisible: true },
+            { x: 50, y: 50, label: 'C', value: 'átl. hőm. 15.8°C', alwaysVisible: true },
+            { x: 83, y: 48, label: 'D', value: 'átl. hőm. 16.5°C', alwaysVisible: true },
+            { x: 96, y: 60, label: 'E', value: 'átl. hőm. 10.1°C', alwaysVisible: true }
+          ]
+        },
+        watermark: {
+          lines: ['szoftver: Pix4D', 'fotó: DJI MAVIC 3 Thermal']
+        }
       },
       {
-        src: '/images/kutatás_pics/Szentkirály/02_szentkirály_ortho_0307.png',
-        alt: 'Szentkirály Ortofotó - Március 7.',
-        title: 'Márciusi Állapot (Ortofotó)',
-        description: 'A kísérleti terület madártávlatból március elején.',
+        src: '/images/kutatás_pics/Szentkirály/erno_hagyma.jpg',
+        alt: 'Szentkirály Hagyma',
+        title: 'Június - Hagymaállomány',
+        description: 'Az ábrán a jól fejlett hagyma állományt látjuk. A gépnyomtól balra az ásógépezett, jobbra a kontroll, kultivátorozott és kombinátorozott felület. Jól látszik, hogy az ásógépezés gyomszabályozó hatása sokkal erőteljesebb, a gyomírtószer hatóanyagának aktiválódásakor a magról kelő gyomok éppen optimális fejlettségi állapotban voltak.',
         type: 'image' as const
       }
     ] as PhotoItem[]
@@ -117,16 +137,11 @@ export const locations = {
             gradient: 'linear-gradient(to top, #000000, #008080, #ffff00, #ff0000)'
           },
           points: [
-            { x: 30, y: 75, label: 'Kontroll (ásóborona)', value: 'átl. hőmérséklet 13.2°C' },
-            { x: 55, y: 25, label: 'Ásógépezett (Imants - 40SX)', value: 'átl. hőmérséklet 20.1°C' }
+            { x: 30, y: 75, label: 'Kontroll (ásóborona)', value: 'átl. hőmérséklet 13.2°C', alwaysVisible: true },
+            { x: 55, y: 25, label: 'Ásógépezett (Imants - 40SX)', value: 'átl. hőmérséklet 20.1°C', alwaysVisible: true }
           ]
         },
-        leftOverlays: {
-          points: [
-            { x: 30, y: 75, label: 'Kontroll (ásóborona)', value: '' },
-            { x: 55, y: 25, label: 'Ásógépezett (Imants - 40SX)', value: '' }
-          ]
-        },
+        leftOverlays: {},
         watermark: {
           lines: ['szoftver: Pix4D', 'fotó: DJI MAVIC 3 Thermal']
         }
@@ -143,18 +158,12 @@ export const locations = {
         rightLabel: 'TGI Index',
         overlays: {
           points: [
-            { x: 50, y: 25, label: 'Ásógépezett (9 sor)', value: 'levélfelület borítás: 41,5%', hideRing: true },
-            { x: 50, y: 75, label: 'Kontroll (9 sor)', value: 'levélfelület borítás: 35,9%', hideRing: true }
+            { x: 50, y: 25, label: 'Ásógépezett (9 sor)', value: 'levélfelület borítás: 41,5%', hideRing: true, alwaysVisible: true },
+            { x: 50, y: 75, label: 'Kontroll (9 sor)', value: 'levélfelület borítás: 35,9%', hideRing: true, alwaysVisible: true }
           ],
-          lines: [{ y: 50 }]
+          lines: [{ y: 50, alwaysVisible: true }]
         },
-        leftOverlays: {
-          points: [
-            { x: 50, y: 25, label: 'Ásógépezett (9 sor)', value: '' },
-            { x: 50, y: 75, label: 'Kontroll (9 sor)', value: '' }
-          ],
-          lines: [{ y: 50 }]
-        },
+        leftOverlays: {},
         watermark: {
           lines: ['szoftver: Pix4D', 'fotó: DJI MAVIC 3 Thermal']
         }
@@ -178,7 +187,7 @@ export const locations = {
               x: 37,
               y: 25,
               direction: 'left' as const,
-              label: 'Kontroll',
+              label: 'Kontroll'
             },
             {
               x: 67,
@@ -189,15 +198,7 @@ export const locations = {
             }
           ]
         },
-        leftOverlays: {
-          // Empty or specific if needed, but per request, left image (clean) has no labels.
-          // Actually user said: "bal oldali képen nincsenek labalek a jobb oldalin vannak"
-          // The "Right" image is the one REVEALED by sliding (usually background?).
-          // In BeforeAfterSlider, `rightImage` is the background (layer 1), `leftImage` is foreground (layer 2, clipped).
-          // If we pull slider LEFT (reveal background, rightImage), we see overlays.
-          // So overlays should be on `overlays` (for rightImage).
-          // `leftOverlays` should be empty or undefined.
-        }
+        leftOverlays: {}
       },
     ] as PhotoItem[]
   },
@@ -296,32 +297,44 @@ export const locations = {
     },
     photos: [
       {
-        src: '/images/kutatás_pics/Lakitelek/01_Lakitelek_0502_ortho.png',
-        alt: 'Lakitelek Ortofotó - Május 2.',
-        title: 'Májusi Állapot (Ortofotó)',
-        description: 'A kísérleti terület madártávlatból május elején. A különböző talajművelési változatok hatása már ebben a korai stádiumban is kezd megmutatkozni.',
-        type: 'image' as const
-      },
-      {
-        src: '/images/kutatás_pics/Lakitelek/02_Lakitelek_0502_termal.png',
-        alt: 'Lakitelek Hőkamera - Május 2.',
-        title: 'Májusi Hőtérkép',
-        description: 'A tavaszi hőtérkép felvétel a talajfelszín és a fiatal állomány hőmérsékleti viszonyait tükrözi, utalva a vízháztartásbeli eltérésekre.',
-        type: 'image' as const
-      },
-      {
-        src: '/images/kutatás_pics/Lakitelek/03_Lakitelek_0606_ortho.png',
-        alt: 'Lakitelek Ortofotó - Június 6.',
-        title: 'Júniusi Állapot (Ortofotó)',
-        description: 'Nyár elejére a növényállomány jelentős fejlődésen ment keresztül. A parcellák közötti különbségek szabad szemmel is jól láthatóvá váltak.',
-        type: 'image' as const
-      },
-      {
-        src: '/images/kutatás_pics/Lakitelek/04_Lakitelek_0606_termal.png',
-        alt: 'Lakitelek Hőkamera - Június 6.',
-        title: 'Júniusi Hőtérkép',
-        description: 'A júniusi hőkamerás felvétel kiemeli a parcellák közötti mikroklimatikus különbségeket. A hűvösebb területek jobb vízellátottságot és intenzívebb párologtatást jeleznek.',
-        type: 'image' as const
+        src: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_orto.jpeg',
+        alt: 'Ortofotó és Hőtérkép Összehasonlítás (05.02)',
+        title: 'Ortofotó és Hőtérkép Összehasonlítás (05.02)',
+        description: 'A fotó közvetlenül a talajművelési kombinációk befejezése után készült.',
+        type: 'comparison' as const,
+        leftSrc: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_orto.jpeg',
+        rightSrc: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_otermal.jpeg',
+        leftLabel: 'Ortofotó',
+        rightLabel: 'Hőtérkép',
+        leftDescription: 'A fotó közvetlenül a talajművelési kombinációk befejezése után készült. A II. és III.-es parcella felülete ásógépezett, a IV.-es V.-ös parcellák ásógép nélküliek. Az ábrán jól látszik, hogy az ásógépezett felület homogén, felszíne rögös, szabályosan csipkézett, a légifotón kifejezetten szerkezetesnek tűnik. A nem ásógépezett felület heterogén, szerkezet nélküli, a homok talaj felülete, szél által befújt, sima, a homokszemek a talaj felületén a szél hatására elmozudltak.',
+        rightDescription: 'Ugyanezen 4 kezelés hőtérképén jól látszik, h az ásógépezett talajfelszín hőmérséklete homogén, egyenletes, hőmérséklete a nem ásógépezet felülethez képest alacsonyabb, mivel ez a felület nedvesebb. A nem ásógépezett felület hőmérséklete heterogén, a felület több helyen száraz, ezeken a foltokon gyorsabban melegszik fel.',
+        overlays: {
+          scale: {
+            min: 11.0,
+            max: 24.0,
+            unit: '°C',
+            gradient: 'linear-gradient(to top, #000000, #008080, #ffff00, #ff0000)'
+          },
+          points: [
+            { x: 5, y: 25, label: 'I.', value: '', hideRing: true, alwaysVisible: true },
+            { x: 28, y: 40, label: 'II. - III.', value: '', hideRing: true, alwaysVisible: true },
+            { x: 55, y: 55, label: 'IV. - V.', value: '', hideRing: true, alwaysVisible: true },
+            { x: 80, y: 70, label: 'VI. - VII.', value: '', hideRing: true, alwaysVisible: true },
+            { x: 8, y: 50, label: 'Ásógépezett felület (átl.)', value: '16.8°C' },
+            { x: 30, y: 70, label: 'Vízborított / Nedves talaj', value: '12.0°C' },
+            { x: 55, y: 15, label: 'Száraz, szerkezet nélküli homok', value: '20.2°C' },
+          ],
+          lines: [
+            { y: 32, xStart: 0, xEnd: 17, color: '#d4a84b', alwaysVisible: true },
+            { y: 45, xStart: 17, xEnd: 40, color: '#d4a84b', alwaysVisible: true },
+            { y: 61, xStart: 40, xEnd: 68, color: '#d4a84b', alwaysVisible: true },
+            { y: 73, xStart: 68, xEnd: 100, color: '#d4a84b', alwaysVisible: true },
+          ]
+        },
+        leftOverlays: {},
+        watermark: {
+          lines: ['szoftver: Pix4D', 'fotó: DJI MAVIC 3 Thermal']
+        }
       }
     ] as PhotoItem[]
   },

@@ -5,6 +5,7 @@ import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide
 import Image from 'next/image'
 import styles from './PhotoViewer.module.css'
 import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
+import ThermalOverlays from '../ThermalOverlays/ThermalOverlays'
 
 interface ThermalOverlay {
     scale?: {
@@ -53,11 +54,14 @@ interface PhotoViewerModalProps {
         rightLabel?: string
         altLeft?: string
         altRight?: string
+        leftDescription?: string
+        rightDescription?: string
         overlays?: ThermalOverlay
         leftOverlays?: ThermalOverlay
         watermark?: {
             lines: string[]
         }
+        initialSliderPosition?: number
     }
     currentIndex: number
     totalItems: number
@@ -76,6 +80,7 @@ export function PhotoViewerModal({
 }: PhotoViewerModalProps) {
     const [mounted, setMounted] = useState(false)
     const [zoom, setZoom] = useState(1)
+    const [sliderPos, setSliderPos] = useState(50)
 
     useEffect(() => {
         console.log('PhotoViewerModal mounted')
@@ -255,6 +260,8 @@ export function PhotoViewerModal({
                                                 rightLabel={currentImage.rightLabel}
                                                 overlays={currentImage.overlays}
                                                 leftOverlays={currentImage.leftOverlays}
+                                                onSliderChange={setSliderPos}
+                                                initialSliderPosition={currentImage.initialSliderPosition}
                                             />
                                         </div>
                                     ) : (
@@ -264,18 +271,37 @@ export function PhotoViewerModal({
                                                 cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
                                                 transition: isDragging ? 'none' : 'transform 0.1s ease-out',
                                                 userSelect: 'none',
-                                                pointerEvents: 'auto'
+                                                pointerEvents: 'auto',
+                                                position: 'relative', // Ensure relative positioning for overlays
+                                                width: '100%',
+                                                height: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
                                             }}
                                         >
-                                            <Image
-                                                src={currentImage.src}
-                                                alt={currentImage.alt}
-                                                width={1600}
-                                                height={1200}
-                                                className={styles.modalImage}
-                                                priority
-                                                draggable={false}
-                                            />
+                                            <div style={{ position: 'relative', width: 'auto', height: 'auto' }}>
+                                                <Image
+                                                    src={currentImage.src}
+                                                    alt={currentImage.alt}
+                                                    width={1600}
+                                                    height={1200}
+                                                    className={styles.modalImage}
+                                                    priority
+                                                    draggable={false}
+                                                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                                                />
+                                                {currentImage.overlays && (
+                                                    <ThermalOverlays overlays={currentImage.overlays} />
+                                                )}
+                                                {currentImage.watermark && (
+                                                    <div className={styles.watermark}>
+                                                        {currentImage.watermark.lines.map((line, idx) => (
+                                                            <span key={idx} className={styles.watermarkLine}>{line}</span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     )}
                                 </motion.div>
@@ -331,7 +357,11 @@ export function PhotoViewerModal({
                                 <h2 className={styles.modalTitle}>{currentImage.title || 'Foto Részletek'}</h2>
                             </div>
                             <div className={styles.modalDescription}>
-                                <p>{currentImage.description}</p>
+                                <p>
+                                    {currentImage.type === 'comparison' && currentImage.leftDescription && currentImage.rightDescription
+                                        ? (sliderPos > 50 ? currentImage.leftDescription : currentImage.rightDescription)
+                                        : currentImage.description}
+                                </p>
                             </div>
                         </div>
                     </motion.div>
