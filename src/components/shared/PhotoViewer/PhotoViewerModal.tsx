@@ -6,6 +6,38 @@ import Image from 'next/image'
 import styles from './PhotoViewer.module.css'
 import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
 
+interface ThermalOverlay {
+    scale?: {
+        min: number
+        max: number
+        unit: string
+        gradient?: string
+    }
+    points?: {
+        x: number // percentage
+        y: number // percentage
+        label: string
+        value: string
+        hideRing?: boolean
+    }[]
+    lines?: {
+        y: number
+        label?: string
+    }[]
+    verticalLines?: {
+        x: number
+        label?: string
+        style?: 'dashed' | 'solid'
+    }[]
+    arrows?: {
+        x: number
+        y: number
+        direction: 'left' | 'right'
+        label: string
+        subLabel?: string
+    }[]
+}
+
 interface PhotoViewerModalProps {
     isOpen: boolean
     onClose: () => void
@@ -21,18 +53,10 @@ interface PhotoViewerModalProps {
         rightLabel?: string
         altLeft?: string
         altRight?: string
-        overlays?: {
-            scale?: {
-                min: number
-                max: number
-                unit: string
-            }
-            points?: {
-                x: number
-                y: number
-                label: string
-                value: string
-            }[]
+        overlays?: ThermalOverlay
+        leftOverlays?: ThermalOverlay
+        watermark?: {
+            lines: string[]
         }
     }
     currentIndex: number

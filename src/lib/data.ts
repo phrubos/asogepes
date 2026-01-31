@@ -1,3 +1,5 @@
+import type { PhotoItem } from '@/components/shared/PhotoViewer/PhotoViewer'
+
 // Location data for the experiment section
 export const locations = {
   szentkiraly: {
@@ -47,15 +49,17 @@ export const locations = {
         src: '/images/kutatás_pics/Szentkirály/01_szentkirály_termal_0307.png',
         alt: 'Szentkirály Hőkamera - Március 7.',
         title: 'Márciusi Hőtérkép',
-        description: 'A kora tavaszi hőtérkép felvétel a talajfelszín hőmérsékleti viszonyait tükrözi.'
+        description: 'A kora tavaszi hőtérkép felvétel a talajfelszín hőmérsékleti viszonyait tükrözi.',
+        type: 'image' as const
       },
       {
         src: '/images/kutatás_pics/Szentkirály/02_szentkirály_ortho_0307.png',
         alt: 'Szentkirály Ortofotó - Március 7.',
         title: 'Márciusi Állapot (Ortofotó)',
-        description: 'A kísérleti terület madártávlatból március elején.'
+        description: 'A kísérleti terület madártávlatból március elején.',
+        type: 'image' as const
       }
-    ]
+    ] as PhotoItem[]
   },
   kecskemet: {
     name: 'Kecskemét-Borbás',
@@ -100,7 +104,7 @@ export const locations = {
         alt: 'Kecskemét Összehasonlítás',
         title: 'Ortofotó és Hőtérkép Összehasonlítás (05.16)',
         description: 'A képen szereplő, felső 11 m széles ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. A drónos légifelvételen jól látszik, hogy a lazább szerkezetű, ásógépezett felület már felszáradt, mert gyorsabban felmelegedett, az alsó, kontroll sáv ugyanakkor még nedves.',
-        type: 'comparison',
+        type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
         rightSrc: '/images/kutatás_pics/kecskemet_borbas/02_termal_cut.jpeg',
         leftLabel: 'Ortofotó',
@@ -132,7 +136,7 @@ export const locations = {
         alt: 'Kecskemét Összehasonlítás 2',
         title: 'Ortofotó és TGI index Összehasonlítás (06.19)',
         description: 'A képen szereplő felső 11 m széles felület ásógépezve volt, az alsó 11 m széles csak ásóboronázva. Mindkét parcellán 9 sor ipari paradicsom volt. Szemmel is jó látható, hogy a felső mezőben nagyobb a lombfelület borítottság mint az alsóban. Az alkalmazott térinformatikai szoftver szerint a kontroll mezőben 35,9%-os az ásógépezett mezőben 41,5%-os a levélfelület borítás. Látható tehát, hogy az ásógépezett területen gyorsabb ütemben fejlődnek a növények.',
-        type: 'comparison',
+        type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_cut_orto.jpeg',
         rightSrc: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_tgi_cut.jpeg',
         leftLabel: 'Ortofotó',
@@ -160,26 +164,26 @@ export const locations = {
         alt: 'Kecskemét Paradicsom Állapot',
         title: 'Paradicsom állapot (06.19)',
         description: 'A júniusi fotón jól látható: a kép bal oldalára eső sorok a kontroll, a középső és a tőle jobbra eső sorok az ásógépezett parcellán fejlődtek. A lombtömeg és a hajtáshossz átlagosan 15%-kal nagyobb az ásógépezett területen.',
-        type: 'comparison',
+        type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/kecskemet_borbas/20250617_115254.jpg',
         rightSrc: '/images/kutatás_pics/kecskemet_borbas/20250617_115254.jpg',
         leftLabel: 'Kontroll',
         rightLabel: 'Ásógépezett',
         overlays: {
           verticalLines: [
-            { x: 50, style: 'dashed' }
+            { x: 50, style: 'dashed' as const }
           ],
           arrows: [
             {
               x: 37,
               y: 25,
-              direction: 'left',
+              direction: 'left' as const,
               label: 'Kontroll',
             },
             {
               x: 67,
               y: 25,
-              direction: 'right',
+              direction: 'right' as const,
               label: 'Ásógépezett',
               subLabel: 'Lombtömeg és hajtáshossz\nátlagosan +15%'
             }
@@ -195,7 +199,7 @@ export const locations = {
           // `leftOverlays` should be empty or undefined.
         }
       },
-    ]
+    ] as PhotoItem[]
   },
   lakitelek: {
     name: 'Lakitelek',
@@ -295,27 +299,31 @@ export const locations = {
         src: '/images/kutatás_pics/Lakitelek/01_Lakitelek_0502_ortho.png',
         alt: 'Lakitelek Ortofotó - Május 2.',
         title: 'Májusi Állapot (Ortofotó)',
-        description: 'A kísérleti terület madártávlatból május elején. A különböző talajművelési változatok hatása már ebben a korai stádiumban is kezd megmutatkozni.'
+        description: 'A kísérleti terület madártávlatból május elején. A különböző talajművelési változatok hatása már ebben a korai stádiumban is kezd megmutatkozni.',
+        type: 'image' as const
       },
       {
         src: '/images/kutatás_pics/Lakitelek/02_Lakitelek_0502_termal.png',
         alt: 'Lakitelek Hőkamera - Május 2.',
         title: 'Májusi Hőtérkép',
-        description: 'A tavaszi hőtérkép felvétel a talajfelszín és a fiatal állomány hőmérsékleti viszonyait tükrözi, utalva a vízháztartásbeli eltérésekre.'
+        description: 'A tavaszi hőtérkép felvétel a talajfelszín és a fiatal állomány hőmérsékleti viszonyait tükrözi, utalva a vízháztartásbeli eltérésekre.',
+        type: 'image' as const
       },
       {
         src: '/images/kutatás_pics/Lakitelek/03_Lakitelek_0606_ortho.png',
         alt: 'Lakitelek Ortofotó - Június 6.',
         title: 'Júniusi Állapot (Ortofotó)',
-        description: 'Nyár elejére a növényállomány jelentős fejlődésen ment keresztül. A parcellák közötti különbségek szabad szemmel is jól láthatóvá váltak.'
+        description: 'Nyár elejére a növényállomány jelentős fejlődésen ment keresztül. A parcellák közötti különbségek szabad szemmel is jól láthatóvá váltak.',
+        type: 'image' as const
       },
       {
         src: '/images/kutatás_pics/Lakitelek/04_Lakitelek_0606_termal.png',
         alt: 'Lakitelek Hőkamera - Június 6.',
         title: 'Júniusi Hőtérkép',
-        description: 'A júniusi hőkamerás felvétel kiemeli a parcellák közötti mikroklimatikus különbségeket. A hűvösebb területek jobb vízellátottságot és intenzívebb párologtatást jeleznek.'
+        description: 'A júniusi hőkamerás felvétel kiemeli a parcellák közötti mikroklimatikus különbségeket. A hűvösebb területek jobb vízellátottságot és intenzívebb párologtatást jeleznek.',
+        type: 'image' as const
       }
-    ]
+    ] as PhotoItem[]
   },
 }
 

@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react'
@@ -8,6 +6,38 @@ import styles from './PhotoViewer.module.css'
 import { usePhotoNavigation } from './usePhotoNavigation'
 import { PhotoViewerModal } from './PhotoViewerModal'
 import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
+
+interface ThermalOverlay {
+    scale?: {
+        min: number
+        max: number
+        unit: string
+        gradient?: string
+    }
+    points?: {
+        x: number // percentage
+        y: number // percentage
+        label: string
+        value: string
+        hideRing?: boolean
+    }[]
+    lines?: {
+        y: number
+        label?: string
+    }[]
+    verticalLines?: {
+        x: number
+        label?: string
+        style?: 'dashed' | 'solid'
+    }[]
+    arrows?: {
+        x: number
+        y: number
+        direction: 'left' | 'right'
+        label: string
+        subLabel?: string
+    }[]
+}
 
 export interface PhotoItem {
     src: string
@@ -21,38 +51,8 @@ export interface PhotoItem {
     rightLabel?: string
     altLeft?: string
     altRight?: string
-    overlays?: {
-        scale?: {
-            min: number
-            max: number
-            unit: string
-        }
-        points?: {
-            x: number
-            y: number
-            label: string
-            value: string
-        }[]
-        points?: {
-            x: number
-            y: number
-            label: string
-            value: string
-        }[]
-    }
-    leftOverlays?: {
-        scale?: {
-            min: number
-            max: number
-            unit: string
-        }
-        points?: {
-            x: number
-            y: number
-            label: string
-            value: string
-        }[]
-    }
+    overlays?: ThermalOverlay
+    leftOverlays?: ThermalOverlay
     watermark?: {
         lines: string[]
     }
