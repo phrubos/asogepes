@@ -46,7 +46,7 @@ export const locations = {
     },
     photos: [
       {
-        src: '/images/kutatás_pics/Szentkirály/ernő_termal_0307_cut.jpeg',
+        src: '/images/kutatás_pics/Szentkirály/ernő_termal_0307_cut_mod.jpeg',
         alt: 'Szentkirály Hőkamera - Március 7.',
         title: 'Márciusi Hőtérkép (03.07)',
         objectFit: 'contain',
@@ -61,11 +61,11 @@ export const locations = {
             gradient: 'linear-gradient(to top, #000000, #008080, #ffff00, #ff0000)'
           },
           points: [
-            { x: 23, y: 38, label: 'A', value: 'átl. hőm. 18.5°C', alwaysVisible: true },
-            { x: 29, y: 50, label: 'B', value: 'átl. hőm. 6.5°C', alwaysVisible: true },
-            { x: 50, y: 50, label: 'C', value: 'átl. hőm. 15.8°C', alwaysVisible: true },
-            { x: 83, y: 48, label: 'D', value: 'átl. hőm. 16.5°C', alwaysVisible: true },
-            { x: 96, y: 60, label: 'E', value: 'átl. hőm. 10.1°C', alwaysVisible: true }
+            { x: 20, y: 38, label: 'A', value: 'átl. hőm. 18.5°C', alwaysVisible: true },
+            { x: 26, y: 50, label: 'B', value: 'átl. hőm. 6.5°C', alwaysVisible: true },
+            { x: 47, y: 50, label: 'C', value: 'átl. hőm. 15.8°C', alwaysVisible: true },
+            { x: 80, y: 48, label: 'D', value: 'átl. hőm. 16.5°C', alwaysVisible: true },
+            { x: 93, y: 60, label: 'E', value: 'átl. hőm. 10.1°C', alwaysVisible: true }
           ]
         },
         watermark: {
@@ -320,7 +320,7 @@ export const locations = {
             { x: 28, y: 40, label: 'II. - III.', value: '', hideRing: true, alwaysVisible: true },
             { x: 55, y: 55, label: 'IV. - V.', value: '', hideRing: true, alwaysVisible: true },
             { x: 80, y: 70, label: 'VI. - VII.', value: '', hideRing: true, alwaysVisible: true },
-            { x: 8, y: 50, label: 'Ásógépezett felület (átl.)', value: '16.8°C' },
+
             { x: 30, y: 70, label: 'Vízborított / Nedves talaj', value: '12.0°C' },
             { x: 55, y: 15, label: 'Száraz, szerkezet nélküli homok', value: '20.2°C' },
           ],

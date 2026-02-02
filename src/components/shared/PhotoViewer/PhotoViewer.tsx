@@ -8,6 +8,7 @@ import { PhotoViewerModal } from './PhotoViewerModal'
 import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
 import ThermalOverlays from '../ThermalOverlays/ThermalOverlays'
 import SoilLoader from '@/components/ui/SoilLoader'
+import { FormattedText } from './FormattedText'
 
 interface ThermalOverlay {
     scale?: {
@@ -92,7 +93,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
     const currentItem = items[currentIndex] || items[0]
 
     const displayDescription = currentItem.type === 'comparison' && currentItem.leftDescription && currentItem.rightDescription
-        ? (sliderPos > 50 ? currentItem.leftDescription : currentItem.rightDescription)
+        ? (sliderPos >= 50 ? currentItem.leftDescription : currentItem.rightDescription)
         : currentItem.description
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -185,7 +186,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                                         onSliderChange={setSliderPos}
                                         onLoad={handleLoadComplete}
                                         objectFit="cover"
-                                        sizes="(max-width: 768px) 100vw, 800px"
+                                        sizes="100vw"
                                         initialSliderPosition={currentItem.initialSliderPosition}
                                     />
                                 </div>
@@ -197,9 +198,9 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                                         fill
                                         className={styles.image}
                                         priority
-                                        sizes="(max-width: 768px) 100vw, 800px"
+                                        sizes="100vw"
                                         style={{ objectFit: currentItem.objectFit || 'cover' }}
-                                        onLoadingComplete={handleLoadComplete}
+                                        onLoad={handleLoadComplete}
                                     />
                                     {currentItem.overlays && (
                                         <ThermalOverlays overlays={currentItem.overlays} />
@@ -261,7 +262,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                         transition={{ duration: 0.3 }}
                     >
                         <h3 className={styles.title}>{currentItem.title || 'Fotó'}</h3>
-                        <p className={styles.description}>{displayDescription}</p>
+                        <FormattedText className={styles.description} text={displayDescription} />
                     </motion.div>
                 </AnimatePresence>
             </div>

@@ -220,6 +220,70 @@
     margin: 0;
 }
 
+.highlight {
+    color: var(--color-gold, #d4a84b);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+/* Definition Lists */
+.definitionList {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.introText {
+    margin: 0;
+}
+
+.definitionItem {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 0.5rem;
+    align-items: baseline;
+    font-size: 0.95rem;
+}
+
+.definitionKey {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid #fff;
+    color: #fff;
+    border-radius: 99px;
+    font-weight: 700;
+    font-size: 1rem;
+    font-family: var(--font-mono, monospace);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-right: 4px;
+}
+
+.definitionValue {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.5;
+}
+
+.highlightBadge {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    color: var(--color-gold, #d4a84b);
+    font-weight: 700;
+    font-size: 1.25em;
+    font-family: var(--font-mono, monospace);
+    letter-spacing: -0.02em;
+}
+
 /* Responsive & Layout Changes */
 @media (min-width: 1024px) {
     .container {

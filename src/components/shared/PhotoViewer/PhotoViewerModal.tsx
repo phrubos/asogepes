@@ -6,6 +6,8 @@ import Image from 'next/image'
 import styles from './PhotoViewer.module.css'
 import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
 import ThermalOverlays from '../ThermalOverlays/ThermalOverlays'
+import SoilLoader from '@/components/ui/SoilLoader'
+import { FormattedText } from './FormattedText'
 
 interface ThermalOverlay {
     scale?: {
@@ -81,6 +83,16 @@ export function PhotoViewerModal({
     const [mounted, setMounted] = useState(false)
     const [zoom, setZoom] = useState(1)
     const [sliderPos, setSliderPos] = useState(50)
+    const [isLoading, setIsLoading] = useState(true)
+
+    // Reset loading state when index changes
+    useEffect(() => {
+        setIsLoading(true)
+    }, [currentIndex])
+
+    const handleLoadComplete = () => {
+        setIsLoading(false)
+    }
 
     useEffect(() => {
         console.log('PhotoViewerModal mounted')
@@ -247,6 +259,39 @@ export function PhotoViewerModal({
                                     onMouseUp={handleMouseUp}
                                     onMouseLeave={handleMouseLeave}
                                 >
+                                    {/* Loading Indicator Overlay */}
+                                    <AnimatePresence>
+                                        {isLoading && (
+                                            <motion.div
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                style={{
+                                                    position: 'absolute',
+                                                    inset: 0,
+                                                    zIndex: 50,
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '1rem',
+                                                    backgroundColor: '#1A1612', // Slightly dark background
+                                                }}
+                                            >
+                                                <SoilLoader size="md" />
+                                                <p style={{
+                                                    fontSize: '0.9rem',
+                                                    color: 'rgba(240, 245, 240, 0.6)',
+                                                    letterSpacing: '0.05em',
+                                                    fontWeight: 500,
+                                                }}>
+                                                    Betöltés...
+                                                </p>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+
                                     {isComparison && currentImage.leftSrc && currentImage.rightSrc ? (
                                         <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                                             <BeforeAfterSlider
@@ -262,6 +307,7 @@ export function PhotoViewerModal({
                                                 leftOverlays={currentImage.leftOverlays}
                                                 onSliderChange={setSliderPos}
                                                 initialSliderPosition={currentImage.initialSliderPosition}
+                                                onLoad={handleLoadComplete}
                                             />
                                         </div>
                                     ) : (
@@ -290,6 +336,7 @@ export function PhotoViewerModal({
                                                     priority
                                                     draggable={false}
                                                     style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                                                    onLoad={handleLoadComplete}
                                                 />
                                                 {currentImage.overlays && (
                                                     <ThermalOverlays overlays={currentImage.overlays} />
@@ -357,11 +404,11 @@ export function PhotoViewerModal({
                                 <h2 className={styles.modalTitle}>{currentImage.title || 'Foto Részletek'}</h2>
                             </div>
                             <div className={styles.modalDescription}>
-                                <p>
-                                    {currentImage.type === 'comparison' && currentImage.leftDescription && currentImage.rightDescription
-                                        ? (sliderPos > 50 ? currentImage.leftDescription : currentImage.rightDescription)
+                                <FormattedText
+                                    text={currentImage.type === 'comparison' && currentImage.leftDescription && currentImage.rightDescription
+                                        ? (sliderPos >= 50 ? currentImage.leftDescription : currentImage.rightDescription)
                                         : currentImage.description}
-                                </p>
+                                />
                             </div>
                         </div>
                     </motion.div>
