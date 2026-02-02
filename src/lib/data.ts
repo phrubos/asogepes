@@ -123,7 +123,7 @@ export const locations = {
         src: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
         alt: 'Kecskemét Összehasonlítás',
         title: 'Ortofotó és Hőtérkép Összehasonlítás (05.16)',
-        description: 'A képen szereplő, felső 11 m széles ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. A drónos légifelvételen jól látszik, hogy a lazább szerkezetű, ásógépezett felület már felszáradt, mert gyorsabban felmelegedett, az alsó, kontroll sáv ugyanakkor még nedves.',
+        description: 'A képen szereplő, felső 11 m széles sáv ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. A drónos légifelvételen jól látszik, hogy a lazább szerkezetű, ásógépezett felület már felszáradt, mert gyorsabban felmelegedett, az alsó, kontroll sáv ugyanakkor még nedves.',
         type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
         rightSrc: '/images/kutatás_pics/kecskemet_borbas/02_termal_cut.jpeg',
@@ -321,7 +321,7 @@ export const locations = {
             { x: 55, y: 55, label: 'IV. - V.', value: '', hideRing: true, alwaysVisible: true },
             { x: 80, y: 70, label: 'VI. - VII.', value: '', hideRing: true, alwaysVisible: true },
 
-            { x: 30, y: 70, label: 'Vízborított / Nedves talaj', value: '12.0°C' },
+            { x: 30, y: 70, label: 'Nedvesebb talaj', value: '12.0°C' },
             { x: 55, y: 15, label: 'Száraz, szerkezet nélküli homok', value: '20.2°C' },
           ],
           lines: [
