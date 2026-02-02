@@ -74,7 +74,7 @@ const FormatInline = ({ text }: { text: string }) => {
     // Normalize quotes to standard "
     const encodedText = text.replace(/[""]/g, '"')
 
-    const regex = /(?:(\d+(?:[.,]\d+)?%)|\b([IVXLCDM]+\.)|\b(\d+(?:[.,]\d+)?\s+(?:m|cm|mm|km|sor|kezelés|db|alkalom|°C))\b)/g
+    const regex = /(?:(\d+(?:[.,]\d+)?%)|\b([IVXLCDM]+\.)|\b(\d+(?:[.,]\d+)?\s+(?:méter|m|cm|mm|km|sor|kezelés|db|alkalom|°C))\b)/g
 
     const parts = encodedText.split(regex)
 

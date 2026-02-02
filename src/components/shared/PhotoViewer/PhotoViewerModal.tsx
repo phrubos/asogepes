@@ -355,24 +355,26 @@ export function PhotoViewerModal({
                             </div>
 
                             {/* Modal Navigation (Bottom Center) */}
-                            <div className={styles.modalBottomControls}>
-                                <button className={styles.navButton} onClick={(e) => { e.stopPropagation(); onPrev(); }}>
-                                    <ChevronLeft size={24} />
-                                </button>
+                            {totalItems > 1 && (
+                                <div className={styles.modalBottomControls}>
+                                    <button className={styles.navButton} onClick={(e) => { e.stopPropagation(); onPrev(); }}>
+                                        <ChevronLeft size={24} />
+                                    </button>
 
-                                <div className={styles.indicators}>
-                                    {Array.from({ length: totalItems }).map((_, idx) => (
-                                        <div
-                                            key={idx}
-                                            className={`${styles.indicator} ${idx === currentIndex ? styles.activeIndicator : ''}`}
-                                        />
-                                    ))}
+                                    <div className={styles.indicators}>
+                                        {Array.from({ length: totalItems }).map((_, idx) => (
+                                            <div
+                                                key={idx}
+                                                className={`${styles.indicator} ${idx === currentIndex ? styles.activeIndicator : ''}`}
+                                            />
+                                        ))}
+                                    </div>
+
+                                    <button className={styles.navButton} onClick={(e) => { e.stopPropagation(); onNext(); }}>
+                                        <ChevronRight size={24} />
+                                    </button>
                                 </div>
-
-                                <button className={styles.navButton} onClick={(e) => { e.stopPropagation(); onNext(); }}>
-                                    <ChevronRight size={24} />
-                                </button>
-                            </div>
+                            )}
 
                             {/* Zoom Controls Overlay on Image Area - Hide for comparison */}
                             {!isComparison && (
@@ -398,9 +400,11 @@ export function PhotoViewerModal({
                             </button>
 
                             <div className={styles.modalHeader}>
-                                <div className={styles.modalMeta}>
-                                    KÉP {currentIndex + 1} / {totalItems}
-                                </div>
+                                {totalItems > 1 && (
+                                    <div className={styles.modalMeta}>
+                                        KÉP {currentIndex + 1} / {totalItems}
+                                    </div>
+                                )}
                                 <h2 className={styles.modalTitle}>{currentImage.title || 'Foto Részletek'}</h2>
                             </div>
                             <div className={styles.modalDescription}>

@@ -123,7 +123,7 @@ export const locations = {
         src: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
         alt: 'Kecskemét Összehasonlítás',
         title: 'Ortofotó és Hőtérkép Összehasonlítás (05.16)',
-        description: 'A képen szereplő, felső 11 m széles sáv ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. A drónos légifelvételen jól látszik, hogy a lazább szerkezetű, ásógépezett felület már felszáradt, mert gyorsabban felmelegedett, az alsó, kontroll sáv ugyanakkor még nedves.',
+        description: 'A képen szereplő, felső 11 méter széles sáv ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. A drónos légifelvételen jól látszik, hogy a lazább szerkezetű, ásógépezett felület már felszáradt, mert gyorsabban felmelegedett, az alsó, kontroll sáv ugyanakkor még nedves.',
         type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
         rightSrc: '/images/kutatás_pics/kecskemet_borbas/02_termal_cut.jpeg',
@@ -150,7 +150,7 @@ export const locations = {
         src: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_cut_orto.jpeg',
         alt: 'Kecskemét Összehasonlítás 2',
         title: 'Ortofotó és TGI index Összehasonlítás (06.19)',
-        description: 'A képen szereplő felső 11 m széles felület ásógépezve volt, az alsó 11 m széles csak ásóboronázva. Mindkét parcellán 9 sor ipari paradicsom volt. Szemmel is jó látható, hogy a felső mezőben nagyobb a lombfelület borítottság mint az alsóban. Az alkalmazott térinformatikai szoftver szerint a kontroll mezőben 35,9%-os az ásógépezett mezőben 41,5%-os a levélfelület borítás. Látható tehát, hogy az ásógépezett területen gyorsabb ütemben fejlődnek a növények.',
+        description: 'A képen szereplő felső 11 méter széles felület ásógépezve volt, az alsó 11 méter széles csak ásóboronázva. Mindkét parcellán 9 sor ipari paradicsom volt. Szemmel is jó látható, hogy a felső mezőben nagyobb a lombfelület borítottság mint az alsóban. Az alkalmazott térinformatikai szoftver szerint a kontroll mezőben 35,9%-os az ásógépezett mezőben 41,5%-os a levélfelület borítás. Látható tehát, hogy az ásógépezett területen gyorsabb ütemben fejlődnek a növények.',
         type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_cut_orto.jpeg',
         rightSrc: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_tgi_cut.jpeg',
@@ -327,8 +327,8 @@ export const locations = {
           lines: [
             { y: 32, xStart: 0, xEnd: 17, color: '#d4a84b', alwaysVisible: true },
             { y: 45, xStart: 17, xEnd: 40, color: '#d4a84b', alwaysVisible: true },
-            { y: 61, xStart: 40, xEnd: 68, color: '#d4a84b', alwaysVisible: true },
-            { y: 73, xStart: 68, xEnd: 100, color: '#d4a84b', alwaysVisible: true },
+            { y: 61, xStart: 40.6, xEnd: 69, color: '#d4a84b', alwaysVisible: true },
+            { y: 73, xStart: 69, xEnd: 100, color: '#d4a84b', alwaysVisible: true },
           ]
         },
         leftOverlays: {},
