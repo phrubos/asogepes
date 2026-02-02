@@ -107,6 +107,7 @@ export default function BeforeAfterSlider({
     const containerRef = useRef<HTMLDivElement>(null)
     const [imageRatio, setImageRatio] = useState<number | null>(null)
     const [containerRect, setContainerRect] = useState<{ width: number; height: number } | null>(null)
+    const shouldPreventClick = useRef(false)
 
     // Monitor container size
     useEffect(() => {
@@ -127,6 +128,8 @@ export default function BeforeAfterSlider({
 
     const handleMove = useCallback((clientX: number) => {
         if (!containerRef.current) return
+
+        shouldPreventClick.current = true
 
         const rect = containerRef.current.getBoundingClientRect()
         const x = Math.max(0, Math.min(clientX - rect.left, rect.width))
@@ -283,6 +286,15 @@ export default function BeforeAfterSlider({
         <div
             className={styles.container}
             ref={containerRef}
+            onClick={(e) => {
+                if (shouldPreventClick.current) {
+                    e.stopPropagation()
+                    shouldPreventClick.current = false
+                }
+            }}
+            onMouseDownCapture={() => {
+                shouldPreventClick.current = false
+            }}
         >
             {/* Content Wrapper covers the container while maintaining aspect ratio */}
             <div style={wrapperStyle}>
