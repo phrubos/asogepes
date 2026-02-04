@@ -28,6 +28,7 @@ interface ThermalOverlay {
         xEnd?: number   // Percentage
         color?: string
         alwaysVisible?: boolean
+        hasArrows?: boolean
     }[]
     verticalLines?: {
         x: number
@@ -38,8 +39,8 @@ interface ThermalOverlay {
     arrows?: {
         x: number
         y: number
-        direction: 'left' | 'right'
-        label: string
+        direction: 'left' | 'right' | 'down' | 'none'
+        label?: string
         subLabel?: string
         alwaysVisible?: boolean
     }[]
