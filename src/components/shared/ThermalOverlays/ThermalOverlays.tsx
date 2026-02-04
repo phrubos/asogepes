@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './ThermalOverlays.module.css'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowDown } from 'lucide-react'
 
 // Reuse the interface from your project
 export interface ThermalOverlayData {
@@ -27,14 +27,31 @@ export interface ThermalOverlayData {
         xEnd?: number
         color?: string
         alwaysVisible?: boolean
+        hasArrows?: boolean
     }[]
     arrows?: {
         x: number
         y: number
-        direction: 'left' | 'right'
-        label: string
+        direction: 'left' | 'right' | 'down' | 'none'
+        label?: string
         subLabel?: string
         alwaysVisible?: boolean
+    }[]
+    rects?: {
+        x: number
+        y: number
+        width: number
+        height: number
+        borderColor?: string
+    }[]
+    textLabels?: {
+        x: number
+        y: number
+        text: string
+        fontSize?: string
+        color?: string
+        fontWeight?: string | number
+        rotation?: number
     }[]
 }
 
@@ -113,14 +130,72 @@ export default function ThermalOverlays({ overlays }: ThermalOverlaysProps) {
             {overlays.arrows?.map((arrow, idx) => (
                 <div
                     key={`arrow-${idx}`}
-                    className={`${styles.overlayArrow} ${arrow.direction === 'left' ? styles.arrowLeft : styles.arrowRight}`}
+                    className={`
+                        ${styles.overlayArrow} 
+                        ${arrow.direction === 'left' ? styles.arrowLeft : ''}
+                        ${arrow.direction === 'right' ? styles.arrowRight : ''}
+                        ${arrow.direction === 'down' ? styles.arrowDown : ''}
+                        ${arrow.direction === 'none' ? styles.arrowNone : ''}
+                    `}
                     style={{ left: `${arrow.x}%`, top: `${arrow.y}%` }}
                 >
-                    <div className={styles.arrowLabelGroup}>
-                        <span className={styles.arrowLabel}>{arrow.label}</span>
-                        {arrow.subLabel && <span className={styles.arrowSubLabel}>{arrow.subLabel}</span>}
-                    </div>
-                    {arrow.direction === 'left' ? <ArrowLeft size={24} /> : <ArrowRight size={24} />}
+                    {arrow.direction === 'none' ? (
+                        <div className={styles.arrowLabelGroupNone}>
+                            {arrow.label && <span className={styles.arrowLabel}>{arrow.label}</span>}
+                            {arrow.subLabel && <span className={styles.arrowSubLabel}>{arrow.subLabel}</span>}
+                        </div>
+                    ) : arrow.direction !== 'down' ? (
+                        <>
+                            <div className={styles.arrowLabelGroup}>
+                                <span className={styles.arrowLabel}>{arrow.label}</span>
+                                {arrow.subLabel && <span className={styles.arrowSubLabel}>{arrow.subLabel}</span>}
+                            </div>
+                            {arrow.direction === 'left' ? <ArrowLeft size={24} /> : <ArrowRight size={24} />}
+                        </>
+                    ) : (
+                        <>
+                            <ArrowDown size={32} />
+                            {(arrow.label || arrow.subLabel) && (
+                                <div className={styles.arrowLabelGroupDown}>
+                                    {arrow.label && <span className={styles.arrowLabel}>{arrow.label}</span>}
+                                    {arrow.subLabel && <span className={styles.arrowSubLabel}>{arrow.subLabel}</span>}
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+            ))}
+
+            {/* Rects (e.g. for tractor box) */}
+            {overlays.rects?.map((rect, idx) => (
+                <div
+                    key={`rect-${idx}`}
+                    className={styles.overlayRect}
+                    style={{
+                        left: `${rect.x}%`,
+                        top: `${rect.y}%`,
+                        width: `${rect.width}%`,
+                        height: `${rect.height}%`,
+                        borderColor: rect.borderColor || 'white'
+                    }}
+                />
+            ))}
+
+            {/* Custom Text Labels (e.g. big T) */}
+            {overlays.textLabels?.map((label, idx) => (
+                <div
+                    key={`text-${idx}`}
+                    className={styles.overlayTextLabel}
+                    style={{
+                        left: `${label.x}%`,
+                        top: `${label.y}%`,
+                        fontSize: label.fontSize || '24px',
+                        color: label.color || 'white',
+                        fontWeight: label.fontWeight || 'bold',
+                        transform: label.rotation ? `translate(-50%, -50%) rotate(${label.rotation}deg)` : 'translate(-50%, -50%)'
+                    }}
+                >
+                    {label.text}
                 </div>
             ))}
         </div>

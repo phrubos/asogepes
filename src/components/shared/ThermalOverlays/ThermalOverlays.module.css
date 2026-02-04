@@ -155,3 +155,100 @@
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
     z-index: 16;
 }
+
+.arrowLeft {
+    flex-direction: row;
+}
+
+.arrowRight {
+    flex-direction: row-reverse;
+}
+
+.arrowDown {
+    flex-direction: column;
+    align-items: center;
+}
+
+.arrowLabelGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.arrowRight .arrowLabelGroup {
+    align-items: flex-start;
+}
+
+.arrowLabelGroupDown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 4px 8px;
+    border-radius: 4px;
+    backdrop-filter: blur(2px);
+}
+
+.arrowLabel {
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.arrowSubLabel {
+    font-size: 11px;
+    opacity: 0.9;
+    line-height: 1.2;
+}
+
+.overlayRect {
+    position: absolute;
+    border: 2px solid white;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 12;
+}
+
+.overlayTextLabel {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 13;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    z-index: 13;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
+}
+
+.arrowNone {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.arrowLabelGroupNone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #000000;
+    padding: 6px 12px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.arrowLabelGroupNone .arrowLabel {
+    color: #ffd700;
+    margin-bottom: 2px;
+}
+
+.arrowLabelGroupNone .arrowSubLabel {
+    color: white;
+    opacity: 1;
+    text-align: center;
+    width: 100%;
+    /* Ensure it takes full width for alignment */
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 2px;
+    margin-top: 2px;
+}

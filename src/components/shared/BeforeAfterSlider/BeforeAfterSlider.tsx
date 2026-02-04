@@ -11,6 +11,7 @@ interface ThermalOverlay {
         max: number
         unit: string
         gradient?: string
+        right?: number // Optional right position override
     }
     points?: {
         x: number // percentage
@@ -61,6 +62,7 @@ interface BeforeAfterSliderProps {
     objectFit?: React.CSSProperties['objectFit']
     sizes?: string
     initialSliderPosition?: number
+    interactionEnabled?: boolean
 }
 
 export default function BeforeAfterSlider({
@@ -77,7 +79,8 @@ export default function BeforeAfterSlider({
     onLoad,
     objectFit,
     sizes = '100vw',
-    initialSliderPosition = 50
+    initialSliderPosition = 50,
+    interactionEnabled = true
 }: BeforeAfterSliderProps) {
     const [sliderPosition, setSliderPosition] = useState(initialSliderPosition) // Percentage of container
     const [isDragging, setIsDragging] = useState(false)
@@ -127,7 +130,10 @@ export default function BeforeAfterSlider({
     }, [])
 
     const handleMove = useCallback((clientX: number) => {
-        if (!containerRef.current) return
+        if (!containerRef.current || !interactionEnabled) {
+            console.log('[BeforeAfterSlider] handleMove ignored:', { container: !!containerRef.current, interactionEnabled })
+            return
+        }
 
         shouldPreventClick.current = true
 
@@ -135,12 +141,15 @@ export default function BeforeAfterSlider({
         const x = Math.max(0, Math.min(clientX - rect.left, rect.width))
         const percent = Math.max(0, Math.min((x / rect.width) * 100, 100))
 
+        console.log('[BeforeAfterSlider] Handling move:', { percent })
         setSliderPosition(percent)
-    }, [])
+    }, [interactionEnabled])
 
     const onMouseDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+        console.log('[BeforeAfterSlider] onMouseDown:', { interactionEnabled })
+        if (!interactionEnabled) return
         setIsDragging(true)
-    }, [])
+    }, [interactionEnabled])
 
     const onMouseUp = useCallback(() => {
         setIsDragging(false)
@@ -157,7 +166,25 @@ export default function BeforeAfterSlider({
 
     // Global event listeners (same as before)
     useEffect(() => {
-        const handleGlobalMouseUp = () => setIsDragging(false)
+        const handleGlobalMouseUp = () => {
+            setIsDragging(false)
+
+            // Prevent subsequent click event which causes modal closing
+            // This happens when mouseup occurs on the overlay (common ancestor)
+            const preventClick = (clickEvent: MouseEvent) => {
+                clickEvent.stopPropagation()
+                clickEvent.stopImmediatePropagation()
+                clickEvent.preventDefault()
+                window.removeEventListener('click', preventClick, true)
+            }
+
+            // Add capture listener to catch the click before it bubbles
+            window.addEventListener('click', preventClick, true)
+
+            // Cleanup in case click doesn't fire (e.g. context menu or other interruption)
+            setTimeout(() => window.removeEventListener('click', preventClick, true), 50)
+        }
+
         const handleGlobalMouseMove = (e: MouseEvent) => {
             if (isDragging) {
                 handleMove(e.clientX)
@@ -286,6 +313,10 @@ export default function BeforeAfterSlider({
         <div
             className={styles.container}
             ref={containerRef}
+            style={{
+                pointerEvents: interactionEnabled ? 'auto' : 'none',
+                touchAction: interactionEnabled ? 'none' : 'auto' // Allow browser defaults (zoom/scroll) when disabled
+            }}
             onClick={(e) => {
                 if (shouldPreventClick.current) {
                     e.stopPropagation()
@@ -297,7 +328,22 @@ export default function BeforeAfterSlider({
             }}
         >
             {/* Content Wrapper covers the container while maintaining aspect ratio */}
+            {objectFit !== 'contain' && (
+                <>
+                    {leftLabel && <div className={`${styles.label} ${styles.labelLeft}`}>{leftLabel}</div>}
+                    {rightLabel && <div className={`${styles.label} ${styles.labelRight}`}>{rightLabel}</div>}
+                </>
+            )}
+
+            {/* Content Wrapper covers the container while maintaining aspect ratio */}
+            {/* Note: Labels moved to container for 'cover', inside for 'contain' */}
             <div style={wrapperStyle}>
+                {objectFit === 'contain' && (
+                    <>
+                        {leftLabel && <div className={`${styles.label} ${styles.labelLeft}`}>{leftLabel}</div>}
+                        {rightLabel && <div className={`${styles.label} ${styles.labelRight}`}>{rightLabel}</div>}
+                    </>
+                )}
 
                 {/* Right Image Layer (Background) */}
                 <div className={styles.imageWrapper}>
@@ -364,7 +410,7 @@ export default function BeforeAfterSlider({
                                 !line.alwaysVisible && (
                                     <div
                                         key={`line-${idx}`}
-                                        className={styles.overlayLine}
+                                        className={`${styles.overlayLine} ${line.hasArrows ? styles.overlayLineWithArrows : ''}`}
                                         style={{
                                             top: `${line.y}%`,
                                             left: line.xStart !== undefined ? `${line.xStart}%` : 0,
@@ -446,7 +492,7 @@ export default function BeforeAfterSlider({
                             {leftOverlays.lines?.map((line, idx) => (
                                 <div
                                     key={`line-${idx}`}
-                                    className={styles.overlayLine}
+                                    className={`${styles.overlayLine} ${line.hasArrows ? styles.overlayLineWithArrows : ''}`}
                                     style={{
                                         top: `${line.y}%`,
                                         left: line.xStart !== undefined ? `${line.xStart}%` : 0,
@@ -463,7 +509,15 @@ export default function BeforeAfterSlider({
                     )}
                 </div>
 
-            </div>{/* End Wrapper */}
+                {/* Watermark inside wrapper for 'contain' mode */}
+                {objectFit === 'contain' && watermark && (
+                    <div className={styles.watermark}>
+                        {watermark.lines.map((line, idx) => (
+                            <span key={idx} className={styles.watermarkLine}>{line}</span>
+                        ))}
+                    </div>
+                )}
+            </div>
 
             {/* Slider Handle - Stays in Container Space */}
             <div
@@ -526,7 +580,7 @@ export default function BeforeAfterSlider({
                         line.alwaysVisible && (
                             <div
                                 key={`static-line-${idx}`}
-                                className={styles.overlayLine}
+                                className={`${styles.overlayLine} ${line.hasArrows ? styles.overlayLineWithArrows : ''}`}
                                 style={{
                                     top: `${line.y}%`,
                                     left: line.xStart !== undefined ? `${line.xStart}%` : 0,
@@ -577,7 +631,8 @@ export default function BeforeAfterSlider({
                     style={{
                         opacity: sliderPosition < 45 ? 1 : 0,
                         transition: 'opacity 0.3s ease',
-                        zIndex: 20 // Ensure on top
+                        zIndex: 20, // Ensure on top
+                        right: overlays.scale.right !== undefined ? `${overlays.scale.right}px` : undefined
                     }}
                 >
                     <div className={styles.scaleMax}>
@@ -599,15 +654,10 @@ export default function BeforeAfterSlider({
                 <div
                     className={styles.thermalScale}
                     style={{
-                        // Left scale usually visible when left image is dominant? 
-                        // Or maybe always? Assuming specific logic if needed, but for now mirror the point logic or invert?
-                        // If distinct from Right scale, maybe it needs its own logic.
-                        // But currently no left scale usage. I'll stick to a safe default or hide it if not needed.
-                        // Actually, let's assume it should be visible when Left is visible (> 55?)
                         opacity: sliderPosition > 55 ? 1 : 0,
                         transition: 'opacity 0.3s ease',
                         zIndex: 20,
-                        left: '30px', // Left scale on left side?
+                        left: leftOverlays.scale.right !== undefined ? `${leftOverlays.scale.right}px` : '30px', // Reuse 'right' prop for left distance
                         right: 'auto'
                     }}
                 >
@@ -626,10 +676,7 @@ export default function BeforeAfterSlider({
                 </div>
             )}
 
-            {leftLabel && <div className={`${styles.label} ${styles.labelLeft}`}>{leftLabel}</div>}
-            {rightLabel && <div className={`${styles.label} ${styles.labelRight}`}>{rightLabel}</div>}
-
-            {watermark && (
+            {objectFit !== 'contain' && watermark && (
                 <div className={styles.watermark}>
                     {watermark.lines.map((line, idx) => (
                         <span key={idx} className={styles.watermarkLine}>{line}</span>

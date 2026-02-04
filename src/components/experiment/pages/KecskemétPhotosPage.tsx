@@ -22,7 +22,6 @@ export default function KecskemétPhotosPage() {
                     <MapPin size={12} />
                     <span>Kecskemét-Borbás</span>
                 </div>
-                <h3 className={styles.headerTitle}>Fotók</h3>
             </motion.div>
 
             {/* Content */}

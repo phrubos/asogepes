@@ -61,20 +61,22 @@ export const FormattedText: React.FC<FormattedTextProps> = ({ text, className })
     )
 }
 
-// Helper for inline formatting (numbers, percentages)
+// Helper for inline formatting (numbers, percentages, and explicit [[text]])
 const FormatInline = ({ text }: { text: string }) => {
     if (!text) return null
 
     // Regex for inline highlights:
-    // 1. Percentages (e.g., "54%", "12,5%")
-    // 2. Roman numerals with extensions (e.g., "II.", "III.-es", "V.-ös") - Note: removed trailing \b because dot is non-word char
-    // 3. Quantities with units (e.g., "11 m", "9 sor", "4 kezelés")
-    // 4. Standalone measurement values (fallback for strict matches)
+    // 1. Explicit highlights: [[text]]
+    // 2. Percentages (e.g., "54%", "12,5%")
+    // 3. Roman numerals with extensions (e.g., "II.", "III.-es", "V.-ös")
+    // 4. Quantities with units (e.g., "11 m", "9 sor", "4 kezelés")
+    // 5. Standalone measurement values (fallback for strict matches)
 
     // Normalize quotes to standard "
     const encodedText = text.replace(/[""]/g, '"')
 
-    const regex = /(?:(\d+(?:[.,]\d+)?%)|\b([IVXLCDM]+\.)|\b(\d+(?:[.,]\d+)?\s+(?:méter|m|cm|mm|km|sor|kezelés|db|alkalom|°C))\b)/g
+    // Updated regex to include \[\[(.*?)\]\] as the first capturing group
+    const regex = /(?:(\[\[.*?\]\])|(\d+(?:[.,]\d+)?%)|\b([IVXLCDM]+\.)|\b(\d+(?:[.,]\d+)?\s+(?:méter|m|cm|mm|km|sor|kezelés|db|alkalom|°C))\b)/g
 
     const parts = encodedText.split(regex)
 
@@ -83,8 +85,17 @@ const FormatInline = ({ text }: { text: string }) => {
             {parts.map((part, index) => {
                 if (!part) return null
 
-                // If it matches our regex (it will be one of the captured groups, but split returns undefined for non-matches around the match)
-                // Filter out undefined captures from the split output which happen because of the capturing groups
+                // Check for explicit [[text]] pattern
+                if (part.startsWith('[[') && part.endsWith(']]')) {
+                    const content = part.slice(2, -2); // Remove [[ and ]]
+                    return (
+                        <span key={index} className={styles.highlightBadge}>
+                            {content}
+                        </span>
+                    )
+                }
+
+                // Existing checks for auto-highlighting
                 if (
                     /^\d+(?:[.,]\d+)?%$/.test(part) ||
                     /^[IVXLCDM]+\..*$/.test(part) ||

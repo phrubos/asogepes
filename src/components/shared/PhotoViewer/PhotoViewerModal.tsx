@@ -128,26 +128,20 @@ export function PhotoViewerModal({
         }
     }, [isOpen])
 
-    // Native Wheel Handler for smooth, non-chained Zoom
-    useEffect(() => {
-        const element = imageAreaRef.current
-        if (!element || !isOpen || isComparison) return
+    // Native Wheel Handler replacement
+    const handleWheel = useCallback((e: React.WheelEvent) => {
+        // e.preventDefault() is handled by body overflow: hidden
+        e.stopPropagation()
+        console.log('[PhotoViewerModal] Wheel Event:', { deltaY: e.deltaY, currentZoom: zoom })
 
-        const handleWheel = (e: WheelEvent) => {
-            e.preventDefault() // Stop page scroll
-            e.stopPropagation() // Stop bubbling
+        const delta = e.deltaY > 0 ? -0.1 : 0.1
+        setZoom(prev => Math.max(0.5, Math.min(4, prev + delta)))
+    }, [zoom]) // Added zoom dependency for logging current state
 
-            const delta = e.deltaY > 0 ? -0.1 : 0.1
-            setZoom(prev => Math.max(0.5, Math.min(4, prev + delta)))
-        }
-
-        // Add non-passive listener
-        element.addEventListener('wheel', handleWheel, { passive: false })
-
-        return () => {
-            element.removeEventListener('wheel', handleWheel)
-        }
-    }, [isOpen, isComparison])
+    /* 
+    // Removed native listener effect to avoid binding issues
+    useEffect(() => { ... }, [isOpen]) 
+    */
 
 
     // Escape key handler
@@ -173,15 +167,15 @@ export function PhotoViewerModal({
 
     // Mouse event handlers for drag-to-pan
     const handleMouseDown = useCallback((e: React.MouseEvent) => {
-        if (zoom <= 1 || isComparison) return
+        if (zoom <= 1) return
         e.preventDefault()
         setIsDragging(true)
         dragStart.current = { x: e.clientX, y: e.clientY }
         positionStart.current = { ...position }
-    }, [zoom, position, isComparison])
+    }, [zoom, position])
 
     const handleMouseMove = useCallback((e: React.MouseEvent) => {
-        if (!isDragging || zoom <= 1 || isComparison) return
+        if (!isDragging || zoom <= 1) return
         e.preventDefault()
 
         const deltaX = e.clientX - dragStart.current.x
@@ -198,7 +192,7 @@ export function PhotoViewerModal({
         const newY = Math.max(-maxY, Math.min(maxY, positionStart.current.y + deltaY))
 
         setPosition({ x: newX, y: newY })
-    }, [isDragging, zoom, isComparison])
+    }, [isDragging, zoom])
 
     const handleMouseUp = useCallback(() => {
         setIsDragging(false)
@@ -231,25 +225,28 @@ export function PhotoViewerModal({
                         exit={{ opacity: 0 }}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* Image Area (Left) */}
                         <div
                             ref={imageAreaRef}
                             className={styles.modalImageArea}
-                        // onWheel removed in favor of native listener
+                            onWheel={handleWheel}
                         >
                             {/* Zoom Wrapper handles clipping */}
                             <div className={styles.zoomWrapper}>
                                 <motion.div
                                     key={currentImage.src}
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3 }}
                                     style={{
+                                        transform: `scale(${zoom}) translate(${position.x / zoom}px, ${position.y / zoom}px)`,
+                                        cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
+                                        transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+                                        userSelect: 'none',
+                                        pointerEvents: 'auto',
+                                        position: 'relative',
                                         width: '100%',
                                         height: '100%',
-                                        position: 'relative',
-                                        overflow: 'hidden',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center'
@@ -308,47 +305,38 @@ export function PhotoViewerModal({
                                                 onSliderChange={setSliderPos}
                                                 initialSliderPosition={currentImage.initialSliderPosition}
                                                 onLoad={handleLoadComplete}
+                                                interactionEnabled={zoom === 1}
                                             />
                                         </div>
                                     ) : (
-                                        <div
-                                            style={{
-                                                transform: `scale(${zoom}) translate(${position.x / zoom}px, ${position.y / zoom}px)`,
-                                                cursor: zoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
-                                                transition: isDragging ? 'none' : 'transform 0.1s ease-out',
-                                                userSelect: 'none',
-                                                pointerEvents: 'auto',
-                                                position: 'relative', // Ensure relative positioning for overlays
-                                                width: '100%',
-                                                height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center'
-                                            }}
-                                        >
-                                            <div style={{ position: 'relative', width: 'auto', height: 'auto' }}>
-                                                <Image
-                                                    src={currentImage.src}
-                                                    alt={currentImage.alt}
-                                                    width={1600}
-                                                    height={1200}
-                                                    className={styles.modalImage}
-                                                    priority
-                                                    draggable={false}
-                                                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                                                    onLoad={handleLoadComplete}
-                                                />
-                                                {currentImage.overlays && (
-                                                    <ThermalOverlays overlays={currentImage.overlays} />
-                                                )}
-                                                {currentImage.watermark && (
-                                                    <div className={styles.watermark}>
-                                                        {currentImage.watermark.lines.map((line, idx) => (
-                                                            <span key={idx} className={styles.watermarkLine}>{line}</span>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
+                                        <div style={{ position: 'relative', width: 'auto', height: 'auto' }}>
+                                            <Image
+                                                src={currentImage.src}
+                                                alt={currentImage.alt}
+                                                width={1600}
+                                                height={1200}
+                                                className={styles.modalImage}
+                                                priority
+                                                draggable={false}
+                                                style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                                                onLoad={handleLoadComplete}
+                                            />
+                                            {currentImage.overlays && (
+                                                <ThermalOverlays overlays={currentImage.overlays} />
+                                            )}
+                                            {currentImage.watermark && (
+                                                <div className={styles.watermark}>
+                                                    {currentImage.watermark.lines.map((line, idx) => (
+                                                        <span key={idx} className={styles.watermarkLine}>{line}</span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            {currentImage.leftLabel && (
+                                                <div className={`${styles.label} ${styles.labelLeft}`}>{currentImage.leftLabel}</div>
+                                            )}
+                                            {currentImage.rightLabel && (
+                                                <div className={`${styles.label} ${styles.labelRight}`}>{currentImage.rightLabel}</div>
+                                            )}
                                         </div>
                                     )}
                                 </motion.div>
@@ -376,21 +364,19 @@ export function PhotoViewerModal({
                                 </div>
                             )}
 
-                            {/* Zoom Controls Overlay on Image Area - Hide for comparison */}
-                            {!isComparison && (
-                                <div className={styles.zoomControls} onClick={(e) => e.stopPropagation()}>
-                                    <button className={styles.zoomBtn} onClick={handleZoomOut} disabled={zoom <= 0.5}>
-                                        <ZoomOut size={18} />
-                                    </button>
-                                    <span className={styles.zoomLevel}>{Math.round(zoom * 100)}%</span>
-                                    <button className={styles.zoomBtn} onClick={handleZoomIn} disabled={zoom >= 4}>
-                                        <ZoomIn size={18} />
-                                    </button>
-                                    <button className={styles.zoomBtn} onClick={handleReset}>
-                                        <RotateCcw size={18} />
-                                    </button>
-                                </div>
-                            )}
+                            {/* Zoom Controls Overlay on Image Area */}
+                            <div className={styles.zoomControls} onClick={(e) => e.stopPropagation()}>
+                                <button className={styles.zoomBtn} onClick={handleZoomOut} disabled={zoom <= 0.5}>
+                                    <ZoomOut size={18} />
+                                </button>
+                                <span className={styles.zoomLevel}>{Math.round(zoom * 100)}%</span>
+                                <button className={styles.zoomBtn} onClick={handleZoomIn} disabled={zoom >= 4}>
+                                    <ZoomIn size={18} />
+                                </button>
+                                <button className={styles.zoomBtn} onClick={handleReset}>
+                                    <RotateCcw size={18} />
+                                </button>
+                            </div>
                         </div>
 
                         {/* Info Panel (Right) */}

@@ -22,7 +22,6 @@ export default function SzentkirályPhotosPage() {
                     <MapPin size={12} />
                     <span>Szentkirály</span>
                 </div>
-                <h3 className={styles.headerTitle}>Fotók</h3>
             </motion.div>
 
             {/* Content */}

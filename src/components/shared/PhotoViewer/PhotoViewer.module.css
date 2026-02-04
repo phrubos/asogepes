@@ -187,17 +187,45 @@
     gap: 1.2rem;
     /* More breathing room */
     text-align: left;
-    /* Stable Height Fix: Ensure container is tall enough for longest text (06.19) to prevent jumping */
-    min-height: 560px;
-    justify-content: center;
-    /* Center content vertically */
+    /* Stable Height Fix: Fixed height with scrolling for long content */
+    height: 560px;
+    /* Fixed height instead of min-height */
+    /* justify-content: center removed - handled by pseudo-elements to prevent clipping when scrolling */
+    overflow-y: auto;
+
+    /* Custom Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gold, #d4a84b) rgba(255, 255, 255, 0.05);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+.descriptionArea::before,
+.descriptionArea::after {
+    content: '';
+    margin: auto;
+}
+
+/* Webkit Scrollbar Styling */
+.descriptionArea::-webkit-scrollbar {
+    width: 6px;
+}
+
+.descriptionArea::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.descriptionArea::-webkit-scrollbar-thumb {
+    background-color: var(--color-gold, #d4a84b);
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .textContainer {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    z-index: 1;
 }
 
 .title {
@@ -279,7 +307,6 @@
     border: none;
     color: var(--color-gold, #d4a84b);
     font-weight: 700;
-    font-size: 1.25em;
     font-family: var(--font-mono, monospace);
     letter-spacing: -0.02em;
 }
@@ -554,4 +581,26 @@
     color: rgba(255, 255, 255, 0.8);
     font-weight: 500;
     line-height: 1.2;
+}
+
+/* Labels for Single Images */
+.label {
+    position: absolute;
+    top: 20px;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 12px;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 15;
+    font-weight: 500;
+}
+
+.labelLeft {
+    left: 20px;
+}
+
+.labelRight {
+    right: 20px;
 }

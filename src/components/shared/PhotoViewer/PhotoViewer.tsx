@@ -16,6 +16,7 @@ interface ThermalOverlay {
         max: number
         unit: string
         gradient?: string
+        right?: number
     }
     points?: {
         x: number // percentage
@@ -211,6 +212,12 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                                                 <span key={idx} className={styles.watermarkLine}>{line}</span>
                                             ))}
                                         </div>
+                                    )}
+                                    {currentItem.leftLabel && (
+                                        <div className={`${styles.label} ${styles.labelLeft}`}>{currentItem.leftLabel}</div>
+                                    )}
+                                    {currentItem.rightLabel && (
+                                        <div className={`${styles.label} ${styles.labelRight}`}>{currentItem.rightLabel}</div>
                                     )}
                                 </>
                             )}

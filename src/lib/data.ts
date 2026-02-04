@@ -48,10 +48,11 @@ export const locations = {
       {
         src: '/images/kutatás_pics/Szentkirály/ernő_termal_0307_cut_mod.jpeg',
         alt: 'Szentkirály Hőkamera - Március 7.',
-        title: 'Márciusi Hőtérkép (03.07)',
+        title: 'A kísérleti parcella drónos hőtérképe',
         objectFit: 'contain',
         aspectRatio: '16/9',
-        description: 'Hőkamerás felvétel az ásógépezés napjáról (dél körül). "A": Kombinátorozott kontroll (magasabb hőm.). "B": Friss ásógépezés (nedvesebb, hűvösebb). "C-D": Ásógépezés után ~1 órával a laza talaj gyorsan felmelegszik, eléri a kontroll hőmérsékletét. "E": Vetés után a bolygatott felszín újra hűvösebb.',
+        rightLabel: 'Hőtérkép',
+        description: 'A kezelt tábláról az ásógépezés napján készítettünk drónos hőtérképet. A kép bal oldalán a [[T]] pont az ásógépezést végző traktort mutatja. A nyíl a gép haladási irányát. A kép [[március 7]]-én készült, a déli órákban, napsütéses időben, [[18 °C]]-os levegőhőmérséklet mellett.\n\nJellemző hőreferencia pontok (kb. [[100 m²]]-es körfelület átlagos hőmérséklete, °C):\n\n[[A]] – Kontroll felület, kombinátorozott, hetek óta bolygatatlan.\n[[B]] – Frissen ásógépezett, nyers felület. A hőmérséklete alacsony, felülete nedves.\n[[C – D]] – Kb. 30 és 60 perccel korábban ásógépezett felületek. Jól látható, hogy a laza szerkezetű talaj felülete igen gyorsan eléri a kontrolléhoz közelítő hőmérséklet értéket.\n[[E]] – a kép jobb oldalán látható sáv hagyma vetőmaggal már frissen bevetett terület. A vetőgép által bolygatott talajfelszín újra hűvösebb.',
         overlays: {
           scale: {
             min: 5.0,
@@ -61,11 +62,20 @@ export const locations = {
             gradient: 'linear-gradient(to top, #000000, #008080, #ffff00, #ff0000)'
           },
           points: [
-            { x: 20, y: 38, label: 'A', value: 'átl. hőm. 18.5°C', alwaysVisible: true },
-            { x: 26, y: 50, label: 'B', value: 'átl. hőm. 6.5°C', alwaysVisible: true },
-            { x: 47, y: 50, label: 'C', value: 'átl. hőm. 15.8°C', alwaysVisible: true },
-            { x: 80, y: 48, label: 'D', value: 'átl. hőm. 16.5°C', alwaysVisible: true },
-            { x: 93, y: 60, label: 'E', value: 'átl. hőm. 10.1°C', alwaysVisible: true }
+            { x: 18, y: 35, label: 'A', value: '18.5°C', alwaysVisible: true },
+            { x: 22, y: 55, label: 'B', value: '6.5°C', alwaysVisible: true },
+            { x: 65, y: 56, label: 'C', value: '15.8°C', alwaysVisible: true },
+            { x: 88, y: 57, label: 'D', value: '17.8°C', alwaysVisible: true },
+            { x: 96, y: 65, label: 'E', value: '10.1°C', alwaysVisible: true }
+          ],
+          rects: [
+            { x: 21.6, y: 66, width: 6, height: 10, borderColor: 'white' }
+          ],
+          textLabels: [
+            { x: 16.5, y: 66, text: 'T', fontSize: '32px', fontWeight: 'bold' }
+          ],
+          arrows: [
+            { x: 21.6, y: 74, direction: 'down', label: '', alwaysVisible: true }
           ]
         },
         watermark: {
@@ -76,7 +86,7 @@ export const locations = {
         src: '/images/kutatás_pics/Szentkirály/erno_hagyma.jpg',
         alt: 'Szentkirály Hagyma',
         title: 'Június - Hagymaállomány',
-        description: 'Az ábrán a jól fejlett hagyma állományt látjuk. A gépnyomtól balra az ásógépezett, jobbra a kontroll, kultivátorozott és kombinátorozott felület. Jól látszik, hogy az ásógépezés gyomszabályozó hatása sokkal erőteljesebb, a gyomírtószer hatóanyagának aktiválódásakor a magról kelő gyomok éppen optimális fejlettségi állapotban voltak.',
+        description: 'Az ábrán a jól fejlett hagyma állományt látjuk. A gépnyomtól balra az ásógépezett, jobbra a kontroll, kultivátorozott és kombinátorozott felület. Jól látszik, hogy az ásógépezés gyomszabályozó hatása sokkal erőteljesebb, a [[preemergens]] gyomírtószer hatóanyagának aktiválódásakor a magról kelő gyomok éppen optimális fejlettségi állapotban voltak.',
         type: 'image' as const
       }
     ] as PhotoItem[]
@@ -122,13 +132,13 @@ export const locations = {
       {
         src: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
         alt: 'Kecskemét Összehasonlítás',
-        title: 'Ortofotó és Hőtérkép Összehasonlítás (05.16)',
-        description: 'A képen szereplő, felső 11 méter széles sáv ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. A drónos légifelvételen jól látszik, hogy a lazább szerkezetű, ásógépezett felület már felszáradt, mert gyorsabban felmelegedett, az alsó, kontroll sáv ugyanakkor még nedves.',
+        title: 'Ortofotó és hőtérkép, az ültetés után, 05.\u00A016-án',
+        description: 'A képen látható felső, 11 méter széles sáv ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. A drónos légifelvételen jól látszik, hogy a lazább szerkezetű, ásógépezett felület már felszáradt, mert gyorsabban felmelegedett, az alsó, kontroll sáv ugyanakkor még nedves, hőmérséklete alacsonyabb.',
         type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
         rightSrc: '/images/kutatás_pics/kecskemet_borbas/02_termal_cut.jpeg',
         leftLabel: 'Ortofotó',
-        rightLabel: 'Hőkamera',
+        rightLabel: 'Hőtérkép',
         overlays: {
           scale: {
             min: 11.7,
@@ -137,9 +147,10 @@ export const locations = {
             gradient: 'linear-gradient(to top, #000000, #008080, #ffff00, #ff0000)'
           },
           points: [
-            { x: 30, y: 75, label: 'Kontroll (ásóborona)', value: 'átl. hőmérséklet 13.2°C', alwaysVisible: true },
-            { x: 55, y: 25, label: 'Ásógépezett (Imants - 40SX)', value: 'átl. hőmérséklet 20.1°C', alwaysVisible: true }
-          ]
+            { x: 52, y: 75, label: 'Kontroll (ásóborona)', value: 'átl. hőmérséklet 13.2°C', alwaysVisible: true },
+            { x: 52, y: 20, label: 'Ásógépezett (Imants - 40SX)', value: 'átl. hőmérséklet 20.1°C', alwaysVisible: true }
+          ],
+          lines: [{ y: 50, alwaysVisible: true }]
         },
         leftOverlays: {},
         watermark: {
@@ -149,8 +160,8 @@ export const locations = {
       {
         src: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_cut_orto.jpeg',
         alt: 'Kecskemét Összehasonlítás 2',
-        title: 'Ortofotó és TGI index Összehasonlítás (06.19)',
-        description: 'A képen szereplő felső 11 méter széles felület ásógépezve volt, az alsó 11 méter széles csak ásóboronázva. Mindkét parcellán 9 sor ipari paradicsom volt. Szemmel is jó látható, hogy a felső mezőben nagyobb a lombfelület borítottság mint az alsóban. Az alkalmazott térinformatikai szoftver szerint a kontroll mezőben 35,9%-os az ásógépezett mezőben 41,5%-os a levélfelület borítás. Látható tehát, hogy az ásógépezett területen gyorsabb ütemben fejlődnek a növények.',
+        title: 'Ortofotó és TGI (lombfelület) index, 06.\u00A019-én',
+        description: 'A képen látható felső, 11 méter széles sáv ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. Mindkét parcellára 9 sor ipari paradicsom került. Szemmel is jó látható, hogy a felső mezőn nagyobb a lombfelület borítás, mint az alsón. Az alkalmazott térinformatikai szoftver szerint a kontroll mezőben 35,9%-os, az ásógépezett mezőben 41,5%-os a lombfelület borítás. Az ásógépezett felületen tehát gyorsabb ütemben fejlődtek a növények.',
         type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_cut_orto.jpeg',
         rightSrc: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_tgi_cut.jpeg',
@@ -171,34 +182,29 @@ export const locations = {
       {
         src: '/images/kutatás_pics/kecskemet_borbas/paradicsom_sáringer.webp',
         alt: 'Kecskemét Paradicsom Állapot',
-        title: 'Paradicsom állapot (06.19)',
-        description: 'A júniusi fotón jól látható: a kép bal oldalára eső sorok a kontroll, a középső és a tőle jobbra eső sorok az ásógépezett parcellán fejlődtek. A lombtömeg és a hajtáshossz átlagosan 15%-kal nagyobb az ásógépezett területen.',
-        type: 'comparison' as const,
-        leftSrc: '/images/kutatás_pics/kecskemet_borbas/paradicsom_sáringer.webp',
-        rightSrc: '/images/kutatás_pics/kecskemet_borbas/paradicsom_sáringer.webp',
-        leftLabel: 'Kontroll',
-        rightLabel: 'Ásógépezett',
+        title: 'A lombtömeg alakulása, 06.\u00A019-én',
+        description: 'A kép bal oldalára eső sorok a kontroll, a középső és a tőle jobbra eső sorok az ásógépezett parcellán fejlődtek. A lombtömeg és a hajtáshossz átlagosan 15%-kal nagyobb az ásógépezett területen.',
+        type: 'image' as const,
         overlays: {
           verticalLines: [
             { x: 50, style: 'dashed' as const }
           ],
           arrows: [
             {
-              x: 37,
-              y: 25,
-              direction: 'left' as const,
+              x: 25,
+              y: 50,
+              direction: 'none' as const,
               label: 'Kontroll'
             },
             {
-              x: 67,
-              y: 25,
-              direction: 'right' as const,
+              x: 75,
+              y: 50,
+              direction: 'none' as const,
               label: 'Ásógépezett',
-              subLabel: 'Lombtömeg és hajtáshossz\nátlagosan +15%'
+              subLabel: '+15%\nlombtömeg'
             }
           ]
         },
-        leftOverlays: {}
       },
     ] as PhotoItem[]
   },
@@ -297,38 +303,46 @@ export const locations = {
     },
     photos: [
       {
-        src: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_orto.jpeg',
-        alt: 'Ortofotó és Hőtérkép Összehasonlítás (05.02)',
-        title: 'Ortofotó és Hőtérkép Összehasonlítás (05.02)',
+        src: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_orto_1.jpeg',
+        alt: 'Lakitelek Összehasonlítás',
+        title: 'Ortofotó és hőtérkép a talajelőkészítés után, 05.\u00A002-án',
         description: 'A fotó közvetlenül a talajművelési kombinációk befejezése után készült.',
         type: 'comparison' as const,
-        leftSrc: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_orto.jpeg',
-        rightSrc: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_otermal.jpeg',
+        leftSrc: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_orto_1.jpeg',
+        rightSrc: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_otermal_1.jpeg',
         leftLabel: 'Ortofotó',
         rightLabel: 'Hőtérkép',
-        leftDescription: 'A fotó közvetlenül a talajművelési kombinációk befejezése után készült. A II. és III.-es parcella felülete ásógépezett, a IV.-es V.-ös parcellák ásógép nélküliek. Az ábrán jól látszik, hogy az ásógépezett felület homogén, felszíne rögös, szabályosan csipkézett, a légifotón kifejezetten szerkezetesnek tűnik. A nem ásógépezett felület heterogén, szerkezet nélküli, a homok talaj felülete, szél által befújt, sima, a homokszemek a talaj felületén a szél hatására elmozudltak.',
-        rightDescription: 'Ugyanezen 4 kezelés hőtérképén jól látszik, h az ásógépezett talajfelszín hőmérséklete homogén, egyenletes, hőmérséklete a nem ásógépezet felülethez képest alacsonyabb, mivel ez a felület nedvesebb. A nem ásógépezett felület hőmérséklete heterogén, a felület több helyen száraz, ezeken a foltokon gyorsabban melegszik fel.',
+        leftDescription: 'A fotó közvetlenül a talajművelési lépések befejezése után készült. Az I., II., III. és a VI., VII. parcellák felülete ásógépezett, a IV.-es V. parcellák ásógép nélküliek. Az ábrán jól látszik, hogy az ásógépezett felületek homogének, felszínük rögös, szabályosan csipkézett, a légifotón kifejezetten szerkezetesnek tűnik. A nem ásógépezett felület heterogén, szerkezet nélküli, a homoktalaj felülete szél által befújt, sima, a homokszemek a talaj felületén a szél hatására elmozdultak.',
+        rightDescription: 'A hőtérképén jól látszik, hogy az ásógépezett talajfelszín hőmérséklete homogén, egyenletes, hőmérséklete a nem ásógépezet felülethez képest alacsonyabb, mivel ez a felület nedvesebb. A nem ásógépezett felület hőmérséklete heterogén, a felület több helyen száraz, ezeken a foltokon gyorsabban melegszik fel.',
         overlays: {
           scale: {
             min: 11.0,
             max: 24.0,
             unit: '°C',
-            gradient: 'linear-gradient(to top, #000000, #008080, #ffff00, #ff0000)'
+            gradient: 'linear-gradient(to top, #000000, #008080, #ffff00, #ff0000)',
+            right: 8
           },
           points: [
-            { x: 5, y: 25, label: 'I.', value: '', hideRing: true, alwaysVisible: true },
-            { x: 28, y: 40, label: 'II. - III.', value: '', hideRing: true, alwaysVisible: true },
-            { x: 55, y: 55, label: 'IV. - V.', value: '', hideRing: true, alwaysVisible: true },
-            { x: 80, y: 70, label: 'VI. - VII.', value: '', hideRing: true, alwaysVisible: true },
+            { x: 8, y: 29, label: 'I.', value: '', hideRing: true, alwaysVisible: true },
+            { x: 30, y: 42, label: 'II. - III.', value: '', hideRing: true, alwaysVisible: true },
+            { x: 58, y: 58, label: 'IV. - V.', value: '', hideRing: true, alwaysVisible: true },
+            { x: 83, y: 70, label: 'VI. - VII.', value: '', hideRing: true, alwaysVisible: true },
 
-            { x: 30, y: 70, label: 'Nedvesebb talaj', value: '12.0°C' },
-            { x: 55, y: 15, label: 'Száraz, szerkezet nélküli homok', value: '20.2°C' },
+            { x: 30, y: 48, label: 'Ásógépezett felület', value: '', hideRing: true, alwaysVisible: true },
+            { x: 83, y: 76, label: 'Kombinátorozott felület', value: '', hideRing: true, alwaysVisible: true },
+
+            { x: 30, y: 70, label: '', value: '12.0°C' },
+            { x: 47, y: 39, label: '', value: '13.8°C' },
+            { x: 63, y: 80, label: '', value: '17.8°C' },
+            { x: 59, y: 25, label: '', value: '20.5°C' },
+            { x: 9, y: 65, label: '', value: '15.2°C' },
+            { x: 81, y: 26, label: '', value: '12.2°C' },
           ],
           lines: [
-            { y: 32, xStart: 0, xEnd: 17, color: '#d4a84b', alwaysVisible: true },
-            { y: 45, xStart: 17, xEnd: 40, color: '#d4a84b', alwaysVisible: true },
-            { y: 61, xStart: 40.6, xEnd: 69, color: '#d4a84b', alwaysVisible: true },
-            { y: 73, xStart: 69, xEnd: 100, color: '#d4a84b', alwaysVisible: true },
+            { y: 32, xStart: 0, xEnd: 18, color: '#d4a84b', alwaysVisible: true, hasArrows: true },
+            { y: 45, xStart: 18, xEnd: 43, color: '#d4a84b', alwaysVisible: true, hasArrows: true },
+            { y: 61, xStart: 43, xEnd: 73, color: '#d4a84b', alwaysVisible: true, hasArrows: true },
+            { y: 73, xStart: 73, xEnd: 100, color: '#d4a84b', alwaysVisible: true, hasArrows: true },
           ]
         },
         leftOverlays: {},
