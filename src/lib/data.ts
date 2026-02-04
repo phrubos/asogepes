@@ -86,7 +86,7 @@ export const locations = {
         src: '/images/kutatás_pics/Szentkirály/erno_hagyma.jpg',
         alt: 'Szentkirály Hagyma',
         title: 'Június - Hagymaállomány',
-        description: 'Az ábrán a jól fejlett hagyma állományt látjuk. A gépnyomtól balra az ásógépezett, jobbra a kontroll, kultivátorozott és kombinátorozott felület. Jól látszik, hogy az ásógépezés gyomszabályozó hatása sokkal erőteljesebb, a [[preemergens]] gyomírtószer hatóanyagának aktiválódásakor a magról kelő gyomok éppen optimális fejlettségi állapotban voltak.',
+        description: 'Az ábrán a jól fejlett hagyma állományt látjuk. A gépnyomtól balra az ásógépezett, jobbra a kontroll, kultivátorozott és kombinátorozott felület. Jól látszik, hogy az ásógépezés gyomszabályozó hatása sokkal erőteljesebb, a preemergens gyomírtószer hatóanyagának aktiválódásakor a magról kelő gyomok éppen optimális fejlettségi állapotban voltak.',
         type: 'image' as const
       }
     ] as PhotoItem[]
