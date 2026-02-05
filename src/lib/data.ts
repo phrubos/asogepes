@@ -421,7 +421,7 @@ export const ploughingProblems = [
   },
   {
     title: 'Széntartalom oxidálódása',
-    description: 'A forgatás hatására a mélyebb rétegek szerves anyaga a felszínre kerül és gyorsabban oxidálódik, csökkentve a humusztartalmat.',
+    description: 'A forgatás hatására a mélyebb rétegek a felszínre kerülnek, a szervesanyag gyorsabban oxidálódik, csökkentve a humusztartalmat.',
     icon: 'trending-up',
     dataBadge: 'Humusz veszteség',
     source: 'Szakdolgozat 7. oldal',

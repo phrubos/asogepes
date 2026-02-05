@@ -55,7 +55,7 @@ const applicationModes: ApplicationMode[] = [
   {
     id: 'with-ploughing',
     title: 'Lazítás + Szántás + Ásógép',
-    subtitle: 'Őszi szántás után tavaszi ásógép',
+    subtitle: 'Lazítás és őszi szántás után tavaszi ásógép',
     icon: <Combine size={32} />,
     when: 'Ősszel nagy tömegű szármaradvány vagy szervestrágya',
     soilType: 'Bármely talajtípus',
