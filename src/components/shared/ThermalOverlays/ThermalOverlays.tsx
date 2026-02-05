@@ -53,6 +53,12 @@ export interface ThermalOverlayData {
         fontWeight?: string | number
         rotation?: number
     }[]
+    verticalLines?: {
+        x: number
+        label?: string
+        style?: 'dashed' | 'solid'
+        alwaysVisible?: boolean
+    }[]
 }
 
 interface ThermalOverlaysProps {
