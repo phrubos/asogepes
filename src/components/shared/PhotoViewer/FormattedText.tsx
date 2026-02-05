@@ -9,6 +9,26 @@ interface FormattedTextProps {
 export const FormattedText: React.FC<FormattedTextProps> = ({ text, className }) => {
     if (!text) return null
 
+    const renderWithParagraphs = (content: string, pClassName?: string) => {
+        // Split by double newlines into groups
+        const groups = content.split('\n\n').filter(g => g.trim() !== '')
+
+        return groups.map((group, groupIdx) => {
+            // Split each group by single newline into lines
+            const lines = group.split('\n').filter(l => l.trim() !== '')
+
+            return (
+                <div key={groupIdx} className={styles.paragraphGroup}>
+                    {lines.map((line, lineIdx) => (
+                        <p key={lineIdx} className={pClassName}>
+                            <FormatInline text={line.trim()} />
+                        </p>
+                    ))}
+                </div>
+            )
+        })
+    }
+
     // 1. Detect Structured Definitions (e.g., "A": Value, "B": Value)
     // Matches: "Key": or Key: or Key – patterns at start of sentences or distinct phrases
     // Key can be a range like A-B or C - D
@@ -35,11 +55,7 @@ export const FormattedText: React.FC<FormattedTextProps> = ({ text, className })
 
         return (
             <div className={className}>
-                {intro.trim() && (
-                    <p className={styles.introText}>
-                        <FormatInline text={intro} />
-                    </p>
-                )}
+                {intro.trim() && renderWithParagraphs(intro, styles.introText)}
                 <ul className={styles.definitionList}>
                     {definitions.map((def, idx) => (
                         <li key={idx} className={styles.definitionItem}>
@@ -56,9 +72,9 @@ export const FormattedText: React.FC<FormattedTextProps> = ({ text, className })
 
     // Fallback for standard text
     return (
-        <p className={className}>
-            <FormatInline text={text} />
-        </p>
+        <div className={className}>
+            {renderWithParagraphs(text)}
+        </div>
     )
 }
 

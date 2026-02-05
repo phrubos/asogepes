@@ -5,10 +5,9 @@
 .heroPage {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  max-height: 100%;
+  min-height: 100%;
   justify-content: center;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .content {
@@ -137,8 +136,8 @@
 .mapContainer {
   width: 100%;
   height: auto;
-  min-height: 300px;
-  max-height: 380px;
+  min-height: 400px;
+  max-height: 500px;
   /* Frame styles removed to avoid duplication with internal component */
   /* background: linear-gradient(135deg, rgba(26, 23, 20, 0.5) 0%, rgba(35, 30, 25, 0.6) 100%); */
   /* border: 1px solid rgba(255, 255, 255, 0.08); */

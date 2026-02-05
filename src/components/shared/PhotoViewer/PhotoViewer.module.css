@@ -248,6 +248,15 @@
     margin: 0;
 }
 
+.description p,
+.introText p {
+    margin: 0;
+}
+
+.paragraphGroup:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
 .highlight {
     color: var(--color-gold, #d4a84b);
     font-weight: 600;

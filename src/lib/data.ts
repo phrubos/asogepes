@@ -52,7 +52,7 @@ export const locations = {
         objectFit: 'contain',
         aspectRatio: '16/9',
         rightLabel: 'Hőtérkép',
-        description: 'A kezelt tábláról az ásógépezés napján készítettünk drónos hőtérképet. A kép baloldalán a [[T]] betűvel az ásógépezést végző traktort jelöltük. A nyíl a gép haladási irányát. A kép [[március 7]]-én készült, a déli órákban, napsütéses időben, [[18 °C]]-os levegőhőmérséklet mellett.\n\nJellemző hőreferencia pontok (kb. [[100 m²]]-es körfelület átlagos hőmérséklete, °C):\n\nA – Kontroll felület, kombinátorozott, hetek óta bolygatatlan.\nB – Frissen ásógépezett, nyers felület. A hőmérséklete alacsony, felülete nedves.\nC – D – Kb. 30 és 60 perccel korábban ásógépezett felületek. Jól látható, hogy a laza szerkezetű talaj felülete igen gyorsan eléri a kontrolléhoz közelítő hőmérséklet értéket.\nE – a kép jobb oldalán látható sáv hagyma vetőmaggal már frissen bevetett terület. A vetőgép által bolygatott talajfelszín újra hűvösebb.',
+        description: 'A kezelt tábláról az ásógépezés napján készítettünk drónos hőtérképet. A kép baloldalán [[T]] betűvel az ásógépezést végző traktort jelöltük. A nyíl a gép haladási irányát. A kép [[március 7]]-én készült, a déli órákban, napsütéses időben, [[18 °C]]-os levegőhőmérséklet mellett.\nJellemző hőreferencia pontok (kb. [[100 m²]]-es körfelület átlagos hőmérséklete, °C):\n\nA – Kontroll felület, kombinátorozott, hetek óta bolygatatlan.\nB – Frissen ásógépezett, nyers felület. A hőmérséklete alacsony, felülete nedves.\nC – D – Kb. 30 és 60 perccel korábban ásógépezett felületek. Jól látható, hogy a laza szerkezetű talaj felülete igen gyorsan eléri a kontrolléhoz közelítő hőmérséklet értéket.\nE – a kép jobb oldalán látható sáv hagyma vetőmaggal már frissen bevetett terület. A vetőgép által bolygatott talajfelszín újra hűvösebb.',
         overlays: {
           scale: {
             min: 5.0,
@@ -312,8 +312,8 @@ export const locations = {
         rightSrc: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_otermal_1.jpeg',
         leftLabel: 'Ortofotó',
         rightLabel: 'Hőtérkép',
-        leftDescription: 'A fotó közvetlenül a talajművelési lépések befejezése után készült. Az ábrán jól látszik, hogy az ásógépezett felületek homogének, felszínük rögös, szabályosan csipkézett, a légifotón kifejezetten szerkezetesnek tűnik. A nem ásógépezett felület heterogén, szerkezet nélküli, a homoktalaj felülete szél által befújt, sima, a homokszemek a talaj felületén a szél hatására elmozdultak.',
-        rightDescription: 'A fotó közvetlenül a talajművelési lépések befejezése után készült. A hőtérképén jól látszik, hogy az ásógépezett talajfelszín hőmérséklete homogén, egyenletes, hőmérséklete a nem ásógépezet felülethez képest alacsonyabb, mivel ez a felület nedvesebb. A nem ásógépezett felület hőmérséklete heterogén, a felület több helyen száraz, ezeken a foltokon gyorsabban melegszik fel.',
+        leftDescription: 'A fotó közvetlenül a talajművelési lépések befejezése után készült.\n\nAz ábrán jól látszik, hogy az ásógépezett felületek homogének, felszínük rögös, szabályosan csipkézett, a légifotón kifejezetten szerkezetesnek tűnik. A nem ásógépezett felület heterogén, szerkezet nélküli, a homoktalaj felülete szél által befújt, sima, a homokszemek a talaj felületén a szél hatására elmozdultak.',
+        rightDescription: 'A fotó közvetlenül a talajművelési lépések befejezése után készült.\n\nA hőtérképén jól látszik, hogy az ásógépezett talajfelszín hőmérséklete homogén, egyenletes, hőmérséklete a nem ásógépezet felülethez képest alacsonyabb, mivel ez a felület nedvesebb. A nem ásógépezett felület hőmérséklete heterogén, a felület több helyen száraz, ezeken a foltokon gyorsabban melegszik fel.',
         overlays: {
           scale: {
             min: 11.0,

@@ -57,8 +57,7 @@ export default function HeroPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             Három helyszínen, 9 különböző művelési kombinációval,
-            hat hónapon át mértük a talajszerkezet változását —{' '}
-            <em>az eredmények egyértelműek.</em>
+            hat hónapon át mértük a talajszerkezet változását.
           </motion.p>
 
           {/* Stats Row */}
