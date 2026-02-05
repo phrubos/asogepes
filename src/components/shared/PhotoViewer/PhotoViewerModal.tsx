@@ -305,7 +305,8 @@ export function PhotoViewerModal({
                                                 onSliderChange={setSliderPos}
                                                 initialSliderPosition={currentImage.initialSliderPosition}
                                                 onLoad={handleLoadComplete}
-                                                interactionEnabled={zoom === 1}
+                                                interactionEnabled={true}
+                                                zoom={zoom}
                                             />
                                         </div>
                                     ) : (

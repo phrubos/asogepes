@@ -64,6 +64,7 @@ interface BeforeAfterSliderProps {
     sizes?: string
     initialSliderPosition?: number
     interactionEnabled?: boolean
+    zoom?: number
 }
 
 export default function BeforeAfterSlider({
@@ -81,10 +82,13 @@ export default function BeforeAfterSlider({
     objectFit,
     sizes = '100vw',
     initialSliderPosition = 50,
-    interactionEnabled = true
+    interactionEnabled = true,
+    zoom = 1
 }: BeforeAfterSliderProps) {
     const [sliderPosition, setSliderPosition] = useState(initialSliderPosition) // Percentage of container
     const [isDragging, setIsDragging] = useState(false)
+    const [mouseY, setMouseY] = useState(50) // Percentage of height
+    const [isHoveringHandle, setIsHoveringHandle] = useState(false)
     const loadedImagesRef = useRef(new Set<string>())
 
     const handleImageLoaded = useCallback((src: string) => {
@@ -149,6 +153,7 @@ export default function BeforeAfterSlider({
     const onMouseDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
         console.log('[BeforeAfterSlider] onMouseDown:', { interactionEnabled })
         if (!interactionEnabled) return
+        e.stopPropagation() // Prevent modal from starting a pan
         setIsDragging(true)
     }, [interactionEnabled])
 
@@ -157,13 +162,27 @@ export default function BeforeAfterSlider({
     }, [])
 
     const onMouseMove = useCallback((e: React.MouseEvent) => {
-        if (!isDragging) return
-        handleMove(e.clientX)
+        if (!containerRef.current) return
+
+        // Track vertical position for the hover indicator
+        const rect = containerRef.current.getBoundingClientRect()
+        const yPercent = ((e.clientY - rect.top) / rect.height) * 100
+        setMouseY(Math.max(0, Math.min(100, yPercent)))
+
+        if (isDragging) {
+            handleMove(e.clientX)
+        }
     }, [isDragging, handleMove])
 
     const onTouchMove = useCallback((e: React.TouchEvent) => {
         handleMove(e.touches[0].clientX)
-    }, [handleMove])
+
+        if (zoom > 1 && containerRef.current) {
+            const rect = containerRef.current.getBoundingClientRect()
+            const yPercent = ((e.touches[0].clientY - rect.top) / rect.height) * 100
+            setMouseY(Math.max(0, Math.min(100, yPercent)))
+        }
+    }, [zoom, handleMove])
 
     // Global event listeners (same as before)
     useEffect(() => {
@@ -189,6 +208,13 @@ export default function BeforeAfterSlider({
         const handleGlobalMouseMove = (e: MouseEvent) => {
             if (isDragging) {
                 handleMove(e.clientX)
+
+                // Also track vertical position during drag if zoomed
+                if (zoom > 1 && containerRef.current) {
+                    const rect = containerRef.current.getBoundingClientRect()
+                    const yPercent = ((e.clientY - rect.top) / rect.height) * 100
+                    setMouseY(Math.max(0, Math.min(100, yPercent)))
+                }
             }
         }
 
@@ -528,12 +554,33 @@ export default function BeforeAfterSlider({
                 onTouchStart={onMouseDown}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onMouseUp}
+                onMouseMove={onMouseMove}
+                onMouseEnter={() => setIsHoveringHandle(true)}
+                onMouseLeave={() => setIsHoveringHandle(false)}
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className={styles.handleButton}>
-                    <ChevronLeft size={16} />
-                    <ChevronRight size={16} />
-                </div>
+                {/* Floating Handle on Zoom Hover/Drag */}
+                {zoom > 1 && (isHoveringHandle || isDragging) ? (
+                    <div
+                        className={styles.handleButton}
+                        style={{ position: 'absolute', top: `${mouseY}%`, transition: 'none' }}
+                    >
+                        <ChevronLeft size={16} />
+                        <ChevronRight size={16} />
+                    </div>
+                ) : (
+                    /* Regular Handle Button - center aligned */
+                    <div
+                        className={styles.handleButton}
+                        style={{
+                            opacity: (zoom > 1 && (isHoveringHandle || isDragging)) ? 0 : 1,
+                            pointerEvents: (zoom > 1 && (isHoveringHandle || isDragging)) ? 'none' : 'auto'
+                        }}
+                    >
+                        <ChevronLeft size={16} />
+                        <ChevronRight size={16} />
+                    </div>
+                )}
             </div>
 
             {/* Static (HUD) Layer - Contains alwaysVisible elements scaled with the image */}

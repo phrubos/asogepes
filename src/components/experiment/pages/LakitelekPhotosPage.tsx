@@ -22,7 +22,6 @@ export default function LakitelekPhotosPage() {
           <MapPin size={12} />
           <span>Lakitelek</span>
         </div>
-        <h3 className={styles.headerTitle}>Fotók</h3>
       </motion.div>
 
       {/* Content */}

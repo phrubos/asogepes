@@ -270,7 +270,7 @@
 
 .definitionItem {
     display: grid;
-    grid-template-columns: 60px 1fr;
+    grid-template-columns: 50px 1fr;
     gap: 0.5rem;
     align-items: baseline;
     font-size: 1rem;
@@ -280,18 +280,20 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 32px;
-    height: 32px;
-    padding: 0 8px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 2px solid #fff;
+    min-width: 24px;
+    min-height: 24px;
+    height: auto;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid #fff;
     color: #fff;
     border-radius: 99px;
     font-weight: 700;
-    font-size: 1rem;
-    font-family: var(--font-mono, monospace);
+    font-size: 0.8rem;
+    white-space: nowrap;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    margin-right: 4px;
+    margin-right: 6px;
+    flex-shrink: 0;
 }
 
 .definitionValue {
@@ -308,6 +310,7 @@
     color: var(--color-gold, #d4a84b);
     font-weight: 700;
     letter-spacing: -0.01em;
+    white-space: nowrap;
 }
 
 /* Responsive & Layout Changes */

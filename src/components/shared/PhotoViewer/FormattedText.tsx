@@ -10,13 +10,14 @@ export const FormattedText: React.FC<FormattedTextProps> = ({ text, className })
     if (!text) return null
 
     // 1. Detect Structured Definitions (e.g., "A": Value, "B": Value)
-    // Matches: "Key": or Key: patterns at start of sentences or distinct phrases
-    const definitionRegex = /(?:^|\s)["']?([A-Z](?:-[A-Z])?)["']?:\s/
+    // Matches: "Key": or Key: or Key – patterns at start of sentences or distinct phrases
+    // Key can be a range like A-B or C - D
+    const definitionRegex = /(?:^|\s)["']?([A-Z](?:\s?[-–]\s?[A-Z])?)["']?(?::| –)\s/
 
     if (definitionRegex.test(text)) {
         // Split by the pattern to create list items
         // We use a slightly complex split to capture the key
-        const parts = text.split(/["']?([A-Z](?:-[A-Z])?)["']?:\s/)
+        const parts = text.split(/["']?([A-Z](?:\s?[-–]\s?[A-Z])?)["']?(?::| –)\s/)
 
         // parts[0] is the intro text
         // parts[1] is Key1 ("A"), parts[2] is Value1

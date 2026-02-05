@@ -102,6 +102,17 @@ export default function ThermalOverlays({ overlays }: ThermalOverlaysProps) {
                 </div>
             ))}
 
+            {/* Vertical Lines */}
+            {overlays.verticalLines?.map((line, idx) => (
+                <div
+                    key={`vline-${idx}`}
+                    className={`${styles.overlayVerticalLine} ${line.style === 'solid' ? styles.solid : styles.dashed}`}
+                    style={{ left: `${line.x}%` }}
+                >
+                    {line.label && <span className={styles.overlayVerticalLineLabel}>{line.label}</span>}
+                </div>
+            ))}
+
             {/* Scale */}
             {overlays.scale && (
                 <div

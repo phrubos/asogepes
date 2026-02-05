@@ -52,7 +52,7 @@ export const locations = {
         objectFit: 'contain',
         aspectRatio: '16/9',
         rightLabel: 'Hőtérkép',
-        description: 'A kezelt tábláról az ásógépezés napján készítettünk drónos hőtérképet. A kép bal oldalán a [[T]] pont az ásógépezést végző traktort mutatja. A nyíl a gép haladási irányát. A kép [[március 7]]-én készült, a déli órákban, napsütéses időben, [[18 °C]]-os levegőhőmérséklet mellett.\n\nJellemző hőreferencia pontok (kb. [[100 m²]]-es körfelület átlagos hőmérséklete, °C):\n\n[[A]] – Kontroll felület, kombinátorozott, hetek óta bolygatatlan.\n[[B]] – Frissen ásógépezett, nyers felület. A hőmérséklete alacsony, felülete nedves.\n[[C – D]] – Kb. 30 és 60 perccel korábban ásógépezett felületek. Jól látható, hogy a laza szerkezetű talaj felülete igen gyorsan eléri a kontrolléhoz közelítő hőmérséklet értéket.\n[[E]] – a kép jobb oldalán látható sáv hagyma vetőmaggal már frissen bevetett terület. A vetőgép által bolygatott talajfelszín újra hűvösebb.',
+        description: 'A kezelt tábláról az ásógépezés napján készítettünk drónos hőtérképet. A kép baloldalán a [[T]] betűvel az ásógépezést végző traktort jelöltük. A nyíl a gép haladási irányát. A kép [[március 7]]-én készült, a déli órákban, napsütéses időben, [[18 °C]]-os levegőhőmérséklet mellett.\n\nJellemző hőreferencia pontok (kb. [[100 m²]]-es körfelület átlagos hőmérséklete, °C):\n\nA – Kontroll felület, kombinátorozott, hetek óta bolygatatlan.\nB – Frissen ásógépezett, nyers felület. A hőmérséklete alacsony, felülete nedves.\nC – D – Kb. 30 és 60 perccel korábban ásógépezett felületek. Jól látható, hogy a laza szerkezetű talaj felülete igen gyorsan eléri a kontrolléhoz közelítő hőmérséklet értéket.\nE – a kép jobb oldalán látható sáv hagyma vetőmaggal már frissen bevetett terület. A vetőgép által bolygatott talajfelszín újra hűvösebb.',
         overlays: {
           scale: {
             min: 5.0,
@@ -147,8 +147,8 @@ export const locations = {
             gradient: 'linear-gradient(to top, #000000, #008080, #ffff00, #ff0000)'
           },
           points: [
-            { x: 52, y: 75, label: 'Kontroll (ásóborona)', value: 'átl. hőmérséklet 13.2°C', alwaysVisible: true },
-            { x: 52, y: 20, label: 'Ásógépezett (Imants - 40SX)', value: 'átl. hőmérséklet 20.1°C', alwaysVisible: true }
+            { x: 52, y: 75, label: 'Kontroll (ásóborona)', value: '13.2°C', alwaysVisible: true },
+            { x: 52, y: 20, label: 'Ásógépezett (Imants - 40SX)', value: '20.1°C', alwaysVisible: true }
           ],
           lines: [{ y: 50, alwaysVisible: true }]
         },
@@ -192,13 +192,13 @@ export const locations = {
           arrows: [
             {
               x: 25,
-              y: 50,
+              y: 20,
               direction: 'none' as const,
               label: 'Kontroll'
             },
             {
               x: 75,
-              y: 50,
+              y: 20,
               direction: 'none' as const,
               label: 'Ásógépezett',
               subLabel: '+15%\nlombtömeg'
@@ -312,8 +312,8 @@ export const locations = {
         rightSrc: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_otermal_1.jpeg',
         leftLabel: 'Ortofotó',
         rightLabel: 'Hőtérkép',
-        leftDescription: 'A fotó közvetlenül a talajművelési lépések befejezése után készült. Az I., II., III. és a VI., VII. parcellák felülete ásógépezett, a IV.-es V. parcellák ásógép nélküliek. Az ábrán jól látszik, hogy az ásógépezett felületek homogének, felszínük rögös, szabályosan csipkézett, a légifotón kifejezetten szerkezetesnek tűnik. A nem ásógépezett felület heterogén, szerkezet nélküli, a homoktalaj felülete szél által befújt, sima, a homokszemek a talaj felületén a szél hatására elmozdultak.',
-        rightDescription: 'A hőtérképén jól látszik, hogy az ásógépezett talajfelszín hőmérséklete homogén, egyenletes, hőmérséklete a nem ásógépezet felülethez képest alacsonyabb, mivel ez a felület nedvesebb. A nem ásógépezett felület hőmérséklete heterogén, a felület több helyen száraz, ezeken a foltokon gyorsabban melegszik fel.',
+        leftDescription: 'A fotó közvetlenül a talajművelési lépések befejezése után készült. Az ábrán jól látszik, hogy az ásógépezett felületek homogének, felszínük rögös, szabályosan csipkézett, a légifotón kifejezetten szerkezetesnek tűnik. A nem ásógépezett felület heterogén, szerkezet nélküli, a homoktalaj felülete szél által befújt, sima, a homokszemek a talaj felületén a szél hatására elmozdultak.',
+        rightDescription: 'A fotó közvetlenül a talajművelési lépések befejezése után készült. A hőtérképén jól látszik, hogy az ásógépezett talajfelszín hőmérséklete homogén, egyenletes, hőmérséklete a nem ásógépezet felülethez képest alacsonyabb, mivel ez a felület nedvesebb. A nem ásógépezett felület hőmérséklete heterogén, a felület több helyen száraz, ezeken a foltokon gyorsabban melegszik fel.',
         overlays: {
           scale: {
             min: 11.0,
@@ -328,10 +328,14 @@ export const locations = {
             { x: 58, y: 58, label: 'IV. - V.', value: '', hideRing: true, alwaysVisible: true },
             { x: 83, y: 70, label: 'VI. - VII.', value: '', hideRing: true, alwaysVisible: true },
 
-            { x: 30, y: 48, label: 'Ásógépezett felület', value: '', hideRing: true, alwaysVisible: true },
-            { x: 83, y: 76, label: 'Kombinátorozott felület', value: '', hideRing: true, alwaysVisible: true },
 
-            { x: 30, y: 70, label: '', value: '12.0°C' },
+            { x: 8.5, y: 35, label: 'Ásógépezett felület', value: '', hideRing: true, alwaysVisible: true },
+            { x: 30, y: 48, label: 'Ásógépezett felület', value: '', hideRing: true, alwaysVisible: true },
+            { x: 84, y: 76, label: 'Ásógépezett felület', value: '', hideRing: true, alwaysVisible: true },
+
+            { x: 57, y: 64, label: 'Kombinátorozott felület', value: '', hideRing: true, alwaysVisible: true },
+
+            { x: 30, y: 70, label: '', value: '12.8°C' },
             { x: 47, y: 39, label: '', value: '13.8°C' },
             { x: 63, y: 80, label: '', value: '17.8°C' },
             { x: 59, y: 25, label: '', value: '20.5°C' },
