@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import styles from './Hero.module.css'
@@ -9,8 +10,22 @@ import { heroStats } from '@/lib/data'
 import { useParallax } from '@/hooks/useParallax'
 import { useTypewriter } from '@/hooks/useTypewriter'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
-import LoadingScreen from '@/components/ui/LoadingScreen'
 import { MagneticButton } from '@/components/ui/MagneticButton'
+
+const VIDEO_QUERY = '(min-width: 768px) and (prefers-reduced-motion: no-preference)'
+
+function useHeroVideo() {
+  const [enabled, setEnabled] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia(VIDEO_QUERY)
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true
+    const update = () => setEnabled(mq.matches && !saveData)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+  return enabled
+}
 
 export default function Hero() {
   const { style: parallaxStyle } = useParallax({ speed: 0.3, maxOffset: 150 })
@@ -24,54 +39,56 @@ export default function Hero() {
     pauseBeforeRestart: 500
   })
 
-  const [isVideoReady, setIsVideoReady] = useState(false)
+  const showVideo = useHeroVideo()
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    // Check if video is already playing (e.g. from cache)
-    if (videoRef.current && !videoRef.current.paused && !videoRef.current.ended && videoRef.current.readyState > 2) {
-      setIsVideoReady(true)
+    const video = videoRef.current
+    if (!showVideo || !video) return
+    const start = () => {
+      video.load()
+      video.play().catch(() => {})
     }
-  }, [])
+    if (document.readyState === 'complete') start()
+    else window.addEventListener('load', start, { once: true })
+    return () => window.removeEventListener('load', start)
+  }, [showVideo])
 
   return (
     <header className={styles.hero}>
-      <LoadingScreen isLoading={!isVideoReady} />
       <div className={styles.heroBg} style={parallaxStyle}>
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className={styles.heroVideo}
-          poster="/images/hero-bg-final-optimized.jpg"
-          onPlaying={() => setIsVideoReady(true)}
-          onError={() => setIsVideoReady(true)} // Fallback to show content if video fails
-        >
-          <source src="/videos/hero_background_optimized.mp4" type="video/mp4" />
-          {/* Fallback for browsers that don't support video */}
-        </video>
+        <Image
+          src="/images/hero-bg-final-optimized.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className={styles.heroPoster}
+        />
+        {showVideo && (
+          <video
+            ref={videoRef}
+            loop
+            muted
+            playsInline
+            preload="none"
+            aria-hidden="true"
+            className={`${styles.heroVideo} ${isVideoPlaying ? styles.heroVideoPlaying : ''}`}
+            onPlaying={() => setIsVideoPlaying(true)}
+          >
+            <source src="/videos/hero_background_optimized.mp4" type="video/mp4" />
+          </video>
+        )}
         <div className={styles.heroOverlay}></div>
       </div>
       <div className={styles.heroContent}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className={styles.heroBadge}
-        >
+        <div className={`${styles.heroBadge} ${styles.rise}`}>
           Neumann János Egyetem × Agroskill Kft.
-        </motion.div>
+        </div>
 
         <h1 className={styles.heroTitle}>
-          <motion.span
-            className={styles.titleLine}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-          >
+          <span className={`${styles.titleLine} ${styles.rise}`} style={{ animationDelay: '100ms' }}>
             A talaj nem{' '}
             <span className={styles.titleAccent}>
               {typewriterText}
@@ -83,26 +100,16 @@ export default function Hero() {
                 |
               </motion.span>
             </span>
-          </motion.span>
+          </span>
         </h1>
 
-        <motion.p
-          className={styles.heroSubtitle}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
+        <p className={`${styles.heroSubtitle} ${styles.rise}`} style={{ animationDelay: '400ms' }}>
           Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról, öntözött kertészeti kultúrákban
-        </motion.p>
+        </p>
 
-        <motion.div
-          className={styles.heroStats}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-        >
+        <div className={`${styles.heroStats} ${styles.rise}`} style={{ animationDelay: '500ms' }}>
           {heroStats.map((stat, index) => (
-            <motion.div
+            <div
               key={index}
               className={styles.stat}
             >
@@ -118,16 +125,11 @@ export default function Hero() {
               {stat.sublabel && (
                 <span className={styles.statSublabel}>{stat.sublabel}</span>
               )}
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
-        <motion.div
-          className={styles.heroCta}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
+        <div className={`${styles.heroCta} ${styles.rise}`} style={{ animationDelay: '600ms' }}>
           <Link href="/kutatas">
             <MagneticButton
               variant="primary"
@@ -138,7 +140,7 @@ export default function Hero() {
               <ArrowRight size={20} />
             </MagneticButton>
           </Link>
-        </motion.div>
+        </div>
       </div>
     </header>
   )

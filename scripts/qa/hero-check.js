@@ -11,7 +11,7 @@ const titleVisible = page => page.evaluate(() => {
   const b = h1.getBoundingClientRect(); if (!b.width) return false
   const hit = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2)
   if (!hit || !(h1 === hit || h1.contains(hit))) return false
-  for (let e = h1; e; e = e.parentElement) if (parseFloat(getComputedStyle(e).opacity) < 0.9) return false
+  for (let e = hit; e; e = e.parentElement) if (parseFloat(getComputedStyle(e).opacity) < 0.9) return false
   return true
 }).catch(() => false)
 
