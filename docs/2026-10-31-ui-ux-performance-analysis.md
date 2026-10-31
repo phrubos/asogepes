@@ -167,14 +167,14 @@ Hero-betöltő lassított 4G-n: **57,1 s**, mire a főoldal tartalma látható (
 
 | Prioritás | Feladat | Érintett fájlok | Méret |
 |---|---|---|---|
-| **P0** | Hero-betöltő megszüntetése, poster azonnal, videó lusta + mobil változat | `home/Hero.tsx`, `public/videos` | S |
-| **P0** | `ScrollLayout .mainContent { min-width: 0 }` + `/problema` SVG/hero kilógások | `ScrollLayout.module.css`, `ProblemHeroPage.module.css`, `PloughingSoilComparison` | S–M |
-| **P0** | Next + eslint-config-next frissítése a legújabb 15.5.x patch-re | `package.json` | S |
-| **P1** | 125%-os skálázási média-feltétel szűkítése, tipográfiai skála (törzs ≥16 px) | `globals.css`, CSS-modulok | M |
-| **P1** | Mesterséges betöltők és késleltetések törlése (`RouteLoadingProvider`, `NavigationContext` 500 ms, `template.tsx`) | providers, `app/template.tsx` | S |
-| **P1** | `MotionConfig reducedMotion="user"` + CSS reduced-motion | `app/layout.tsx`, `globals.css` | S |
-| **P1** | Hover-only interakciók koppintásra is | `HubFolder`, kártyák | M |
-| **P1** | `next/font`, `force-dynamic` törlése, `Andornak.mp4` lusta | `layout.tsx`, `page.tsx`, `OperationPrinciple.tsx` | S |
+| **P0** ✅ | Hero-betöltő megszüntetése, poster azonnal, videó lusta + mobil változat | `home/Hero.tsx`, `public/videos` | S |
+| **P0** ✅ | `ScrollLayout .mainContent { min-width: 0 }` + `/problema` SVG/hero kilógások | `ScrollLayout.module.css`, `ProblemHeroPage.module.css`, `PloughingSoilComparison` | S–M |
+| **P0** ✅ | Next + eslint-config-next frissítése a legújabb 15.5.x patch-re | `package.json` | S |
+| **P1** ✅ | 125%-os skálázási média-feltétel szűkítése, tipográfiai skála (törzs ≥16 px) | `globals.css`, CSS-modulok | M |
+| **P1** ✅ | Mesterséges betöltők és késleltetések törlése (`RouteLoadingProvider`, `NavigationContext` 500 ms, `template.tsx`) | providers, `app/template.tsx` | S |
+| **P1** ✅ | `MotionConfig reducedMotion="user"` + CSS reduced-motion | `app/layout.tsx`, `globals.css` | S |
+| **P1** ✅ | Hover-only interakciók koppintásra is | `HubFolder`, kártyák | M |
+| **P1** ✅ | `next/font`, `force-dynamic` törlése, `Andornak.mp4` lusta | `layout.tsx`, `page.tsx`, `OperationPrinciple.tsx` | S |
 | **P2** | Mobil alsó navigáció egyesítése (pöttyök + következő gomb), 44 px célok | `ScrollLayout`, `NextSectionIndicator` | M |
 | **P2** | 100vh „holt” képernyők megszüntetése | szekció CSS-ek | M |
 | **P2** | Forrásképek előméretezése (ortofotók, modellfotók) | `public/images` | S |
@@ -185,6 +185,23 @@ Hero-betöltő lassított 4G-n: **57,1 s**, mire a főoldal tartalma látható (
 | **P3** | Teljes motion-audit (`review-animations`) | — | M |
 
 Javaslat: a P0 + P1 tételeket érdemes a 2026-os adatfeltöltés **előtt** elvégezni (rövid spec + terv a `docs/` alá), hogy az új adatok már javított mobil és tipográfiai keretbe kerüljenek.
+
+### 13.1 Elvégezve — 2026-10-31 (`chore/cleanup-2026`)
+
+A P0 + P1 tételek (✅) elkészültek; spec: `docs/superpowers/specs/2026-10-31-pre-2026-hardening-design.md`, napló: `docs/superpowers/progress/2026-10-31-pre-2026-hardening.md`. Minden pont mérve a `scripts/qa/` szkriptjeivel, production buildön: `hero-check`, `nav-check`, `clip-check` (360/390/1440/1536/1366 px × 4 oldal = 0), `type-check` (folyószöveg medián ≥ 15 px, nincs 12 px alatti szöveg), `motion-check`, `touch-check` mind zöld.
+
+| Profil | Oldal | FCP előtte → utána | LCP előtte → utána | CLS előtte → utána | TBT~ előtte → utána |
+|---|---|---|---|---|---|
+| Mobil, lassított 4G, 4× CPU | `/` | 2,2 s → 0,8 s | (betöltő 57 s) → 0,8 s | 0,032 → 0 | 398 → ~250 ms |
+| | `/problema` | 4,4 s → 1,1 s | 4,4 s → 2,8 s | 0,010 → **0,106** | 2213 → ~1000 ms |
+| | `/technologia` | 3,3 s → 1,0 s | 3,7 s → 3,6 s | 0,019 → 0 | 1276 → ~500 ms |
+| | `/kutatas` | 3,1 s → 1,3 s | 3,7 s → 3,2 s | 0,029 → 0,011 | 1520 → ~950 ms |
+| Asztali, 10 Mbit/s | `/technologia` | 0,6 s → 0,3 s | 1,0 s → 0,5 s | 0 → 0,005 | 0 → ~50 ms |
+| | `/kutatas` | 0,6 s → 0,4 s | 0,9 s → 0,9 s | 0,007 → 0 | 98 → ~150 ms |
+
+Átvitel: asztali `/technologia` 4,1 MB → 600 KB (a videó csak látótérben tölt), `/` 1,2 MB → 643 KB (asztali, videó a `load` után), mobilon nincs videó.
+
+Nyitott (döntésre vár): (1) a `/problema` mobil CLS 0,106 a fontcseréből jön (`display: swap`; a korábbi render-blokkoló `@import`-nál nem volt csere, de az FCP 4,4 s volt) — lehetőségek: `display: 'optional'` vagy finomhangolt fallback-metrikák; (2) a HubFolder 768/1024 px-en levág feliratokat; (3) a `next start` képoptimalizálója terhelés alatt egy AVIF-kódolásnál elakadhat (a `manometer_200_v2.png` valójában JPEG); (4) a mobil TBT még ~0,5–1 s (P3 szerint lusta mountolás) — ezeket a mobil újratervezés előtt érdemes eldönteni.
 
 ## 14. Hatókörön kívül
 

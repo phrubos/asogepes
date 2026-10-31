@@ -28,41 +28,22 @@ export default function ResearchHeroSection() {
       <div className={styles.content}>
         {/* Left Column - Text */}
         <div className={styles.textColumn}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div className="hero-rise">
             <PageBadge label="A KUTATÁS" />
-          </motion.div>
+          </div>
 
-          <motion.h1
-            className={styles.title}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-          >
+          <h1 className={`${styles.title} hero-rise`} style={{ animationDelay: '100ms' }}>
             Szántóföldi talajszerkezet
             <span className={styles.titleAccent}>vizsgálatok</span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            className={styles.description}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
+          <p className={`${styles.description} hero-rise`} style={{ animationDelay: '200ms' }}>
             Három helyszínen, 9 különböző művelési kombinációval,
             hat hónapon át mértük a talajszerkezet változását.
-          </motion.p>
+          </p>
 
           {/* Stats Row */}
-          <motion.div
-            className={styles.statsRow}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
+          <div className={`${styles.statsRow} hero-rise`} style={{ animationDelay: '300ms' }}>
             {/* Stat 1 */}
             <div className={styles.statItem}>
               <div className={styles.statValue}>3</div>
@@ -89,7 +70,7 @@ export default function ResearchHeroSection() {
                 <div className={styles.statDetail}>Március – Augusztus</div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Right Column - Map */}

@@ -3,6 +3,12 @@
 import { motion, useMotionValue, useTransform, MotionValue } from 'framer-motion'
 import { useEffect, useMemo } from 'react'
 
+// Deterministic pseudo-random in [0, 1), rounded so server and browser agree
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed) * 10000
+  return Math.round((x - Math.floor(x)) * 10000) / 10000
+}
+
 interface InteractiveSoilProps {
   progress: number | MotionValue<number> // 0.0 to 4.0
   onProgressChange?: (val: number) => void
@@ -113,20 +119,21 @@ export default function InteractiveSoil({ progress, onProgressChange, onInteract
   const deepRainOpacity = useTransform(activeProgress, [1, 3.5], [1, 0])
 
 
-  // Particle Systems
+  // Particle Systems (seeded, so the server and the browser render the same drops)
   const skyRain = useMemo(() => Array.from({ length: 40 }, (_, i) => ({
     id: i,
-    x: Math.random() * 600,
-    delay: Math.random() * 5,
-    dur: 1.5 + Math.random() // varied speed
+    x: seededRandom(i * 3 + 1) * 600,
+    delay: seededRandom(i * 3 + 2) * 5,
+    dur: 1.5 + seededRandom(i * 3 + 3) // varied speed
   })), [])
 
 
   const soilDrops = useMemo(() => Array.from({ length: 60 }, (_, i) => ({
     id: i,
-    x: Math.random() * 600,
-    delay: Math.random() * 4,
-    dur: 2 + Math.random() * 2 // Slower in soil
+    x: seededRandom(i * 4 + 1001) * 600,
+    delay: seededRandom(i * 4 + 1002) * 4,
+    dur: 2 + seededRandom(i * 4 + 1003) * 2, // Slower in soil
+    r: seededRandom(i * 4 + 1004) * 1.5 + 0.5
   })), [])
 
   return (
@@ -270,7 +277,7 @@ export default function InteractiveSoil({ progress, onProgressChange, onInteract
           {/* === WATER INFILTRATION === */}
           <g mask="url(#waterMask)">
             {soilDrops.map(p => (
-              <circle key={p.id} r={Math.random() * 1.5 + 0.5} fill="#4FC3F7" opacity="0.5">
+              <circle key={p.id} r={p.r} fill="#4FC3F7" opacity="0.5">
                 <animate
                   attributeName="cx" from={p.x} to={p.x}
                   dur="0.1s" fill="freeze"

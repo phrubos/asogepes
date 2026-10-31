@@ -19,12 +19,26 @@ npm run start    # Start production server
 npx playwright test --project=chromium  # E2E tests against http://localhost:3000 (server must already run)
 ```
 
+QA scripts (`scripts/qa/`, see its README) run against a production build in `.next-qa` on port 3100, so they never clash with `npm run dev`:
+
+```bash
+bash scripts/qa/stop-server.sh 3100   # always first: an old server keeps serving the old build
+NEXT_DIST_DIR=.next-qa npm run build && NEXT_DIST_DIR=.next-qa npx next start -p 3100
+node scripts/qa/clip-check.js    # clipped text at 360/390/1440/1536/1366 px (Git Bash + --pages=/…: prefix MSYS_NO_PATHCONV=1)
+node scripts/qa/type-check.js    # body text median >= 15px, no text < 12px
+node scripts/qa/hero-check.js    # home hero never blocked by the video
+node scripts/qa/nav-check.js     # SSR <h1>, fast menu navigation, ?section= deep links
+node scripts/qa/motion-check.js  # prefers-reduced-motion honoured
+node scripts/qa/touch-check.js   # hover cards work by tap and keyboard
+node scripts/qa/perf.js          # FCP/LCP/CLS/TBT report
+```
+
 Run Python scripts with `py file.py`.
 
 ## Architecture
 
 ### Page Structure (App Router)
-- `/` - Home page: `home/Hero` (background video, stats, CTA)
+- `/` - Home page: `home/Hero` (poster image; background video only on >=768px without reduced motion / Save-Data; stats, CTA)
 - `/problema` - `problem/ProblemScrollLayout`: hero, compaction, ploughing, cultivator sections
 - `/technologia` - `solution-v2/TechnologyScrollLayout`: hero, operation principle, models (38SX, 38WX, 40SX), application guide
 - `/kutatas` - `experiment/ResearchScrollLayout`: hero, methodology, Szentkirály, Kecskemét, Lakitelek
@@ -40,8 +54,8 @@ src/components/
 ├── experiment/    # ResearchScrollLayout, sections/, pages/ (per location), FieldChart3DCanvas, BookLayout
 ├── layout/        # Navigation, Footer
 ├── shared/        # ScrollLayout, PhotoViewer, BeforeAfterSlider, ThermalOverlays
-├── ui/            # MagneticButton, ImageLightbox, PageBadge, AnimatedNumber, LoadingScreen, SoilLoader
-├── providers/     # NavigationContext, RouteLoadingProvider
+├── ui/            # MagneticButton, ImageLightbox, PageBadge, AnimatedNumber, SoilLoader
+├── providers/     # MotionProvider (MotionConfig reducedMotion="user")
 └── error/         # HydrationErrorBoundary
 ```
 
@@ -64,4 +78,7 @@ Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `
 ## Design Notes
 
 - Avoid blue/indigo colors - use earth tones per globals.css
-- Respect `prefers-reduced-motion` in every animation
+- Respect `prefers-reduced-motion` in every animation (`useReducedMotion` from `@/hooks/useReducedMotion`; Framer's `MotionConfig` skips transforms but not opacity)
+- Hover-revealed content must also open by tap and keyboard: use `useDisclosureTrigger` (`@/hooks/useDisclosureTrigger`)
+- Text: no font-size below 0.75rem (12px); body text at least 0.9375rem. Sections grow with content (`min-height`, not fixed `height` + `overflow: hidden`)
+- Fonts come from `next/font` in `app/layout.tsx` (`--font-inter`, `--font-fraunces`); don't add CSS `@import` font URLs

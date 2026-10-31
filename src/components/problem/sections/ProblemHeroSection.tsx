@@ -53,33 +53,19 @@ export default function ProblemHeroSection() {
             <div className={styles.content}>
                 {/* Left Column: Heading & Intro */}
                 <div className={styles.heroLeft}>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
+                    <div className="hero-rise">
                         <PageBadge label="A PROBLÉMA" />
-                    </motion.div>
+                    </div>
 
-                    <motion.h1
-                        className={styles.heroTitle}
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.1 }}
-                    >
+                    <h1 className={`${styles.heroTitle} hero-rise`} style={{ animationDelay: '100ms' }}>
                         Miért veszítjük el<br />
                         <span className={styles.titleHighlight}>a gyökértömeget?</span>
-                    </motion.h1>
+                    </h1>
 
-                    <motion.p
-                        className={styles.heroSubtitle}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                    >
+                    <p className={`${styles.heroSubtitle} hero-rise`} style={{ animationDelay: '200ms' }}>
                         Az intenzív öntözés és a nehéz gépek taposása láthatatlanul teszi tönkre a talajszerkezetet, homok és vályog talajon egyaránt.<br />
                         Három fő ellenséggel küzdünk.
-                    </motion.p>
+                    </p>
                 </div>
 
                 <div className={styles.heroRight}>

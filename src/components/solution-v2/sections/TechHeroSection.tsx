@@ -18,11 +18,7 @@ export default function TechHeroSection() {
             <div className={styles.content}>
                 {/* Left Column - Text */}
                 <div className={styles.textColumn}>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    >
+                    <div className="hero-rise">
                         <PageBadge label="A TECHNOLÓGIA" />
                         <h1 className={styles.title}>
                             Lazítás és forgatás,<br />
@@ -32,7 +28,7 @@ export default function TechHeroSection() {
                             Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
                             miközben megszünteti a tömörödést. Ismerje meg a gép működését.
                         </p>
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* Right Column - Hub Folder */}

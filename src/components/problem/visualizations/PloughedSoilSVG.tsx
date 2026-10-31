@@ -19,7 +19,7 @@ const generateClodPath = (cx: number, cy: number, r: number, seed: number) => {
         const rVar = r * (0.8 + seededRandom(seed + i) * 0.3)
         const px = cx + Math.cos(angle) * rVar
         const py = cy + Math.sin(angle) * rVar
-        points.push(`${px},${py}`)
+        points.push(`${px.toFixed(2)},${py.toFixed(2)}`) // fixed precision: server and browser Math.sin/cos may differ in the last digits
     }
     return `M${points.join(' L')} Z`
 }
