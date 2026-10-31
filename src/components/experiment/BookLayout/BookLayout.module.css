@@ -460,7 +460,7 @@
   }
 
   .sectionNumber {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     margin-bottom: 2px;
   }
 
@@ -535,7 +535,7 @@
   }
 
   .sectionLabel {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     display: block;
     /* Keep labels if they fit */
   }
@@ -664,7 +664,7 @@
 
 .indicatorLabel {
   font-family: var(--font-mono, monospace);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);

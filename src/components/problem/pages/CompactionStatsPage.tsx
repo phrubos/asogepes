@@ -255,7 +255,7 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                     marginBottom: '0.75rem'
                 }}>
                     <span style={{
-                        fontSize: '0.7rem',
+                        fontSize: '0.75rem',
                         color: currentData.color,
                         textTransform: 'uppercase',
                         fontWeight: 700,
@@ -306,7 +306,7 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                         <Info size={18} />
                     </div>
                     <div>
-                        <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '4px' }}>TALAJELLENÁLLÁS</div>
+                        <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '4px' }}>TALAJELLENÁLLÁS</div>
                         <div style={{ fontSize: '1.5rem', fontWeight: 800, color: currentData.color, transition: 'color 0.3s', fontFamily: 'var(--font-display)' }}>
                             {Math.round(currentProgress * 5)} bar
                         </div>
@@ -494,7 +494,7 @@ export default function CompactionStatsPage() {
                             zIndex: 20,
                             maxWidth: '80%',
                             color: 'rgba(255, 255, 255, 0.95)',
-                            fontSize: '0.9rem',
+                            fontSize: '0.9375rem',
                             fontWeight: 500,
                             lineHeight: 1.5,
                             pointerEvents: 'none',

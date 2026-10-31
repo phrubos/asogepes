@@ -23,7 +23,7 @@
 
   .hubFolder {
     width: 220px !important;
-    height: 340px !important;
+    height: 390px !important;
   }
 
   .miniFolder {
@@ -47,7 +47,7 @@
   .miniFolderTab {
     padding: 3px 8px !important;
     top: -14px !important;
-    font-size: 0.45rem !important;
+    font-size: 0.75rem !important;
   }
 
   /* Adjust Nav Group Positions for smaller scale */
@@ -105,13 +105,13 @@
   }
 
   .miniFolderLabel {
-    font-size: 0.7rem !important;
+    font-size: 0.75rem !important;
     /* Even smaller */
     white-space: nowrap;
   }
 
   .miniFolderDesc {
-    font-size: 0.5rem !important;
+    font-size: 0.75rem !important;
   }
 }
 
@@ -301,7 +301,7 @@
   background: linear-gradient(180deg, var(--color-gold) 0%, #C49A3D 100%);
   border-radius: 8px 8px 0 0;
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -449,7 +449,7 @@
 }
 
 .hubSubtitle {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -541,7 +541,7 @@
 
 .optionDesc {
   display: block;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.4);
 }
 
@@ -549,7 +549,7 @@
   padding: 0.25rem 0.5rem;
   background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.5);
   transition: all 0.3s ease;
@@ -572,7 +572,7 @@
 }
 
 .hubMeta {
-  font-size: 0.5rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.25);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -582,7 +582,7 @@
   padding: 0.2rem 0.4rem;
   background: rgba(106, 139, 94, 0.15);
   border-radius: 4px;
-  font-size: 0.5rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-green);
 }
@@ -660,7 +660,7 @@
   padding: 5px 12px;
   border-radius: 6px 6px 0 0;
   font-family: var(--font-display);
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -847,7 +847,7 @@
 
 /* Mini Folder Description */
 .miniFolderDesc {
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);
   text-align: center;
   text-transform: uppercase;
@@ -1087,7 +1087,7 @@
   }
 
   .miniFolderTab {
-    font-size: 0.5rem;
+    font-size: 0.75rem;
     padding: 4px 10px;
     top: -16px;
   }
@@ -1144,7 +1144,7 @@
   }
 
   .miniFolderDesc {
-    font-size: 0.55rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -1164,16 +1164,16 @@
   }
 
   .miniFolderTab {
-    font-size: 0.45rem;
+    font-size: 0.75rem;
     padding: 3px 8px;
     top: -14px;
   }
 
   .miniFolderLabel {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
 
   .miniFolderDesc {
-    font-size: 0.5rem;
+    font-size: 0.75rem;
   }
 }

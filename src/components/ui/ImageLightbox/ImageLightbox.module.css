@@ -67,7 +67,7 @@
 
 .zoomLevel {
   font-family: var(--font-mono, monospace);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);
   min-width: 40px;
   text-align: center;
@@ -185,7 +185,7 @@
   left: var(--space-xl);
   display: flex;
   gap: var(--space-sm);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.3);
   z-index: 10;
 }

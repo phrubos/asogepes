@@ -106,7 +106,7 @@
 
 .month {
   font-family: var(--font-mono, monospace);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.6);
   padding: 4px var(--space-sm);
@@ -135,7 +135,7 @@
 }
 
 .barLabel {
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -200,7 +200,7 @@
 /* Value inside bar */
 .barValueInside {
   font-family: var(--font-mono, monospace);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--color-white);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -324,7 +324,7 @@
 /* Evaluation text in summary */
 .summaryText {
   margin: var(--space-xs) 0 0 0;
-  font-size: 0.75rem;
+  font-size: 0.9375rem;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.6);
   max-width: 100%;
@@ -347,7 +347,7 @@
 
 .summaryNote p {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 0.9375rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.85);
   font-style: italic;
@@ -411,11 +411,11 @@
   }
 
   .barValueInside {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
   }
 
   .month {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     padding: 4px 8px;
   }
 

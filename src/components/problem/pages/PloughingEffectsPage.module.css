@@ -201,7 +201,7 @@
 
 .cardBadge {
     display: inline-block;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--color-gold);
     opacity: 0.8;
     margin-top: var(--space-sm);

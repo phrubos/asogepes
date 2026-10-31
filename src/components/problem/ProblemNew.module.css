@@ -409,7 +409,7 @@
   }
 
   .problemCardDesc {
-    font-size: 0.8rem;
+    font-size: 0.9375rem;
     line-height: 1.4;
   }
 
@@ -421,7 +421,7 @@
   .pillBadge {
     padding: 0.35rem 0.75rem;
     margin-bottom: 1vh;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -516,7 +516,7 @@
   }
 
   .comparisonList li {
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
   }
 }
 

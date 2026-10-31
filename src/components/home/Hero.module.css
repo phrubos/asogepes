@@ -52,11 +52,11 @@
     }
 
     .statLabel {
-        font-size: clamp(0.55rem, 0.9vh, 0.65rem);
+        font-size: 0.75rem;
     }
 
     .statSublabel {
-        font-size: 0.65rem;
+        font-size: 0.75rem;
         margin-top: 0;
     }
 

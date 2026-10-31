@@ -653,7 +653,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
                         <span style={{ color: '#d4a84b', fontSize: '14px' }}>★</span>
                         <span>Legnagyobb hatékonyság</span>
                     </div>
-                    <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', color: 'rgba(255, 255, 255, 0.4)', fontSize: '11px' }}>
+                    <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', color: 'rgba(255, 255, 255, 0.4)', fontSize: '12px' }}>
                         WASD: Mozgás | Bal klikk: Forgatás | Jobb klikk: Mozgatás | Görgő: Zoom
                     </div>
                 </div>
