@@ -248,3 +248,9 @@
         gap: var(--space-xl);
     }
 }
+/* Collapsed cards are absolutely positioned in their slot: leave room for 3-line titles */
+@media (max-width: 640px) {
+    .cardContainer {
+        min-height: 5.5rem;
+    }
+}

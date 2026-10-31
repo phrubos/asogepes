@@ -1,7 +1,7 @@
 // Fails (exit 1) when text is cut off: by the viewport horizontally, or partially by an
 // ancestor with overflow hidden/clip. Scrollable ancestors (auto/scroll) are exempt, and so is
 // content an ancestor hides completely (closed accordions, carousel slides).
-// usage: node scripts/qa/clip-check.js [baseUrl] [--sizes=360x844,390x844] [--pages=/,/kutatas]
+// usage: node scripts/qa/clip-check.js [baseUrl] [--sizes=360x844,390x844] [--pages=/,/kutatas] [--show=8]
 const path = require('path')
 const { chromium } = require(path.resolve('node_modules/@playwright/test'))
 const arg = (name, def) => (process.argv.find(a => a.startsWith(`--${name}=`)) || '').split('=')[1] || def
@@ -73,7 +73,7 @@ function findClipped() {
       }
       total += found.size
       console.log(`${found.size ? 'FAIL' : 'ok  '} ${w}x${h} ${p}: ${found.size}`)
-      ;[...found].slice(0, 8).forEach(f => console.log('      ' + f))
+      ;[...found].slice(0, Number(arg('show', 8))).forEach(f => console.log('      ' + f))
     }
     await ctx.close()
   }

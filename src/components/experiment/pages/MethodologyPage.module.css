@@ -95,7 +95,7 @@
   width: 100%;
   max-width: 100%;
   flex: 1;
-  height: 80px;
+  min-height: 80px;
 }
 
 .scaleOptimal,
@@ -380,7 +380,7 @@
 
   /* Compact Scale Bar */
   .scaleBar {
-    height: 60px;
+    min-height: 60px;
   }
 
   .scaleValue {
@@ -397,5 +397,20 @@
     /* Constrain image width */
     aspect-ratio: 3 / 4;
     margin: 0 auto;
+  }
+}
+/* Phones: let the scale bar grow with its text instead of cutting it */
+@media (max-width: 600px) {
+  .scaleBar {
+    flex: none;
+  }
+
+  .scaleOptimal,
+  .scaleCompacted {
+    padding: var(--space-sm);
+  }
+
+  .scaleValue {
+    white-space: nowrap;
   }
 }

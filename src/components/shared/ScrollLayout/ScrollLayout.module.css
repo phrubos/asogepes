@@ -255,6 +255,7 @@
 
 .mainContent {
   flex: 1;
+  min-width: 0;
   margin-left: 280px;
   position: relative;
   /* Clean warm gradient base */
@@ -665,6 +666,16 @@
   }
 }
 
+/* Framer's y animation replaces translateX(-50%); without the sidebar, centre with margins instead */
+@media (max-width: 1024px) {
+  .scrollIndicator {
+    left: 16px;
+    right: 16px;
+    width: fit-content;
+    margin: 0 auto;
+  }
+}
+
 @media (max-width: 768px) {
   .scrollIndicator {
     bottom: 90px;
@@ -678,10 +689,12 @@
 
   .indicatorSection {
     font-size: 0.7rem;
+    white-space: normal;
   }
 
   .indicatorSubsection {
     font-size: 0.75rem;
+    white-space: normal;
   }
 
   .indicatorTitleWrapper {

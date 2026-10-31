@@ -301,7 +301,14 @@
     }
 
     .titleLine {
-        font-size: 2.5rem;
+        /* "végtelen erőforrás" stays on one line down to 360px */
+        font-size: clamp(1.75rem, 7.5vw, 2.5rem);
+    }
+
+    /* own line instead of an 18ch reservation, so typing never reflows the title */
+    .titleAccent {
+        display: block;
+        min-width: 0;
     }
 
     .heroStats {

@@ -275,7 +275,7 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
             {/* Additional Info Cards (Soil Resistance, Roots, Water) - Below Challenges */}
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr 1fr',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 9rem), 1fr))',
                 gap: '0.75rem',
                 // Apply blur to this entire block if ANY challenge card is open
                 transition: 'all 0.4s',
@@ -525,7 +525,7 @@ export default function CompactionStatsPage() {
                                 flex: 1,
                                 position: 'relative',
                                 zIndex: expandedCardId === 1 ? 50 : 1,
-                                minHeight: '64px' // Compact height
+                                minHeight: 'var(--challenge-slot-min, 64px)' // Compact height
                             }}
                         >
                             <CollapsibleChallengeCard
@@ -550,7 +550,7 @@ export default function CompactionStatsPage() {
                                 flex: 1,
                                 position: 'relative',
                                 zIndex: expandedCardId === 2 ? 50 : 1,
-                                minHeight: '64px'
+                                minHeight: 'var(--challenge-slot-min, 64px)'
                             }}
                         >
                             <CollapsibleChallengeCard
@@ -575,7 +575,7 @@ export default function CompactionStatsPage() {
                                 flex: 1,
                                 position: 'relative',
                                 zIndex: expandedCardId === 3 ? 50 : 1,
-                                minHeight: '64px'
+                                minHeight: 'var(--challenge-slot-min, 64px)'
                             }}
                         >
                             <CollapsibleChallengeCard

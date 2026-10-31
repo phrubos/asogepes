@@ -289,3 +289,11 @@
     font-size: 11px;
     text-transform: uppercase;
 }
+/* Points near the image edge: start / end the label at the point so it stays inside the image */
+.pointLabelEnd {
+    transform: translateX(-50%);
+}
+
+.pointLabelStart {
+    transform: translateX(50%);
+}

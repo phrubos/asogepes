@@ -412,7 +412,7 @@ export default function BeforeAfterSlider({
                                             <div className={styles.pointRing} />
                                         )}
                                         <div
-                                            className={styles.pointLabel}
+                                            className={`${styles.pointLabel} ${point.x > 85 ? styles.pointLabelEnd : point.x < 15 ? styles.pointLabelStart : ''}`}
                                             style={point.value ? {
                                                 opacity: sliderPosition < 45 ? 1 : 0,
                                                 transition: 'opacity 0.3s ease'
@@ -510,7 +510,7 @@ export default function BeforeAfterSlider({
                                     className={styles.thermalPoint}
                                     style={{ left: `${point.x}%`, top: `${point.y}%` }}
                                 >
-                                    <div className={styles.pointLabel}>
+                                    <div className={`${styles.pointLabel} ${point.x > 85 ? styles.pointLabelEnd : point.x < 15 ? styles.pointLabelStart : ''}`}>
                                         <span className={styles.pointTitle}>{point.label}</span>
                                         {point.value && <span className={styles.pointValue}>{point.value}</span>}
                                     </div>
@@ -606,7 +606,7 @@ export default function BeforeAfterSlider({
                                 {!point.value && !point.hideRing && (
                                     <div className={styles.pointRing} />
                                 )}
-                                <div className={styles.pointLabel}>
+                                <div className={`${styles.pointLabel} ${point.x > 85 ? styles.pointLabelEnd : point.x < 15 ? styles.pointLabelStart : ''}`}>
                                     <span className={styles.pointTitle}>{point.label}</span>
                                     {/* Values for static points are only shown if slider reveals analysis side */}
                                     {point.value && (

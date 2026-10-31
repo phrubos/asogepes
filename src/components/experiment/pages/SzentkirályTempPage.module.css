@@ -89,6 +89,10 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+    .container {
+        padding-inline: 0;
+    }
+
     .headerTitle {
         font-size: 1.125rem;
     }
@@ -96,7 +100,7 @@
 
 /* Fix for 125% scaling (short viewports) */
 /* Fix for 125% scaling (short viewports) - Side-by-Side Layout */
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
     .container {
         height: 100vh;
         max-height: 100%;

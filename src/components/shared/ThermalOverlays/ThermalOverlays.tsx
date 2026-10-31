@@ -83,7 +83,7 @@ export default function ThermalOverlays({ overlays }: ThermalOverlaysProps) {
                         </div>
                     )}
                     {point.value && (
-                        <div className={styles.pointLabel}>
+                        <div className={`${styles.pointLabel} ${point.x > 85 ? styles.pointLabelEnd : point.x < 15 ? styles.pointLabelStart : ''}`}>
                             <span className={styles.pointValue}>{point.value}</span>
                         </div>
                     )}

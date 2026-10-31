@@ -52,7 +52,7 @@
 
 @media (max-width: 1024px) {
   .statsPageGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-xl);
     max-height: none;
   }
@@ -632,3 +632,27 @@
 }
 
 /* Cultivator Problems - Dark Cards */
+/* Phones: the later desktop .cultivatorGrid rule overrides the 1200px query above */
+@media (max-width: 1200px) {
+  .cultivatorPageWrapper {
+    width: 100%;
+    padding: 0 var(--space-md) 4vh;
+  }
+
+  .cultivatorGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .cultivatorProblemsGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Collapsed challenge cards are absolutely positioned in their slot: leave room for 3-line titles */
+@media (max-width: 640px) {
+  .challengesList {
+    --challenge-slot-min: 5.5rem;
+  }
+}

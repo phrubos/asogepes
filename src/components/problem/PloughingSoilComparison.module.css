@@ -157,7 +157,8 @@
   right: 0.5rem;
   top: 33%;
   /* Starts below sky */
-  bottom: 0.5rem;
+  bottom: 0.75rem;
+  /* room for half of the last depth label (it is centred on its mark) */
   width: 2.5rem;
   /* 40px */
   display: flex;

@@ -63,9 +63,16 @@
   }
 }
 
+/* Phones and tablets: content sets the height, nothing is cut off */
 @media (max-width: 1024px) {
   .section {
-    height: calc(100vh - 220px);
-    max-height: calc(100vh - 220px);
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    margin-bottom: var(--space-3xl);
+  }
+
+  .section > * {
+    flex: none;
   }
 }
