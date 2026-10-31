@@ -104,9 +104,6 @@ export default function InteractiveSoil({ progress, onProgressChange, onInteract
   const rootsMassD = useTransform(activeProgress, [0, 1, 2, 3, 4], rootMassPaths)
   const tapRootD = useTransform(activeProgress, [0, 1, 2, 3, 4], tapRootPaths)
 
-  // Water Logic
-  const waterFlowOpacity = useTransform(activeProgress, [0, 2, 3.5], [0.8, 0.5, 0])
-
   // Water pools ON TOP of the pan layer (internal waterlogging)
   const waterPoolOpacity = useTransform(activeProgress, [2.5, 4], [0, 0.9])
   const waterPoolHeight = useTransform(activeProgress, [2.5, 4], [0, 15])

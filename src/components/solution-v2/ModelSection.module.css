@@ -425,16 +425,6 @@
   height: 85% !important;
 }
 
-/* Variations can be handled inline or here */
-.bar.gold {
-  background: var(--color-gold);
-  box-shadow: 0 0 8px rgba(207, 166, 87, 0.2);
-}
-
-.bar.gray {
-  background: rgba(255, 255, 255, 0.2);
-}
-
 /* Bar color variants for SSR-safe rendering */
 .barGold {
   background: var(--color-gold);

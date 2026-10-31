@@ -63,12 +63,6 @@
     .heroCta {
         margin-top: 1vh;
     }
-
-    .ctaButton {
-        padding: var(--space-sm) var(--space-xl);
-        font-size: 0.85rem;
-        gap: var(--space-xs);
-    }
 }
 
 .heroBg {
@@ -234,32 +228,6 @@
 /* CTA Button */
 .heroCta {
     margin-top: var(--space-2xl);
-}
-
-.ctaButton {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-md) var(--space-2xl);
-    background: var(--color-gold);
-    color: var(--color-earth-900);
-    border-radius: 100px;
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(212, 168, 75, 0.3);
-}
-
-.ctaButton:hover {
-    background: var(--color-gold-light);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(212, 168, 75, 0.4);
-}
-
-.ctaButton:active {
-    transform: translateY(0);
 }
 
 @media (max-width: 1024px) {

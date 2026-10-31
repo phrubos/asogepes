@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { Rotate3d, Info, X, Eye, EyeOff } from 'lucide-react'
+import { Rotate3d, Info, X } from 'lucide-react'
 
 interface ParcelData {
     num: string

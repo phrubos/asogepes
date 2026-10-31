@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef, createContext, useContext, useMemo } from 'react'
-import { useSearchParams, useRouter, usePathname } from 'next/navigation'
+import { useState, useCallback, useEffect, useRef, createContext, useContext } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import styles from './ScrollLayout.module.css'
 import NextSectionIndicator from './NextSectionIndicator'
@@ -45,7 +45,6 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
   const isProgrammaticScroll = useRef(false)
   const searchParams = useSearchParams()
   const router = useRouter()
-  const pathname = usePathname()
 
   // Initialize from URL
   useEffect(() => {

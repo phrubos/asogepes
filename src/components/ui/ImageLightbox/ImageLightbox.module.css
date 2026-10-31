@@ -178,11 +178,6 @@
   z-index: 10;
 }
 
-/* Thumbnails - hidden by default, shown only when multiple images */
-.thumbnails {
-  display: none;
-}
-
 /* Keyboard hints */
 .hints {
   position: absolute;

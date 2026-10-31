@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronRight, Activity, Droplet, UnfoldHorizontal, Redo } from 'lucide-react'
+import { Droplet, UnfoldHorizontal, Redo } from 'lucide-react'
 import PageBadge from '@/components/ui/PageBadge'
 import { useScrollNav } from '@/components/shared/ScrollLayout'
 import styles from '../pages/ProblemHeroPage.module.css'

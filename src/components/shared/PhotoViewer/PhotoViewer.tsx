@@ -77,7 +77,7 @@ interface PhotoViewerProps {
 }
 
 export default function PhotoViewer({ items }: PhotoViewerProps) {
-    const { currentIndex, next, prev, setIndex } = usePhotoNavigation({ totalItems: items.length })
+    const { currentIndex, next, prev } = usePhotoNavigation({ totalItems: items.length })
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [sliderPos, setSliderPos] = useState(50)
     const [isLoading, setIsLoading] = useState(true)

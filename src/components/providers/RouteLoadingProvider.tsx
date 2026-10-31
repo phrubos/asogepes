@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
 import LoadingScreen from '@/components/ui/LoadingScreen'
 import { useNavigation } from './NavigationContext'
 
@@ -10,8 +9,6 @@ export default function RouteLoadingProvider({
 }: {
   children: React.ReactNode
 }) {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
   const { isNavigating } = useNavigation()
   const [isMounting, setIsMounting] = useState(true)
 

@@ -237,50 +237,6 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Conclusion Footer */
-.conclusion {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-md);
-  padding: var(--space-md) var(--space-lg);
-  /* Slightly more padding */
-  background: rgba(26, 23, 20, 0.85);
-  /* Darker background */
-  border-radius: 100px;
-  border: 1px solid rgba(212, 168, 75, 0.4);
-  /* Gold border for visibility */
-  margin-top: auto;
-  width: fit-content;
-  align-self: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  /* Drop shadow to pop */
-}
-
-.conclusionIcon {
-  font-size: 1.25rem;
-}
-
-.conclusionText {
-  font-size: 0.9375rem;
-  color: #fff;
-  /* Pure white */
-  margin: 0;
-}
-
-.conclusionText strong {
-  color: var(--color-gold);
-  font-weight: 700;
-}
-
-.conclusionText em {
-  color: var(--color-white);
-  font-style: normal;
-  text-decoration: underline;
-  text-decoration-color: var(--color-gold);
-  text-underline-offset: 4px;
-}
-
 @media (max-width: 1024px) {
   .grid {
     grid-template-columns: 1fr;
@@ -299,16 +255,5 @@
 
   .card {
     min-height: 250px;
-  }
-
-  .conclusion {
-    margin: var(--space-lg) auto 0;
-    border-radius: var(--radius-md);
-    width: 100%;
-    text-align: center;
-    flex-direction: column;
-    gap: var(--space-sm);
-    background: rgba(26, 23, 20, 0.95);
-    /* Even darker on mobile */
   }
 }

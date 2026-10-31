@@ -358,49 +358,11 @@ export const locations = {
   },
 }
 
-// Key findings for results section
-export const findings = [
-  {
-    number: '01',
-    title: 'Tartósabb lazaság',
-    text: 'Az ásógépezett parcellák 5-10 cm-rel mélyebben maradtak lazák a teljes tenyészidőszak alatt, még 400-450 mm öntözővíz kijuttatása után is.',
-  },
-  {
-    number: '02',
-    title: 'Gyorsabb felmelegedés',
-    text: 'A tavaszi mérések során az ásógépezett talaj 2-4°C-kal melegebb volt — a 2025-ös hideg tavasz miatt ez különösen fontos volt.',
-  },
-  {
-    number: '03',
-    title: 'Jobb vízgazdálkodás',
-    text: 'Az ásógépezett parcellákban a víz egyenletesebben oszlott el a talajszelvényben, mélyebb rétegekbe is lejutott.',
-  },
-  {
-    number: '04',
-    title: 'Látható növényfejlődés',
-    text: 'A paradicsom és hagyma állományok szemmel láthatóan fejlettebbek voltak az ásógépezett területeken.',
-  },
-]
-
 // Hero statistics
 export const heroStats = [
   { number: '3', label: 'Helyszín', sublabel: 'Szentkirály · Kecskemét · Lakitelek' },
   { number: '9', label: 'Kezelés kombináció', sublabel: 'Különböző művelési módok' },
   { number: '6', label: 'Hónap', sublabel: 'Március – Augusztus' },
-]
-
-// Tab 1: A Tömörödés Problémája
-export const compactionChallenges = [
-  {
-    title: 'Gyakori öntözés hatása',
-    description: 'Ennyi öntözővizet kell a talajfelszínnek elnyelnie és mélyebbre szivárogtatnia egy öntözési szezonban, bármely átlagos kertészeti kultúrában.',
-    icon: 'droplet',
-  },
-  {
-    title: 'Szerkezetromlás üteme',
-    description: 'A tárcsázott vagy kombinátorozott talajon már 30 nap alatt jelentős szerkezetromlás mérhető intenzív öntözés mellett.',
-    icon: 'arrow-down-narrow-wide',
-  },
 ]
 
 // Tab 2: Miért nem elég a szántás?
@@ -435,9 +397,6 @@ export const ploughingProblems = [
   },
 ]
 
-// Legacy alias for backward compatibility
-export const irrigationChallenges = compactionChallenges
-
 // Problem statistics
 export const problemStatistics = {
   irrigation: {
@@ -453,53 +412,6 @@ export const problemStatistics = {
     label: 'Öntözési gyakoriság',
   },
 }
-
-// Consequences data
-export const consequences = [
-  {
-    title: 'Gyors tömörödés',
-    description: 'Szántott talajon 30 nap alatt 20-50%-os szerkezetromlás intenzív öntözés mellett',
-    icon: 'compress',
-    dataBadge: 'Szentkirály: 35cm → 5cm',
-    source: '13. ábra, 32. oldal',
-  },
-  {
-    title: 'Biológiai élet károsodása',
-    description: 'A forgatás során az aerob és anaerob rétegek felcserélése károsítja a talajéletet',
-    icon: 'activity',
-    dataBadge: 'Széntartalom oxidálódása',
-    source: '7. oldal',
-  },
-  {
-    title: 'Lassú tavaszi felmelegedés',
-    description: 'Tömör talajszerkezet → késleltetett növényfejlődés. 2025 hideg tavaszán kritikus volt.',
-    icon: 'thermometer',
-    dataBadge: '2-4°C különbség',
-    source: '14., 16. ábra',
-  },
-  {
-    title: 'Nem egyenletes vízgazdálkodás',
-    description: 'A tömör rétegek akadályozzák a víz egyenletes eloszlását a talajban',
-    icon: 'droplet',
-    dataBadge: 'Pangóvíz ÉS kiszáradás',
-    source: '11., 17. ábra',
-  },
-]
-
-// Benefits data
-export const benefits = [
-  { title: 'Nincs eketalp', description: 'Nem gyúr tömör réteget a művelt zóna alá' },
-  { title: 'Megmarad a talajélet', description: 'A mikroorganizmusok a helyükön maradnak' },
-  { title: 'Gyorsabb felmelegedés', description: 'Nagyobb pórustérfogat = jobb hővezetés' },
-  { title: 'Egyenletes felszín', description: 'Nincs barázda, azonnal vethető' },
-]
-
-// Machine types
-export const machineTypes = [
-  { badge: 'Nagy szériás', name: '38SX', depth: '15-35 cm munkamélység', featured: false },
-  { badge: 'Lazítókéses', name: '38WX', depth: '35 cm + 55 cm lazítás', featured: false },
-  { badge: 'Mélyásógép', name: '40SX', depth: '20-50 cm munkamélység', featured: true },
-]
 
 // Alkalmazási módok - ásógép önmagában vs. kombinációban
 export const applicationModes = [

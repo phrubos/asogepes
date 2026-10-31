@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Hungarian agricultural research website ("Ásógépes Talajművelés") presenting scientific findings about spade machine soil cultivation for irrigated horticultural crops. Built with Next.js 15, React 18, TypeScript, and features heavy animation use with GSAP and Framer Motion.
+Hungarian agricultural research website ("Ásógépes Talajművelés") presenting scientific findings about spade machine soil cultivation for irrigated horticultural crops. Built with Next.js 15, React 18, TypeScript, Framer Motion and CSS Modules (no Tailwind). The `/kutatas` 3D field chart uses plain `three` (no react-three-fiber).
 
 The site is in Hungarian language and uses an earth-tone color palette (browns, greens, golds) with Fraunces (display) and Inter (body) fonts.
 
@@ -12,61 +12,56 @@ The site is in Hungarian language and uses an earth-tone color palette (browns, 
 
 ```bash
 npm run dev      # Start development server
-npm run build    # Production build
-npm run lint     # ESLint
+npm run build    # Production build (also runs lint + typecheck)
+npm run lint     # ESLint (next/core-web-vitals, .eslintrc.json) — 0 errors; only react-hooks/exhaustive-deps warnings remain
+npx tsc --noEmit # Typecheck
 npm run start    # Start production server
+npx playwright test --project=chromium  # E2E tests against http://localhost:3000 (server must already run)
 ```
+
+Run Python scripts with `py file.py`.
 
 ## Architecture
 
 ### Page Structure (App Router)
-- `/` - Home page with Hero and ResearchQuestions
-- `/problema` - Problem page: soil compaction issues with irrigated farming
-- `/technologia` - Solution page: spade machine technology (3 models: 38SX, 38WX, 40SX)
-- `/kutatas` - Research/experiment page: field trial locations and methodology
-- `/eredmenyek` - Results page: findings from the research
+- `/` - Home page: `home/Hero` (background video, stats, CTA)
+- `/problema` - `problem/ProblemScrollLayout`: hero, compaction, ploughing, cultivator sections
+- `/technologia` - `solution-v2/TechnologyScrollLayout`: hero, operation principle, models (38SX, 38WX, 40SX), application guide
+- `/kutatas` - `experiment/ResearchScrollLayout`: hero, methodology, Szentkirály, Kecskemét, Lakitelek
+
+All three content pages use the shared `shared/ScrollLayout` (window scroll, section/subsection nav, `?section=` deep links).
 
 ### Component Organization
 ```
 src/components/
-├── home/          # Hero, ResearchQuestions
-├── problem/       # SoilHero variants (6 hero options), CompactionView, PloughingView, CultivatorView
-├── solution-v2/   # SolutionLayout, ModelSection, HubFolder, ApplicationGuide, FieldDataModal
-├── experiment/    # ResearchLayout, Timeline, LocationContent, BarChart
-├── results/       # ResultsLayout
+├── home/          # Hero
+├── problem/       # ProblemScrollLayout, sections/, pages/, visualizations/ (SVG soil profiles)
+├── solution-v2/   # TechnologyScrollLayout, sections/, pages/, HubFolder, ModelSection, ApplicationGuide
+├── experiment/    # ResearchScrollLayout, sections/, pages/ (per location), FieldChart3DCanvas, BookLayout
 ├── layout/        # Navigation, Footer
-├── ui/            # Reusable: MagneticButton, TextReveal, TiltCard, ImageLightbox, AnimatedChart, etc.
-├── providers/     # RouteLoadingProvider
-└── shared/        # Shared components
+├── shared/        # ScrollLayout, PhotoViewer, BeforeAfterSlider, ThermalOverlays
+├── ui/            # MagneticButton, ImageLightbox, PageBadge, AnimatedNumber, LoadingScreen, SoilLoader
+├── providers/     # NavigationContext, RouteLoadingProvider
+└── error/         # HydrationErrorBoundary
 ```
 
-### Key Patterns
+### Data Layer
+- Research data (locations, photos, treatments, model details) lives in `src/lib/data.ts`; technology models in `src/lib/technology-data.ts`.
+- Some research numbers are still hard-coded inside location page components (`experiment/pages/*`), not in `data.ts` — check both when updating data.
 
-**Layout Components**: Each major page has a layout component (e.g., `ProblemLayout`, `SolutionLayout`, `ResearchLayout`) that orchestrates section composition and navigation.
-
-**Hero Variants**: The problem page has multiple hero implementations in separate folders (`SoilHero/`, `SoilHeroAlt/`, `SoilHeroInteractive/`, etc.) - currently using `SoilHeroInteractive`.
-
-**Data Layer**: Research data (locations, machine specs, findings) centralized in `src/lib/data.ts`.
-
-**Animation Libraries**:
-- GSAP with `@gsap/react` for complex scroll-triggered animations
-- Framer Motion for component transitions and micro-interactions
-- Custom hook: `useGSAP.ts` for GSAP cleanup
-
-**CSS Modules**: Each component typically has a corresponding `.module.css` file (e.g., `ProblemNew.module.css`).
+### CSS Modules
+Each component has a `.module.css` file. Unused classes were pruned in the 2026 cleanup; when deleting a component, delete its unused CSS too.
 
 ### Import Alias
 Use `@/` for imports from `src/` directory (configured in tsconfig.json).
 
-## Slash Commands
+## Analysis / audit
+- UI/UX, mobile and performance analysis: `docs/2026-10-31-ui-ux-performance-analysis.md`
 
-- `/checkpoint` - Create a comprehensive git commit with all changes
-- `/create-feature` - Create feature spec with requirements and implementation plan in `/specs` folder
-- `/check-build` - Run lint, typecheck, and build to verify no errors
+## Skills
+Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `skills-lock.json`): ux-heuristics, performance-optimization, information-architecture, design-motion-principles, review-animations, find-animation-opportunities, animation-vocabulary, emil-design-eng, apple-design, systematic-debugging, verification-before-completion, writing-plans, executing-plans.
 
 ## Design Notes
 
-- Design iterations stored in `.superdesign/design_iterations/` as HTML files
-- Uses Flowbite as styling base for design prototypes
 - Avoid blue/indigo colors - use earth tones per globals.css
-- Google Fonts: prefer JetBrains Mono, Space Mono, Inter, Poppins, etc.
+- Respect `prefers-reduced-motion` in every animation

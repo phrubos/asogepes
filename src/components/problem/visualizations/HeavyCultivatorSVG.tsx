@@ -62,7 +62,6 @@ const HeavyCultivatorSVG = () => {
         const items: ClodProps[] = []
         let seed = 4444
         const width = 300
-        const height = 150
         const soilSurface = 45
         const maxDepth = 145
 

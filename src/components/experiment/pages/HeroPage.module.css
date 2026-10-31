@@ -216,10 +216,6 @@
     padding: var(--space-xs) var(--space-sm);
   }
 
-  .statNumber {
-    font-size: 1.25rem;
-  }
-
   .mapContainer {
     min-height: 280px;
   }

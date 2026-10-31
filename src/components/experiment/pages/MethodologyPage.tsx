@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Gauge, ImageIcon } from 'lucide-react'
+import { Gauge } from 'lucide-react'
 import Image from 'next/image'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from './MethodologyPage.module.css'

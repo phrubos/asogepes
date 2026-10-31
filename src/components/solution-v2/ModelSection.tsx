@@ -1,6 +1,5 @@
 // ModelSection.tsx - Redesign Layout
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
@@ -13,7 +12,6 @@ import {
   ArrowRight,
   MapPin,
   Leaf,
-  Droplets,
   Calendar,
   BarChart3
 } from 'lucide-react'

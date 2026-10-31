@@ -321,23 +321,6 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-.summaryValue {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  font-family: var(--font-mono, monospace);
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.summaryValue.good {
-  color: #81C784;
-}
-
-.summaryValue.bad {
-  color: #E57373;
-}
-
 /* Evaluation text in summary */
 .summaryText {
   margin: var(--space-xs) 0 0 0;

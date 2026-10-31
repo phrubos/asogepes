@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Maximize2, X, CheckCircle, Award, Sparkles, TrendingUp, Layers, Play } from 'lucide-react'
+import { MapPin, Maximize2, X, TrendingUp, Layers, Play } from 'lucide-react'
 import { locations } from '@/lib/data'
 import styles from './LakitelekChartPage.module.css'
 

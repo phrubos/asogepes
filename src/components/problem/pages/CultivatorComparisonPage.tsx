@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { Check, X, Layers } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 import HeavyCultivatorSVG from '../visualizations/HeavyCultivatorSVG'
 import SpadingMachineSVG from '../visualizations/SpadingMachineSVG'
 import styles from '../ProblemNew.module.css'

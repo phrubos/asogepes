@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import Link from 'next/link'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { Shovel, Layers, Combine, Star, ChevronRight, ChevronsDown } from 'lucide-react'
 import styles from './ApplicationGuide.module.css'
 

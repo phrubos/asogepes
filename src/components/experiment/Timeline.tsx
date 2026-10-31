@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { TrendingUp, TrendingDown, Minus, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import styles from './Timeline.module.css'
 
 interface TimelineData {
@@ -29,8 +29,6 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
 
   const maxValue = Math.max(...data.flatMap(d => [d.spade, d.control])) * 1.15
 
-  const spadeChange = data[data.length - 1].spade - data[0].spade
-  const controlChange = data[data.length - 1].control - data[0].control
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -67,12 +65,6 @@ export default function Timeline({ data, title = "A talaj tömörödése a terme
       x: '200%',
       transition: { duration: 1.2, delay: delay + 0.5, ease: 'easeInOut' }
     })
-  }
-
-  const getTrendIcon = (value: number) => {
-    if (value > 0) return <TrendingUp size={14} />
-    if (value < 0) return <TrendingDown size={14} />
-    return <Minus size={14} />
   }
 
   return (

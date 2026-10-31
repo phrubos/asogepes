@@ -9,26 +9,6 @@
   margin-bottom: var(--space-2xl);
 }
 
-.title {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  color: var(--color-white);
-  margin: 0 0 var(--space-sm);
-  letter-spacing: -0.02em;
-}
-
-.subtitle {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0;
-  /* max-width: 600px -> 37.5rem */
-  max-width: 37.5rem;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-}
-
 /* Comparison Grid */
 .comparisonGrid {
   display: grid;
@@ -110,26 +90,6 @@
 .labelGood {
   background: linear-gradient(135deg, var(--color-green), var(--color-green-dark));
   color: white;
-}
-
-.badge,
-.badgeGood {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.badge {
-  background: rgba(229, 115, 115, 0.2);
-  color: #EF9A9A;
-}
-
-.badgeGood {
-  background: rgba(76, 175, 80, 0.2);
-  color: #81C784;
 }
 
 .pillBadge {
@@ -224,20 +184,6 @@
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
 }
 
-/* Gradients for Penetrometer HTML bars */
-.gradPloughed {
-  background: linear-gradient(180deg,
-      #4CAF50 0%,
-      #8BC34A 50%,
-      #F44336 100%);
-}
-
-.gradSpaded {
-  background: linear-gradient(180deg,
-      #4CAF50 0%,
-      #66BB6A 100%);
-}
-
 /* HTML implementation of Depth Scale */
 .depthMarkers {
   width: 100%;
@@ -267,17 +213,6 @@
   font-weight: 700;
   color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
-}
-
-/* Caption */
-.caption {
-  padding: var(--space-md) var(--space-lg);
-  font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.6);
-  line-height: 1.6;
-  background: rgba(255, 255, 255, 0.02);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  font-style: italic;
 }
 
 /* Problem & Benefit Lists */
@@ -330,13 +265,6 @@
   line-height: 1.4;
 }
 
-.itemDetail {
-  display: block;
-  font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 2px;
-}
-
 /* VS Divider */
 .divider {
   display: flex;
@@ -377,40 +305,10 @@
   }
 }
 
-/* Footer Legend */
-.footer {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-2xl);
-  margin-top: var(--space-2xl);
-  padding-top: var(--space-xl);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.legendColor {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-}
-
 @media (max-width: 768px) {
   .container {
     padding: var(--space-xl);
     margin: var(--space-2xl) 0;
-  }
-
-  .footer {
-    flex-direction: column;
-    gap: var(--space-md);
-    align-items: center;
   }
 
   .cardHeader {
@@ -418,15 +316,6 @@
     gap: var(--space-sm);
     align-items: flex-start;
   }
-}
-
-/* Depth Scale styling */
-.depthScale text {
-  font-family: var(--font-mono, 'JetBrains Mono', monospace);
-}
-
-.penetrometerScale text {
-  font-family: var(--font-mono, 'JetBrains Mono', monospace);
 }
 
 /* =================================================================
@@ -449,17 +338,6 @@
   .header {
     margin-bottom: 0.25rem;
     flex-shrink: 0;
-  }
-
-  .title {
-    font-size: 1rem;
-    margin-bottom: 0;
-  }
-
-  .subtitle {
-    font-size: 0.75rem;
-    line-height: 1.3;
-    max-width: 100%;
   }
 
   /* Compact description */
@@ -517,12 +395,6 @@
     padding: 0.15rem 0.35rem;
   }
 
-  .badge,
-  .badgeGood {
-    font-size: 0.5rem;
-    padding: 0.1rem 0.25rem;
-  }
-
   .problemList,
   .benefitList {
     padding: 0.25rem;
@@ -543,10 +415,6 @@
   .itemText {
     font-size: 0.825rem;
     line-height: 1.35;
-  }
-
-  .itemDetail {
-    display: none;
   }
 
   .iconBad,
@@ -570,24 +438,6 @@
     /* 24px */
     height: 1.5rem;
     font-size: 0.55rem;
-  }
-
-  /* Footer Legend Compact */
-  .footer {
-    margin-top: 0.25rem;
-    padding-top: 0.25rem;
-    gap: 0.5rem;
-    flex-shrink: 0;
-  }
-
-  .legendItem {
-    font-size: 0.6rem;
-    gap: 0.2rem;
-  }
-
-  .legendColor {
-    width: 8px;
-    height: 8px;
   }
 }
 
@@ -629,10 +479,5 @@
 
   .itemText {
     font-size: 0.6rem;
-  }
-
-  .footer {
-    display: none;
-    /* Keep footer hidden if really needed to save space */
   }
 }

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X, Check, Droplets, Bug, Sprout, ThermometerSun, ArrowDown } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { motion } from 'framer-motion'
+import { X, Check, Droplets, Bug, Sprout } from 'lucide-react'
 import styles from './PloughingSoilComparison.module.css'
 import PloughedSoilSVG from './visualizations/PloughedSoilSVG'
 
@@ -28,9 +28,6 @@ const spadedBenefits = [
   { icon: Droplets, text: 'A víz mozgása nem korlátozott', detail: 'Egyenletes eloszlás' },
   { icon: Bug, text: 'A talajélet aktívabb', detail: 'Rétegek megmaradnak' },
 ]
-
-// Mélység jelölők
-const depthMarkers = [0, 10, 20, 30]
 
 // Scale Overlay Komponens
 const ScaleOverlays = ({ type }: { type: 'ploughed' | 'spaded' }) => (
@@ -269,7 +266,6 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
 
 export default function PloughingSoilComparison() {
   const [hoveredSide, setHoveredSide] = useState<'ploughed' | 'spaded' | null>(null)
-  const [activeTab, setActiveTab] = useState<'visual' | 'list'>('visual')
 
   const containerVariants = {
     hidden: { opacity: 0 },

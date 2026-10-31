@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect, useRef, createContext, useContext } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 import SoilLoader from '@/components/ui/SoilLoader'
 import styles from './BookLayout.module.css'
 import ScrollProgressIndicator from './ScrollProgressIndicator'
