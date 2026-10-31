@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef, createContext, useContext } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import styles from './ScrollLayout.module.css'
 import NextSectionIndicator from './NextSectionIndicator'
@@ -38,46 +38,31 @@ export const useScrollNav = () => {
   return context
 }
 
+// Custom scroll offsets per section (lower = appears higher on screen)
+const sectionOffsets: Record<string, number> = {
+  // Probléma page
+  'compaction': -40,            // Öntözés és Tömörödés - OK
+  'cultivator-comparison': -20, // Kultivátorozott vs. ásógépezett - OK
+  'ploughing-effects': 150,      // Szántás hatásai - lejjebb
+  'ploughing-structure': -20,   // Szántott vs. ásógépezett - OK
+  // Technológia page
+  'operation': -80,             // Működési elv - OK
+  'model-38sx': 100,            // Modellek - feljebb (2 scroll)
+  'model-38wx': 100,
+  'model-40sx': 100,
+  'application': -10,            // Alkalmazás - lejjebb
+  'application-guide': -10,
+  // Kutatás page
+  'methodology': -60,           // Módszertan - feljebb (1 scroll)
+}
+
 export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutProps) {
   const [activeSection, setActiveSection] = useState(sections[0]?.id || '')
   const [activeSubsection, setActiveSubsection] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const isProgrammaticScroll = useRef(false)
-  const searchParams = useSearchParams()
   const router = useRouter()
-
-  // Initialize from URL
-  useEffect(() => {
-    const sectionId = searchParams.get('section')
-    if (sectionId) {
-      const section = sections.find(s => s.id === sectionId)
-      const subsection = sections.flatMap(s => s.subsections || []).find(sub => sub.id === sectionId)
-
-      if (section || subsection) {
-        setTimeout(() => {
-          scrollToSection(sectionId)
-        }, 100)
-      }
-    }
-  }, [])
-
-  // Custom scroll offsets per section (lower = appears higher on screen)
-  const sectionOffsets: Record<string, number> = {
-    // Probléma page
-    'compaction': -40,            // Öntözés és Tömörödés - OK
-    'cultivator-comparison': -20, // Kultivátorozott vs. ásógépezett - OK
-    'ploughing-effects': 150,      // Szántás hatásai - lejjebb
-    'ploughing-structure': -20,   // Szántott vs. ásógépezett - OK
-    // Technológia page
-    'operation': -80,             // Működési elv - OK
-    'model-38sx': 100,            // Modellek - feljebb (2 scroll)
-    'model-38wx': 100,
-    'model-40sx': 100,
-    'application': -10,            // Alkalmazás - lejjebb
-    'application-guide': -10,
-    // Kutatás page
-    'methodology': -60,           // Módszertan - feljebb (1 scroll)
-  }
+  const didInitFromUrl = useRef(false)
 
   // Get scroll offset based on target
   const getScrollOffset = useCallback((targetId: string) => {
@@ -159,6 +144,23 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
       }
     }
   }, [handleSectionClick, handleSubsectionClick, sections])
+
+  // Initialize from URL
+  useEffect(() => {
+    if (didInitFromUrl.current) return
+    didInitFromUrl.current = true
+    const sectionId = new URLSearchParams(window.location.search).get('section')
+    if (sectionId) {
+      const section = sections.find(s => s.id === sectionId)
+      const subsection = sections.flatMap(s => s.subsections || []).find(sub => sub.id === sectionId)
+
+      if (section || subsection) {
+        setTimeout(() => {
+          scrollToSection(sectionId)
+        }, 100)
+      }
+    }
+  }, [sections, scrollToSection])
 
   // IntersectionObserver for tracking active section during scroll
   useEffect(() => {

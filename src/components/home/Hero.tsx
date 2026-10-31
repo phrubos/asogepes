@@ -11,11 +11,9 @@ import { useTypewriter } from '@/hooks/useTypewriter'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
 import LoadingScreen from '@/components/ui/LoadingScreen'
 import { MagneticButton } from '@/components/ui/MagneticButton'
-import { useNavigation } from '../providers/NavigationContext'
 
 export default function Hero() {
   const { style: parallaxStyle } = useParallax({ speed: 0.3, maxOffset: 150 })
-  const { startNavigating } = useNavigation()
 
   // Typewriter effect
   const typewriterText = useTypewriter({
@@ -135,7 +133,6 @@ export default function Hero() {
               variant="primary"
               size="lg"
               magneticStrength={0.25}
-              onClick={() => startNavigating()}
             >
               Fedezd fel a kutatást
               <ArrowRight size={20} />

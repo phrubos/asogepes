@@ -4,8 +4,14 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigation } from '../providers/NavigationContext'
 import styles from './Navigation.module.css'
+
+const navItems = [
+  { href: '/', label: 'Főoldal' },
+  { href: '/problema', label: 'Probléma' },
+  { href: '/technologia', label: 'Technológia' },
+  { href: '/kutatas', label: 'Kutatás' },
+]
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
@@ -16,19 +22,11 @@ export default function Navigation() {
   const [mounted, setMounted] = useState(false)
   const navRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
-  const { startNavigating } = useNavigation()
 
   // Prevent hydration mismatch
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  const navItems = [
-    { href: '/', label: 'Főoldal' },
-    { href: '/problema', label: 'Probléma' },
-    { href: '/technologia', label: 'Technológia' },
-    { href: '/kutatas', label: 'Kutatás' },
-  ]
 
   // Find active index based on pathname
   useEffect(() => {
@@ -132,9 +130,8 @@ export default function Navigation() {
               onMouseEnter={() => setHoverIndex(index)}
               onMouseLeave={() => setHoverIndex(null)}
               onClick={() => {
-                if (pathname !== item.href) {
-                  startNavigating()
-                } else if (item.href === '/problema') {
+                if (pathname !== item.href) return
+                if (item.href === '/problema') {
                   // If clicking "Probléma" while already there, reset to top
                   window.dispatchEvent(new CustomEvent('reset-problem-scroll'))
                 } else if (item.href === '/technologia') {
@@ -217,7 +214,6 @@ export default function Navigation() {
                         className={`${styles.mobileLink} ${pathname === item.href ? styles.mobileActive : ''}`}
                         onClick={() => {
                           setMobileMenuOpen(false)
-                          if (pathname !== item.href) startNavigating()
                         }}
                         aria-current={pathname === item.href ? 'page' : undefined}
                       >
