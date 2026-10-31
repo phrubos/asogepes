@@ -9,6 +9,7 @@ import styles from './Hero.module.css'
 import { heroStats } from '@/lib/data'
 import { useParallax } from '@/hooks/useParallax'
 import { useTypewriter } from '@/hooks/useTypewriter'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 
@@ -39,6 +40,7 @@ export default function Hero() {
     pauseBeforeRestart: 500
   })
 
+  const reducedMotion = useReducedMotion()
   const showVideo = useHeroVideo()
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -92,13 +94,15 @@ export default function Hero() {
             A talaj nem{' '}
             <span className={styles.titleAccent}>
               {typewriterText}
-              <motion.span
-                className={styles.cursor}
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }}
-              >
-                |
-              </motion.span>
+              {!reducedMotion && (
+                <motion.span
+                  className={styles.cursor}
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }}
+                >
+                  |
+                </motion.span>
+              )}
             </span>
           </span>
         </h1>

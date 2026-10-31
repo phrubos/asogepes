@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 interface AnimatedNumberProps {
   value: number
@@ -25,65 +25,59 @@ export default function AnimatedNumber({
   const [count, setCount] = useState(0)
   const [hasAnimated, setHasAnimated] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
+  const reduced = useReducedMotion()
 
   useEffect(() => {
+    // Reduced motion: the final value is rendered directly, nothing to animate
+    if (reduced || hasAnimated) return
+
+    let animationFrame = 0
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated) {
-            // Start animation
-            const startTime = performance.now() + delay
-            let animationFrame: number
+        if (!entries.some(entry => entry.isIntersecting)) return
+        observer.disconnect()
 
-            const animate = (currentTime: number) => {
-              if (currentTime < startTime) {
-                animationFrame = requestAnimationFrame(animate)
-                return
-              }
+        const startTime = performance.now() + delay
 
-              const elapsed = currentTime - startTime
-              const progress = Math.min(elapsed / duration, 1)
-              
-              // Easing function (easeOutExpo)
-              const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress)
-              
-              setCount(easeProgress * value)
-
-              if (progress < 1) {
-                animationFrame = requestAnimationFrame(animate)
-              } else {
-                setHasAnimated(true)
-              }
-            }
-
+        const animate = (currentTime: number) => {
+          if (currentTime < startTime) {
             animationFrame = requestAnimationFrame(animate)
+            return
           }
-        })
+
+          const elapsed = currentTime - startTime
+          const progress = Math.min(elapsed / duration, 1)
+
+          // Easing function (easeOutExpo)
+          const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress)
+
+          setCount(easeProgress * value)
+
+          if (progress < 1) {
+            animationFrame = requestAnimationFrame(animate)
+          } else {
+            setHasAnimated(true)
+          }
+        }
+
+        animationFrame = requestAnimationFrame(animate)
       },
       { threshold: 0.3 }
     )
 
-    const currentRef = ref.current
-    if (currentRef) {
-      observer.observe(currentRef)
-    }
+    if (ref.current) observer.observe(ref.current)
 
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef)
-      }
+      observer.disconnect()
+      cancelAnimationFrame(animationFrame)
     }
-  }, [value, duration, delay, hasAnimated])
+  }, [value, duration, delay, hasAnimated, reduced])
+
+  const shown = reduced ? value : count
 
   return (
-    <motion.span
-      ref={ref}
-      className={className}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      {prefix}{count.toFixed(decimals)}{suffix}
-    </motion.span>
+    <span ref={ref} className={className}>
+      {prefix}{shown.toFixed(decimals)}{suffix}
+    </span>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useReducedMotion } from './useReducedMotion'
 
 interface UseTypewriterOptions {
     text: string
@@ -23,8 +24,12 @@ export function useTypewriter({
     const [isTyping, setIsTyping] = useState(true)
     const [isDeleting, setIsDeleting] = useState(false)
     const [hasInitialDelay, setHasInitialDelay] = useState(true)
+    const reduced = useReducedMotion()
 
     useEffect(() => {
+        // Reduced motion: no typing loop, the full text is shown
+        if (reduced) return
+
         // Initial delay before starting
         if (hasInitialDelay) {
             const initialTimeout = setTimeout(() => {
@@ -61,7 +66,7 @@ export function useTypewriter({
         }
 
         return () => clearTimeout(timeout)
-    }, [displayText, isTyping, isDeleting, hasInitialDelay, text, typingSpeed, deletingSpeed, pauseBeforeDelete, pauseBeforeRestart, initialDelay])
+    }, [reduced, displayText, isTyping, isDeleting, hasInitialDelay, text, typingSpeed, deletingSpeed, pauseBeforeDelete, pauseBeforeRestart, initialDelay])
 
-    return displayText
+    return reduced ? text : displayText
 }

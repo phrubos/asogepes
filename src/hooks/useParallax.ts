@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useReducedMotion } from './useReducedMotion'
 
 interface ParallaxOptions {
   speed?: number
@@ -10,17 +11,7 @@ interface ParallaxOptions {
 export function useParallax(options: ParallaxOptions = {}) {
   const { speed = 0.3, maxOffset = 100 } = options
   const [offset, setOffset] = useState(0)
-  const [isReduced, setIsReduced] = useState(false)
-
-  // Check for reduced motion preference
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setIsReduced(mediaQuery.matches)
-
-    const handler = (e: MediaQueryListEvent) => setIsReduced(e.matches)
-    mediaQuery.addEventListener('change', handler)
-    return () => mediaQuery.removeEventListener('change', handler)
-  }, [])
+  const isReduced = useReducedMotion()
 
   const handleScroll = useCallback(() => {
     if (isReduced) return

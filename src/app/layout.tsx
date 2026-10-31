@@ -3,6 +3,7 @@ import './globals.css'
 import Navigation from '@/components/layout/Navigation'
 import Footer from '@/components/layout/Footer'
 import { HydrationErrorBoundary } from '@/components/error/HydrationErrorBoundary'
+import MotionProvider from '@/components/providers/MotionProvider'
 
 export const metadata: Metadata = {
   title: 'Ásógépes Talajművelés | Tudományos Kutatás 2025',
@@ -22,9 +23,11 @@ export default function RootLayout({
             Ugrás a tartalomhoz
           </a>
 
-          <Navigation />
-          {children}
-          <Footer />
+          <MotionProvider>
+            <Navigation />
+            {children}
+            <Footer />
+          </MotionProvider>
         </body>
       </HydrationErrorBoundary>
     </html>

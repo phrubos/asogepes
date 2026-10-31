@@ -1,9 +1,10 @@
 'use client'
 
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDown, Sprout } from 'lucide-react'
 import styles from './OperationPrinciple.module.css'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 interface FeatureItem {
   icon: React.ReactNode
@@ -26,6 +27,23 @@ const features: FeatureItem[] = [
 
 export default function OperationPrinciple() {
   const sectionRef = useRef<HTMLElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const reduced = useReducedMotion()
+
+  // Load and play the loop only while it is on screen; with reduced motion the viewer starts it
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video || reduced) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) video.play().catch(() => {})
+      else video.pause()
+    }, { threshold: 0.25 })
+    observer.observe(video)
+    return () => {
+      observer.disconnect()
+      video.pause()
+    }
+  }, [reduced])
 
   // Reuse existing animation variants...
   const containerVariants = {
@@ -88,11 +106,13 @@ export default function OperationPrinciple() {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <video
+            ref={videoRef}
             src="/videos/Andornak.mp4"
-            autoPlay
             loop
             muted
             playsInline
+            preload="none"
+            controls={reduced}
             className={styles.video}
           />
 
