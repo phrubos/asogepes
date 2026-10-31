@@ -6,6 +6,7 @@ import { Settings, Folder, Play, HelpCircle, Sparkles } from 'lucide-react'
 import Image from 'next/image'
 import { modelData, ModelId } from '@/lib/technology-data'
 import styles from './HubFolder.module.css'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 type HoveredOption = 'operation' | 'models' | 'guide' | null
 // ModelId imported from shared data
@@ -39,13 +40,14 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
   // Demo animation state
   const [demoState, setDemoState] = useState<DemoState>('idle')
   const [isUserInteracting, setIsUserInteracting] = useState(false)
+  const reducedMotion = useReducedMotion()
   const demoTimeoutRef = useRef<NodeJS.Timeout>()
   const resumeTimeoutRef = useRef<NodeJS.Timeout>()
   const sequenceIndexRef = useRef(0)
 
   // Run demo sequence when not interacting
   useEffect(() => {
-    if (isUserInteracting) return
+    if (isUserInteracting || reducedMotion) return
 
     const runNextStep = () => {
       const step = DEMO_SEQUENCE[sequenceIndexRef.current]
@@ -62,7 +64,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
     return () => {
       if (demoTimeoutRef.current) clearTimeout(demoTimeoutRef.current)
     }
-  }, [isUserInteracting])
+  }, [isUserInteracting, reducedMotion])
 
   // Stop demo when user interacts
   const handleUserInteractionStart = useCallback(() => {
@@ -95,6 +97,25 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
   const handleNavMouseEnter = useCallback((type: HoveredOption) => {
     setHoveredOption(type)
   }, [])
+
+  // Tap, click and keyboard open an option too (hover alone does nothing on touch screens)
+  const optionProps = (type: HoveredOption) => ({
+    role: 'button' as const,
+    tabIndex: 0,
+    'aria-expanded': hoveredOption === type,
+    onClick: () => {
+      handleUserInteractionStart()
+      setIsHubHovered(true)
+      setHoveredOption(type)
+    },
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return
+      e.preventDefault()
+      handleUserInteractionStart()
+      setIsHubHovered(true)
+      setHoveredOption(type)
+    },
+  })
 
   // Removed handleNavMouseLeave to make it sticky until click
 
@@ -496,6 +517,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               <div
                 className={`${styles.hubOption} ${effectiveHoveredOption === 'operation' ? styles.hubOptionActive : ''}`}
                 onMouseEnter={() => handleNavMouseEnter('operation')}
+                {...optionProps('operation')}
                 data-interactive="true"
               // Removed onMouseLeave
               >
@@ -513,6 +535,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               <div
                 className={`${styles.hubOption} ${effectiveHoveredOption === 'models' ? styles.hubOptionActive : ''}`}
                 onMouseEnter={() => handleNavMouseEnter('models')}
+                {...optionProps('models')}
                 data-interactive="true"
               // Removed onMouseLeave
               >
@@ -530,6 +553,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               <div
                 className={`${styles.hubOption} ${effectiveHoveredOption === 'guide' ? styles.hubOptionActive : ''}`}
                 onMouseEnter={() => handleNavMouseEnter('guide')}
+                {...optionProps('guide')}
                 data-interactive="true"
               // Removed onMouseLeave
               >

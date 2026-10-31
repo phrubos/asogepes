@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion'
 import { Droplet, Layers, Info, Sprout, Droplets, ChevronDown } from 'lucide-react'
 
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
+import { useDisclosureTrigger } from '@/hooks/useDisclosureTrigger'
 import styles from '../ProblemNew.module.css'
 
 interface CollapsibleChallengeCardProps {
@@ -11,8 +12,8 @@ interface CollapsibleChallengeCardProps {
     title: string;
     children: React.ReactNode;
     isOpen: boolean;
-    onHoverStart: () => void;
-    onHoverEnd: () => void;
+    onOpen: () => void;
+    onClose: () => void;
     isAnyOpen: boolean;
 }
 
@@ -21,12 +22,13 @@ function CollapsibleChallengeCard({
     title,
     children,
     isOpen,
-    onHoverStart,
-    onHoverEnd,
+    onOpen,
+    onClose,
     isAnyOpen
 }: CollapsibleChallengeCardProps) {
     // If ANY card is open, but NOT this one -> Blue/Fade it
     const isInactive = isAnyOpen && !isOpen;
+    const { hover, trigger } = useDisclosureTrigger({ isOpen, onOpen, onClose })
 
     return (
         <div
@@ -45,9 +47,11 @@ function CollapsibleChallengeCard({
             }}
         >
             <motion.div
-                onMouseEnter={onHoverStart}
-                onMouseLeave={onHoverEnd}
+                {...hover}
+                {...trigger}
+                aria-label={title}
                 style={{
+                    outlineOffset: '-3px',
                     position: 'absolute',
                     top: 0,
                     left: 0,
@@ -532,8 +536,8 @@ export default function CompactionStatsPage() {
                                 icon={<Droplet size={24} />}
                                 title="Gyakori öntözés hatása"
                                 isOpen={expandedCardId === 1}
-                                onHoverStart={() => setExpandedCardId(1)}
-                                onHoverEnd={() => setExpandedCardId(null)}
+                                onOpen={() => setExpandedCardId(1)}
+                                onClose={() => setExpandedCardId(null)}
                                 isAnyOpen={expandedCardId !== null}
                             >
                                 <div className={styles.itemContent}>
@@ -557,8 +561,8 @@ export default function CompactionStatsPage() {
                                 icon={<Layers size={24} />}
                                 title="Szerkezetromlás üteme"
                                 isOpen={expandedCardId === 2}
-                                onHoverStart={() => setExpandedCardId(2)}
-                                onHoverEnd={() => setExpandedCardId(null)}
+                                onOpen={() => setExpandedCardId(2)}
+                                onClose={() => setExpandedCardId(null)}
                                 isAnyOpen={expandedCardId !== null}
                             >
                                 <div className={styles.itemContent}>
@@ -582,8 +586,8 @@ export default function CompactionStatsPage() {
                                 icon={<span style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'monospace' }}>O₂</span>}
                                 title="Oxigénhiány"
                                 isOpen={expandedCardId === 3}
-                                onHoverStart={() => setExpandedCardId(3)}
-                                onHoverEnd={() => setExpandedCardId(null)}
+                                onOpen={() => setExpandedCardId(3)}
+                                onClose={() => setExpandedCardId(null)}
                                 isAnyOpen={expandedCardId !== null}
                             >
                                 <div className={styles.itemContent}>

@@ -115,6 +115,15 @@ export default function ProblemHeroSection() {
                                         onClick={() => handleNavigate(item.id)}
                                         onMouseEnter={() => setHoveredId(item.id)}
                                         onMouseLeave={() => setHoveredId(null)}
+                                        role="button"
+                                        tabIndex={0}
+                                        onKeyDown={(e) => {
+                                            if (e.key !== 'Enter' && e.key !== ' ') return
+                                            e.preventDefault()
+                                            handleNavigate(item.id)
+                                        }}
+                                        onFocus={() => setHoveredId(item.id)}
+                                        onBlur={() => setHoveredId(null)}
                                     >
                                         <span className={styles.spadeNumber}>{item.number}</span>
                                         <div className={styles.spadeIcon}>{item.icon}</div>

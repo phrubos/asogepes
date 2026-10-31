@@ -16,6 +16,7 @@ A QA-build a `.next-qa` mappába kerül és a 3100-as porton fut, így nem ütk�
 | `node scripts/qa/hero-check.js [url]` | A főoldal címe látható: blokkolt videóval ≤ 3 s, lassított 4G mobilon ≤ 4 s (0 `.mp4` kérés), lassított asztalin ≤ 3 s | 1 hibánál |
 | `node scripts/qa/nav-check.js [url]` | SSR: minden oldal HTML-jében van `<h1>`, nincs Suspense-sablon mögött; nincs teljes képernyős réteg; menü → új oldal ≤ 1 s; `?section=` deep link | 1 hibánál |
 | `node scripts/qa/motion-check.js [url]` | `prefers-reduced-motion: reduce` mellett a főoldal a képek dekódolása után 0,5 s és 3 s múlva pixelre azonos (asztali + mobil); a `/technologia`-n egy videó sem indul magától | 1 hibánál |
+| `node scripts/qa/touch-check.js [url]` | Hover-kártyák: koppintás nyit és nyitva marad (telefon + érintős laptop), második koppintás zár; egér hoverrel nyit, kattintás nyitva hagyja; Enter nyit/zár; `/problema` hero-kártya Enterrel navigál; `/technologia` hub-opció koppintásra mutatja a mappákat | 1 hibánál |
 | `node scripts/qa/perf.js [url]` | FCP / LCP / CLS / TBT / bájtok, mobil (lassított 4G, 4× CPU) és asztali | csak riport |
 | `node scripts/qa/shots.js <outDir> [url]` | Viewport-lépésenkénti képernyőképek + konzolhibák | csak riport |
 

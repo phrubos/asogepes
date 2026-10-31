@@ -6,6 +6,7 @@ import { Activity, Leaf, Thermometer, AlertTriangle, ArrowDownToLine, Shuffle, T
 import Image from 'next/image'
 import { ploughingProblems } from '@/lib/data'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
+import { useDisclosureTrigger } from '@/hooks/useDisclosureTrigger'
 import styles from './PloughingEffectsPage.module.css'
 
 interface CollapsiblePloughingCardProps {
@@ -14,8 +15,8 @@ interface CollapsiblePloughingCardProps {
     description: string;
     badge: string;
     isOpen: boolean;
-    onHoverStart: () => void;
-    onHoverEnd: () => void;
+    onOpen: () => void;
+    onClose: () => void;
     isAnyOpen: boolean;
 }
 
@@ -25,12 +26,13 @@ function CollapsiblePloughingCard({
     description,
     badge,
     isOpen,
-    onHoverStart,
-    onHoverEnd,
+    onOpen,
+    onClose,
     isAnyOpen
 }: CollapsiblePloughingCardProps) {
     // If ANY card is open, but NOT this one -> Blue/Fade it
     const isInactive = isAnyOpen && !isOpen;
+    const { hover, trigger } = useDisclosureTrigger({ isOpen, onOpen, onClose })
 
     return (
         <div
@@ -45,9 +47,11 @@ function CollapsiblePloughingCard({
             }}
         >
             <motion.div
-                onMouseEnter={onHoverStart}
-                onMouseLeave={onHoverEnd}
+                {...hover}
+                {...trigger}
+                aria-label={title}
                 style={{
+                    outlineOffset: '-3px',
                     // Absolute positioning to allow "overlay" expansion without pushing siblings
                     position: 'absolute',
                     top: 0,
@@ -250,8 +254,8 @@ export default function PloughingEffectsPage() {
                             description={problem.description}
                             badge={problem.dataBadge}
                             isOpen={expandedCardId === index}
-                            onHoverStart={() => setExpandedCardId(index)}
-                            onHoverEnd={() => setExpandedCardId(null)}
+                            onOpen={() => setExpandedCardId(index)}
+                            onClose={() => setExpandedCardId(null)}
                             isAnyOpen={expandedCardId !== null}
                         />
                     ))}
