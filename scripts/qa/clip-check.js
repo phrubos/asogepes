@@ -5,7 +5,7 @@
 const path = require('path')
 const { chromium } = require(path.resolve('node_modules/@playwright/test'))
 const arg = (name, def) => (process.argv.find(a => a.startsWith(`--${name}=`)) || '').split('=')[1] || def
-const base = process.argv.slice(2).find(a => !a.startsWith('--')) || 'http://localhost:3000'
+const base = process.argv.slice(2).find(a => !a.startsWith('--')) || 'http://localhost:3100'
 const sizes = arg('sizes', '360x844,390x844,1440x900,1536x864,1366x768').split(',').map(s => s.split('x').map(Number))
 const pages = arg('pages', '/,/problema,/technologia,/kutatas').split(',')
 

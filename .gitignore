@@ -56,3 +56,4 @@ Thumbs.db
 
 # QA output
 /.qa/
+/.next-qa/

@@ -3,7 +3,7 @@
 const path = require('path')
 const { chromium } = require(path.resolve('node_modules/@playwright/test'))
 const out = process.argv[2]
-const base = process.argv[3] || 'http://localhost:3000'
+const base = process.argv[3] || 'http://localhost:3100'
 const pages = ['/', '/problema', '/technologia', '/kutatas']
 const viewports = { desktop: { width: 1440, height: 900 }, mobile: { width: 390, height: 844 } }
 ;(async () => {

@@ -2,7 +2,7 @@
 // usage: node scripts/qa/perf.js [baseUrl]
 const path = require('path')
 const { chromium } = require(path.resolve('node_modules/@playwright/test'))
-const base = process.argv[2] || 'http://localhost:3000'
+const base = process.argv[2] || 'http://localhost:3100'
 const profiles = {
   mobile4g: { vp: { width: 390, height: 844 }, mobile: true, net: { latency: 150, downloadThroughput: 1.6e6 / 8, uploadThroughput: 750e3 / 8 }, cpu: 4 },
   desktop: { vp: { width: 1440, height: 900 }, mobile: false, net: { latency: 40, downloadThroughput: 10e6 / 8, uploadThroughput: 5e6 / 8 }, cpu: 1 },

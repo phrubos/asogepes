@@ -4,7 +4,7 @@
 // usage: node scripts/qa/hero-check.js [baseUrl]
 const path = require('path')
 const { chromium } = require(path.resolve('node_modules/@playwright/test'))
-const base = process.argv[2] || 'http://localhost:3000'
+const base = process.argv[2] || 'http://localhost:3100'
 
 const titleVisible = page => page.evaluate(() => {
   const h1 = document.querySelector('header h1, h1'); if (!h1) return false

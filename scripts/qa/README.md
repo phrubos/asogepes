@@ -3,9 +3,11 @@
 Mindegyik production buildön fut:
 
 ```bash
-bash scripts/qa/stop-server.sh          # a régi szerver leállítása (különben régi build-ID-vel válaszol)
-npm run build && npx next start -p 3000 # külön terminálban / háttérben
+bash scripts/qa/stop-server.sh 3100     # a régi QA-szerver leállítása (különben régi build-ID-vel válaszol)
+NEXT_DIST_DIR=.next-qa npm run build && NEXT_DIST_DIR=.next-qa npx next start -p 3100
 ```
+
+A QA-build a `.next-qa` mappába kerül és a 3100-as porton fut, így nem ütközik egy futó `npm run dev`-vel (az a `.next`-et használja, 3000-es port).
 
 | Szkript | Mit ellenőriz | Kilépési kód |
 |---|---|---|

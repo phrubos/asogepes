@@ -3,7 +3,7 @@
 // usage: node scripts/qa/type-check.js [baseUrl]
 const path = require('path')
 const { chromium } = require(path.resolve('node_modules/@playwright/test'))
-const base = process.argv[2] || 'http://localhost:3000'
+const base = process.argv[2] || 'http://localhost:3100'
 const MEDIAN_MIN = 15, LABEL_MIN = 12
 
 ;(async () => {

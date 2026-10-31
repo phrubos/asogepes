@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // QA builds (scripts/qa) use NEXT_DIST_DIR=.next-qa so they never clobber a running `next dev`
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   serverExternalPackages: [],
   images: {
     formats: ['image/avif', 'image/webp'],
