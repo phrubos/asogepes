@@ -93,6 +93,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
 
     if (!items || items.length === 0) return null
     const currentItem = items[currentIndex] || items[0]
+    const hasMarks = Boolean(currentItem.overlays && Object.keys(currentItem.overlays).length)
 
     const displayDescription = currentItem.type === 'comparison' && currentItem.leftDescription && currentItem.rightDescription
         ? (sliderPos >= 50 ? currentItem.leftDescription : currentItem.rightDescription)
@@ -259,10 +260,10 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                 )}
             </div>
 
-            {/* Phones: the preview drops its small labels, so say where the full picture is */}
+            {/* Phones: the preview is a clean photo with its title; marks and text are in the fullscreen view */}
             <button type="button" className={styles.zoomHint} onClick={() => setIsModalOpen(true)}>
                 <Maximize2 size={16} aria-hidden="true" />
-                Teljes kép a mért értékekkel
+                {hasMarks ? 'Teljes kép a mért értékekkel' : 'Teljes kép és leírás'}
             </button>
 
             {/* Description Area */}

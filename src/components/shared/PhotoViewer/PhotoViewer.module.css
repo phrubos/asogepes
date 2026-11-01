@@ -666,7 +666,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        align-self: flex-start;
+        align-self: center;
         min-height: 44px;
         padding: 0 14px;
         border: 1px solid rgba(212, 168, 75, 0.3);
@@ -679,11 +679,17 @@
         cursor: pointer;
     }
 
+    /* the title heads the photo; the long text is read in the fullscreen view */
     .descriptionArea {
+        order: -1;
         height: auto;
         overflow: visible;
-        padding: 8px 0 0;
+        padding: 0;
         box-shadow: none;
+    }
+
+    .descriptionArea .description {
+        display: none;
     }
 
     .descriptionArea::after {
