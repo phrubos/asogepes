@@ -865,7 +865,7 @@
     gap: 12px;
   }
 
-  .cultivatorImageHeading {
+  .pillBadge.cultivatorImageHeading {
     display: inline-block;
     align-self: flex-start;
     margin: 0;
@@ -884,6 +884,27 @@
 
 @media (max-width: 1024px) {
   .comparisonHeading {
-    text-align: left;
+    display: flex;
+    margin-bottom: 12px;
+  }
+
+  .comparisonHeading .pillBadge {
+    margin-bottom: 0;
+  }
+}
+
+/* Phones and tablets: the section sets the gutter, so these inner frames add none */
+@media (max-width: 1024px) {
+  .statsPageGrid,
+  .ploughStructureContent {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .ploughStructureContent {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
   }
 }

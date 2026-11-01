@@ -343,3 +343,11 @@
   z-index: 5;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
+
+/* Phones and tablets: the section sets the gutter, the hero text lines up with the rest of the page */
+@media (max-width: 1024px) {
+  .content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

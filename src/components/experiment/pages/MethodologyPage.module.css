@@ -487,9 +487,19 @@
     height: 136px;
   }
 
+  /* stacked, the two ranges are two equal boxes: same corners, a small gap between */
   .scaleBar {
     flex-direction: column;
+    gap: 8px;
     min-height: 0;
+    overflow: visible;
+    border-radius: 0;
+  }
+
+  .scaleOptimal,
+  .scaleCompacted {
+    border-radius: 10px;
+    padding: 10px 12px;
   }
 }
 

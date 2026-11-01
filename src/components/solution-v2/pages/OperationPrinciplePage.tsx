@@ -1,10 +1,11 @@
 'use client'
 
 import OperationPrinciple from '../OperationPrinciple'
+import frameStyles from './PageFrame.module.css'
 
 export default function OperationPrinciplePage() {
     return (
-        <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%', padding: '0 2rem' }}>
+        <div className={frameStyles.frame}>
             <OperationPrinciple />
         </div>
     )

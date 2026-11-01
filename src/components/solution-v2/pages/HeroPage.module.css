@@ -154,3 +154,10 @@
         align-items: flex-start;
     }
 }
+
+/* Phones and tablets: the text column keeps its reading width but starts at the page gutter */
+@media (max-width: 1024px) {
+    .textColumn {
+        align-self: flex-start;
+    }
+}

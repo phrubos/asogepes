@@ -505,5 +505,6 @@
 @media (max-width: 1024px) {
   .header {
     text-align: left;
+    margin-bottom: 12px;
   }
 }

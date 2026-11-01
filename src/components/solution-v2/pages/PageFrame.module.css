@@ -1,0 +1,13 @@
+/* Width frame for the technology sub-pages; on phones and tablets the section already sets the gutter */
+.frame {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 2rem;
+}
+
+@media (max-width: 1024px) {
+    .frame {
+        padding: 0;
+    }
+}

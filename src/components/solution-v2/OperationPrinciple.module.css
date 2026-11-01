@@ -284,6 +284,10 @@
     align-items: flex-start;
   }
 
+  .subtitle {
+    margin: 0;
+  }
+
   .content {
     gap: 24px;
   }

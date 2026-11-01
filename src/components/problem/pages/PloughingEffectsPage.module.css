@@ -316,3 +316,21 @@
         display: none;
     }
 }
+
+/* Phones and tablets: the picture spans the column like the other sections, not an 800px centred box */
+@media (max-width: 1024px) {
+    .imageColumn {
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* Phones and tablets: the quote spans the column too */
+@media (max-width: 1024px) {
+    .quoteColumn {
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}

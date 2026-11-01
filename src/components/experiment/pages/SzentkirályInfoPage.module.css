@@ -383,3 +383,14 @@
     display: none;
   }
 }
+
+/* Phones and tablets: 16px between a title and its content, the same on every /kutatas page */
+@media (max-width: 1024px) {
+  .infoPage {
+    gap: 16px;
+  }
+
+  .headerTitle {
+    margin-bottom: 0;
+  }
+}

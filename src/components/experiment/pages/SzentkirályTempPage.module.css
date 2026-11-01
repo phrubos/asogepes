@@ -15,10 +15,10 @@
     box-sizing: border-box;
 }
 
-/* Header */
+/* Header: the container gap (16px) is the space to the chart, as on the timeline pages */
 .header {
     text-align: center;
-    margin-bottom: var(--space-sm);
+    margin-bottom: 0;
 }
 
 .headerBadge {
@@ -57,6 +57,11 @@
     max-width: 800px;
     margin: 0 auto;
     width: 100%;
+}
+
+/* the chart's own outer margin would double the gap under the title */
+.chartContainer > div {
+    margin: 0;
 }
 
 /* Override TemperatureChart container styles */
@@ -114,7 +119,7 @@
 
     .header {
         flex-shrink: 0;
-        margin-bottom: var(--space-xs);
+        margin-bottom: var(--space-md);
         z-index: 2;
     }
 
@@ -128,7 +133,8 @@
         min-height: 0;
         display: flex;
         align-items: center;
-        justify-content: center;
+        /* top, not centred: centring left a tall empty band between the title and the chart */
+        justify-content: flex-start;
         max-width: 1200px;
         /* Allow more width for side-by-side */
         margin: 0 auto;
@@ -162,14 +168,22 @@
 
 @media (max-width: 1024px) {
   .header {
-    margin-bottom: 16px;
+    margin-bottom: 0;
     padding-top: 0;
   }
+
 }
 
 /* Phones and tablets: titles and labels align left, like the text under them */
 @media (max-width: 1024px) {
   .header {
     text-align: left;
+  }
+}
+
+/* Phones and tablets: the chart spans the column like the other charts */
+@media (max-width: 1024px) {
+  .chartContainer {
+    max-width: none;
   }
 }

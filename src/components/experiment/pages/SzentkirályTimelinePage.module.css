@@ -98,7 +98,7 @@
 
 @media (max-width: 1024px) {
   .header {
-    margin-bottom: 16px;
+    margin-bottom: 0;
     padding-top: 0;
   }
 }
