@@ -306,3 +306,21 @@
     display: none;
   }
 }
+
+/* Phones and tablets (fullscreen view): the Kontroll / Ásógépezett labels shrink so the photo stays visible */
+@media (max-width: 1024px) {
+  .arrowLabelGroupNone {
+    padding: 4px 10px;
+    border-width: 1px;
+    border-radius: 6px;
+  }
+
+  .arrowLabelGroupNone .arrowLabel {
+    font-size: 14px;
+  }
+
+  .arrowLabelGroupNone .arrowSubLabel {
+    padding-top: 2px;
+    font-size: 12px;
+  }
+}
