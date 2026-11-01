@@ -10,9 +10,9 @@ import styles from '../pages/HeroPage.module.css'
 
 // Phones and tablets get a plain list of the same three destinations instead of the animated folder
 const TOPICS: HeroTopic[] = [
-    { id: 'operation', title: 'Működési elv', desc: 'Hogyan működik az ásógép?' },
-    { id: 'models', title: 'Modellek', desc: '38SX, 38WX, 40SX' },
-    { id: 'application', title: 'Útmutató', desc: 'Melyik módszert válasszam?' },
+    { id: 'operation', lead: '1', title: 'Működési elv', desc: 'Hogyan működik az ásógép?' },
+    { id: 'models', lead: '2', title: 'Modellek', desc: '38SX, 38WX, 40SX' },
+    { id: 'application', lead: '3', title: 'Útmutató', desc: 'Melyik módszert válasszam?' },
 ]
 
 export default function TechHeroSection() {

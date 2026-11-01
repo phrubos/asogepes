@@ -6,8 +6,8 @@ import styles from './HeroTopicList.module.css'
 export interface HeroTopic {
     id: string
     title: string
-    desc: string
-    /** Short gold figure before the title (e.g. a depth range); rows without it span the full width */
+    desc?: string
+    /** Short gold figure before the title (the row number); rows without it span the full width */
     lead?: string
 }
 
@@ -21,7 +21,7 @@ export default function HeroTopicList({ topics, onSelect, label }: { topics: Her
                     {hasLead && <span className={styles.topicLead}>{lead}</span>}
                     <span className={styles.topicText}>
                         <span className={styles.topicTitle}>{title}</span>
-                        <span className={styles.topicDesc}>{desc}</span>
+                        {desc && <span className={styles.topicDesc}>{desc}</span>}
                     </span>
                     <ArrowDown size={18} className={styles.topicArrow} aria-hidden="true" />
                 </button>
