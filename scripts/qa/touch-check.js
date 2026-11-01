@@ -3,7 +3,8 @@
 // and it stays open, a second tap closes it;
 // a mouse opens it by hovering and a click keeps it open; Enter opens and closes it;
 // a tap on a /technologia hub option shows its mini folders (touch laptop), a tap on a phone topic scrolls to it
-// (/technologia and /problema); Enter on a /problema hero card navigates.
+// (/technologia and /problema); the phone model switcher shows one model per tab and follows deep links;
+// Enter on a /problema hero card navigates.
 // usage: node scripts/qa/touch-check.js [baseUrl]
 const path = require('path')
 const { chromium } = require(path.resolve('node_modules/@playwright/test'))
@@ -99,6 +100,14 @@ async function reveal(page, title) {
     await page.locator('nav[aria-label="Témák"] button', { hasText: 'Modellek' }).tap(); await page.waitForTimeout(2500)
     const top = await page.evaluate(() => document.getElementById('model-38sx').getBoundingClientRect().top)
     ok(`phone: tap on the "Modellek" topic scrolls to the first model (top=${Math.round(top)})`, Math.abs(top - 80) < 60)
+    // model switcher: one model at a time; a tab shows another; a deep link opens the model it names
+    const shown = () => page.evaluate(() => [...document.querySelectorAll('[id^="model-"][role="tabpanel"]')].filter(e => e.offsetParent).map(e => e.id).join(','))
+    ok('phone: only the first model is shown', (await shown()) === 'model-38sx')
+    await page.locator('#model-38sx [role="tab"]', { hasText: '38WX' }).tap(); await page.waitForTimeout(800)
+    ok('phone: tap on the 38WX tab shows 38WX', (await shown()) === 'model-38wx')
+    await page.goto(base + '/technologia?section=model-40sx', { waitUntil: 'networkidle' }); await page.waitForTimeout(2500)
+    const top40 = await page.evaluate(() => document.getElementById('model-40sx').getBoundingClientRect().top)
+    ok(`phone: ?section=model-40sx opens 40SX and scrolls to it (top=${Math.round(top40)})`, (await shown()) === 'model-40sx' && Math.abs(top40 - 80) < 60)
     await ctx.close()
   }
 

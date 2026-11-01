@@ -511,6 +511,16 @@
     min-height: 44px;
     padding: 0 4px;
   }
+
+  /* the switcher's selected tab already names the model: keep the heading for screen readers only */
+  .sectionHeader {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 
 /* ===========================================

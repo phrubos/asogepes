@@ -95,6 +95,14 @@ function scrollToElement(element: HTMLElement, offset: number) {
   requestAnimationFrame(tick)
 }
 
+/** Fired (synchronously) before jumping to a section, so a target that is hidden, e.g. a
+ *  model behind the phone switcher, can show itself first. detail = the target element id. */
+export const SCROLL_TARGET_EVENT = 'scroll-layout-target'
+
+function announceTarget(id: string) {
+  window.dispatchEvent(new CustomEvent(SCROLL_TARGET_EVENT, { detail: id }))
+}
+
 export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutProps) {
   const [activeSection, setActiveSection] = useState(sections[0]?.id || '')
   const [activeSubsection, setActiveSubsection] = useState<string | null>(null)
@@ -125,6 +133,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
 
     // Determine scroll target: first subsection element if exists, otherwise section wrapper
     const targetId = firstSubsection?.id || sectionId
+    announceTarget(targetId)
     const element = document.getElementById(targetId)
 
     if (element) {
@@ -149,6 +158,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
     setActiveSection(parentSectionId)
     setActiveSubsection(subsectionId)
 
+    announceTarget(subsectionId)
     const element = document.getElementById(subsectionId)
     if (element) {
       // Dynamic offset - some sections need to appear higher

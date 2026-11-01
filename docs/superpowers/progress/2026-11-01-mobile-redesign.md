@@ -43,4 +43,11 @@ Spec: `docs/superpowers/specs/2026-11-01-mobile-redesign-design.md`. Döntések 
 - perf mobile4g: TBT 218 / 345 / 353 / 437 ms, CLS 0.000 mind a 4 oldalon (cél ≤ 450 ms, ≤ 0.05). Desktop CLS ≤ 0.038.
 - `mobile-check.js`: a `html`/`body` overflow nem számít vágásnak (a viewportra hat); új `--debug=y0-y1` kapcsoló.
 - Oldalhossz 390 px-en (QA build): / 1173, /problema 6944, /technologia 7408, /kutatas 10741 px. Csökkenés a fázis elején mért állapothoz képest: /problema −20%, /technologia −5%, /kutatas −14%. A −25%-os cél csak részben teljesült; a fő ok, hogy a szöveg és az adat megmaradt, csak az üres sávok és a dobozok tűntek el.
-- Nyitott: /technologia modellváltó (szegmens), a Lakitelek-eredménysor értékcsíkja keskenyíti a szöveget, a MagneticButton `<a>`-n belüli `<button>` (beágyazott interaktív elem, régi).
+- Nyitott: a Lakitelek-eredménysor értékcsíkja keskenyíti a szöveget, a MagneticButton `<a>`-n belüli `<button>` (beágyazott interaktív elem, régi).
+
+## 6. fázis — /technologia modellváltó
+- Mobilon (≤1024 px) egyszerre egy modell látszik; felül háromgombos szegmens-váltó (név + típus, `role="tablist"`, nyilak / Home / End), a modell végén „Következő modell” gomb. Ha az olvasó a modell közepén vált, az új modell tetejére ugrik (reduced motion alatt azonnal). Asztali nézet változatlan (3 modell egymás alatt, a váltó nem jelenik meg).
+- A modell fejléce mobilon csak képernyőolvasónak marad meg (a kiválasztott fül már megnevezi).
+- Mélylinkek: a `ScrollLayout` ugrás előtt `scroll-layout-target` eseményt küld (`SCROLL_TARGET_EVENT`); a modellek oldala erre `flushSync`-kel kiválasztja a célmodellt, így a `?section=model-*`, a Tartalom lap és a hero témalista a megfelelő modellt nyitja meg, és a 64 px-es pozícióra ugrik.
+- touch-check: új telefonos tesztek (csak az első modell látszik, a 38WX fül átvált, a `?section=model-40sx` megnyitja és odaugrik).
+- Eredmény: /technologia 7408 → 4859 px (−34%, a −25%-os cél teljesült); mobile4g TBT 436 ms, CLS 0.000; desktop CLS 0.038 (változatlan). A teljes QA-sor zöld.

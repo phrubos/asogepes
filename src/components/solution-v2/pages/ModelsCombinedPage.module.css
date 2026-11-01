@@ -16,14 +16,98 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Phones and tablets: each model is as tall as its content */
+/* the switcher and "next model" exist for phones only */
+.switcher,
+.nextModel {
+    display: none;
+}
+
+/* Phones and tablets: one model at a time, chosen with a segmented switcher */
 @media (max-width: 1024px) {
     .model {
         min-height: 0;
-        padding: 0 0 48px;
+        padding: 0;
+    }
+
+    .model:not([data-selected]) {
+        display: none;
     }
 
     .model + .model {
-        padding-top: 48px;
+        border-top: none;
+    }
+
+    .switcher {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        margin-bottom: 24px;
+        padding: 4px;
+        border: 1px solid rgba(212, 168, 75, 0.2);
+        border-radius: 14px;
+        background: rgba(245, 240, 232, 0.04);
+    }
+
+    .tab {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        min-height: 56px;
+        padding: 6px 4px;
+        border: none;
+        border-radius: 10px;
+        background: transparent;
+        color: rgba(245, 240, 232, 0.72);
+        font: inherit;
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .tab[aria-selected='true'] {
+        background: var(--color-gold);
+        color: var(--color-earth-900, #1a1612);
+    }
+
+    .tab:focus-visible {
+        outline: 2px solid var(--color-gold);
+        outline-offset: 2px;
+    }
+
+    .tabName {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+
+    .tabType {
+        font-size: 0.75rem;
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    .nextModel {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        align-self: flex-start;
+        min-height: 48px;
+        margin-top: 24px;
+        padding: 0 18px;
+        border: 1px solid rgba(212, 168, 75, 0.35);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--color-gold);
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+    }
+}
+
+@media (max-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .tab {
+        transition: none;
     }
 }
