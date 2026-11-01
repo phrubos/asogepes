@@ -696,3 +696,10 @@
         display: none;
     }
 }
+
+/* Phones and tablets: the +/- zoom panel covers the picture and its marks in the fullscreen view */
+@media (max-width: 1024px) {
+    .zoomControls {
+        display: none;
+    }
+}
