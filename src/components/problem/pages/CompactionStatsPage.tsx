@@ -202,6 +202,33 @@ const timelineData = [
     { day: 120, label: '120 nap után', color: '#D32F2F' },
 ]
 
+/** Phones and tablets: the simulated state as one strip under the soil picture, so it reads with it */
+function CompactionReadout({ progress }: { progress: any }) {
+    const [currentProgress, setCurrentProgress] = useState(0)
+
+    useEffect(() => progress.on('change', (latest: number) => setCurrentProgress(latest)), [progress])
+
+    const currentData = timelineData[Math.min(Math.round(currentProgress), 4)]
+    const compacted = currentProgress > 2
+
+    return (
+        <dl className={styles.soilReadout} aria-label="Szimulált állapot">
+            <div>
+                <dt>Talajellenállás</dt>
+                <dd style={{ color: currentData.color }}>{Math.round(currentProgress * 5)} bar</dd>
+            </div>
+            <div>
+                <dt>Gyökérzóna</dt>
+                <dd>{compacted ? 'Sekély' : 'Mély'}</dd>
+            </div>
+            <div>
+                <dt>Vízáteresztés</dt>
+                <dd>{compacted ? 'Gyenge' : 'Jó'}</dd>
+            </div>
+        </dl>
+    )
+}
+
 function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, expandedCardId: number | null }) {
     const [currentProgress, setCurrentProgress] = useState(0)
 
@@ -291,7 +318,6 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                 {/* Soil Resistance Card */}
                 <motion.div
                     variants={itemVariants}
-                    className={styles.simCard}
                     style={{
                         background: 'rgba(255,255,255,0.03)',
                         border: '1px solid rgba(255,255,255,0.08)',
@@ -321,7 +347,6 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                 {/* Root Zone Card */}
                 <motion.div
                     variants={itemVariants}
-                    className={styles.simCard}
                     style={{
                         background: 'rgba(255,255,255,0.03)',
                         border: '1px solid rgba(255,255,255,0.08)',
@@ -350,7 +375,6 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                 {/* Water Management Card */}
                 <motion.div
                     variants={itemVariants}
-                    className={styles.simCard}
                     style={{
                         background: 'rgba(255,255,255,0.03)',
                         border: '1px solid rgba(255,255,255,0.08)',
@@ -480,6 +504,9 @@ export default function CompactionStatsPage() {
                         height: '100%'
                     }}
                 >
+                    {/* phones and tablets: the section title sits over the picture it introduces */}
+                    <span className={`${styles.pillBadge} ${styles.soilHeading}`}>Talajállapot és kockázatok</span>
+
                     {/* Container to fill the column while keeping aspect ratio */}
                     <div ref={soilRef} style={{
                         width: '100%',
@@ -522,6 +549,7 @@ export default function CompactionStatsPage() {
                             amit a penetrométer jól mutat.
                         </div>
                     </div>
+                    <CompactionReadout progress={progress} />
                     {/* phones and tablets: the caption sits under the picture instead of over it */}
                     <p className={styles.soilCaptionBelow}>
                         Rendszeres öntözés, folyamatos tömörödés, amit a penetrométer jól mutat.
@@ -531,7 +559,7 @@ export default function CompactionStatsPage() {
                 {/* Right Column Wrapper - Flex Column for Challenges + Info */}
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0, justifyContent: 'space-between' }}>
                     <div className={styles.challengesList} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <div style={{ textAlign: 'left', marginBottom: 'var(--space-xs)' }}>
+                        <div className={styles.challengesHeading} style={{ textAlign: 'left', marginBottom: 'var(--space-xs)' }}>
                             <span className={styles.pillBadge}>Talajállapot és kockázatok</span>
                         </div>
 
@@ -613,7 +641,9 @@ export default function CompactionStatsPage() {
                         </motion.div>
                     </div>
 
-                    <CompactionStatsDisplay progress={progress} expandedCardId={expandedCardId} />
+                    <div className={styles.simDesktop}>
+                        <CompactionStatsDisplay progress={progress} expandedCardId={expandedCardId} />
+                    </div>
                 </div>
             </div>
         </motion.div >

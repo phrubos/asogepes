@@ -779,16 +779,63 @@
 }
 
 /* Phones and tablets: each simulated-state card is one row (icon, then label and value) */
+/* The simulated-state cards sit beside the challenges on desktop; phones and tablets show
+   them as one strip under the soil picture instead (.soilReadout) */
+.simDesktop {
+  display: contents;
+}
+
+.soilHeading,
+.soilReadout {
+  display: none;
+}
+
 @media (max-width: 1024px) {
-  .simCard {
-    flex-direction: row !important;
-    align-items: center;
-    gap: 12px !important;
-    padding: 10px 12px !important;
+  .simDesktop,
+  .challengesHeading {
+    display: none;
   }
 
-  .simCard > div:first-child {
-    flex-shrink: 0;
+  .soilHeading {
+    display: inline-block;
+    align-self: flex-start;
+    margin: 0;
+  }
+
+  .soilReadout {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    margin: 0;
+    border: 1px solid rgba(245, 240, 232, 0.1);
+    border-radius: 12px;
+    background: rgba(245, 240, 232, 0.03);
+  }
+
+  .soilReadout > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px;
+    min-width: 0;
+  }
+
+  .soilReadout > div + div {
+    border-left: 1px solid rgba(245, 240, 232, 0.1);
+  }
+
+  .soilReadout dt {
+    font-size: 0.75rem;
+    color: rgba(245, 240, 232, 0.6);
+  }
+
+  .soilReadout dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-cream);
+    transition: color 0.3s;
   }
 }
 
