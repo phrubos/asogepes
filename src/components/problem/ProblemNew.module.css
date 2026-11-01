@@ -769,3 +769,11 @@
     line-height: 1.55;
   }
 }
+
+/* Phones and tablets: the gap between two subsections is the standard 64px; the comparison
+   block drops its desktop frame spacing */
+@media (max-width: 1024px) {
+  .subsectionSpacer {
+    height: 64px !important;
+  }
+}

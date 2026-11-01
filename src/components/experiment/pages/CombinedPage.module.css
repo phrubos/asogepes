@@ -67,7 +67,9 @@
     height: auto;
     max-height: none;
     overflow: visible;
-    margin-bottom: var(--space-3xl);
+    min-height: 0;
+    margin-bottom: 64px;
+    scroll-margin-top: 64px;
   }
 
   .section > * {

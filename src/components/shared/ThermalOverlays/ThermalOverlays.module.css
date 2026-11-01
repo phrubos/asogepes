@@ -297,3 +297,17 @@
 .pointLabelStart {
     transform: translateX(50%);
 }
+
+/* Phones and tablets: in the inline preview only the A–E rings, lines and the colour scale stay;
+   values and captions overlapped at this size and are read in the fullscreen view */
+@media (max-width: 1024px) {
+  :global([data-preview]) .pointLabel,
+  :global([data-preview]) .overlayLineLabel,
+  :global([data-preview]) .overlayVerticalLineLabel,
+  :global([data-preview]) .arrowLabel,
+  :global([data-preview]) .arrowSubLabel,
+  :global([data-preview]) .overlayTextLabel,
+  :global([data-preview]) .scaleValue {
+    display: none;
+  }
+}

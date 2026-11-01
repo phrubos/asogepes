@@ -11,3 +11,11 @@
   padding: 100px 0 120px 0;
   box-sizing: border-box;
 }
+
+/* Phones and tablets: sections are as tall as their content */
+@media (max-width: 1024px) {
+  .scrollSection {
+    min-height: 0;
+    padding: 0;
+  }
+}

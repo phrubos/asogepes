@@ -13,7 +13,7 @@ export default function CultivatorSection() {
                     <CultivatorProblemsPage />
                 </div>
 
-                <div style={{ height: '10vh' }} />
+                <div className={styles.subsectionSpacer} style={{ height: '10vh' }} />
 
                 {/* Comparison subsection */}
                 <div id="cultivator-comparison" className={styles.combinedSection}>

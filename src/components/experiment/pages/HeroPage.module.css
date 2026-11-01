@@ -220,3 +220,56 @@
     min-height: 280px;
   }
 }
+/* Phones and tablets: left-aligned text; the three figures read as rows (number, then what it counts) */
+@media (max-width: 1024px) {
+  .heroPage {
+    min-height: 0;
+    padding: 24px 0 0;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    height: auto;
+    padding: 0;
+    text-align: left;
+  }
+
+  .textColumn {
+    align-items: flex-start;
+  }
+
+  .statsRow {
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+    width: 100%;
+  }
+
+  .statItem {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 12px;
+    padding: 14px 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(212, 168, 75, 0.15);
+  }
+
+  .statItem:last-child {
+    border-bottom: none;
+  }
+
+  .statValue {
+    font-size: 2.25rem;
+  }
+
+  .statDetail {
+    font-size: 0.875rem;
+  }
+
+  .mapContainer {
+    min-height: 0;
+    max-width: none;
+    margin: 0;
+  }
+}

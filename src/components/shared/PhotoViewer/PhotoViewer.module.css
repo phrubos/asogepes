@@ -609,3 +609,63 @@
 .labelRight {
     right: 20px;
 }
+.zoomHint {
+    display: none;
+}
+
+/* Phones and tablets: the picture is a preview (dense labels live in the fullscreen view),
+   the text below it reads in the page flow instead of a 560px inner scroll box */
+@media (max-width: 1024px) {
+    .container {
+        gap: 12px;
+        margin-bottom: 0;
+    }
+
+    .imageWrapper {
+        aspect-ratio: 4 / 3 !important;
+        border-radius: 12px;
+    }
+
+    .bottomControls {
+        bottom: 10px;
+        gap: 10px;
+    }
+
+    .indicators {
+        padding: 0 14px;
+        gap: 8px;
+    }
+
+    .imageWrapper .watermark,
+    .imageWrapper .label {
+        display: none;
+    }
+
+    .zoomHint {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        align-self: flex-start;
+        min-height: 44px;
+        padding: 0 14px;
+        border: 1px solid rgba(212, 168, 75, 0.3);
+        border-radius: 999px;
+        background: rgba(212, 168, 75, 0.08);
+        color: var(--color-gold, #d4a84b);
+        font: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .descriptionArea {
+        height: auto;
+        overflow: visible;
+        padding: 8px 0 0;
+        box-shadow: none;
+    }
+
+    .descriptionArea::after {
+        display: none;
+    }
+}

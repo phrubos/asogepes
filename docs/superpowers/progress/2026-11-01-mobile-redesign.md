@@ -26,3 +26,21 @@ Spec: `docs/superpowers/specs/2026-11-01-mobile-redesign-design.md`. Döntések 
 - „Részletek” link 44 px magas.
 - Eltérés a spectől: a modellek közti szegmens-váltó nem készült el (a 3 modell egymás alatt olvasható, a `model-*` mélylinkek változatlanok) → oldalhossz 7786 → 7408 px (−5%, a cél −25% volt).
 - mobile-check /technologia 0 hiba (eddig 8).
+
+## 4. fázis — /kutatas
+- Hero: balra zárt; a három szám soronként (szám + mit számol), a térkép a tartalomhoz méretezve.
+- Szekciók és oldalblokkok (`sections.module.css`, 11 oldal-modul, `CombinedPage`) mobilon a tartalomhoz nőnek: nincs `height: 100%` + belső görgetés, nincs saját oldalpadding (a margót a layout adja), alszekciók között 64 px.
+- Módszertan balra zárt.
+- `PhotoViewer` (közös): mobilon 4:3 előnézet; a sűrű feliratokat (értékek, vonal- és nyílfeliratok, vízjel) az előnézet elrejti — `[data-preview]` hatókör, a teljes képernyős nézetben (portál) megmaradnak; alatta „Teljes kép a mért értékekkel” gomb (44 px). A leírás a lapfolyamban olvasható (eddig 560 px-es belső görgetődoboz, a B–E pontok nem látszottak).
+- Lakitelek: fejléc egymás alatt, „Teljes képernyő” 44 px, az eredménylista teljes szöveggel (eddig egysoros levágás + 2 soros clamp). A 3D modell eddig is csak a lejátszás gombra töltődik be.
+- mobile-check /kutatas 0 hiba (eddig 31).
+
+## 5. fázis — főoldal
+- A CTA link a gomb méretét kapja (eddig 250×20 px-es inline link volt a gomb körül), aláhúzás nélkül.
+
+## Ellenőrzés (QA build, :3100)
+- mobile-check 8/8 ok (4 oldal × 390/360 px); touch-check (telefonon a kártyaszöveg koppintás nélkül látszik, a /problema témalista ugrik; touch laptop / egér / billentyű változatlan), nav-, motion-, type-, hero-, clip-check zöld.
+- perf mobile4g: TBT 218 / 345 / 353 / 437 ms, CLS 0.000 mind a 4 oldalon (cél ≤ 450 ms, ≤ 0.05). Desktop CLS ≤ 0.038.
+- `mobile-check.js`: a `html`/`body` overflow nem számít vágásnak (a viewportra hat); új `--debug=y0-y1` kapcsoló.
+- Oldalhossz 390 px-en (QA build): / 1173, /problema 6944, /technologia 7408, /kutatas 10741 px. Csökkenés a fázis elején mért állapothoz képest: /problema −20%, /technologia −5%, /kutatas −14%. A −25%-os cél csak részben teljesült; a fő ok, hogy a szöveg és az adat megmaradt, csak az üres sávok és a dobozok tűntek el.
+- Nyitott: /technologia modellváltó (szegmens), a Lakitelek-eredménysor értékcsíkja keskenyíti a szöveget, a MagneticButton `<a>`-n belüli `<button>` (beágyazott interaktív elem, régi).

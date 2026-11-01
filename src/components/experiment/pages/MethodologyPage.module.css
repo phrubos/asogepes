@@ -414,3 +414,43 @@
     white-space: nowrap;
   }
 }
+
+/* Phones and tablets: the page margin comes from the layout; the block grows with its content */
+@media (max-width: 1024px) {
+  .methodologyPage {
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    overflow: visible;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Phones and tablets: heading and text left-aligned like every other section */
+@media (max-width: 1024px) {
+  .content {
+    padding: 0;
+    gap: 32px;
+  }
+
+  .textColumn,
+  .header {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .description {
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+  }
+
+  .dashboardContainer,
+  .imageColumn {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}

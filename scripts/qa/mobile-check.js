@@ -2,7 +2,7 @@
 // (a) an empty vertical band taller than 300px between pieces of content,
 // (b) text boxes that overlap each other (two different texts drawn on top of one another),
 // (c) a visible tap target (button, link, [role=button]) smaller than 44x44 px (24px for inline text links).
-// usage: node scripts/qa/mobile-check.js [baseUrl] [--pages=/,/problema] [--show=N]
+// usage: node scripts/qa/mobile-check.js [baseUrl] [--pages=/,/problema] [--show=N] [--debug=y0-y1 (list content boxes in that band)]
 const path = require('path')
 const { chromium } = require(path.resolve('node_modules/@playwright/test'))
 const args = process.argv.slice(2)
@@ -25,14 +25,15 @@ const sizes = [[390, 844], [360, 740]]
       const height = await page.evaluate(() => document.documentElement.scrollHeight)
       for (let y = 0; y < height; y += h / 2) { await page.evaluate(y => window.scrollTo(0, y), y); await page.waitForTimeout(200) }
       await page.waitForTimeout(800)
-      const r = await page.evaluate(() => {
+      const r = await page.evaluate((dbg) => {
         const vis = e => { const s = getComputedStyle(e); return s.visibility !== 'hidden' && s.display !== 'none' && +s.opacity > 0.05 }
         const name = e => `${e.tagName.toLowerCase()}.${String(e.className && e.className.baseVal !== undefined ? e.className.baseVal : e.className).split(' ')[0].split('__')[0].slice(0, 40)}`
         const fixed = e => { for (let n = e; n; n = n.parentElement) { const pos = getComputedStyle(n).position; if (pos === 'fixed' || pos === 'sticky') return true } return false }
         // a box cut away by an overflow:hidden/clip ancestor is not drawn, so it cannot overlap anything
+        // (html/body overflow applies to the viewport, not to their own box)
         const clippedOut = (el, rc) => {
           const cx = (rc.left + rc.right) / 2, cy = (rc.top + rc.bottom) / 2
-          for (let n = el.parentElement; n; n = n.parentElement) {
+          for (let n = el.parentElement; n && n !== document.body && n !== document.documentElement; n = n.parentElement) {
             const s = getComputedStyle(n)
             if (/hidden|clip/.test(s.overflowX + s.overflowY)) { const r = n.getBoundingClientRect(); if (cx < r.left || cx > r.right || cy < r.top || cy > r.bottom) return true }
           }
@@ -75,8 +76,11 @@ const sizes = [[390, 844], [360, 740]]
           const min = inline ? 24 : 44
           if (rc.width < min || rc.height < min) small.push(`${name(e)} "${(e.innerText || e.getAttribute('aria-label') || '').trim().slice(0, 30)}" ${Math.round(rc.width)}x${Math.round(rc.height)}`)
         }
-        return { gaps, overlaps: [...new Set(overlaps)], small: [...new Set(small)] }
-      })
+        const [d0, d1] = (dbg || '').split('-').map(Number)
+        const debug = dbg ? sorted.filter(b => b.bottom > d0 && b.top < d1).map(b => `${Math.round(b.top)}-${Math.round(b.bottom)} ${b.text || 'media'}`) : []
+        return { gaps, overlaps: [...new Set(overlaps)], small: [...new Set(small)], debug }
+      }, opt('debug'))
+      if (r.debug.length) console.log(r.debug.join('\n'))
       const n = r.gaps.length + r.overlaps.length + r.small.length
       failed += n
       console.log(`${n ? 'FAIL' : 'ok  '} ${w}x${h} ${p}: gaps ${r.gaps.length}, overlaps ${r.overlaps.length}, small targets ${r.small.length}`)

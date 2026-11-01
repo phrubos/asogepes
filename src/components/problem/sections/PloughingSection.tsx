@@ -13,7 +13,7 @@ export default function PloughingSection() {
                     <PloughingEffectsPage />
                 </div>
 
-                <div style={{ height: '15vh' }} />
+                <div className={styles.subsectionSpacer} style={{ height: '15vh' }} />
 
                 {/* Structure comparison subsection */}
                 <div id="ploughing-structure" className={styles.combinedSectionCompact}>

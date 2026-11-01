@@ -418,3 +418,17 @@
 .pointLabelStart {
     transform: translateX(50%);
 }
+
+/* Phones and tablets: the inline preview keeps the two side labels, rings and lines; titles,
+   values, captions and the watermark overlapped at this size and are read in the fullscreen view */
+@media (max-width: 1024px) {
+  :global([data-preview]) .watermark,
+  :global([data-preview]) .pointTitle,
+  :global([data-preview]) .pointValue,
+  :global([data-preview]) .overlayLineLabel,
+  :global([data-preview]) .overlayVerticalLineLabel,
+  :global([data-preview]) .arrowLabel,
+  :global([data-preview]) .arrowSubLabel {
+    display: none;
+  }
+}

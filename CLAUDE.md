@@ -31,6 +31,7 @@ node scripts/qa/nav-check.js     # SSR <h1>, fast menu navigation, ?section= dee
 node scripts/qa/motion-check.js  # prefers-reduced-motion honoured
 node scripts/qa/touch-check.js   # hover cards work by tap and keyboard
 node scripts/qa/perf.js          # FCP/LCP/CLS/TBT report
+node scripts/qa/mobile-check.js  # phones (390/360 px): no empty band > 300px, no overlapping text, tap targets >= 44px
 ```
 
 Run Python scripts with `py file.py`.
@@ -81,4 +82,5 @@ Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `
 - Respect `prefers-reduced-motion` in every animation (`useReducedMotion` from `@/hooks/useReducedMotion`; Framer's `MotionConfig` skips transforms but not opacity)
 - Hover-revealed content must also open by tap and keyboard: use `useDisclosureTrigger` (`@/hooks/useDisclosureTrigger`)
 - Text: no font-size below 0.75rem (12px); body text at least 0.9375rem. Sections grow with content (`min-height`, not fixed `height` + `overflow: hidden`)
+- Phones/tablets (<=1024px) have their own patterns, desktop is unchanged: `shared/ScrollLayout/MobileSectionBar` (sticky bar + contents sheet), `shared/HeroTopicList` (hero topics), `problem/StaticChallenge` (hover cards shown as a list). Gate JS with `useMediaQuery` (`@/hooks/useMediaQuery`, null until mounted); pause loops off-screen with `useLoopActive`. Put `mobile-static` on Framer entrances that would hide content until scrolled. Laptop `@media (max-height: …)` rules must also say `and (min-width: 1025px)` or they hit tall phones
 - Fonts come from `next/font` in `app/layout.tsx` (`--font-inter`, `--font-fraunces`); don't add CSS `@import` font URLs

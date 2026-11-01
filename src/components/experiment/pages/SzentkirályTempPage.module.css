@@ -141,3 +141,15 @@
         width: 100%;
     }
 }
+
+/* Phones and tablets: the page margin comes from the layout; the block grows with its content */
+@media (max-width: 1024px) {
+  .container {
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    overflow: visible;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

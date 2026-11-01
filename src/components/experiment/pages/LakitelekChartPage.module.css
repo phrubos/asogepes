@@ -757,3 +757,76 @@
 .playButtonPulse:hover {
   animation: none;
 }
+
+/* Phones and tablets: the page margin comes from the layout; the block grows with its content */
+@media (max-width: 1024px) {
+  .resultsPanel {
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    overflow: visible;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Phones and tablets: header stacks, the 3D model stays behind its play button, and the
+   results list shows every treatment and description in full (no inner scroll, no clamp) */
+@media (max-width: 1024px) {
+  .container {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .headerLeft {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .fullscreenButton {
+    min-height: 44px;
+  }
+
+  .mainContent {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .sidePanel {
+    position: static;
+    width: 100%;
+    max-width: none;
+    height: auto;
+  }
+
+  .resultsTableWrapper {
+    overflow: visible;
+    max-height: none;
+  }
+
+  .resultRow {
+    min-height: 0;
+    align-items: flex-start;
+  }
+
+  .resultTreatment {
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .resultDesc {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react'
 import Image from 'next/image'
 import styles from './PhotoViewer.module.css'
 import { usePhotoNavigation } from './usePhotoNavigation'
@@ -114,6 +114,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                 tabIndex={0}
                 onKeyDown={handleKeyDown}
                 aria-label="Open fullscreen view"
+                data-preview
                 style={{ aspectRatio: currentItem.aspectRatio }}
             >
                 {/* Loading Indicator Overlay */}
@@ -257,6 +258,12 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                     </div>
                 )}
             </div>
+
+            {/* Phones: the preview drops its small labels, so say where the full picture is */}
+            <button type="button" className={styles.zoomHint} onClick={() => setIsModalOpen(true)}>
+                <Maximize2 size={16} aria-hidden="true" />
+                Teljes kép a mért értékekkel
+            </button>
 
             {/* Description Area */}
             <div className={styles.descriptionArea}>
