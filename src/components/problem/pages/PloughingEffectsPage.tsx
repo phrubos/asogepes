@@ -111,19 +111,9 @@ function CollapsiblePloughingCard({
                                 boxShadow: '0 0 15px rgba(212, 168, 75, 0.1)',
                             }}
                         >
-                            <motion.div
-                                animate={{
-                                    y: [2, 5, 2],
-                                    opacity: [0.5, 1, 0.5]
-                                }}
-                                transition={{
-                                    duration: 2,
-                                    repeat: Infinity,
-                                    ease: "easeInOut"
-                                }}
-                            >
+                            <div className="nudge-down">
                                 <ChevronDown size={18} color="var(--color-gold)" />
-                            </motion.div>
+                            </div>
                         </motion.div>
                     )}
                 </div>
@@ -210,7 +200,7 @@ export default function PloughingEffectsPage() {
                         style={{ cursor: 'pointer' }}
                     >
                         <Image
-                            src="/images/premium_plough_head.png"
+                            src="/images/premium_plough_head.jpg"
                             alt="American mouldboard eke"
                             fill
                             className={styles.mainImage}
@@ -222,7 +212,7 @@ export default function PloughingEffectsPage() {
                     <ImageLightbox
                         isOpen={isLightboxOpen}
                         onClose={() => setIsLightboxOpen(false)}
-                        src="/images/premium_plough_head.png"
+                        src="/images/premium_plough_head.jpg"
                         alt="American mouldboard eke"
                     />
                 </motion.div>

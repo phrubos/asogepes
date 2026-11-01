@@ -51,11 +51,11 @@ export default function MethodologyPage() {
 
               <div
                 className={styles.manometerWrapper}
-                onClick={() => setLightboxImage('/images/manometer_200_v2.png')}
+                onClick={() => setLightboxImage('/images/manometer_200_v2.jpg')}
                 style={{ cursor: 'pointer' }}
               >
                 <Image
-                  src="/images/manometer_200_v2.png"
+                  src="/images/manometer_200_v2.jpg"
                   alt="Manométer"
                   fill
                   className={styles.manometerImage}
@@ -77,11 +77,11 @@ export default function MethodologyPage() {
         >
           <div
             className={styles.imageWrapper}
-            onClick={() => setLightboxImage('/images/penetrometer_rotated_view.png')}
+            onClick={() => setLightboxImage('/images/penetrometer_rotated_view.jpg')}
             style={{ cursor: 'pointer' }}
           >
             <Image
-              src="/images/penetrometer_rotated_view.png"
+              src="/images/penetrometer_rotated_view.jpg"
               alt="Penetrométer"
               fill
               className={styles.image}

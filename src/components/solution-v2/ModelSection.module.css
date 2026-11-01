@@ -373,22 +373,23 @@
   transition: opacity 0.3s;
 }
 
-/* Animation Keyframes */
+/* Animation Keyframes (transform, not height: no layout work every frame) */
 @keyframes barFluctuate {
 
   0%,
   100% {
-    height: 20%;
+    transform: scaleY(0.24);
     opacity: 0.6;
   }
 
   50% {
-    height: 85%;
+    transform: scaleY(1);
     opacity: 1;
   }
 }
 
 .animBar {
+  height: 85%;
   animation: barFluctuate 2s infinite ease-in-out;
   transform-origin: bottom;
 }
@@ -400,29 +401,27 @@
   box-shadow: 0 0 10px var(--color-gold);
   /* Glow */
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  /* Bouncy snap */
-  transform: none;
 }
 
-/* Stable curve on hover */
+/* Hover: static bar chart (heights 35/50/75/60/85 % of the box) */
 .chartVisual:hover .animBar:nth-child(1) {
-  height: 35% !important;
+  transform: scaleY(0.41);
 }
 
 .chartVisual:hover .animBar:nth-child(2) {
-  height: 50% !important;
+  transform: scaleY(0.59);
 }
 
 .chartVisual:hover .animBar:nth-child(3) {
-  height: 75% !important;
+  transform: scaleY(0.88);
 }
 
 .chartVisual:hover .animBar:nth-child(4) {
-  height: 60% !important;
+  transform: scaleY(0.71);
 }
 
 .chartVisual:hover .animBar:nth-child(5) {
-  height: 85% !important;
+  transform: scaleY(1);
 }
 
 /* Bar color variants for SSR-safe rendering */

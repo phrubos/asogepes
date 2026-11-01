@@ -1,7 +1,8 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { useLoopActive } from '@/hooks/useLoopActive'
 
 const seededRandom = (seed: number) => {
     const x = Math.sin(seed) * 10000
@@ -35,6 +36,8 @@ interface ClodProps {
 }
 
 const PloughedSoilSVG = () => {
+    const svgRef = useRef<SVGSVGElement>(null)
+    const loopActive = useLoopActive(svgRef)
     // Palette
     const darkPalette = ['#4E342E', '#5D4037', '#6D4C41']
     const lightPalette = ['#6B5344', '#795548', '#8B7355']
@@ -104,7 +107,7 @@ const PloughedSoilSVG = () => {
     }, [])
 
     return (
-        <svg viewBox="0 0 300 150" style={{ width: '100%', height: 'auto', borderRadius: '8px', overflow: 'hidden' }} preserveAspectRatio="xMidYMid slice">
+        <svg ref={svgRef} viewBox="0 0 300 150" style={{ width: '100%', height: 'auto', borderRadius: '8px', overflow: 'hidden' }} preserveAspectRatio="xMidYMid slice">
             <defs>
             </defs>
 
@@ -121,21 +124,18 @@ const PloughedSoilSVG = () => {
                     : lightPalette[item.variantIndex]
 
                 return (
-                    <motion.path
+                    <path
                         key={item.id}
                         d={item.path}
                         fill={fill}
                         stroke="rgba(0,0,0,0.3)"
                         strokeWidth={0.5}
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: item.delay }}
                     />
                 )
             })}
 
             {/* Falling Water Drops - Stagnating at the Pan */}
-            {Array.from({ length: 8 }).map((_, i) => (
+            {loopActive && Array.from({ length: 8 }).map((_, i) => (
                 <motion.circle
                     key={`drop-${i}`}
                     cx={30 + i * 35} // Spread across width
@@ -147,8 +147,8 @@ const PloughedSoilSVG = () => {
                         opacity: [0, 0.8, 0.8, 0] // Fade out after stopping
                     }}
                     transition={{
-                        duration: 3 + Math.random(), // Varied speed
-                        delay: Math.random() * 2,
+                        duration: 3 + seededRandom(i + 71), // Varied speed
+                        delay: seededRandom(i + 91) * 2,
                         repeat: Infinity,
                         ease: "easeIn", // Accelerate down
                         times: [0, 0.8, 0.9, 1] // Spend time "sitting" at the bottom
@@ -163,8 +163,8 @@ const PloughedSoilSVG = () => {
                 stroke="#1E88E5" // Darker Contour
                 strokeWidth="1"
                 initial={{ opacity: 0.8 }}
-                animate={{ opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                animate={loopActive ? { opacity: [0.7, 1, 0.7] } : { opacity: 0.8 }}
+                transition={loopActive ? { duration: 3, repeat: Infinity, ease: "easeInOut" } : { duration: 0 }}
             />
 
             {/* Eketalp (Plough Pan) - Red Band (20-30cm -> 116-150px) */}

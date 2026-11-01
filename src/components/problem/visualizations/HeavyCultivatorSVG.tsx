@@ -228,7 +228,7 @@ const HeavyCultivatorSVG = () => {
             {/* Flat Soil Background */}
             <rect x="0" y="45" width="300" height="105" fill={soilBgColor} />
 
-            {/* Particles */}
+            {/* Particles (static: the staggered pop-in ran offscreen at page load and cost thousands of style writes) */}
             {clods.map((item) => {
                 let fill = '#000'
                 if (item.type === 'outline') {
@@ -240,16 +240,13 @@ const HeavyCultivatorSVG = () => {
                 }
 
                 return (
-                    <motion.path
+                    <path
                         key={item.id}
                         d={item.path}
                         fill={fill}
                         // Add Outline/Stroke
                         stroke="rgba(0,0,0,0.3)"
                         strokeWidth={0.8}
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: item.delay, duration: 0.3 }}
                     />
                 )
             })}

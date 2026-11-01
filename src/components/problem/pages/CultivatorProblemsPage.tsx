@@ -77,7 +77,7 @@ export default function CultivatorProblemsPage() {
                             style={{ cursor: 'pointer' }}
                         >
                             <Image
-                                src="/images/premium_cultivator_courtyard.png"
+                                src="/images/premium_cultivator_courtyard.jpg"
                                 alt="Nehézkultivátor"
                                 fill
                                 className={styles.cultivatorImage}
@@ -122,7 +122,7 @@ export default function CultivatorProblemsPage() {
             <ImageLightbox
                 isOpen={isLightboxOpen}
                 onClose={() => setIsLightboxOpen(false)}
-                src="/images/premium_cultivator_courtyard.png"
+                src="/images/premium_cultivator_courtyard.jpg"
                 alt="Nehézkultivátor"
             />
         </motion.div>

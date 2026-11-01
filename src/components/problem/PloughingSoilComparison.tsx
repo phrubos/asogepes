@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { X, Check, Droplets, Bug, Sprout } from 'lucide-react'
 import styles from './PloughingSoilComparison.module.css'
 import PloughedSoilSVG from './visualizations/PloughedSoilSVG'
+import { useLoopActive } from '@/hooks/useLoopActive'
 
 // Determinisztikus random generátor
 const seededRandom = (seed: number) => {
@@ -90,6 +91,8 @@ const generateClodPath = (cx: number, cy: number, r: number, seed: number) => {
 
 // Ásógépezett talaj SVG vizualizáció - 600px széles
 const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
+  const svgRef = useRef<SVGSVGElement>(null)
+  const loopActive = useLoopActive(svgRef)
   // Color palette matching PloughedSoilSVG style exactly
   const darkPalette = [
     '#4E342E', // Darkest (Subsoil)
@@ -193,7 +196,7 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
   }, [])
 
   return (
-    <svg viewBox="0 0 600 250" className={styles.soilSvg} preserveAspectRatio="none">
+    <svg ref={svgRef} viewBox="0 0 600 250" className={styles.soilSvg} preserveAspectRatio="none">
       <defs>
         <filter id="soilTextureSpaded">
           <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" />
@@ -226,7 +229,7 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
       <rect x="0" y="72" width="600" height="180" fill="none" filter="url(#soilTextureSpaded)" opacity="0.2" pointerEvents="none" />
 
       {/* Víz egyenletesen szivárog */}
-      {waterParticles.map((p, i) => (
+      {loopActive && waterParticles.map((p, i) => (
         <motion.circle
           key={i}
           cx={p.x}

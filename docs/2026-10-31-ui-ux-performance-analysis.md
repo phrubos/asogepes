@@ -201,7 +201,7 @@ A P0 + P1 tételek (✅) elkészültek; spec: `docs/superpowers/specs/2026-10-31
 
 Átvitel: asztali `/technologia` 4,1 MB → 600 KB (a videó csak látótérben tölt), `/` 1,2 MB → 643 KB (asztali, videó a `load` után), mobilon nincs videó.
 
-Nyitott (döntésre vár): (1) a `/problema` mobil CLS 0,106 a fontcseréből jön (`display: swap`; a korábbi render-blokkoló `@import`-nál nem volt csere, de az FCP 4,4 s volt) — lehetőségek: `display: 'optional'` vagy finomhangolt fallback-metrikák; (2) a HubFolder 768/1024 px-en levág feliratokat; (3) a `next start` képoptimalizálója terhelés alatt egy AVIF-kódolásnál elakadhat (a `manometer_200_v2.png` valójában JPEG); (4) a mobil TBT még ~0,5–1 s (P3 szerint lusta mountolás) — ezeket a mobil újratervezés előtt érdemes eldönteni.
+Utójavítás (2026-11-01, a nyitott tételek): (1) a `/problema` mobil CLS 0,106 → 0,001 — a hero-cím telefonon szélességhez igazodó méretet kapott, így a tartalék és a Fraunces betűvel is 2 sorban marad; (2) 1024 px alatt a HubFolder helyett egyszerű témalista (a HubFolder csak asztalon mountol); (3) a négy `.png` nevű JPEG átnevezve `.jpg`-re; (4) mobil TBT: a képernyőn kívüli végtelen animációk csak látótérben futnak (`useLoopActive`), a talajrögök statikusak (eddig ~74 000 stílusírás betöltéskor), a modell-diagram `transform`-mal animál, a ScrollLayout második szekciótól `content-visibility: auto` → mobil TBT `/problema` ~1000 → ~440 ms, `/kutatas` ~950 → ~280 ms, `/technologia` ~500 → ~400 ms; (5) az `InteractiveSoil` SMIL-esője áll képernyőn kívül és reduced motion esetén (`motion-check` ellenőrzi).
 
 ## 14. Hatókörön kívül
 

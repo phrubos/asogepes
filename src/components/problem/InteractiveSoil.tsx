@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useMotionValue, useTransform, MotionValue } from 'framer-motion'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 // Deterministic pseudo-random in [0, 1), rounded so server and browser agree
 const seededRandom = (seed: number) => {
@@ -14,9 +14,21 @@ interface InteractiveSoilProps {
   onProgressChange?: (val: number) => void
   onInteractionStart?: () => void
   onInteractionEnd?: () => void
+  /** Freezes the SMIL rain (offscreen or reduced motion) */
+  paused?: boolean
 }
 
-export default function InteractiveSoil({ progress, onProgressChange, onInteractionStart, onInteractionEnd }: InteractiveSoilProps) {
+export default function InteractiveSoil({ progress, onProgressChange, onInteractionStart, onInteractionEnd, paused = false }: InteractiveSoilProps) {
+  const svgRef = useRef<SVGSVGElement>(null)
+
+  // CSS reduced-motion rules and Framer do not reach SMIL <animate>, so pause it explicitly
+  useEffect(() => {
+    const svg = svgRef.current
+    if (!svg) return
+    if (paused) svg.pauseAnimations()
+    else svg.unpauseAnimations()
+  }, [paused])
+
   const progressMV = useMotionValue(0)
   const activeProgress = (typeof progress === 'number') ? progressMV : progress
 
@@ -145,7 +157,7 @@ export default function InteractiveSoil({ progress, onProgressChange, onInteract
       }}
     >
       <div className="w-full h-full relative select-none">
-        <svg viewBox="0 0 600 500" className="w-full h-full absolute inset-0">
+        <svg ref={svgRef} viewBox="0 0 600 500" className="w-full h-full absolute inset-0">
           <defs>
             {/* 1. SKY GRADIENT - Atmospheric */}
             <linearGradient id="skyGradientPremium" x1="0" y1="0" x2="0" y2="1">

@@ -332,6 +332,14 @@
 }
 
 /* Section content wrapper - centers content in the safe zone */
+/* Sections after the first skip style, layout and paint until they near the viewport:
+   on phones the whole page was laid out again on every font swap and hydration pass.
+   The browser remembers each real height once rendered (auto); ScrollLayout re-aims smooth scrolls. */
+.section+.section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 100vh;
+}
+
 .section>* {
   width: 100%;
   max-width: 100%;

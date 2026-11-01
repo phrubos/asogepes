@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion'
 import { Droplet, Layers, Info, Sprout, Droplets, ChevronDown } from 'lucide-react'
 
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
+import { useLoopActive } from '@/hooks/useLoopActive'
 import { useDisclosureTrigger } from '@/hooks/useDisclosureTrigger'
 import styles from '../ProblemNew.module.css'
 
@@ -149,19 +150,9 @@ function CollapsibleChallengeCard({
                                     boxShadow: '0 0 15px rgba(212, 168, 75, 0.1)',
                                 }}
                             >
-                                <motion.div
-                                    animate={{
-                                        y: [2, 5, 2],
-                                        opacity: [0.5, 1, 0.5]
-                                    }}
-                                    transition={{
-                                        duration: 2,
-                                        repeat: Infinity,
-                                        ease: "easeInOut"
-                                    }}
-                                >
+                                <div className="nudge-down">
                                     <ChevronDown size={18} color="var(--color-gold)" />
-                                </motion.div>
+                                </div>
                             </motion.div>
                         )}
                     </div>
@@ -385,9 +376,12 @@ export default function CompactionStatsPage() {
     const [isPlaying, setIsPlaying] = useState(true)
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
     const controlsRef = useRef<any>(null)
+    const soilRef = useRef<HTMLDivElement>(null)
+    // the 20 s demo only plays while the soil is on screen (and never with reduced motion); dragging still works
+    const loopActive = useLoopActive(soilRef)
 
     useEffect(() => {
-        if (!isPlaying) {
+        if (!isPlaying || !loopActive) {
             if (controlsRef.current) controlsRef.current.stop();
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
             return;
@@ -425,7 +419,7 @@ export default function CompactionStatsPage() {
             if (controlsRef.current) controlsRef.current.stop();
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
         };
-    }, [isPlaying]);
+    }, [isPlaying, loopActive]);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -473,7 +467,7 @@ export default function CompactionStatsPage() {
                     }}
                 >
                     {/* Container to fill the column while keeping aspect ratio */}
-                    <div style={{
+                    <div ref={soilRef} style={{
                         width: '100%',
                         position: 'relative',
                         aspectRatio: '3/2', // Balanced ratio: Shows down to ~35cm without being too tall
@@ -489,6 +483,7 @@ export default function CompactionStatsPage() {
                             }}
                             onInteractionStart={() => setIsPlaying(false)}
                             onInteractionEnd={() => setIsPlaying(true)}
+                            paused={!loopActive}
                         />
 
                         <div style={{

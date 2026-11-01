@@ -1,6 +1,7 @@
 // Fails (exit 1) when prefers-reduced-motion: reduce is not honoured:
 // (a) the home page 0.5s and 3s after its images loaded must be pixel-identical (final state at once),
-// (b) no <video> on /technologia plays on its own.
+// (b) no <video> on /technologia plays on its own,
+// (c) the SMIL rain on /problema (which CSS and Framer cannot reach) is paused even in view.
 // usage: node scripts/qa/motion-check.js [baseUrl]
 const path = require('path')
 const { chromium } = require(path.resolve('node_modules/@playwright/test'))
@@ -34,6 +35,14 @@ const base = process.argv[2] || 'http://localhost:3100'
       playing = Math.max(playing, await page.evaluate(() => [...document.querySelectorAll('video')].filter(v => !v.paused).length))
     }
     results.push(['/technologia: no video plays on its own', playing === 0])
+    await ctx.close()
+  }
+  {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' })
+    const page = await ctx.newPage()
+    await page.goto(base + '/problema', { waitUntil: 'load' })
+    await page.$eval('svg:has(animate)', s => s.scrollIntoView({ block: 'center' })); await page.waitForTimeout(1500)
+    results.push(['/problema: SMIL rain paused in view', await page.$eval('svg:has(animate)', s => s.animationsPaused())])
     await ctx.close()
   }
   await browser.close()

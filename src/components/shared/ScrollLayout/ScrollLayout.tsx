@@ -56,6 +56,43 @@ const sectionOffsets: Record<string, number> = {
   'methodology': -60,           // Módszertan - feljebb (1 scroll)
 }
 
+// Sections below the first one skip rendering until they near the viewport (content-visibility in the CSS),
+// so their height is only an estimate until scrolled past and a target can move during a smooth scroll.
+// Re-aim once the scroll stops, until the target sits at its offset; a touch or wheel by the user cancels.
+function scrollToElement(element: HTMLElement, offset: number) {
+  const behavior: ScrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+  const aim = () => window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY - offset, behavior })
+  aim()
+
+  let cancelled = false
+  const cancel = () => { cancelled = true }
+  window.addEventListener('wheel', cancel, { once: true, passive: true })
+  window.addEventListener('touchstart', cancel, { once: true, passive: true })
+  const cleanup = () => {
+    window.removeEventListener('wheel', cancel)
+    window.removeEventListener('touchstart', cancel)
+  }
+
+  let lastY = -1
+  let stillFrames = 0
+  let corrections = 0
+  let frames = 0
+  const tick = () => {
+    if (cancelled || ++frames > 600) return cleanup()
+    if (window.scrollY === lastY) stillFrames++
+    else { stillFrames = 0; lastY = window.scrollY }
+    if (stillFrames >= 6) {
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
+      if (Math.abs(element.getBoundingClientRect().top - offset) <= 2 || atBottom || corrections >= 4) return cleanup()
+      corrections++
+      stillFrames = 0
+      aim()
+    }
+    requestAnimationFrame(tick)
+  }
+  requestAnimationFrame(tick)
+}
+
 export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutProps) {
   const [activeSection, setActiveSection] = useState(sections[0]?.id || '')
   const [activeSubsection, setActiveSubsection] = useState<string | null>(null)
@@ -87,9 +124,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
 
     if (element) {
       // Dynamic offset - some sections need to appear higher
-      const scrollOffset = getScrollOffset(targetId)
-      const y = element.getBoundingClientRect().top + window.scrollY - scrollOffset
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      scrollToElement(element, getScrollOffset(targetId))
 
       // Update URL
       const url = new URL(window.location.href)
@@ -112,9 +147,7 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
     const element = document.getElementById(subsectionId)
     if (element) {
       // Dynamic offset - some sections need to appear higher
-      const scrollOffset = getScrollOffset(subsectionId)
-      const y = element.getBoundingClientRect().top + window.scrollY - scrollOffset
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      scrollToElement(element, getScrollOffset(subsectionId))
 
       // Update URL
       const url = new URL(window.location.href)

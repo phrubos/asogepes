@@ -105,6 +105,14 @@
   }
 }
 
+/* Phones: the title scales with the width, so it breaks into the same two lines
+   with the fallback and the loaded Fraunces (no layout shift when the font arrives) */
+@media (max-width: 640px) {
+  .heroTitle {
+    font-size: clamp(1.625rem, 7.4vw, 2.2rem);
+  }
+}
+
 /* Stagger cards vertically to create diagonal */
 
 @media (max-width: 1200px) {

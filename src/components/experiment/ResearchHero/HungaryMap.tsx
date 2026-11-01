@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import LocationCard from './LocationCard'
 import styles from './ResearchHero.module.css'
+import { useLoopActive } from '@/hooks/useLoopActive'
 
 interface MarkerData {
   id: string
@@ -92,6 +93,8 @@ interface HungaryMapProps {
 export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
   const [hoveredMarker, setHoveredMarker] = useState<string | null>(null)
   const [isMounted, setIsMounted] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const loopActive = useLoopActive(containerRef)
 
   useEffect(() => {
     setIsMounted(true)
@@ -109,7 +112,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
 
   if (!isMounted) {
     return (
-      <div className={styles.mapContainer}>
+      <div ref={containerRef} className={styles.mapContainer}>
         <div className={styles.mapLabel}>
           <span>Magyarország</span>
           <span className={styles.mapLabelSub}>Kísérleti helyszínek</span>
@@ -119,7 +122,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
   }
 
   return (
-    <div className={styles.mapContainer}>
+    <div ref={containerRef} className={styles.mapContainer}>
       <svg
         viewBox="-5 -5 110 80"
         className={styles.hungarySvg}
@@ -197,8 +200,8 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
                 strokeWidth="0.3"
                 pointerEvents="none"
                 initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
+                animate={loopActive ? { scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] } : { scale: 1, opacity: 0.5 }}
+                transition={loopActive ? { duration: 2, repeat: Infinity, delay: index * 0.3 } : { duration: 0 }}
               />
 
               {/* Glow */}
