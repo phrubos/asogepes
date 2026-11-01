@@ -210,6 +210,8 @@ export default function PloughingEffectsPage() {
             <div className={styles.grid}>
                 {/* Left Column: Image */}
                 <motion.div className={styles.imageColumn} variants={itemVariants}>
+                    {/* stacked layout: the section title sits over the picture it introduces */}
+                    <span className={`${styles.pillBadge} ${styles.imageHeading}`}>Szántás hatásai</span>
                     <div
                         className={styles.imageWrapper}
                         onClick={() => setIsLightboxOpen(true)}
@@ -248,7 +250,7 @@ export default function PloughingEffectsPage() {
 
                 {/* Right Column: Title + Interactive Cards */}
                 <motion.div className={styles.cardsColumn} variants={containerVariants}>
-                    <motion.div className={styles.header} variants={itemVariants} style={{ textAlign: 'left', marginBottom: '1rem' }}>
+                    <motion.div className={`${styles.header} ${styles.cardsHeading}`} variants={itemVariants} style={{ textAlign: 'left', marginBottom: '1rem' }}>
                         <span className={styles.pillBadge}>Szántás hatásai</span>
                     </motion.div>
 

@@ -295,3 +295,24 @@
         display: none;
     }
 }
+
+/* Stacked layout (one column): the title heads the picture instead of the cards below the quote */
+.imageHeading {
+    display: none;
+}
+
+@media (max-width: 1200px) {
+    .imageColumn {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .imageHeading {
+        display: inline-block;
+        margin: 0;
+    }
+
+    .cardsHeading {
+        display: none;
+    }
+}
