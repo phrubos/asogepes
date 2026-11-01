@@ -642,7 +642,9 @@
   transform-style: preserve-3d;
   border: none;
   background: transparent;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* transform and opacity are Framer's (entrance, hover); a CSS transition on them lags behind
+     every frame and snaps at the end, so only the dimming filter eases here */
+  transition: filter 0.4s ease;
 }
 
 .miniFolder:hover {
