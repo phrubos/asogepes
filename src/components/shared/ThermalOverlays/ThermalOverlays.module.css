@@ -298,16 +298,11 @@
     transform: translateX(50%);
 }
 
-/* Phones and tablets: in the inline preview only the A–E rings, lines and the colour scale stay;
-   values and captions overlapped at this size and are read in the fullscreen view */
+/* Phones and tablets: the inline preview is a clean photo. The marks were placed for the
+   desktop crop and their labels do not fit, so they show in the fullscreen view only */
 @media (max-width: 1024px) {
-  :global([data-preview]) .pointLabel,
-  :global([data-preview]) .overlayLineLabel,
-  :global([data-preview]) .overlayVerticalLineLabel,
-  :global([data-preview]) .arrowLabel,
-  :global([data-preview]) .arrowSubLabel,
-  :global([data-preview]) .overlayTextLabel,
-  :global([data-preview]) .scaleValue {
+  :global([data-preview]) .overlayContainer,
+  :global([data-preview]) .thermalScale {
     display: none;
   }
 }

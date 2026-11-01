@@ -515,19 +515,40 @@
     transform: rotate(90deg);
 }
 
+/* Phones and tablets: picture on top (its area needs a real height, the image layers are
+   absolute), the text scrolls below it, close button pinned to the corner */
 @media (max-width: 1024px) {
+    .modalOverlay {
+        padding: 0;
+    }
+
     .modalContent {
+        width: 100%;
+        height: 100dvh;
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr auto;
-        gap: 1rem;
-        height: auto;
-        max-height: 95vh;
+        grid-template-rows: minmax(0, 1fr) minmax(0, 42%);
+        gap: 0;
     }
 
     .modalInfoPanel {
-        padding: 1.5rem;
+        justify-content: flex-start;
+        padding: 20px 20px 32px;
         background: transparent;
-        border: none;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        touch-action: pan-y;
+        overscroll-behavior: contain;
+    }
+
+    .modalHeader {
+        margin-bottom: 1rem;
+    }
+
+    .closeButton {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        background: rgba(10, 8, 6, 0.7);
     }
 }
 

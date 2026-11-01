@@ -419,16 +419,14 @@
     transform: translateX(50%);
 }
 
-/* Phones and tablets: the inline preview keeps the two side labels, rings and lines; titles,
-   values, captions and the watermark overlapped at this size and are read in the fullscreen view */
+/* Phones and tablets: the inline preview keeps only the two side labels and the handle.
+   The marks were placed for the desktop crop and their labels do not fit, so they show
+   in the fullscreen view only */
 @media (max-width: 1024px) {
   :global([data-preview]) .watermark,
-  :global([data-preview]) .pointTitle,
-  :global([data-preview]) .pointValue,
-  :global([data-preview]) .overlayLineLabel,
-  :global([data-preview]) .overlayVerticalLineLabel,
-  :global([data-preview]) .arrowLabel,
-  :global([data-preview]) .arrowSubLabel {
+  :global([data-preview]) .overlayContainer,
+  :global([data-preview]) .staticOverlayContainer,
+  :global([data-preview]) .thermalScale {
     display: none;
   }
 }
