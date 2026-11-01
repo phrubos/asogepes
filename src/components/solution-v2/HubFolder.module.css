@@ -285,7 +285,8 @@
 .hubFolder {
   position: relative;
   width: 260px;
-  height: 400px;
+  /* the layers are absolute, so this must fit the three items when their subtitles wrap */
+  height: 440px;
   cursor: pointer;
   transform-style: preserve-3d;
   z-index: 20;
