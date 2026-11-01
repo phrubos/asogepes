@@ -310,17 +310,22 @@
 /* Phones and tablets (fullscreen view): the Kontroll / Ásógépezett labels shrink so the photo stays visible */
 @media (max-width: 1024px) {
   .arrowLabelGroupNone {
-    padding: 4px 10px;
+    padding: 2px 8px;
     border-width: 1px;
-    border-radius: 6px;
+    border-radius: 5px;
   }
 
+  /* 12px is the site's smallest text size */
   .arrowLabelGroupNone .arrowLabel {
-    font-size: 14px;
+    margin-bottom: 0;
+    font-size: 12px;
+    letter-spacing: 0.02em;
   }
 
   .arrowLabelGroupNone .arrowSubLabel {
-    padding-top: 2px;
+    margin-top: 1px;
+    padding-top: 1px;
     font-size: 12px;
+    font-weight: 500;
   }
 }
