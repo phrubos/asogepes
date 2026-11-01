@@ -1,0 +1,74 @@
+/* Hero topic list: phones and tablets only */
+.topicList {
+    display: none;
+}
+
+.topicItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    width: 100%;
+    min-height: 64px;
+    padding: var(--space-md);
+    background: rgba(245, 240, 232, 0.04);
+    border: 1px solid rgba(212, 168, 75, 0.2);
+    border-radius: var(--radius-lg);
+    color: var(--color-cream);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.topicItem:active {
+    background: rgba(212, 168, 75, 0.12);
+    border-color: rgba(212, 168, 75, 0.5);
+}
+
+.topicIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: rgba(212, 168, 75, 0.12);
+    color: var(--color-gold);
+}
+
+.topicText {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.topicTitle {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.topicDesc {
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    color: rgba(245, 240, 232, 0.7);
+}
+
+.topicChevron {
+    flex-shrink: 0;
+    color: var(--color-gold);
+}
+
+@media (max-width: 1024px) {
+    .topicList {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+    }
+}

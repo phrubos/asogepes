@@ -4,8 +4,10 @@ import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion'
 import { Droplet, Layers, Info, Sprout, Droplets, ChevronDown } from 'lucide-react'
 
 import InteractiveSoil from '@/components/problem/InteractiveSoil'
+import StaticChallenge from '@/components/problem/StaticChallenge'
 import { useLoopActive } from '@/hooks/useLoopActive'
 import { useDisclosureTrigger } from '@/hooks/useDisclosureTrigger'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import styles from '../ProblemNew.module.css'
 
 interface CollapsibleChallengeCardProps {
@@ -16,6 +18,8 @@ interface CollapsibleChallengeCardProps {
     onOpen: () => void;
     onClose: () => void;
     isAnyOpen: boolean;
+    /** Phones and tablets: the text is short, so show it in place (no card to open) */
+    staticOpen?: boolean;
 }
 
 function CollapsibleChallengeCard({
@@ -25,11 +29,16 @@ function CollapsibleChallengeCard({
     isOpen,
     onOpen,
     onClose,
-    isAnyOpen
+    isAnyOpen,
+    staticOpen = false
 }: CollapsibleChallengeCardProps) {
     // If ANY card is open, but NOT this one -> Blue/Fade it
     const isInactive = isAnyOpen && !isOpen;
     const { hover, trigger } = useDisclosureTrigger({ isOpen, onOpen, onClose })
+
+    if (staticOpen) {
+        return <StaticChallenge icon={icon} title={title}>{children}</StaticChallenge>
+    }
 
     return (
         <div
@@ -270,7 +279,7 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
             {/* Additional Info Cards (Soil Resistance, Roots, Water) - Below Challenges */}
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 9rem), 1fr))',
+                gridTemplateColumns: 'var(--sim-cols, repeat(auto-fit, minmax(min(100%, 9rem), 1fr)))',
                 gap: '0.75rem',
                 // Apply blur to this entire block if ANY challenge card is open
                 transition: 'all 0.4s',
@@ -377,6 +386,7 @@ export default function CompactionStatsPage() {
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
     const controlsRef = useRef<any>(null)
     const soilRef = useRef<HTMLDivElement>(null)
+    const isCompact = useMediaQuery('(max-width: 1024px)') === true
     // the 20 s demo only plays while the soil is on screen (and never with reduced motion); dragging still works
     const loopActive = useLoopActive(soilRef)
 
@@ -457,6 +467,7 @@ export default function CompactionStatsPage() {
             <div className={styles.statsPageGrid}>
                 {/* Main Stat Card - Now Interactive */}
                 <motion.div
+                    className={styles.soilColumn}
                     variants={itemVariants}
                     transition={{ duration: 0.3 }}
                     style={{
@@ -486,7 +497,7 @@ export default function CompactionStatsPage() {
                             paused={!loopActive}
                         />
 
-                        <div style={{
+                        <div className={styles.soilCaption} style={{
                             position: 'absolute',
                             top: '15px',
                             left: '20px',
@@ -508,6 +519,10 @@ export default function CompactionStatsPage() {
                             amit a penetrométer jól mutat.
                         </div>
                     </div>
+                    {/* phones and tablets: the caption sits under the picture instead of over it */}
+                    <p className={styles.soilCaptionBelow}>
+                        Rendszeres öntözés, folyamatos tömörödés, amit a penetrométer jól mutat.
+                    </p>
                 </motion.div >
 
                 {/* Right Column Wrapper - Flex Column for Challenges + Info */}
@@ -534,6 +549,7 @@ export default function CompactionStatsPage() {
                                 onOpen={() => setExpandedCardId(1)}
                                 onClose={() => setExpandedCardId(null)}
                                 isAnyOpen={expandedCardId !== null}
+                                staticOpen={isCompact}
                             >
                                 <div className={styles.itemContent}>
                                     <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>Intenzíven öntözött kertészeti kultúrákban 4-7 naponként 20-40 mm víz kijuttatása történik, ami fokozatosan tömöríti a talajt.</p>
@@ -559,6 +575,7 @@ export default function CompactionStatsPage() {
                                 onOpen={() => setExpandedCardId(2)}
                                 onClose={() => setExpandedCardId(null)}
                                 isAnyOpen={expandedCardId !== null}
+                                staticOpen={isCompact}
                             >
                                 <div className={styles.itemContent}>
                                     <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>Tárcsázott vagy kombinátorozott talajon már 30 nap alatt 20-50%-os szerkezetromlás mérhető intenzív öntözés mellett.</p>
@@ -584,6 +601,7 @@ export default function CompactionStatsPage() {
                                 onOpen={() => setExpandedCardId(3)}
                                 onClose={() => setExpandedCardId(null)}
                                 isAnyOpen={expandedCardId !== null}
+                                staticOpen={isCompact}
                             >
                                 <div className={styles.itemContent}>
                                     <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>A tömörödés kiszorítja a pórusokból a levegőt, ami gyökérfulladáshoz, gyökértömeg veszteséghez vezet és romlik a talajélet.</p>

@@ -105,6 +105,27 @@
   }
 }
 
+/* Phones and tablets: the spade cards give way to HeroTopicList; text reads left-aligned */
+@media (max-width: 1024px) {
+  .heroRight {
+    display: none;
+  }
+
+  .content {
+    text-align: left;
+    padding-top: 24px;
+  }
+
+  .heroLeft {
+    align-items: flex-start;
+    margin: 0;
+  }
+
+  .heroLeft :global(.page-badge) {
+    align-self: flex-start;
+  }
+}
+
 /* Phones: the title scales with the width, so it breaks into the same two lines
    with the fallback and the loaded Fraunces (no layout shift when the font arrives) */
 @media (max-width: 640px) {

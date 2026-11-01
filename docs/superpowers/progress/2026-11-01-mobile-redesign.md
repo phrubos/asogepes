@@ -8,3 +8,11 @@ Spec: `docs/superpowers/specs/2026-11-01-mobile-redesign-design.md`. Döntések 
 - `Navigation`: hamburger 1024 px-től (eddig 900), az 56 px-es sáv jobb szélén; a fejléc üres része átengedi a koppintást (`pointer-events`).
 - FINDING + mitigáció: a képoptimalizáló hosszan futó, memóriahiányos szerveren ismét elakadt (két 1920 px-es Lakitelek-ortofotó, mögöttük minden képkérés). Friss szerveren 15 egyidejű hideg kódolás sem akadt el → nem reprodukálható determinisztikusan. Mitigáció: a 2560 px-nél nagyobb forrásképek (8 db) 2560 px-re méretezve (arány megtartva, ±0,0004; a hőkép-jelölők %-osak) — 21,5 → 7,9 MB, kevesebb memória dekódoláskor. A hero-háttér maradt (nagyobb lett volna).
 - QA: nav-, touch-, motion-, type-check zöld; clip-check 7 méret × 4 oldal = 0.
+
+## 2. fázis — /problema
+- Új `scripts/qa/mobile-check.js` (390 és 360 px): üres sáv > 300 px, egymásra rajzolt szövegek (overflow-val levágott szöveg nem számít), 44 px alatti érintési célok. Kiindulás: 69 hiba a 4 oldalon.
+- Hero: a három „ásó” kártya helyett `HeroTopicList` (közös komponens, a /technologia is ezt használja): cím + mélység („0–20 cm mélyen”), koppintásra ugrik; hero szöveg balra zárva.
+- `ProblemNew`: `.scrollSection` / `.contentWrapper` / `.combinedSection` / `.ploughPageContainer` mobilon a tartalomhoz nő (eddig 100vh + 100/120 px padding).
+- Tömörödés: a szimuláció felirata a kép alá kerül; a három lenyitható kártya mobilon `StaticChallenge` lista (ikon, cím, szöveg, arany adat) — a szántás-hatások ugyanígy; a kultivátor-problémák CSS-sel ugyanerre a mintára. A szimulált állapot egy oszlopban.
+- Kultivátor- és szántásfotó 16:10 (eddig 4:5, 50–60vh); az idézet balra zárt, arany függőleges vonallal.
+- Eredmény: /problema 8665 → 6786 px (−22%); mobile-check 0 hiba (eddig 9).

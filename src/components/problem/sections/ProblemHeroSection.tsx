@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Droplet, UnfoldHorizontal, Redo } from 'lucide-react'
 import PageBadge from '@/components/ui/PageBadge'
+import HeroTopicList, { type HeroTopic } from '@/components/shared/HeroTopicList/HeroTopicList'
 import { useScrollNav } from '@/components/shared/ScrollLayout'
 import styles from '../pages/ProblemHeroPage.module.css'
 
@@ -40,6 +41,13 @@ const HERO_NAV_ITEMS = [
     }
 ]
 
+// Phones and tablets: the same three problems as a tappable list, ordered by depth
+const HERO_TOPICS: HeroTopic[] = [
+    { id: 'compaction', title: 'Az öntözés okozta tömörödés', desc: '0–20 cm mélyen', icon: Droplet },
+    { id: 'cultivator', title: 'A nehézkultivátor korlátai', desc: '20–35 cm mélyen', icon: UnfoldHorizontal },
+    { id: 'ploughing', title: 'A szántás korlátai', desc: '35 cm alatt', icon: Redo },
+]
+
 export default function ProblemHeroSection() {
     const { scrollToSection } = useScrollNav()
     const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -67,6 +75,8 @@ export default function ProblemHeroSection() {
                         Három fő ellenséggel küzdünk.
                     </p>
                 </div>
+
+                <HeroTopicList topics={HERO_TOPICS} onSelect={handleNavigate} label="A három probléma" />
 
                 <div className={styles.heroRight}>
                     {/* Imants / Soil Blades Container */}

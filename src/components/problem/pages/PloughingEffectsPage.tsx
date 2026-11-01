@@ -8,6 +8,9 @@ import { ploughingProblems } from '@/lib/data'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import { useDisclosureTrigger } from '@/hooks/useDisclosureTrigger'
 import styles from './PloughingEffectsPage.module.css'
+import StaticChallenge from '@/components/problem/StaticChallenge'
+import staticStyles from '@/components/problem/StaticChallenge.module.css'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 interface CollapsiblePloughingCardProps {
     icon: React.ReactNode;
@@ -18,6 +21,8 @@ interface CollapsiblePloughingCardProps {
     onOpen: () => void;
     onClose: () => void;
     isAnyOpen: boolean;
+    /** Phones and tablets: show the text in place (no card to open) */
+    staticOpen?: boolean;
 }
 
 function CollapsiblePloughingCard({
@@ -28,11 +33,21 @@ function CollapsiblePloughingCard({
     isOpen,
     onOpen,
     onClose,
-    isAnyOpen
+    isAnyOpen,
+    staticOpen = false
 }: CollapsiblePloughingCardProps) {
     // If ANY card is open, but NOT this one -> Blue/Fade it
     const isInactive = isAnyOpen && !isOpen;
     const { hover, trigger } = useDisclosureTrigger({ isOpen, onOpen, onClose })
+
+    if (staticOpen) {
+        return (
+            <StaticChallenge icon={icon} title={title}>
+                <p>{description}</p>
+                <p className={staticStyles.badge}>{badge}</p>
+            </StaticChallenge>
+        )
+    }
 
     return (
         <div
@@ -147,6 +162,7 @@ function CollapsiblePloughingCard({
 export default function PloughingEffectsPage() {
     const [expandedCardId, setExpandedCardId] = useState<number | null>(null)
     const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+    const isCompact = useMediaQuery('(max-width: 1024px)') === true
 
     const iconMap: Record<string, JSX.Element> = {
         'arrow-down-to-line': <ArrowDownToLine size={20} />,
@@ -247,6 +263,7 @@ export default function PloughingEffectsPage() {
                             onOpen={() => setExpandedCardId(index)}
                             onClose={() => setExpandedCardId(null)}
                             isAnyOpen={expandedCardId !== null}
+                            staticOpen={isCompact}
                         />
                     ))}
                 </motion.div>

@@ -254,3 +254,44 @@
         min-height: 5.5rem;
     }
 }
+
+/* Phones and tablets: landscape photo, a left-aligned pull quote with a gold rule */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0;
+    }
+
+    .grid {
+        gap: 40px;
+    }
+
+    .imageWrapper {
+        width: 100%;
+        max-width: none;
+        height: auto;
+        aspect-ratio: 16 / 10;
+    }
+
+    .quoteColumn {
+        padding: 0;
+    }
+
+    .quoteWrapper {
+        text-align: left;
+        padding-left: 18px;
+        border-left: 3px solid var(--color-gold);
+    }
+
+    .quoteIcon {
+        display: none;
+    }
+
+    .quoteText {
+        font-size: 1.25rem;
+        line-height: 1.5;
+    }
+
+    .quoteDecoration {
+        display: none;
+    }
+}

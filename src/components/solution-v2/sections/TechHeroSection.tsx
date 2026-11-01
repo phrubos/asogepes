@@ -1,15 +1,16 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Settings, Folder, HelpCircle, ChevronRight } from 'lucide-react'
+import { Settings, Folder, HelpCircle } from 'lucide-react'
 import PageBadge from '@/components/ui/PageBadge'
 import HubFolder from '../HubFolder'
 import { useScrollNav } from '@/components/shared/ScrollLayout'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import HeroTopicList, { type HeroTopic } from '@/components/shared/HeroTopicList/HeroTopicList'
 import styles from '../pages/HeroPage.module.css'
 
 // Phones and tablets get a plain list of the same three destinations instead of the animated folder
-const TOPICS = [
+const TOPICS: HeroTopic[] = [
     { id: 'operation', title: 'Működési elv', desc: 'Hogyan működik az ásógép?', icon: Settings },
     { id: 'models', title: 'Modellek', desc: '38SX, 38WX, 40SX', icon: Folder },
     { id: 'application', title: 'Útmutató', desc: 'Melyik módszert válasszam?', icon: HelpCircle },
@@ -57,18 +58,7 @@ export default function TechHeroSection() {
                     </motion.div>
                 )}
 
-                <nav className={`${styles.topicList} hero-rise`} style={{ animationDelay: '200ms' }} aria-label="Témák">
-                    {TOPICS.map(({ id, title, desc, icon: Icon }) => (
-                        <button key={id} type="button" className={styles.topicItem} onClick={() => navigateToSection(id)}>
-                            <span className={styles.topicIcon}><Icon size={20} aria-hidden="true" /></span>
-                            <span className={styles.topicText}>
-                                <span className={styles.topicTitle}>{title}</span>
-                                <span className={styles.topicDesc}>{desc}</span>
-                            </span>
-                            <ChevronRight size={20} className={styles.topicChevron} aria-hidden="true" />
-                        </button>
-                    ))}
-                </nav>
+                <HeroTopicList topics={TOPICS} onSelect={navigateToSection} label="Témák" />
             </div>
         </div>
     )
