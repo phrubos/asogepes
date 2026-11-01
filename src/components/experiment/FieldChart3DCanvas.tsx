@@ -578,7 +578,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '400px', borderRadius: '12px', overflow: 'hidden' }}>
-            <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+            {/* absolute: a % height resolves to 0 when the embedding parent has no fixed height */}
+            <div ref={containerRef} style={{ position: 'absolute', inset: 0 }} />
 
             {/* Rotation Indicator - Top Right */}
             <div style={{
