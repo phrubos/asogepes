@@ -359,3 +359,14 @@
     display: none;
   }
 }
+
+/* Phones and tablets: titles and labels align left, like the text under them */
+@media (max-width: 1024px) {
+  .header {
+    text-align: left;
+  }
+
+  .titleWrapper {
+    justify-content: flex-start;
+  }
+}

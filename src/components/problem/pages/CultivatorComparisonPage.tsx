@@ -52,7 +52,7 @@ export default function CultivatorComparisonPage() {
             viewport={{ once: true }}
             className={`${styles.contentWrapper} ${styles.comparisonPageWrapper}`}
         >
-            <motion.div variants={itemVariants} style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            <motion.div variants={itemVariants} className={styles.comparisonHeading}>
                 <span className={styles.pillBadge}>Talajszelvény összehasonlítás</span>
             </motion.div>
 

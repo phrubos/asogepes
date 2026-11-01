@@ -875,3 +875,15 @@
     display: none;
   }
 }
+
+/* Soil profile comparison title: centred over the two profiles on desktop, left on phones and tablets */
+.comparisonHeading {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .comparisonHeading {
+    text-align: left;
+  }
+}
