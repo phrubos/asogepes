@@ -18,6 +18,8 @@ A QA-build a `.next-qa` mappába kerül és a 3100-as porton fut, így nem ütk�
 | `node scripts/qa/motion-check.js [url]` | `prefers-reduced-motion: reduce` mellett a főoldal a képek dekódolása után 0,5 s és 3 s múlva pixelre azonos (asztali + mobil); a `/technologia`-n egy videó sem indul magától | 1 hibánál |
 | `node scripts/qa/touch-check.js [url]` | Hover-kártyák: koppintás nyit és nyitva marad (telefon + érintős laptop), második koppintás zár; egér hoverrel nyit, kattintás nyitva hagyja; Enter nyit/zár; `/problema` hero-kártya Enterrel navigál; `/technologia` hub-opció koppintásra mutatja a mappákat | 1 hibánál |
 | `node scripts/qa/perf.js [url]` | FCP / LCP / CLS / TBT / bájtok, mobil (lassított 4G, 4× CPU) és asztali | csak riport |
+| `node scripts/qa/layout-check.js [url] [--widths=390,900]` | ≤1024 px: a kártyák és a kártyán kívüli címek a 20 px-es margón kezdődnek, a címek balra igazítottak, cím → tartalom ≤ 24 px, címke → tartalom ≤ 16 px | 1 hibánál |
+| `node scripts/qa/trace.js <url> "<selector>" [w] [h]` | Egy elem és ősei: doboz, margók, paddingok, gap, igazítás, max-width, távolság a következő elemig (miért ott van, ahol) | csak riport |
 | `node scripts/qa/shots.js <outDir> [url]` | Viewport-lépésenkénti képernyőképek + konzolhibák | csak riport |
 
 Git Bash alatt a `--pages=/…` argumentumot az MSYS útvonallá alakítja: `MSYS_NO_PATHCONV=1 node scripts/qa/clip-check.js … --pages=/kutatas`. A `--show=N` oldalanként N levágott elemet ír ki (alapérték 8).

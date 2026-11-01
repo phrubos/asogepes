@@ -60,6 +60,12 @@
       "skillPath": "skills/systematic-debugging/SKILL.md",
       "computedHash": "276fb0aadb002ab930cc2a56de89e16995a2e3e70b33587652bf0a5fb123148d"
     },
+    "ui-fix-from-screenshot": {
+      "source": "local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/ui-fix-from-screenshot/SKILL.md",
+      "computedHash": "ac5dc34a79d2388ae1d1feace35f4526219d5d930811e84aa3197628cbee09b6"
+    },
     "ux-heuristics": {
       "source": "wondelai/skills",
       "sourceType": "github",

@@ -508,4 +508,13 @@
   .badge {
     display: none;
   }
+
+  /* 16px from the title to its text, as on the other /kutatas pages */
+  .textColumn {
+    gap: 16px;
+  }
+
+  .title {
+    margin-bottom: 0;
+  }
 }

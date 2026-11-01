@@ -32,7 +32,11 @@ node scripts/qa/motion-check.js  # prefers-reduced-motion honoured
 node scripts/qa/touch-check.js   # hover cards work by tap and keyboard
 node scripts/qa/perf.js          # FCP/LCP/CLS/TBT report
 node scripts/qa/mobile-check.js  # phones (390/360 px): no empty band > 300px, no overlapping text, tap targets >= 44px
+node scripts/qa/layout-check.js  # <=1024px: one 20px gutter, left-aligned titles, title gap <= 24px, badge gap <= 16px
+node scripts/qa/trace.js <url> "<selector>" [w] [h]  # why an element sits where it does (box/margin/gap of it and its ancestors)
 ```
+
+For a quick check of a CSS change, point the scripts at the dev server instead (`node scripts/qa/layout-check.js http://localhost:3000`); the user usually has `npm run dev` running and prefers that to a QA build. CSS-module classes are hashed: select with `[class*=Component_class]`, accents become `_` (`Szentkir_lyInfoPage`).
 
 Run Python scripts with `py file.py`.
 
@@ -74,7 +78,9 @@ Use `@/` for imports from `src/` directory (configured in tsconfig.json).
 - UI/UX, mobile and performance analysis: `docs/2026-10-31-ui-ux-performance-analysis.md`
 
 ## Skills
-Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `skills-lock.json`): ux-heuristics, performance-optimization, information-architecture, design-motion-principles, review-animations, find-animation-opportunities, animation-vocabulary, emil-design-eng, apple-design, systematic-debugging, verification-before-completion, writing-plans, executing-plans.
+Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `skills-lock.json`): ux-heuristics, performance-optimization, information-architecture, design-motion-principles, review-animations, find-animation-opportunities, animation-vocabulary, emil-design-eng, apple-design, systematic-debugging, verification-before-completion, writing-plans, executing-plans, and the local **ui-fix-from-screenshot** (the workflow for "this looks wrong" screenshots: trace, fix at the right breakpoint, prove with numbers).
+
+Hook: `.claude/hooks/css-guard.js` runs after every Edit/Write of a `*.module.css` and reports, for the newly added lines only, `transition: all`, fonts below 12px, `max-height` queries without `min-width: 1025px`, and `height: 100%`.
 
 ## Design Notes
 
@@ -83,4 +89,9 @@ Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `
 - Hover-revealed content must also open by tap and keyboard: use `useDisclosureTrigger` (`@/hooks/useDisclosureTrigger`)
 - Text: no font-size below 0.75rem (12px); body text at least 0.9375rem. Sections grow with content (`min-height`, not fixed `height` + `overflow: hidden`)
 - Phones/tablets (<=1024px) have their own patterns, desktop is unchanged: `shared/ScrollLayout/MobileSectionBar` (sticky bar + contents sheet), `shared/HeroTopicList` (hero topics), `problem/StaticChallenge` (hover cards shown as a list). Gate JS with `useMediaQuery` (`@/hooks/useMediaQuery`, null until mounted); pause loops off-screen with `useLoopActive`. Put `mobile-static` on Framer entrances that would hide content until scrolled. Laptop `@media (max-height: …)` rules must also say `and (min-width: 1025px)` or they hit tall phones. Shortening a block near the top can pull a heavy section into the `content-visibility` render range at load — check mobile TBT (`perf.js`) after such changes. `MagneticButton` takes `href` to render a link (never wrap it in `<Link>`)
+- Phone/tablet layout rules (user decisions, 2026-11-01): one 20px gutter (the `ScrollLayout_section` padding; inner frames add no horizontal padding and no narrower centred `max-width` box); titles, badges and labels align left; 16px from a title to its content and 12px from a badge to its content, set in one place (container `gap`, title margin 0). Check with `layout-check.js`
+- Framer + CSS: never put `transition: all` on an element Framer animates (the CSS transition lags behind Framer's inline transform and the element jumps when the entrance ends); don't animate `scale` on crisp icons (pixel snap at the end)
+- `height: 100%` against a parent that only has `min-height` resolves to 0 (the 3D canvas and the fullscreen photo broke this way): fill with `position: absolute; inset: 0` or a grid row
+- Photo overlays (`ThermalOverlays`, `BeforeAfterSlider`) use `%` coordinates for the desktop crop: in mobile previews (`[data-preview]`) they are hidden, the fullscreen `PhotoViewer` shows them
+- In a `flex-direction: column` container vertical centring comes from `justify-content`; a laptop rule that centres content in the leftover height leaves a big band under the title
 - Fonts come from `next/font` in `app/layout.tsx` (`--font-inter`, `--font-fraunces`); don't add CSS `@import` font URLs
