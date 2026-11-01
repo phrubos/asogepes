@@ -43,9 +43,9 @@ const HERO_NAV_ITEMS = [
 
 // Phones and tablets: the same three problems as a tappable list, ordered by depth
 const HERO_TOPICS: HeroTopic[] = [
-    { id: 'compaction', title: 'Az öntözés okozta tömörödés', desc: '0–20 cm mélyen', icon: Droplet },
-    { id: 'cultivator', title: 'A nehézkultivátor korlátai', desc: '20–35 cm mélyen', icon: UnfoldHorizontal },
-    { id: 'ploughing', title: 'A szántás korlátai', desc: '35 cm alatt', icon: Redo },
+    { id: 'compaction', lead: '0–20', title: 'Az öntözés okozta tömörödés', desc: 'cm mélyen, a feltalajban' },
+    { id: 'cultivator', lead: '20–35', title: 'A nehézkultivátor korlátai', desc: 'cm mélyen, a művelőréteg alján' },
+    { id: 'ploughing', lead: '35+', title: 'A szántás korlátai', desc: 'cm alatt, az altalajban' },
 ]
 
 export default function ProblemHeroSection() {

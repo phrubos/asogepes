@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Settings, Folder, HelpCircle } from 'lucide-react'
 import PageBadge from '@/components/ui/PageBadge'
 import HubFolder from '../HubFolder'
 import { useScrollNav } from '@/components/shared/ScrollLayout'
@@ -11,9 +10,9 @@ import styles from '../pages/HeroPage.module.css'
 
 // Phones and tablets get a plain list of the same three destinations instead of the animated folder
 const TOPICS: HeroTopic[] = [
-    { id: 'operation', title: 'Működési elv', desc: 'Hogyan működik az ásógép?', icon: Settings },
-    { id: 'models', title: 'Modellek', desc: '38SX, 38WX, 40SX', icon: Folder },
-    { id: 'application', title: 'Útmutató', desc: 'Melyik módszert válasszam?', icon: HelpCircle },
+    { id: 'operation', title: 'Működési elv', desc: 'Hogyan működik az ásógép?' },
+    { id: 'models', title: 'Modellek', desc: '38SX, 38WX, 40SX' },
+    { id: 'application', title: 'Útmutató', desc: 'Melyik módszert válasszam?' },
 ]
 
 export default function TechHeroSection() {

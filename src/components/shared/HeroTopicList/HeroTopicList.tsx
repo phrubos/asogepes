@@ -1,27 +1,29 @@
 'use client'
 
-import { ChevronRight, type LucideIcon } from 'lucide-react'
+import { ArrowDown } from 'lucide-react'
 import styles from './HeroTopicList.module.css'
 
 export interface HeroTopic {
     id: string
     title: string
     desc: string
-    icon: LucideIcon
+    /** Short gold figure before the title (e.g. a depth range); rows without it span the full width */
+    lead?: string
 }
 
-/** Phones and tablets: the hero's way into the page, a plain list of tappable sections (hidden above 1024px) */
+/** Phones and tablets: the hero's way into the page, a contents list of the sections below (hidden above 1024px) */
 export default function HeroTopicList({ topics, onSelect, label }: { topics: HeroTopic[]; onSelect: (id: string) => void; label: string }) {
+    const hasLead = topics.some(t => t.lead)
     return (
         <nav className={`${styles.topicList} hero-rise`} style={{ animationDelay: '200ms' }} aria-label={label}>
-            {topics.map(({ id, title, desc, icon: Icon }) => (
-                <button key={id} type="button" className={styles.topicItem} onClick={() => onSelect(id)}>
-                    <span className={styles.topicIcon}><Icon size={20} aria-hidden="true" /></span>
+            {topics.map(({ id, title, desc, lead }) => (
+                <button key={id} type="button" className={`${styles.topicItem} ${hasLead ? styles.withLead : ''}`} onClick={() => onSelect(id)}>
+                    {hasLead && <span className={styles.topicLead}>{lead}</span>}
                     <span className={styles.topicText}>
                         <span className={styles.topicTitle}>{title}</span>
                         <span className={styles.topicDesc}>{desc}</span>
                     </span>
-                    <ChevronRight size={20} className={styles.topicChevron} aria-hidden="true" />
+                    <ArrowDown size={18} className={styles.topicArrow} aria-hidden="true" />
                 </button>
             ))}
         </nav>
