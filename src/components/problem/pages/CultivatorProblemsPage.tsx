@@ -68,6 +68,8 @@ export default function CultivatorProblemsPage() {
             <div className={styles.cultivatorGrid}>
                 {/* Left Side: Visual & Intro */}
                 <div className={styles.cultivatorVisualSide}>
+                    {/* stacked layout: the section title sits over the picture it introduces */}
+                    <span className={`${styles.pillBadge} ${styles.cultivatorImageHeading}`}>Kiemelhető problémák</span>
                     <motion.div variants={itemVariants} className={styles.cultivatorImageWrapper}>
                         <motion.div
                             className={styles.cultivatorImageContainer}
@@ -93,7 +95,7 @@ export default function CultivatorProblemsPage() {
 
                 {/* Right Side: Problems Grid */}
                 <div className={styles.cultivatorProblemsSide}>
-                    <motion.div variants={itemVariants}>
+                    <motion.div variants={itemVariants} className={styles.cultivatorProblemsHeading}>
                         <span className={styles.pillBadge}>Kiemelhető problémák</span>
                     </motion.div>
 

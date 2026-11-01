@@ -854,3 +854,24 @@
     margin-top: 0;
   }
 }
+
+/* Cultivator, stacked layout (one column): the title heads the picture instead of the list below it */
+.cultivatorImageHeading {
+  display: none;
+}
+
+@media (max-width: 1200px) {
+  .cultivatorVisualSide {
+    gap: 12px;
+  }
+
+  .cultivatorImageHeading {
+    display: inline-block;
+    align-self: flex-start;
+    margin: 0;
+  }
+
+  .cultivatorProblemsHeading {
+    display: none;
+  }
+}
