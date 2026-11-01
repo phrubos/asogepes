@@ -60,7 +60,7 @@ export default function Hero() {
     <header className={styles.hero}>
       <div className={styles.heroBg} style={parallaxStyle}>
         <Image
-          src="/images/hero-bg-final-optimized.jpg"
+          src="/images/hero-poster-frame.jpg"
           alt=""
           fill
           priority
