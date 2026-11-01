@@ -109,6 +109,15 @@
     }
 }
 
+/* Phones and tablets: content is there at once. Put on a Framer element whose entrance
+   (initial opacity 0 / offset) would otherwise hide content until it scrolls into view. */
+@media (max-width: 1024px) {
+    .mobile-static {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
 /* "Open me" chevron bob on expandable cards (CSS, so it runs on the compositor and stops under reduced motion) */
 .nudge-down {
     animation: nudgeDown 2s ease-in-out infinite;
@@ -297,7 +306,7 @@ em {
     }
 }
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
     .section {
         padding: var(--space-3xl) 0;
         /* Even smaller padding for short screens */

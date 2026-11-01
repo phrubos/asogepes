@@ -272,3 +272,46 @@
     right: 10%;
   }
 }
+/* Phones and tablets: left-aligned heading, full-width video with its two labels as a legend
+   underneath (over the picture they covered the machine), features as a plain list */
+@media (max-width: 1024px) {
+  .section {
+    padding: 0;
+  }
+
+  .header {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .content {
+    gap: 24px;
+  }
+
+  .animationWrapper {
+    height: auto;
+    max-height: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .overlayLabel {
+    position: static;
+    transform: none;
+    background: rgba(245, 240, 232, 0.06);
+    border-color: rgba(212, 168, 75, 0.25);
+  }
+
+  .featuresGrid {
+    gap: 0;
+  }
+
+  .featureCard {
+    padding: 16px 0;
+    background: none;
+    border: none;
+    border-top: 1px solid rgba(245, 240, 232, 0.08);
+    border-radius: 0;
+  }
+}

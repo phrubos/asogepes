@@ -322,7 +322,7 @@
 /* =================================================================
    VIEWPORT SCALING FIXES for 125% zoom @ 1080p (~864px viewport height)
    ================================================================= */
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .container {
     padding: 0.5rem 0.75rem;
     margin: 0;
@@ -445,7 +445,7 @@
 /* =================================================================
    EXTRA COMPACT for very small heights (< 750px, e.g. 150% zoom)
    ================================================================= */
-@media (max-height: 750px) {
+@media (max-height: 750px) and (min-width: 1025px) {
   .container {
     padding: 0.25rem 0.5rem;
     gap: 0.15rem;

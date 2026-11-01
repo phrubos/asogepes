@@ -1,0 +1,29 @@
+.models {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.model {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: var(--space-1xl) var(--space-xl) var(--space-xl);
+}
+
+.model + .model {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Phones and tablets: each model is as tall as its content */
+@media (max-width: 1024px) {
+    .model {
+        min-height: 0;
+        padding: 0 0 48px;
+    }
+
+    .model + .model {
+        padding-top: 48px;
+    }
+}

@@ -382,7 +382,7 @@
 }
 
 /* Compact padding for smaller viewports (125% zoom) */
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .pageContent {
     padding: 70px 0 120px 0;
   }

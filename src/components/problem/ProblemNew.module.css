@@ -41,7 +41,7 @@
   /* Balanced padding */
 }
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .statsPageGrid {
     max-height: calc(100vh - 100px);
     /* More space for content */
@@ -66,7 +66,7 @@
   justify-content: flex-start;
 }
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .challengesList {
     gap: var(--space-sm);
   }
@@ -86,7 +86,7 @@
   padding: var(--space-md);
 }
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .challengeItem {
     padding: var(--space-sm);
     gap: var(--space-md);
@@ -156,7 +156,7 @@
   justify-content: center;
 }
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .comparisonPageWrapper {
     padding-top: 4vh !important;
     padding-bottom: 8vh !important;
@@ -285,7 +285,7 @@
   gap: var(--space-4xl);
 }
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .combinedSection {
     padding-top: 60px;
   }
@@ -363,7 +363,7 @@
   height: 100%;
 }
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .cultivatorPageWrapper {
     padding: 0 var(--space-2xl) 4vh;
   }
@@ -495,7 +495,7 @@
 }
 
 /* Height-based adjustments for smaller viewports (e.g., 125% scaling @ 1536x800) */
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
 
   .soilProfilesContainer {
     gap: var(--space-md);
@@ -539,7 +539,7 @@
   overflow: visible;
 }
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .ploughPageContainer {
     padding: 0 2% 0;
     margin-top: 0;
@@ -582,7 +582,7 @@
   overflow: visible;
 }
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .ploughStructureContent {
     padding: 0.25rem;
     justify-content: flex-start;

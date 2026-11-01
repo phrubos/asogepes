@@ -313,7 +313,7 @@
 /* ===========================================
    125% SCALING FIX (LAPTOP OPTIMIZATION)
    =========================================== */
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .methodologyPage {
     /* Ensure page respects height */
     padding: 0.5rem 0;

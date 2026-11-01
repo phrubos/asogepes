@@ -14,7 +14,7 @@
   transition: all 0.4s ease;
 }
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .hubScene {
     min-height: 450px;
     padding: 1rem;

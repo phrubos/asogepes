@@ -257,3 +257,43 @@
     min-height: 250px;
   }
 }
+/* Phones and tablets: no hover, so the "see it in the trial" link is a visible button at the
+   bottom of each card; subtitles wrap instead of being cut off; the section grows with content */
+@media (max-width: 1024px) {
+  .section {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .header {
+    text-align: left;
+  }
+
+  .subtitle {
+    margin: 0;
+  }
+
+  .grid {
+    overflow: visible;
+  }
+
+  .card {
+    min-height: 0;
+    height: auto;
+  }
+
+  .cardSubtitle {
+    white-space: normal;
+  }
+
+  .hoverCta {
+    position: static;
+    min-height: 44px;
+    margin-top: var(--space-md);
+    opacity: 1 !important;
+    transform: none !important;
+    box-shadow: none;
+  }
+}

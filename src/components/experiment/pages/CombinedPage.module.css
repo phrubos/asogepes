@@ -44,14 +44,14 @@
    RESPONSIVE - Adjust for smaller viewports
    ============================================ */
 
-@media (max-height: 900px) {
+@media (max-height: 900px) and (min-width: 1025px) {
   .section {
     min-height: calc(100vh - 170px);
     scroll-margin-top: 70px;
   }
 }
 
-@media (max-height: 700px) {
+@media (max-height: 700px) and (min-width: 1025px) {
   .section {
     height: auto;
     max-height: none;

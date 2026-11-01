@@ -137,3 +137,20 @@
         font-size: 0.9375rem;
     }
 }
+
+/* Phones and tablets: hero reads left-aligned, starting just under the section bar */
+@media (max-width: 1024px) {
+    .heroPage {
+        padding: 24px 0 0;
+    }
+
+    .content {
+        padding: 0;
+        text-align: left;
+    }
+
+    .textColumn {
+        margin: 0;
+        align-items: flex-start;
+    }
+}

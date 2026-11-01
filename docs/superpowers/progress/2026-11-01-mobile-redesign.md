@@ -16,3 +16,13 @@ Spec: `docs/superpowers/specs/2026-11-01-mobile-redesign-design.md`. Döntések 
 - Tömörödés: a szimuláció felirata a kép alá kerül; a három lenyitható kártya mobilon `StaticChallenge` lista (ikon, cím, szöveg, arany adat) — a szántás-hatások ugyanígy; a kultivátor-problémák CSS-sel ugyanerre a mintára. A szimulált állapot egy oszlopban.
 - Kultivátor- és szántásfotó 16:10 (eddig 4:5, 50–60vh); az idézet balra zárt, arany függőleges vonallal.
 - Eredmény: /problema 8665 → 6786 px (−22%); mobile-check 0 hiba (eddig 9).
+
+## 3. fázis — /technologia
+- FINDING + fix (minden oldal): 20 `@media (max-height: …)` laptop-szabály (125%-os skálázás) telefonon is érvényesült (844 px magas kijelző) — pl. a modellfotó ettől lett apró. Mind `and (min-width: 1025px)`-re szűkítve; asztali nézet változatlan.
+- Új globális `.mobile-static` (≤1024 px: `opacity: 1; transform: none !important`) a Framer-belépőkre, amelyek görgetésig elrejtik a tartalmat. A `ModelsCombinedPage` inline stílusai CSS-modulba kerültek; a modellek mobilon a tartalomhoz nőnek.
+- Hero balra zárt, alatta témalista; `sections.module.css` `.scrollSection` mobilon a tartalomhoz nő.
+- Működési elv: balra zárt fejléc, a videó két címkéje a kép alatt jelmagyarázatként (a gépet takarták), a jellemzők listaként.
+- Alkalmazási útmutató: a csak hoverre megjelenő „Lásd a kísérletben” link mobilon mindig látható gomb a kártya alján; az alcímek tördelődnek (eddig levágva).
+- „Részletek” link 44 px magas.
+- Eltérés a spectől: a modellek közti szegmens-váltó nem készült el (a 3 modell egymás alatt olvasható, a `model-*` mélylinkek változatlanok) → oldalhossz 7786 → 7408 px (−5%, a cél −25% volt).
+- mobile-check /technologia 0 hiba (eddig 8).

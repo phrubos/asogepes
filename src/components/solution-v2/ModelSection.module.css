@@ -506,12 +506,17 @@
   .chartRow {
     flex-wrap: wrap;
   }
+
+  .detailsLink {
+    min-height: 44px;
+    padding: 0 4px;
+  }
 }
 
 /* ===========================================
    125% SCALING FIX (LAPTOP OPTIMIZATION)
    =========================================== */
-@media (max-height: 1100px) {
+@media (max-height: 1100px) and (min-width: 1025px) {
   .compactSection {
     gap: 0.5rem;
     padding-bottom: 0.5rem;
