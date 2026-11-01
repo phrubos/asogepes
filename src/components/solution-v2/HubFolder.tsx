@@ -166,41 +166,38 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
     }
   }
 
+  // Side folders slide and fade in; no scale, which re-rasterised them at the end and made the icons jump
   const navButtonVariants = {
-    hidden: { opacity: 0, x: 30, scale: 0.8 },
+    hidden: { opacity: 0, x: 30 },
     visible: (i: number) => ({
       opacity: 1,
       x: 0,
-      scale: 1,
       transition: {
         delay: i * 0.05,
         duration: 0.35,
-        ease: [0.34, 1.56, 0.64, 1]
+        ease: [0.22, 1, 0.36, 1]
       }
     }),
     exit: {
       opacity: 0,
       x: 30,
-      scale: 0.8,
       transition: { duration: 0.2 }
     }
   }
 
   const navButtonLeftVariants = {
-    hidden: { opacity: 0, x: -30, scale: 0.8 },
+    hidden: { opacity: 0, x: -30 },
     visible: {
       opacity: 1,
       x: 0,
-      scale: 1,
       transition: {
         duration: 0.4,
-        ease: [0.34, 1.56, 0.64, 1]
+        ease: [0.22, 1, 0.36, 1]
       }
     },
     exit: {
       opacity: 0,
       x: -30,
-      scale: 0.8,
       transition: { duration: 0.2 }
     }
   }
