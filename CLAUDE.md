@@ -80,6 +80,8 @@ Use `@/` for imports from `src/` directory (configured in tsconfig.json).
 ## Skills
 Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `skills-lock.json`): ux-heuristics, performance-optimization, information-architecture, design-motion-principles, review-animations, find-animation-opportunities, animation-vocabulary, emil-design-eng, apple-design, systematic-debugging, verification-before-completion, writing-plans, executing-plans, and the local **ui-fix-from-screenshot** (the workflow for "this looks wrong" screenshots: trace, fix at the right breakpoint, prove with numbers).
 
+Mods (`.claude/mods/`, see its README): `asogepes-qa` (status line, `/ellenoriz`, `/mehet`, layout-check reminder) and `asogepes-elotte-utana` (`/elotte-utana` before/after pane; `scripts/qa/snap.js`).
+
 Hook: `.claude/hooks/css-guard.js` runs after every Edit/Write of a `*.module.css` and reports, for the newly added lines only, `transition: all`, fonts below 12px, `max-height` queries without `min-width: 1025px`, and `height: 100%`.
 
 ## Design Notes

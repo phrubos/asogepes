@@ -1,0 +1,6 @@
+{
+  "name": "asogepes-elotte-utana",
+  "version": "0.1.0",
+  "description": "Ásógépes site: before/after pane for CSS-module edits (screenshot + measured gutter and gaps at 390px and 1440px on the dev server)",
+  "types": "./types/index.d.ts"
+}

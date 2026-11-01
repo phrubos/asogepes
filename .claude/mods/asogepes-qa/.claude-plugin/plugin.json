@@ -1,0 +1,6 @@
+{
+  "name": "asogepes-qa",
+  "version": "0.1.0",
+  "description": "Ásógépes site: status line (branch, unpushed commits, dev server, last layout-check), /ellenoriz, /mehet, and a reminder when CSS changed without a layout-check",
+  "types": "./types/index.d.ts"
+}
