@@ -414,82 +414,40 @@
   }
 }
 
+/* Phones and tablets: no side/bottom rail (MobileSectionBar replaces it); sections are as tall as their content */
 @media (max-width: 1024px) {
-  .sidebar {
-    position: fixed;
-    bottom: 0;
-    top: auto;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    flex-direction: row;
-    padding: 0;
-    background: rgba(31, 26, 22, 0.98);
-    border-top: 1px solid rgba(212, 168, 75, 0.15);
-    border-right: none;
-    min-width: auto;
-  }
-
-  .sidebarContent {
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-    overflow-x: auto;
-  }
-
-  .timelineTrack {
-    display: none;
-  }
-
-  .sectionNav {
-    flex-direction: row;
-    width: auto;
-    padding: 0 20px;
-    gap: 20px;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .sectionGroup {
-    padding-left: 0;
-    min-height: auto;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .markerWrapper {
-    position: relative;
-    left: auto;
-    top: auto;
-    transform: none;
-    margin-bottom: 5px;
-  }
-
-  .subPages {
-    display: none;
-  }
-
-  .sectionLabel {
-    font-size: 0.75rem;
-    display: block;
-  }
-
-  .sectionNumber {
+  .sidebar,
+  .scrollIndicator {
     display: none;
   }
 
   .mainContent {
     margin-left: 0;
-    margin-bottom: 80px;
+    margin-bottom: 0;
   }
 
   .section {
-    padding-left: 4%;
-    padding-right: 4%;
-    padding-top: 80px;
-    padding-bottom: 180px;
-    /* More space for mobile bottom nav + indicator */
+    min-height: 0;
+    padding: 0 20px;
+  }
+
+  .section > * {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  /* first section clears the 56px bar; the rest are spaced evenly */
+  .section:first-child {
+    padding-top: 56px;
+  }
+
+  .section + .section {
+    margin-top: 64px;
+    contain-intrinsic-size: auto 1200px;
+  }
+
+  .section:last-child {
+    padding-bottom: 64px;
   }
 
   .mainContent::before,
@@ -499,22 +457,6 @@
 
   .mainContent::after {
     display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .sectionLabel {
-    display: none;
-  }
-
-  .sectionGroup.active .sectionLabel {
-    display: block;
-    position: absolute;
-    bottom: -20px;
-    white-space: nowrap;
-    background: rgba(0, 0, 0, 0.8);
-    padding: 2px 8px;
-    border-radius: 4px;
   }
 }
 
@@ -671,41 +613,5 @@
 
   50% {
     transform: translateY(3px);
-  }
-}
-
-/* Framer's y animation replaces translateX(-50%); without the sidebar, centre with margins instead */
-@media (max-width: 1024px) {
-  .scrollIndicator {
-    left: 16px;
-    right: 16px;
-    width: fit-content;
-    margin: 0 auto;
-  }
-}
-
-@media (max-width: 768px) {
-  .scrollIndicator {
-    bottom: 90px;
-    padding: 8px 16px;
-    max-width: 280px;
-  }
-
-  .indicatorLabel {
-    display: none;
-  }
-
-  .indicatorSection {
-    font-size: 0.75rem;
-    white-space: normal;
-  }
-
-  .indicatorSubsection {
-    font-size: 0.75rem;
-    white-space: normal;
-  }
-
-  .indicatorTitleWrapper {
-    gap: 4px;
   }
 }

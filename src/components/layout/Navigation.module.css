@@ -234,21 +234,36 @@
 }
 
 /* Responsive */
-@media (max-width: 900px) {
+/* Phones and tablets: menu button only, centred in the 56px band shared with the section bar.
+   The header spans the full width, so let taps on its empty part fall through to the bar below. */
+@media (max-width: 1024px) {
     .nav {
         display: none;
     }
 
     .menuToggle {
         display: flex;
+        pointer-events: auto;
+    }
+
+    .header {
+        padding: 0 8px;
+        pointer-events: none;
+    }
+
+    .headerInner,
+    .header.scrolled .headerInner {
+        min-height: 56px;
+        padding: 0;
+    }
+
+    .mobileNav,
+    .mobileOverlay {
+        pointer-events: auto;
     }
 }
 
 @media (max-width: 480px) {
-    .header {
-        padding: 0 var(--space-md);
-    }
-
     .mobileNavInner {
         padding: 0 var(--space-md);
     }

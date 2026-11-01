@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import styles from './ScrollLayout.module.css'
 import NextSectionIndicator from './NextSectionIndicator'
+import MobileSectionBar from './MobileSectionBar'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 export interface ScrollSection {
   id: string
@@ -100,9 +102,12 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
   const isProgrammaticScroll = useRef(false)
   const router = useRouter()
   const didInitFromUrl = useRef(false)
+  const isMobile = useMediaQuery('(max-width: 1024px)')
 
   // Get scroll offset based on target
   const getScrollOffset = useCallback((targetId: string) => {
+    // phones and tablets: every target lands just below the 56px section bar
+    if (window.matchMedia('(max-width: 1024px)').matches) return 64
     return sectionOffsets[targetId] ?? 80  // default 80 for unlisted sections
   }, [])
 
@@ -434,8 +439,9 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
           ))}
         </main>
 
-        {/* Next Section Indicator */}
-        <NextSectionIndicator />
+        {/* Desktop: next-section pill; phones and tablets: section bar + contents sheet */}
+        {isMobile === false && <NextSectionIndicator />}
+        <MobileSectionBar />
       </div>
     </ScrollContext.Provider>
   )
