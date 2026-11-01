@@ -51,3 +51,13 @@ Spec: `docs/superpowers/specs/2026-11-01-mobile-redesign-design.md`. Döntések 
 - Mélylinkek: a `ScrollLayout` ugrás előtt `scroll-layout-target` eseményt küld (`SCROLL_TARGET_EVENT`); a modellek oldala erre `flushSync`-kel kiválasztja a célmodellt, így a `?section=model-*`, a Tartalom lap és a hero témalista a megfelelő modellt nyitja meg, és a 64 px-es pozícióra ugrik.
 - touch-check: új telefonos tesztek (csak az első modell látszik, a 38WX fül átvált, a `?section=model-40sx` megnyitja és odaugrik).
 - Eredmény: /technologia 7408 → 4859 px (−34%, a −25%-os cél teljesült); mobile4g TBT 436 ms, CLS 0.000; desktop CLS 0.038 (változatlan). A teljes QA-sor zöld.
+
+## 7. fázis — nyitott pontok
+- **Főoldali CTA:** a `MagneticButton` új `href` propja `motion.create(Link)`-et renderel; a CTA egyetlen link (eddig `<a>`-ban `<button>`, két tab-stop).
+- **Lakitelek eredménysorok:** mobilon az értékcsík a kezelés neve mellett, a leírás alatta teljes szélességben (eddig a csík a jobb oldalon keskenyítette a szöveget).
+- **Oldalhossz, valódi kiindulóponttal mérve:** a redesign előtti commitot (`d8f4daa`) külön worktree-ben buildeltem, `content-visibility` nélkül mértem. A korábbi számokat a `content-visibility` becsült magassága torzította. Kiindulás: /problema 8665, /technologia 7785, /kutatas 13263 px.
+  - /problema: a szimulált állapot kártyái egysorosak, a „VS” elválasztó eltűnt, a kultivátor-lapok paddingje a layoutból jön, a két talajszelvény között 16 px.
+  - /kutatas: idővonal egy sorban (a sávnevek helyett a színkulcs), hőmérséklet két oszlopban, művelési lépések egymás mellett, tényadatlap ikon nélkül, műszer + skála egy panelben, 16:10 fotók, 3D helykitöltő 16:9 a betöltésig, alszekciók között 48 px, a lapok függőleges paddingje 0; a helyszín-címke, a „Módszertan” címke és a dekoratív címvonalak mobilon rejtve (a felső sáv kiírja).
+  - Eredmény (QA build): /problema 6463 (−25,4%), /technologia 4859 (−37,6%), /kutatas 9924 (−25,2%).
+- **FINDING (perf):** a rövidebb módszertani blokk miatt a Szentkirály-szekció (kb. 3360 px) betöltéskor a `content-visibility` renderelési sávjába került; minden képbetöltés újra-layoutolta, /kutatas TBT ~300 → ~520 ms (A/B a `cca0370`-hoz, Chrome-trace: Layout 175 → 475–585 ms). Javítás: mobilon a helyszínek 2. alszekciójától `content-visibility: auto` (`CombinedPage.module.css`). Ezzel ~340 ms.
+- Ellenőrzés: a teljes QA-sor zöld; mobile4g TBT 250 / 409–450 / 353–390 / 325–338 ms, CLS 0.000; desktop CLS ≤ 0.038.

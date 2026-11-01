@@ -306,3 +306,56 @@
     width: 52px;
   }
 }
+
+/* Phones and tablets: the two depths side by side, the difference under its bars;
+   explanation left-aligned */
+@media (max-width: 1024px) {
+  .container {
+    padding: 16px;
+  }
+
+  .chartArea {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  .depthSection {
+    flex: 1 1 0;
+    min-width: 0;
+    gap: 10px;
+  }
+
+  .barsRow {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .barContainer {
+    width: 36px;
+    height: 96px;
+  }
+
+  .diffBadge {
+    flex-basis: 100%;
+    text-align: center;
+  }
+
+  .explanation {
+    padding: 12px 14px;
+  }
+
+  .explanation p {
+    text-align: left;
+  }
+}
+
+/* Phones and tablets: no decorative rule under the chart title */
+@media (max-width: 1024px) {
+  .titleLine {
+    display: none;
+  }
+}

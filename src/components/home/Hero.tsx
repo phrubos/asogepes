@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import styles from './Hero.module.css'
 import { heroStats } from '@/lib/data'
@@ -134,16 +133,15 @@ export default function Hero() {
         </div>
 
         <div className={`${styles.heroCta} ${styles.rise}`} style={{ animationDelay: '600ms' }}>
-          <Link href="/kutatas">
-            <MagneticButton
-              variant="primary"
-              size="lg"
-              magneticStrength={0.25}
-            >
-              Fedezd fel a kutatást
-              <ArrowRight size={20} />
-            </MagneticButton>
-          </Link>
+          <MagneticButton
+            href="/kutatas"
+            variant="primary"
+            size="lg"
+            magneticStrength={0.25}
+          >
+            Fedezd fel a kutatást
+            <ArrowRight size={20} />
+          </MagneticButton>
         </div>
       </div>
     </header>

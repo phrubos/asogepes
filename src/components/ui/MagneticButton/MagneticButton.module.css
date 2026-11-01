@@ -17,6 +17,8 @@
   transition: box-shadow 0.3s ease;
   transform-style: preserve-3d;
   perspective: 1000px;
+  /* also used as a link (href) */
+  text-decoration: none;
 }
 
 .magneticButton:focus-visible {

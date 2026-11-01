@@ -493,3 +493,10 @@
     margin-bottom: 24px;
   }
 }
+
+/* Phones and tablets: the red and green card headers already set the two apart */
+@media (max-width: 1024px) {
+  .divider {
+    display: none;
+  }
+}

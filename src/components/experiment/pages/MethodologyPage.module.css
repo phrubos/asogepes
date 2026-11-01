@@ -422,8 +422,7 @@
     max-height: none;
     min-height: 0;
     overflow: visible;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
   }
 }
 
@@ -452,5 +451,51 @@
     width: 100%;
     margin-left: 0;
     margin-right: 0;
+  }
+}
+
+/* Phones and tablets: the penetrometer photo is landscape so the method reads without a long scroll */
+@media (max-width: 1024px) {
+  .imageWrapper {
+    max-width: none;
+    aspect-ratio: 16 / 10;
+  }
+
+  .image {
+    height: 100%;
+  }
+}
+
+/* Phones and tablets: gauge and its two ranges side by side in one compact panel */
+@media (max-width: 1024px) {
+  .dashboardContainer {
+    min-height: 0;
+    max-height: none;
+    padding: 16px;
+  }
+
+  .measurementDashboard {
+    display: grid;
+    grid-template-columns: 136px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+  }
+
+  .manometerWrapper {
+    order: -1;
+    width: 136px;
+    height: 136px;
+  }
+
+  .scaleBar {
+    flex-direction: column;
+    min-height: 0;
+  }
+}
+
+/* Phones and tablets: the section bar already says "Módszertan" */
+@media (max-width: 1024px) {
+  .badge {
+    display: none;
   }
 }

@@ -264,12 +264,6 @@
     margin-top: var(--space-2xl);
 }
 
-/* the link wraps the button: give it the button's box so the whole button is its tap area */
-.heroCta a {
-    display: inline-flex;
-    text-decoration: none;
-}
-
 @media (max-width: 1024px) {
     .heroContent {
         max-width: 600px;

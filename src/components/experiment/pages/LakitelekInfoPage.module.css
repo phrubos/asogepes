@@ -274,7 +274,21 @@
     max-height: none;
     min-height: 0;
     overflow: visible;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
+  }
+}
+
+/* Phones and tablets: site facts as a compact two-column fact sheet (no icon tiles) */
+@media (max-width: 1024px) {
+  .infoGrid {
+    gap: 6px;
+  }
+
+  .infoCard {
+    padding: 10px 12px;
+  }
+
+  .infoIcon {
+    display: none;
   }
 }

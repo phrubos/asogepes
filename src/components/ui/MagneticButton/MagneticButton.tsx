@@ -1,9 +1,12 @@
 'use client'
 
-import { useRef, useState, ReactNode, MouseEvent } from 'react'
+import { useRef, useState, ReactNode, MouseEvent, RefObject } from 'react'
+import Link from 'next/link'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import styles from './MagneticButton.module.css'
+
+const MotionLink = motion.create(Link)
 
 interface RippleType {
   x: number
@@ -18,6 +21,8 @@ interface MagneticButtonProps {
   className?: string
   disabled?: boolean
   onClick?: () => void
+  /** renders a link styled as this button (instead of a button inside a link) */
+  href?: string
   magneticStrength?: number
   showRipple?: boolean
   showShine?: boolean
@@ -32,13 +37,14 @@ export default function MagneticButton({
   className = '',
   disabled = false,
   onClick,
+  href,
   magneticStrength = 0.3,
   showRipple = true,
   showShine = true,
   showGlow = true,
   ariaLabel
 }: MagneticButtonProps) {
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLElement>(null)
   const [ripples, setRipples] = useState<RippleType[]>([])
   const [isHovered, setIsHovered] = useState(false)
   const prefersReducedMotion = useReducedMotion()
@@ -56,7 +62,7 @@ export default function MagneticButton({
   const rotateX = useTransform(springY, [-20, 20], [5, -5])
   const rotateY = useTransform(springX, [-20, 20], [-5, 5])
 
-  const handleMouseMove = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
     if (prefersReducedMotion || disabled) return
 
     const rect = buttonRef.current?.getBoundingClientRect()
@@ -82,7 +88,7 @@ export default function MagneticButton({
     setIsHovered(true)
   }
 
-  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (e: MouseEvent<HTMLElement>) => {
     if (disabled) return
 
     // Create ripple effect
@@ -115,24 +121,24 @@ export default function MagneticButton({
     className
   ].filter(Boolean).join(' ')
 
-  return (
-    <motion.button
-      ref={buttonRef}
-      className={buttonClasses}
-      style={{
-        x: prefersReducedMotion ? 0 : springX,
-        y: prefersReducedMotion ? 0 : springY,
-        rotateX: prefersReducedMotion ? 0 : rotateX,
-        rotateY: prefersReducedMotion ? 0 : rotateY,
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onMouseEnter={handleMouseEnter}
-      onClick={handleClick}
-      disabled={disabled}
-      aria-label={ariaLabel}
-      whileTap={!disabled && !prefersReducedMotion ? { scale: 0.97 } : undefined}
-    >
+  const sharedProps = {
+    className: buttonClasses,
+    style: {
+      x: prefersReducedMotion ? 0 : springX,
+      y: prefersReducedMotion ? 0 : springY,
+      rotateX: prefersReducedMotion ? 0 : rotateX,
+      rotateY: prefersReducedMotion ? 0 : rotateY,
+    },
+    onMouseMove: handleMouseMove,
+    onMouseLeave: handleMouseLeave,
+    onMouseEnter: handleMouseEnter,
+    onClick: handleClick,
+    'aria-label': ariaLabel,
+    whileTap: !disabled && !prefersReducedMotion ? { scale: 0.97 } : undefined,
+  }
+
+  const content = (
+    <>
       {/* Shine sweep effect */}
       {showShine && !prefersReducedMotion && (
         <span className={`${styles.shine} ${isHovered ? styles.shineActive : ''}`} />
@@ -154,6 +160,20 @@ export default function MagneticButton({
       <span className={styles.content}>
         {children}
       </span>
+    </>
+  )
+
+  if (href) {
+    return (
+      <MotionLink ref={buttonRef as RefObject<HTMLAnchorElement>} href={href} {...sharedProps}>
+        {content}
+      </MotionLink>
+    )
+  }
+
+  return (
+    <motion.button ref={buttonRef as RefObject<HTMLButtonElement>} disabled={disabled} {...sharedProps}>
+      {content}
     </motion.button>
   )
 }

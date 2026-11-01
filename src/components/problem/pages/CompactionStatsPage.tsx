@@ -291,6 +291,7 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                 {/* Soil Resistance Card */}
                 <motion.div
                     variants={itemVariants}
+                    className={styles.simCard}
                     style={{
                         background: 'rgba(255,255,255,0.03)',
                         border: '1px solid rgba(255,255,255,0.08)',
@@ -320,6 +321,7 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                 {/* Root Zone Card */}
                 <motion.div
                     variants={itemVariants}
+                    className={styles.simCard}
                     style={{
                         background: 'rgba(255,255,255,0.03)',
                         border: '1px solid rgba(255,255,255,0.08)',
@@ -348,6 +350,7 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                 {/* Water Management Card */}
                 <motion.div
                     variants={itemVariants}
+                    className={styles.simCard}
                     style={{
                         background: 'rgba(255,255,255,0.03)',
                         border: '1px solid rgba(255,255,255,0.08)',

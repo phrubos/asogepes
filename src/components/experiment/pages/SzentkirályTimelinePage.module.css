@@ -85,7 +85,20 @@
     max-height: none;
     min-height: 0;
     overflow: visible;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
+  }
+}
+
+/* Phones and tablets: the section bar already names the location */
+@media (max-width: 1024px) {
+  .headerBadge {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header {
+    margin-bottom: 16px;
+    padding-top: 0;
   }
 }

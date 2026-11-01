@@ -65,7 +65,13 @@
     max-height: none;
     min-height: 0;
     overflow: visible;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
+  }
+}
+
+/* Phones and tablets: the header holds only the location badge, which the section bar already shows */
+@media (max-width: 1024px) {
+  .header {
+    display: none;
   }
 }

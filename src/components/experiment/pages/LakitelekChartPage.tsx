@@ -138,7 +138,7 @@ export default function LakitelekChartPage() {
         {/* Embedded Content */}
         {!isChartFullscreen && (
           <div className={styles.mainContent}>
-            <motion.div className={styles.visualizationArea}>
+            <motion.div className={styles.visualizationArea} data-loaded={isChartLoaded || undefined}>
               <div className={styles.vizCanvas}>
                 <AnimatePresence mode="wait">
                   {!isChartLoaded ? (

@@ -617,12 +617,12 @@
    the text below it reads in the page flow instead of a 560px inner scroll box */
 @media (max-width: 1024px) {
     .container {
-        gap: 12px;
+        gap: 8px;
         margin-bottom: 0;
     }
 
     .imageWrapper {
-        aspect-ratio: 4 / 3 !important;
+        aspect-ratio: 16 / 10 !important;
         border-radius: 12px;
     }
 

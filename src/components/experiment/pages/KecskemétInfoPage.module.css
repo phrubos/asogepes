@@ -329,7 +329,43 @@
     max-height: none;
     min-height: 0;
     overflow: visible;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
+  }
+}
+
+/* Phones and tablets: control and spade-machine steps side by side (the columns already say
+   which is which, so no "VS" divider) */
+@media (max-width: 1024px) {
+  .treatmentComparison {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .treatmentVs {
+    display: none;
+  }
+
+  .treatment {
+    padding: 12px;
+  }
+
+  .treatmentList li {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+}
+
+/* Phones and tablets: site facts as a compact two-column fact sheet (no icon tiles) */
+@media (max-width: 1024px) {
+  .infoGrid {
+    gap: 6px;
+  }
+
+  .infoCard {
+    padding: 10px 12px;
+  }
+
+  .infoIcon {
+    display: none;
   }
 }

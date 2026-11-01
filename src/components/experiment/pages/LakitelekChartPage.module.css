@@ -765,8 +765,7 @@
     max-height: none;
     min-height: 0;
     overflow: visible;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
   }
 }
 
@@ -828,5 +827,73 @@
     display: block;
     -webkit-line-clamp: unset;
     overflow: visible;
+  }
+}
+
+/* Phones and tablets: the rating bar sits beside the treatment name and the description takes
+   the full row width underneath (beside the text it squeezed every line) */
+@media (max-width: 1024px) {
+  .resultRow {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    column-gap: 8px;
+    row-gap: 4px;
+    align-items: center;
+    padding: 10px 12px;
+  }
+
+  .resultLeft,
+  .resultInfo {
+    display: contents;
+  }
+
+  .resultNum {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .resultTreatment {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 0.9375rem;
+  }
+
+  .resultRight {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .resultDesc {
+    grid-column: 2 / 4;
+    grid-row: 2;
+    font-size: 0.875rem;
+  }
+
+  .ratingBar {
+    width: 56px;
+  }
+
+  .resultRating {
+    display: none;
+  }
+}
+
+/* Phones and tablets: until the 3D model is loaded the play button needs only a short band */
+@media (max-width: 1024px) {
+  .visualizationArea:not([data-loaded]) {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .visualizationArea:not([data-loaded]) .playButton {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+/* Phones and tablets: the section bar already names the location */
+@media (max-width: 1024px) {
+  .headerBadge {
+    display: none;
   }
 }

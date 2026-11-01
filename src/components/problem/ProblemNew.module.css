@@ -777,3 +777,33 @@
     height: 64px !important;
   }
 }
+
+/* Phones and tablets: each simulated-state card is one row (icon, then label and value) */
+@media (max-width: 1024px) {
+  .simCard {
+    flex-direction: row !important;
+    align-items: center;
+    gap: 12px !important;
+    padding: 10px 12px !important;
+  }
+
+  .simCard > div:first-child {
+    flex-shrink: 0;
+  }
+}
+
+/* Phones and tablets: the two cultivator soil profiles are one comparison, so they sit close */
+@media (max-width: 1024px) {
+  .soilProfilesContainer {
+    gap: 16px;
+  }
+}
+
+/* Phones and tablets: the cultivator pages take their spacing from the layout (64px between blocks) */
+@media (max-width: 1024px) {
+  .cultivatorPageWrapper,
+  .comparisonPageWrapper {
+    padding: 0;
+    margin-top: 0;
+  }
+}

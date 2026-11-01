@@ -68,11 +68,21 @@
     max-height: none;
     overflow: visible;
     min-height: 0;
-    margin-bottom: 64px;
+    margin-bottom: 48px; /* subsections of one location; locations are 64px apart */
     scroll-margin-top: 64px;
   }
 
   .section > * {
     flex: none;
+  }
+}
+
+/* Phones and tablets: a location is one long section, so its later subsections (charts,
+   photo viewers) skip rendering until they come near the screen, like the sections do.
+   Jumps land right thanks to the ScrollLayout re-aim. */
+@media (max-width: 1024px) {
+  .section + .section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 800px;
   }
 }

@@ -445,3 +445,66 @@
     flex: 0 0 45%;
   }
 }
+
+/* Phones and tablets: all months in one row (the per-bar names give way to the colour key in
+   the summary below, the value is already inside each bar); summaries read label-over-text */
+@media (max-width: 1024px) {
+  .container {
+    padding: 16px;
+  }
+
+  .timeline {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .timepoint {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .bars {
+    height: 130px;
+    gap: 6px;
+  }
+
+  .barContainer {
+    width: 26px;
+    height: 120px;
+  }
+
+  .barLabel,
+  .barValue {
+    display: none;
+  }
+
+  .summarySection {
+    padding-top: 16px;
+  }
+
+  .summaryCards {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .summaryItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 12px 14px;
+  }
+
+  .summaryNote {
+    padding: 12px 14px;
+  }
+}
+
+/* Phones and tablets: no decorative rule under the chart title */
+@media (max-width: 1024px) {
+  .titleLine {
+    display: none;
+  }
+}
