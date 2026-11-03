@@ -2,6 +2,8 @@
 
 import { useMemo } from 'react'
 import { ScrollLayout, ScrollSection } from '@/components/shared/ScrollLayout'
+import PageEnd from '@/components/shared/PageEnd/PageEnd'
+import { RESEARCH_SITES, RESEARCH_YEARS } from '@/lib/seasons'
 import TechHeroSection from './sections/TechHeroSection'
 import OperationSection from './sections/OperationSection'
 import ModelsSection from './sections/ModelsSection'
@@ -39,5 +41,20 @@ export default function TechnologyScrollLayout() {
         },
     ], [])
 
-    return <ScrollLayout sections={sections} resetEventName="reset-technology-scroll" />
+    return (
+        <ScrollLayout
+            sections={sections}
+            resetEventName="reset-technology-scroll"
+            end={
+                <PageEnd
+                    next={{
+                        href: '/kutatas',
+                        kicker: 'Tovább: Kutatás',
+                        title: 'Mit mértünk a táblákon?',
+                        text: `${RESEARCH_SITES.length} helyszín, ${RESEARCH_YEARS.length} tenyészidő: a talaj szerkezete, hőmérséklete és a növények fejlődése ásógépes és hagyományos művelés után.`,
+                    }}
+                />
+            }
+        />
+    )
 }

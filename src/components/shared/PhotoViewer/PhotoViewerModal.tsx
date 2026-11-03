@@ -382,7 +382,7 @@ export function PhotoViewerModal({
 
                         {/* Info Panel (Right) */}
                         <div className={styles.modalInfoPanel}>
-                            <button className={styles.closeButton} onClick={onClose} aria-label="Close modal">
+                            <button className={styles.closeButton} onClick={onClose} aria-label="Bezárás">
                                 <X size={24} />
                             </button>
 

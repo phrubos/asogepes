@@ -30,11 +30,11 @@ const sizes = [[390, 844], [360, 740]]
         const vis = e => { const s = getComputedStyle(e); return s.visibility !== 'hidden' && s.display !== 'none' && +s.opacity > 0.05 }
         const name = e => `${e.tagName.toLowerCase()}.${String(e.className && e.className.baseVal !== undefined ? e.className.baseVal : e.className).split(' ')[0].split('__')[0].slice(0, 40)}`
         const fixed = e => { for (let n = e; n; n = n.parentElement) { const pos = getComputedStyle(n).position; if (pos === 'fixed' || pos === 'sticky') return true } return false }
-        // a box cut away by an overflow:hidden/clip ancestor is not drawn, so it cannot overlap anything
+        // a box cut away by an overflow:hidden/clip box (its own element or an ancestor, e.g. .sr-only) is not drawn, so it cannot overlap anything
         // (html/body overflow applies to the viewport, not to their own box)
         const clippedOut = (el, rc) => {
           const cx = (rc.left + rc.right) / 2, cy = (rc.top + rc.bottom) / 2
-          for (let n = el.parentElement; n && n !== document.body && n !== document.documentElement; n = n.parentElement) {
+          for (let n = el; n && n !== document.body && n !== document.documentElement; n = n.parentElement) {
             const s = getComputedStyle(n)
             if (/hidden|clip/.test(s.overflowX + s.overflowY)) { const r = n.getBoundingClientRect(); if (cx < r.left || cx > r.right || cy < r.top || cy > r.bottom) return true }
           }

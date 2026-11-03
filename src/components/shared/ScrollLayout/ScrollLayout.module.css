@@ -453,7 +453,7 @@
     contain-intrinsic-size: auto 1200px;
   }
 
-  .section:last-child {
+  .section:last-of-type {
     padding-bottom: 64px;
   }
 

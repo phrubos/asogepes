@@ -114,7 +114,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                 role="button"
                 tabIndex={0}
                 onKeyDown={handleKeyDown}
-                aria-label="Open fullscreen view"
+                aria-label="Teljes képernyős nézet"
                 data-preview
                 style={{ aspectRatio: currentItem.aspectRatio }}
             >
@@ -235,7 +235,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                         <button
                             className={styles.navButton}
                             onClick={prev}
-                            aria-label="Previous image"
+                            aria-label="Előző kép"
                         >
                             <ChevronLeft size={20} />
                         </button>
@@ -252,7 +252,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                         <button
                             className={styles.navButton}
                             onClick={next}
-                            aria-label="Next image"
+                            aria-label="Következő kép"
                         >
                             <ChevronRight size={20} />
                         </button>

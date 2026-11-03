@@ -8,6 +8,8 @@ import SzentkiralyCombinedPage from './pages/SzentkiralyCombinedPage'
 import KecskemetCombinedPage from './pages/KecskemetCombinedPage'
 import LakitelekCombinedPage from './pages/LakitelekCombinedPage'
 import { SeasonProvider } from './season/SeasonContext'
+import SummarySection from './sections/SummarySection'
+import PageEnd from '@/components/shared/PageEnd/PageEnd'
 import { SEASON_YEARS } from '@/lib/seasons'
 
 export default function ResearchScrollLayout() {
@@ -36,8 +38,8 @@ export default function ResearchScrollLayout() {
                 { id: 'szentkiraly-timeline', label: 'A talajszerkezet változása' },
                 { id: 'szentkiraly-temp', label: 'Talajhőmérséklet' },
                 { id: 'szentkiraly-fejlodes', label: 'Fejlődés (2026)' },
-                { id: 'szentkiraly-meresek', label: 'További mérések (2026)' },
                 { id: 'szentkiraly-paradicsom', label: 'Paradicsomtábla (2026)' },
+                { id: 'szentkiraly-meresek', label: 'További mérések (2026)' },
                 { id: 'szentkiraly-photos', label: 'Fotók' },
             ],
         },
@@ -63,11 +65,29 @@ export default function ResearchScrollLayout() {
                 { id: 'lakitelek-photos', label: 'Fotók' },
             ],
         },
+        {
+            id: 'osszegzes',
+            label: 'Összegzés',
+            component: <SummarySection />,
+        },
     ], [])
 
     return (
         <SeasonProvider years={SEASON_YEARS}>
-            <ScrollLayout sections={sections} resetEventName="reset-research-scroll" />
+            <ScrollLayout
+                sections={sections}
+                resetEventName="reset-research-scroll"
+                end={
+                    <PageEnd
+                        next={{
+                            href: '/technologia?section=application-guide',
+                            kicker: 'Tovább: Technológia',
+                            title: 'Melyik módszert válasszam?',
+                            text: 'Az alkalmazási útmutató a talaj állapota és a kultúra szerint ajánl gépet és művelési sort.',
+                        }}
+                    />
+                }
+            />
         </SeasonProvider>
     )
 }

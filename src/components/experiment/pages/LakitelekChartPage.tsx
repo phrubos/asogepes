@@ -204,6 +204,7 @@ export default function LakitelekChartPage() {
                         <motion.button
                           className={`${styles.playButton} ${styles.playButtonPulse}`}
                           onClick={() => setIsChartLoaded(true)}
+                          aria-label="3D modell betöltése"
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
                         >

@@ -11,7 +11,8 @@ const MONTHS: Record<string, string> = {
 export default function DateLabel({ date, stack }: { date: MeasureDate; stack?: boolean }) {
   const full = (MONTHS[date.month] ?? date.month) + (date.third ? ' ' + date.third : '')
   return (
-    <span aria-label={full}>
+    <span>
+      <span className="sr-only">{full}</span>
       <span aria-hidden="true">{date.month}</span>
       {date.third && <span className={`${styles.third} ${stack ? styles.stack : ''}`} aria-hidden="true">{date.third}</span>}
     </span>

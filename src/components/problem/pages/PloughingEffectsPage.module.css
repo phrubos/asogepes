@@ -334,3 +334,35 @@
         margin-right: 0;
     }
 }
+
+/* Laptops (1201-1799px): three columns left the quote ~170px wide (22 lines, one or two words
+   each) because the 50vh photo keeps its width. Photo and cards side by side, the quote under
+   them across the full width, as below 1200px. */
+@media (min-width: 1201px) and (max-width: 1799px) {
+    .grid {
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas:
+            "image cards"
+            "quote quote";
+        column-gap: var(--space-3xl);
+        row-gap: var(--space-2xl);
+    }
+
+    .imageColumn {
+        grid-area: image;
+    }
+
+    .cardsColumn {
+        grid-area: cards;
+    }
+
+    .quoteColumn {
+        grid-area: quote;
+        padding: 0;
+    }
+
+    .quoteWrapper {
+        max-width: 52rem;
+        margin: 0 auto;
+    }
+}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef, createContext, useContext } from 'react'
+import { useState, useCallback, useEffect, useRef, createContext, useContext, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import styles from './ScrollLayout.module.css'
@@ -21,6 +21,8 @@ export interface ScrollSection {
 interface ScrollLayoutProps {
   sections: ScrollSection[]
   resetEventName?: string
+  /** After the last section: where to go next (not a section, so not in the nav) */
+  end?: ReactNode
 }
 
 interface ScrollContextType {
@@ -56,6 +58,7 @@ const sectionOffsets: Record<string, number> = {
   'application-guide': -10,
   // Kutatás page
   'methodology': -60,           // Módszertan - feljebb (1 scroll)
+  'osszegzes': -40,             // Összegzés: past the 100px section padding, the badge just under the top menu
 }
 
 // Sections below the first one skip rendering until they near the viewport (content-visibility in the CSS),
@@ -103,7 +106,7 @@ function announceTarget(id: string) {
   window.dispatchEvent(new CustomEvent(SCROLL_TARGET_EVENT, { detail: id }))
 }
 
-export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutProps) {
+export default function ScrollLayout({ sections, resetEventName, end }: ScrollLayoutProps) {
   const [activeSection, setActiveSection] = useState(sections[0]?.id || '')
   const [activeSubsection, setActiveSubsection] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -441,12 +444,13 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
         </nav>
 
         {/* Main Content Area */}
-        <main className={styles.mainContent}>
+        <main id="main-content" className={styles.mainContent}>
           {sections.map((section) => (
             <section key={section.id} id={section.id} className={styles.section}>
               {section.component}
             </section>
           ))}
+          {end}
         </main>
 
         {/* Desktop: next-section pill; phones and tablets: section bar + contents sheet */}

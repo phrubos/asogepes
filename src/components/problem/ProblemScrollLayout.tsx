@@ -6,6 +6,7 @@ import ProblemHeroSection from '@/components/problem/sections/ProblemHeroSection
 import CompactionSection from '@/components/problem/sections/CompactionSection'
 import CultivatorSection from '@/components/problem/sections/CultivatorSection'
 import PloughingSection from '@/components/problem/sections/PloughingSection'
+import PageEnd from '@/components/shared/PageEnd/PageEnd'
 
 export default function ProblemScrollLayout() {
     const sections: ScrollSection[] = useMemo(() => [
@@ -39,5 +40,20 @@ export default function ProblemScrollLayout() {
         },
     ], [])
 
-    return <ScrollLayout sections={sections} resetEventName="reset-problem-scroll" />
+    return (
+        <ScrollLayout
+            sections={sections}
+            resetEventName="reset-problem-scroll"
+            end={
+                <PageEnd
+                    next={{
+                        href: '/technologia',
+                        kicker: 'Tovább: a megoldás',
+                        title: 'Ásógépes technológia',
+                        text: 'Hogyan lazít és forgat egyszerre az ásógép, tömörítés nélkül, és melyik modell mire való.',
+                    }}
+                />
+            }
+        />
+    )
 }
