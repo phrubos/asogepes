@@ -26,8 +26,9 @@ const MAX_BADGE_GAP = 16
       await page.waitForTimeout(1500)
       // lazy sections report placeholder sizes; walk the page so every entrance animation has finished
       await page.addStyleTag({ content: '* { content-visibility: visible !important }' })
-      const H = await page.evaluate(() => document.documentElement.scrollHeight)
-      for (let y = 0; y < H; y += 300) { await page.evaluate(y => scrollTo(0, y), y); await page.waitForTimeout(120) }
+      // re-read the height on every step, in case the page still grows (fonts, images, late entrances)
+      const pageHeight = () => page.evaluate(() => document.documentElement.scrollHeight)
+      for (let y = 0; y < (await pageHeight()); y += 300) { await page.evaluate(y => scrollTo(0, y), y); await page.waitForTimeout(120) }
       await page.waitForTimeout(1500)
 
       const problems = await page.evaluate(({ CENTRE_OK, MAX_TITLE_GAP, MAX_BADGE_GAP }) => {

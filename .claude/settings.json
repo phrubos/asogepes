@@ -12,5 +12,9 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "asogepes-qa@asogepes-mods": true,
+    "asogepes-elotte-utana@asogepes-mods": true
   }
 }

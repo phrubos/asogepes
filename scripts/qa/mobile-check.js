@@ -22,8 +22,9 @@ const sizes = [[390, 844], [360, 740]]
       await page.goto(base + p, { waitUntil: 'load', timeout: 60000 })
       await page.waitForTimeout(1200)
       // walk the page so lazy sections render and in-view entrances finish
-      const height = await page.evaluate(() => document.documentElement.scrollHeight)
-      for (let y = 0; y < height; y += h / 2) { await page.evaluate(y => window.scrollTo(0, y), y); await page.waitForTimeout(200) }
+      // the page grows while content-visibility sections render: re-read its height on every step
+      const pageHeight = () => page.evaluate(() => document.documentElement.scrollHeight)
+      for (let y = 0; y < (await pageHeight()); y += h / 2) { await page.evaluate(y => window.scrollTo(0, y), y); await page.waitForTimeout(200) }
       await page.waitForTimeout(800)
       const r = await page.evaluate((dbg) => {
         const vis = e => { const s = getComputedStyle(e); return s.visibility !== 'hidden' && s.display !== 'none' && +s.opacity > 0.05 }
@@ -71,6 +72,8 @@ const sizes = [[390, 844], [360, 740]]
         const small = []
         for (const e of document.querySelectorAll('button, a[href], [role="button"], input, select')) {
           if (!vis(e)) continue
+          // not tappable right now (e.g. inside a closed, hidden panel): not a tap target
+          if (getComputedStyle(e).pointerEvents === 'none') continue
           const rc = e.getBoundingClientRect(); if (rc.width === 0 || rc.height === 0) continue
           const inline = e.tagName === 'A' && getComputedStyle(e).display === 'inline'
           const min = inline ? 24 : 44

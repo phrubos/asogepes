@@ -1,0 +1,8 @@
+{
+  "name": "asogepes-mods",
+  "owner": { "name": "phrubos" },
+  "plugins": [
+    { "name": "asogepes-qa", "source": "./asogepes-qa", "description": "QA status line, /ellenoriz, /mehet, layout-check reminder" },
+    { "name": "asogepes-elotte-utana", "source": "./asogepes-elotte-utana", "description": "/elotte-utana before/after measuring pane" }
+  ]
+}

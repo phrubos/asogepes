@@ -64,10 +64,11 @@ function findClipped() {
       await page.goto(base + p, { waitUntil: 'networkidle' })
       await page.waitForTimeout(1500)
       // walk the page so in-view animations reach their final state
-      const height = await page.evaluate(() => document.documentElement.scrollHeight)
-      for (let y = 0; y < height; y += h) { await page.evaluate(y => window.scrollTo(0, y), y); await page.waitForTimeout(350) }
+      // the page grows while content-visibility sections render: re-read its height on every step
+      const pageHeight = () => page.evaluate(() => document.documentElement.scrollHeight)
+      for (let y = 0; y < (await pageHeight()); y += h) { await page.evaluate(y => window.scrollTo(0, y), y); await page.waitForTimeout(350) }
       const found = new Set()
-      for (let y = 0; y < height; y += h) {
+      for (let y = 0; y < (await pageHeight()); y += h) {
         await page.evaluate(y => window.scrollTo(0, y), y); await page.waitForTimeout(150)
         for (const f of await page.evaluate(findClipped)) found.add(f)
       }

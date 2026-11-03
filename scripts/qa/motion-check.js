@@ -28,9 +28,10 @@ const base = process.argv[2] || 'http://localhost:3100'
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' })
     const page = await ctx.newPage()
     await page.goto(base + '/technologia', { waitUntil: 'load' })
-    const height = await page.evaluate(() => document.documentElement.scrollHeight)
+    // the page grows while content-visibility sections render: re-read its height on every step
+    const pageHeight = () => page.evaluate(() => document.documentElement.scrollHeight)
     let playing = 0
-    for (let y = 0; y < height; y += 800) {
+    for (let y = 0; y < (await pageHeight()); y += 800) {
       await page.evaluate(y => window.scrollTo(0, y), y); await page.waitForTimeout(400)
       playing = Math.max(playing, await page.evaluate(() => [...document.querySelectorAll('video')].filter(v => !v.paused).length))
     }
