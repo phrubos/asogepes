@@ -5,7 +5,6 @@ import { MapPin } from 'lucide-react'
 import Timeline from '../Timeline'
 import { szentkiralyTomato } from '@/lib/seasons'
 import SeasonOnly from '../season/SeasonOnly'
-import KeyFacts from '../season/KeyFacts'
 // Same page frame as the onion field's loose-layer block
 import styles from './SzentkirályTimelinePage.module.css'
 import own from './SzentkiralyTomatoPage.module.css'
@@ -53,7 +52,6 @@ export default function SzentkiralyTomatoPage() {
           }))}
           cards={season.cards.map((c) => ({ key: c.treatmentId, title: c.title, text: c.text }))}
           summary={season.summary}
-          aside={<KeyFacts facts={season.facts} />}
         />
       </motion.div>
     </div>

@@ -15,8 +15,8 @@ const sections: { id: string; component: JSX.Element; phoneHeight?: number }[] =
     { id: 'szentkiraly-timeline', component: <SzentkirályTimelinePage /> },
     { id: 'szentkiraly-temp', component: <SzentkirályTempPage /> },
     { id: 'szentkiraly-fejlodes', component: <SzentkiralyGrowthPage />, phoneHeight: 760 },
-    { id: 'szentkiraly-meresek', component: <FurtherMeasuresPage site="szentkiraly" />, phoneHeight: 720 },
     { id: 'szentkiraly-paradicsom', component: <SzentkiralyTomatoPage /> },
+    { id: 'szentkiraly-meresek', component: <FurtherMeasuresPage site="szentkiraly" />, phoneHeight: 790 },
     { id: 'szentkiraly-photos', component: <SzentkirályPhotosPage /> }
 ]
 

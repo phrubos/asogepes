@@ -367,6 +367,43 @@ export const lakitelekSeasons: { seasons: FieldSeason[] } = {
 
 export const LAKITELEK_YEARS = lakitelekSeasons.seasons.map((s) => s.year)
 
+/** Szentkirály tomato, the measurements beside the loose layer ("További mérések").
+ *  Source: Drive "VD-paradicsom-2026" (bulk density, humus, shoot) and "MikrobioMeter-2025-2026"
+ *  (soil life: 3 samples in April, 2 in August). K = kombinátor, A = ásógép. */
+export const szentkiralyTomatoSoil = {
+  bulkDensity: {
+    dates: [
+      { month: 'ÁPR.', third: 'közepe' },
+      { month: 'JÚN.', third: 'eleje' },
+      { month: 'JÚL.', third: 'vége' },
+    ] as MeasureDate[],
+    control: [1.35, 1.38, 1.53],
+    spade: [1.17, 1.35, 1.41],
+  },
+  /** m/m% */
+  humus: {
+    dates: [
+      { month: 'ÁPR.', third: 'közepe' },
+      { month: 'AUG.', third: 'közepe' },
+    ] as MeasureDate[],
+    control: [1.62, 1.7],
+    spade: [1.63, 1.89],
+  },
+  /** cm */
+  shoot: { date: { month: 'JÚL.', third: 'eleje' } as MeasureDate, control: 65, spade: 90 },
+  life: {
+    unit: 'µgC/g',
+    dates: [
+      { month: 'ÁPR.', third: 'eleje' },
+      { month: 'AUG.', third: 'közepe' },
+    ] as MeasureDate[],
+    control: [483.67, 555],
+    spade: [361.33, 601.5],
+    /** fungi : bacteria (bacteria = 1) */
+    fb: { control: [0.9, 1.09], spade: [0.65, 1.17] },
+  },
+}
+
 /* ── Szentkirály onion: growth (phenology), 2026 only ── */
 
 export type Range = [number, number]
@@ -429,7 +466,8 @@ export interface SoilLifeSite {
   samples: SoilLifeSample[]
   /** Growing season bands under the timeline */
   seasons: { year: number; crop: string }[]
-  parcels: { num: string; name: string; role: 'deep' | 'spade' | 'other'; values: number[] }[]
+  /** values: µgC/g; fb: fungi : bacteria ratio (bacteria = 1), both per sample date */
+  parcels: { num: string; name: string; role: 'deep' | 'spade' | 'other'; values: number[]; fb: number[] }[]
   /** One sentence under the title: what is measured and which way is better */
   lead: string
   note: string
@@ -449,13 +487,13 @@ export const lakitelekSoilLife: SoilLifeSite = {
     { year: 2026, crop: 'rozs' },
   ],
   parcels: [
-    { num: 'I.', name: 'Mélyásógép', role: 'deep', values: [282.67, 342, 298.67, 230] },
-    { num: 'II.', name: 'Lazítás + ásógép', role: 'spade', values: [237.67, 299.67, 401.67, 309] },
-    { num: 'III.', name: 'Ásógép', role: 'spade', values: [430.33, 411.67, 423.67, 315.33] },
-    { num: 'IV.', name: 'Lazítás + szántás + kombinátor', role: 'other', values: [353.67, 505, 374, 260.67] },
-    { num: 'V.', name: 'Szántás + kombinátor', role: 'other', values: [443, 466.33, 590, 251.67] },
-    { num: 'VI.', name: 'Lazítás + szántás + ásógép', role: 'spade', values: [486.33, 518, 381, 250.5] },
-    { num: 'VII.', name: 'Szántás + ásógép', role: 'spade', values: [462.33, 488.67, 507, 278] },
+    { num: 'I.', name: 'Mélyásógép', role: 'deep', values: [282.67, 342, 298.67, 230], fb: [0.52, 0.61, 0.55, 0.44] },
+    { num: 'II.', name: 'Lazítás + ásógép', role: 'spade', values: [237.67, 299.67, 401.67, 309], fb: [0.44, 0.52, 0.75, 0.59] },
+    { num: 'III.', name: 'Ásógép', role: 'spade', values: [430.33, 411.67, 423.67, 315.33], fb: [0.81, 0.74, 0.79, 0.58] },
+    { num: 'IV.', name: 'Lazítás + szántás + kombinátor', role: 'other', values: [353.67, 505, 374, 260.67], fb: [0.67, 0.94, 0.82, 0.49] },
+    { num: 'V.', name: 'Szántás + kombinátor', role: 'other', values: [443, 466.33, 590, 251.67], fb: [0.85, 0.88, 1.15, 0.48] },
+    { num: 'VI.', name: 'Lazítás + szántás + ásógép', role: 'spade', values: [486.33, 518, 381, 250.5], fb: [0.95, 0.97, 0.71, 0.47] },
+    { num: 'VII.', name: 'Szántás + ásógép', role: 'spade', values: [462.33, 488.67, 507, 278], fb: [0.91, 0.91, 0.98, 0.53] },
   ],
   lead: 'Az élő mikrobák mennyisége a talajban (élő mikrobiális szén), 4 mérés 2025 májusától 2026 júliusáig. Több = élénkebb talajélet.',
   note: 'Kísérő adat, nem bizonyíték: a művelés hatását a talajszerkezet mutatja.',
@@ -491,6 +529,22 @@ export const szentkiralyOnionSoil = {
   },
 }
 
+/** Szentkirály onion field parts, MicroBIOMETER. Source: Drive "MikrobioMeter-2025-2026" (3 samples in April, 2 in July; MK-2 not sampled in July) */
+export const szentkiralyOnionSoilLife = {
+  unit: 'µgC/g',
+  dates: [
+    { month: 'ÁPR.', third: 'közepe' },
+    { month: 'JÚL.', third: 'vége' },
+  ] as MeasureDate[],
+  fields: [
+    { id: 'MK-1', name: 'ásógép, erdő felől', role: 'spade', values: [569.67, 612.5], fb: [1.12, 1.22] },
+    { id: 'MK-2', name: 'ásógép, dűlő felől', role: 'spade', values: [642, null], fb: [1.28, null] },
+    { id: 'MK-3', name: 'kontroll, 0,3 ha', role: 'control', values: [593, 702], fb: [1.16, 1.36] },
+  ] as { id: string; name: string; role: 'spade' | 'control'; values: (number | null)[]; fb: (number | null)[] }[],
+  /** ± of the July MK-1 value (2 samples) */
+  julySpread: 253.85,
+}
+
 /** Lakitelek rye, 7 parcels. Source: Drive "Lakitelek ásógépes kísérlet 1-7-2026" */
 export const lakitelekSoil2026 = {
   /** g/cm³ per parcel, ÁPR. eleje → JÚL. vége (stubble) */
@@ -507,6 +561,22 @@ export const lakitelekSoil2026 = {
       { num: 'V.', role: 'other', values: [1.39, 1.46] },
       { num: 'VI.', role: 'spade', values: [1.39, 1.45] },
       { num: 'VII.', role: 'spade', values: [1.43, 1.44] },
+    ] as { num: string; role: 'deep' | 'spade' | 'other'; values: number[] }[],
+  },
+  /** m/m%, one composite sample per parcel (along the diagonal), ÁPR. eleje → JÚL. vége (stubble) */
+  humus: {
+    dates: [
+      { month: 'ÁPR.', third: 'eleje' },
+      { month: 'JÚL.', third: 'vége' },
+    ] as MeasureDate[],
+    parcels: [
+      { num: 'I.', role: 'deep', values: [0.564, 0.473] },
+      { num: 'II.', role: 'spade', values: [0.596, 0.677] },
+      { num: 'III.', role: 'spade', values: [0.663, 0.858] },
+      { num: 'IV.', role: 'other', values: [0.715, 0.935] },
+      { num: 'V.', role: 'other', values: [0.695, 0.697] },
+      { num: 'VI.', role: 'spade', values: [0.726, 0.846] },
+      { num: 'VII.', role: 'spade', values: [0.759, 0.747] },
     ] as { num: string; role: 'deep' | 'spade' | 'other'; values: number[] }[],
   },
   /** V/V%, 10 cm, the 7 parcel averages at each date */

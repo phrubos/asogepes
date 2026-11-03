@@ -235,3 +235,10 @@ Eldöntve 11.02.: a VD talajhő 10/20 cm; a lakiteleki mélyásógép 45 cm; a d
 - A Fejlődés, a Talajélet és az új „További mérések” (Szentkirály + Lakitelek) blokk a közös `experiment/story/Story` keretet használja: számozott fejezetek balra, egyszerre egy fókusz a diagramon, a magyarázat a jelölésen ül (`story/Callout`), az olvasó léptet (Vissza / Tovább). Telefonon csak a mostani fejezet látszik, alatta a diagram.
 - Az új adatok (`szentkiralyOnionSoil`, `lakitelekSoil2026` a `seasons.ts`-ben) a Drive táblázataiból, újraellenőrizve 11.02.
 - Javítás a canvashoz képest: Lakitelek víztelítettség – az áprilisi és a júliusi tartomány átfed, ezért a szöveg csak azt mondja, hogy májusban mind a 7 parcella nedvesebb volt.
+
+### 8.y A Drive maradék adatai (2026-11-03)
+
+- Átnézve a Drive mappa: csak a 4 xlsx tartalmaz adatot; a `Képek-VD-ip_paradicsom` mappában lévő `2026_07_02-Dorina-VD-paradicsom.pptx` fotós összevetés, a fotókhoz tartozik.
+- Szentkirály „További mérések (2026)”: **Tábla: Hagyma | Paradicsom** kapcsoló. A hagyma kapott egy 4. fejezetet (Talajélet MK-1/2/3, júliusban 2 minta, MK-2 nyáron nincs mérés). A paradicsom 4 fejezete: térfogattömeg mind a 3 mérésnél, humusz, hajtáshossz, talajélet (`szentkiralyTomatoSoil` a `seasons.ts`-ben). A blokk a Paradicsomtábla alszakasz után áll.
+- A Paradicsomtábla alszakaszból kikerült a KeyFacts doboz (és a komponens): csak a laza réteg és a kártyák maradtak, így egy képernyőre fér.
+- Lakitelek: „További mérések” 4. fejezet a humusz (parcellánként egy átlagminta, ezért „csak irány”); a Talajélet blokk új 6. fejezete a gomba : baktérium arány.

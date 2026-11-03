@@ -3,9 +3,16 @@
 import { useState, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
-import { lakitelekSoil2026 as laki, szentkiralyOnionSoil as szk } from '@/lib/seasons'
+import {
+  lakitelekSoil2026 as laki,
+  szentkiralyOnionSoil as szk,
+  szentkiralyOnionSoilLife as szkLife,
+  szentkiralyTomatoSoil as tom,
+  type MeasureDate,
+} from '@/lib/seasons'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import SeasonOnly from '../season/SeasonOnly'
+import switchStyles from '../season/SeasonSwitch.module.css'
 import Story, { type Chapter } from '../story/Story'
 import Callout from '../story/Callout'
 import { cap, named, namedIn, short } from '../story/dates'
@@ -29,6 +36,23 @@ const lakiWater = laki.water.dates.map((_, j) => {
 })
 const wetIdx = lakiWater.reduce((b, w, j) => (w.lo > lakiWater[b].lo ? j : b), 0)
 const wetAboveAll = lakiWater.every((w, j) => j === wetIdx || w.hi < lakiWater[wetIdx].lo)
+/* Lakitelek humus: change per parcel, m/m%; under 0,05 counts as no real change */
+const humDelta = laki.humus.parcels.map((p) => Math.round((p.values[1] - p.values[0]) * 1000) / 1000)
+const humUp = humDelta.filter((d) => d >= 0.05).length
+const humDown = humDelta.filter((d) => d <= -0.05).length
+const humSame = humDelta.length - humUp - humDown
+const humMax = humDelta.reduce((b, d, i) => (Math.abs(d) > Math.abs(humDelta[b]) ? i : b), 0)
+const humMaxP = laki.humus.parcels[humMax]
+const HUM_NAMES = ['mélyásógép', 'lazítás + ásógép', 'ásógép', 'lazítás + szántás + kombinátor', 'szántás + kombinátor', 'lazítás + szántás + ásógép', 'szántás + ásógép']
+
+/* Szentkirály onion soil life */
+const lifeCtl = szkLife.fields.find((f) => f.role === 'control') ?? szkLife.fields[0]
+const lifeSpring = szkLife.fields.map((f) => f.values[0]).filter((v): v is number => v !== null)
+const lifeJuly = szkLife.fields.filter((f) => f.values[1] !== null)
+const lifeNoJuly = szkLife.fields.filter((f) => f.values[1] === null)
+const lifeTopJuly = lifeJuly.reduce((b, f) => ((f.values[1] as number) > (b.values[1] as number) ? f : b))
+const lifeFb = szkLife.fields.flatMap((f) => f.fb).filter((v): v is number => v !== null)
+
 const rng = (a: number[]) => [Math.min(...a), Math.max(...a)]
 const [shootLo, shootHi] = rng(laki.rye.shoot)
 const [rootLo, rootHi] = rng(laki.rye.root)
@@ -47,6 +71,47 @@ const SZK_CHAPTERS: Chapter[] = [
     title: 'Humusz',
     body: `${cap(namedIn(szk.humus.dates[0]))} az ásógépes parcellán több volt (${hu(szk.humus.spade[0], 2)} és ${hu(szk.humus.control[0], 2)} m/m%). ${cap(namedIn(szk.humus.dates[1]))} mindkettő ${hu(szk.humus.spade[1], 2)}.`,
   },
+  {
+    title: 'Talajélet',
+    body:
+      `Élő mikrobiális szén (${szkLife.unit}) a tábla három részén. ${cap(namedIn(szkLife.dates[0]))} ${Math.round(Math.min(...lifeSpring))}–${Math.round(Math.max(...lifeSpring))}; ` +
+      `${namedIn(szkLife.dates[1])} a ${lifeTopJuly.role === 'control' ? 'kontroll' : 'egyik ásógépes'} rész volt a legmagasabb (${Math.round(lifeTopJuly.values[1] as number)}). ` +
+      `A júliusi értékek 2 minta átlagai, az ásógépes részen nagy szórással (±${Math.round(szkLife.julySpread)})` +
+      (lifeNoJuly.length ? `; ${lifeNoJuly.map((f) => f.id).join(', ')} részen nyáron nem mértek.` : '.') +
+      ` Gomba : baktérium arány ${hu(Math.min(...lifeFb), 2)}–${hu(Math.max(...lifeFb), 2)}. Kísérő adat, nem az ásógép melletti bizonyíték.`,
+  },
+]
+
+/* Szentkirály tomato */
+const tomLooser = tom.bulkDensity.spade.every((v, i) => v < tom.bulkDensity.control[i])
+const tomShootPct = Math.round((tom.shoot.spade / tom.shoot.control - 1) * 100)
+const tomFb = [...tom.life.fb.control, ...tom.life.fb.spade]
+const r = Math.round
+
+const TOMATO_CHAPTERS: Chapter[] = [
+  {
+    title: 'Térfogattömeg',
+    body:
+      `${cap(namedIn(tom.bulkDensity.dates[0]))} volt a legnagyobb a különbség: kombinátor ${hu(tom.bulkDensity.control[0], 2)}, ásógép ${hu(tom.bulkDensity.spade[0], 2)} g/cm³. ` +
+      `${cap(namedIn(tom.bulkDensity.dates[2]))} mindkettő tömörebb (${hu(tom.bulkDensity.control[2], 2)} és ${hu(tom.bulkDensity.spade[2], 2)})` +
+      (tomLooser ? `, de az ásógépes talaj mind a ${tom.bulkDensity.dates.length} mérésnél lazább volt.` : '.') +
+      ' Kisebb = lazább talaj.',
+  },
+  {
+    title: 'Humusz',
+    body: `${cap(namedIn(tom.humus.dates[0]))} egyforma volt (${hu(tom.humus.control[0], 2)} és ${hu(tom.humus.spade[0], 2)} m/m%). ${cap(namedIn(tom.humus.dates[1]))} az ásógépes parcellán ${hu(tom.humus.spade[1], 2)}, a kombinátorosan ${hu(tom.humus.control[1], 2)}.`,
+  },
+  {
+    title: 'Hajtáshossz',
+    body: `${cap(namedIn(tom.shoot.date))} az ásógépes parcellán ${tom.shoot.spade} cm, a kombinátoroson ${tom.shoot.control} cm volt a paradicsom hajtása: ${tomShootPct} %-kal hosszabb.`,
+  },
+  {
+    title: 'Talajélet',
+    body:
+      `Élő mikrobiális szén (${tom.life.unit}). ${cap(namedIn(tom.life.dates[0]))} a kombinátoros parcellán volt több (${r(tom.life.control[0])} és ${r(tom.life.spade[0])}), ` +
+      `${namedIn(tom.life.dates[1])} az ásógépesen (${r(tom.life.spade[1])} és ${r(tom.life.control[1])}); az augusztusi értékek 2 minta átlagai. ` +
+      `Gomba : baktérium arány ${hu(Math.min(...tomFb), 2)}–${hu(Math.max(...tomFb), 2)}. Kísérő adat.`,
+  },
 ]
 
 const LAKI_CHAPTERS: Chapter[] = [
@@ -64,14 +129,34 @@ const LAKI_CHAPTERS: Chapter[] = [
     title: 'Hajtás és gyökér',
     body: `${cap(namedIn(laki.rye.date))} a rozs hajtása ${shootLo}–${shootHi} cm, a gyökere ${rootLo}–${rootHi} cm volt a ${laki.rye.shoot.length} parcellán.`,
   },
+  {
+    title: 'Humusz',
+    body:
+      `Parcellánként egy, az átló mentén vett átlagminta, ezért ez csak irány. ${cap(named(laki.humus.dates[0]))} → ${named(laki.humus.dates[1])} (tarló): ` +
+      `${humUp} parcellán nőtt, ${humDown} parcellán csökkent, ${humSame} parcellán alig változott (±0,05 m/m%-on belül). ` +
+      `A legnagyobb változás a ${humMaxP.num} parcellán (${HUM_NAMES[humMax]}): ${hu(humMaxP.values[0], 3)} → ${hu(humMaxP.values[1], 3)} m/m%.`,
+  },
 ]
 
-/** "További mérések": the 2026 soil measurements beside the main ones, told in three steps */
+/** "További mérések": the 2026 measurements beside the main ones, told in steps; Szentkirály has a field switch (onion / tomato) */
+const FIELDS = [
+  { id: 'onion', label: 'Hagyma' },
+  { id: 'tomato', label: 'Paradicsom' },
+] as const
+type Field = (typeof FIELDS)[number]['id']
+
 export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'lakitelek' }) {
   const phone = useMediaQuery('(max-width: 1024px)') === true
   const [step, setStep] = useState(1)
-  const isSzk = site === 'szentkiraly'
-  const chapters = isSzk ? SZK_CHAPTERS : LAKI_CHAPTERS
+  const [field, setField] = useState<Field>('onion')
+  const isSzk = site === 'szentkiraly' && field === 'onion'
+  const isTom = site === 'szentkiraly' && field === 'tomato'
+  const isLaki = site === 'lakitelek'
+  const chapters = isLaki ? LAKI_CHAPTERS : isTom ? TOMATO_CHAPTERS : SZK_CHAPTERS
+  const pickField = (f: Field) => {
+    setField(f)
+    setStep(1)
+  }
 
   const W = phone ? 430 : 680
   const FS = phone ? 17 : 15
@@ -99,34 +184,113 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
   let title = ''
   let unit = ''
 
+  /** Kontroll and ásógép over the dates: lines, end labels, a bracket on the last gap and a callout */
+  const pairChart = (
+    d: { dates: MeasureDate[]; control: number[]; spade: number[] },
+    domain: [number, number],
+    ticks: number[],
+    digits: number,
+    callout: { main: string; sub: string },
+  ) => {
+    const y = lin(domain[0], domain[1], yBot, yTop + FS)
+    const last = d.dates.length - 1
+    const xs = d.dates.map((_, i) => lin(0, last, X0 + 30, W - (phone ? 110 : 150))(i))
+    const lines = [
+      { k: 'K', v: d.control, other: d.spade, cls: own.control },
+      { k: 'Á', v: d.spade, other: d.control, cls: own.spadeLine },
+    ]
+    const bx = W - 18
+    const yc = y(d.control[last])
+    const ys = y(d.spade[last])
+    chart = (
+      <>
+        {grid(ticks, y, ticks.some((t) => !Number.isInteger(t)) ? 1 : 0)}
+        {lines.map((l, li) => {
+          // The higher end label goes above its point, the lower one below
+          const up = l.v[last] === l.other[last] ? li === 0 : l.v[last] > l.other[last]
+          return (
+            <g key={l.k} className={l.cls}>
+              <polyline points={l.v.map((v, i) => `${xs[i]},${y(v)}`).join(' ')} pathLength={1} className={own.line} style={{ animationDelay: `${li * 200}ms` }} />
+              {l.v.map((v, i) => <circle key={i} cx={xs[i]} cy={y(v)} r={FS * 0.4} className={own.mark} />)}
+              <text x={xs[last] + FS} y={y(l.v[last]) + (up ? -FS * 0.2 : FS * 0.9)} fontSize={FS} className={own.endLabel}>
+                {l.k} {hu(l.v[last], digits)}
+              </text>
+            </g>
+          )
+        })}
+        <path d={`M${bx - 8},${yc} H${bx} V${ys} H${bx - 8}`} className={own.bracket} />
+        {d.dates.map((dt, i) => xTick(xs[i], when(dt), i === last))}
+      </>
+    )
+    callouts = <Callout {...box} x={bx} y={(yc + ys) / 2} side="left" dy={FS * 2.2 - (yc + ys) / 2} main={callout.main} sub={callout.sub} delay={1100} />
+  }
+
   if (isSzk && step === 1) {
     const d = szk.bulkDensity
     title = 'Térfogattömeg'
     unit = 'g/cm³ · kisebb = lazább talaj'
-    const y = lin(1.2, 1.5, yBot, yTop + FS)
-    const xs = d.dates.map((_, i) => lin(0, 2, X0 + 30, W - (phone ? 110 : 150))(i))
-    const lines = [
-      { k: 'K', v: d.control, cls: own.control },
-      { k: 'Á', v: d.spade, cls: own.spadeLine },
+    pairChart(d, [1.2, 1.5], [1.2, 1.3, 1.4, 1.5], 2, {
+      main: `${hu(d.control[2], 2)} / ${hu(d.spade[2], 2)}`,
+      sub: `${when(d.dates[2]).toLowerCase()}: a kontroll tömörebb`,
+    })
+  }
+
+  if (isTom && step === 1) {
+    const d = tom.bulkDensity
+    title = 'Térfogattömeg'
+    unit = 'g/cm³ · kisebb = lazább talaj · K = kombinátor'
+    pairChart(d, [1.1, 1.6], [1.1, 1.2, 1.3, 1.4, 1.5, 1.6], 2, {
+      main: `${hu(d.control[2], 2)} / ${hu(d.spade[2], 2)}`,
+      sub: `${when(d.dates[2]).toLowerCase()}: a kombinátoros tömörebb`,
+    })
+  }
+
+  if (isTom && step === 2) {
+    const d = tom.humus
+    title = 'Humusz'
+    unit = `m/m% · ${when(d.dates[0])} → ${when(d.dates[1])}`
+    pairChart(d, [1.5, 2.0], [1.5, 1.6, 1.7, 1.8, 1.9, 2.0], 2, {
+      main: `${hu(d.control[1], 2)} / ${hu(d.spade[1], 2)}`,
+      sub: `${when(d.dates[1]).toLowerCase()}: az ásógépesen több`,
+    })
+  }
+
+  if (isTom && step === 3) {
+    const d = tom.shoot
+    title = 'Hajtáshossz'
+    unit = `${when(d.date)} · cm`
+    const y = lin(0, 100, yBot, yTop + FS)
+    // Phones: columns kept left so the callout fits beside the gold one
+    const cw = phone ? 70 : 100
+    const cols = [
+      { name: 'KOMBINÁTOR', v: d.control, x: X0 + (phone ? 40 : 90), cls: own.control },
+      { name: 'ÁSÓGÉP', v: d.spade, x: X0 + (phone ? 150 : 290), cls: own.spadeLine },
     ]
-    const bx = W - 18
     chart = (
       <>
-        {grid([1.2, 1.3, 1.4, 1.5], y, 1)}
-        {lines.map((l, li) => (
-          <g key={l.k} className={l.cls}>
-            <polyline points={l.v.map((v, i) => `${xs[i]},${y(v)}`).join(' ')} pathLength={1} className={own.line} style={{ animationDelay: `${li * 200}ms` }} />
-            {l.v.map((v, i) => <circle key={i} cx={xs[i]} cy={y(v)} r={FS * 0.4} className={own.mark} />)}
-            <text x={xs[2] + FS} y={y(l.v[2]) + (li ? FS * 0.9 : -FS * 0.2)} fontSize={FS} className={own.endLabel}>
-              {l.k} {hu(l.v[2], 2)}
+        {grid([0, 25, 50, 75, 100], y, 0)}
+        {cols.map((c, i) => (
+          <g key={c.name} className={c.cls}>
+            <rect x={c.x} y={y(c.v)} width={cw} height={y(0) - y(c.v)} rx={6} className={own.colSolid} style={{ animationDelay: `${i * 200}ms` }} />
+            <text x={c.x + cw / 2} y={y(c.v) - 10} fontSize={FS} textAnchor="middle" className={`${own.endLabel} ${own.fadeIn}`} style={{ animationDelay: `${500 + i * 200}ms` }}>
+              {c.v} cm
             </text>
+            {xTick(c.x + cw / 2, c.name, i === 1)}
           </g>
         ))}
-        <path d={`M${bx - 8},${y(d.control[2])} H${bx} V${y(d.spade[2])} H${bx - 8}`} className={own.bracket} />
-        {d.dates.map((dt, i) => xTick(xs[i], when(dt), i === 2))}
       </>
     )
-    callouts = <Callout {...box} x={bx} y={(y(d.control[2]) + y(d.spade[2])) / 2} side="left" dy={FS * 2.2 - (y(d.control[2]) + y(d.spade[2])) / 2} main={`${hu(d.control[2], 2)} / ${hu(d.spade[2], 2)}`} sub={`${when(d.dates[2]).toLowerCase()}: a kontroll tömörebb`} delay={1100} />
+    callouts = <Callout {...box} x={cols[1].x + cw} y={y(d.spade * 0.6)} side="right" main={`+${tomShootPct} %`} sub="hosszabb hajtás" delay={900} />
+  }
+
+  if (isTom && step === 4) {
+    const d = tom.life
+    title = 'Talajélet'
+    unit = `${d.unit} · ${when(d.dates[0])} → ${when(d.dates[1])}`
+    pairChart(d, [300, 650], [300, 400, 500, 600], 0, {
+      main: `${r(d.control[1])} / ${r(d.spade[1])}`,
+      sub: `${when(d.dates[1]).toLowerCase()}: 2 minta`,
+    })
   }
 
   if (isSzk && step === 2) {
@@ -190,49 +354,124 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
     callouts = <Callout {...box} x={xb} y={y(d.spade[1])} side="right" dy={-FS * 3} main={`${hu(d.control[1], 2)} = ${hu(d.spade[1], 2)}`} sub={`${when(d.dates[1]).toLowerCase()}: egyforma`} delay={900} />
   }
 
-  if (!isSzk && step === 1) {
-    const d = laki.bulkDensity
-    title = 'Térfogattömeg parcellánként'
-    unit = `g/cm³ · ${when(d.dates[0])} ○ → ● ${when(d.dates[1])} (tarló)`
-    const x = lin(1.36, 1.52, X0 + 10, W - (phone ? 24 : 150))
-    const rowH = (H - FS * 7.6) / d.parcels.length
+  type Parcel = { num: string; role: 'deep' | 'spade' | 'other'; values: number[] }
+  /** One row per parcel, first date (ring) → second date (dot) */
+  const dumbbell = (parcels: Parcel[], domain: [number, number], ticks: number[], strongAt: (i: number) => boolean, digits = 2) => {
+    const x = lin(domain[0], domain[1], X0 + 10, W - (phone ? 24 : 150))
+    const rowH = (H - FS * 7.6) / parcels.length
     const ry = (i: number) => FS * 2.2 + rowH * (i + 0.5)
-    const big = lakiDelta.findIndex((v) => Math.abs(v) === lakiMaxDelta && v > 0)
-    const mark = big >= 0 ? big : 0
-    chart = (
+    const node = (
       <>
-        {[1.4, 1.45, 1.5].map((v) => (
+        {ticks.map((v) => (
           <g key={v}>
-            <line x1={x(v)} x2={x(v)} y1={FS * 1.6} y2={ry(d.parcels.length - 1) + rowH / 2} className={own.grid} />
+            <line x1={x(v)} x2={x(v)} y1={FS * 1.6} y2={ry(parcels.length - 1) + rowH / 2} className={own.grid} />
             <text x={x(v)} y={FS * 1.1} fontSize={FS - 1} textAnchor="middle" className={own.axis}>{hu(v, 2)}</text>
           </g>
         ))}
-        {d.parcels.map((p, i) => {
-          const cls = p.role === 'other' ? own.control : own.spadeLine
-          const strong = Math.abs(lakiDelta[i]) === lakiMaxDelta
+        {parcels.map((p, i) => (
+          <g key={p.num} className={`${p.role === 'other' ? own.control : own.spadeLine} ${strongAt(i) ? '' : own.soft}`}>
+            <text x={X0 - 14} y={ry(i) + 5} fontSize={FS} textAnchor="end" className={own.rowName}>{p.num.replace('.', '')}</text>
+            <line x1={x(p.values[0])} x2={x(p.values[1])} y1={ry(i)} y2={ry(i)} pathLength={1} className={own.line} style={{ animationDelay: `${150 + i * 90}ms` }} />
+            <circle cx={x(p.values[0])} cy={ry(i)} r={FS * 0.38} className={own.hollow} />
+            <circle cx={x(p.values[1])} cy={ry(i)} r={FS * 0.42} className={own.mark} />
+            {!phone && (
+              <text x={W - 130} y={ry(i) + 5} fontSize={FS - 1} className={own.rowValue}>
+                {hu(p.values[0], digits)} → {hu(p.values[1], digits)}
+              </text>
+            )}
+          </g>
+        ))}
+      </>
+    )
+    return { x, ry, node }
+  }
+
+  if (isSzk && step === 4) {
+    const d = szkLife
+    title = 'Talajélet a tábla részein'
+    unit = `${d.unit} · ${when(d.dates[0])} → ${when(d.dates[1])}`
+    const y = lin(500, 750, yBot, yTop + FS)
+    const xa = X0 + (phone ? 60 : 110)
+    const xb = W - (phone ? 150 : 250)
+    chart = (
+      <>
+        {grid([500, 550, 600, 650, 700, 750], y, 0)}
+        {d.fields.map((f, li) => {
+          const [a, b] = f.values
+          const endV = (b ?? a) as number
           return (
-            <g key={p.num} className={`${cls} ${strong ? '' : own.soft}`}>
-              <text x={X0 - 14} y={ry(i) + 5} fontSize={FS} textAnchor="end" className={own.rowName}>{p.num.replace('.', '')}</text>
-              <line x1={x(p.values[0])} x2={x(p.values[1])} y1={ry(i)} y2={ry(i)} pathLength={1} className={own.line} style={{ animationDelay: `${150 + i * 90}ms` }} />
-              <circle cx={x(p.values[0])} cy={ry(i)} r={FS * 0.38} className={own.hollow} />
-              <circle cx={x(p.values[1])} cy={ry(i)} r={FS * 0.42} className={own.mark} />
-              {!phone && (
-                <text x={W - 130} y={ry(i) + 5} fontSize={FS - 1} className={own.rowValue}>
-                  {hu(p.values[0], 2)} → {hu(p.values[1], 2)}
-                </text>
+            <g key={f.id} className={f.role === 'control' ? own.control : own.spadeLine}>
+              {a !== null && b !== null && (
+                <line x1={xa} y1={y(a)} x2={xb} y2={y(b)} pathLength={1} className={own.line} style={{ animationDelay: `${li * 200}ms` }} />
               )}
+              {a !== null && <circle cx={xa} cy={y(a)} r={FS * 0.4} className={own.mark} />}
+              {b !== null && <circle cx={xb} cy={y(b)} r={FS * 0.4} className={own.mark} />}
+              <text
+                x={b !== null ? xb + FS : xa}
+                y={b !== null ? y(endV) + 5 : y(endV) - FS}
+                fontSize={FS}
+                textAnchor={b !== null ? 'start' : 'middle'}
+                className={own.endLabel}
+              >
+                {f.id} {Math.round(endV)}
+              </text>
             </g>
           )
         })}
+        {xTick(xa, when(d.dates[0]))}
+        {xTick(xb, when(d.dates[1]), true)}
       </>
     )
     callouts = (
       <Callout
         {...box}
-        x={(x(d.parcels[mark].values[0]) + x(d.parcels[mark].values[1])) / 2}
-        y={ry(mark)}
+        x={xb}
+        y={y(lifeCtl.values[1] as number)}
+        side="left"
+        dy={y(735) - y(lifeCtl.values[1] as number)}
+        main={`${lifeCtl.id}: kontroll`}
+        sub={`${when(d.dates[1]).toLowerCase()}: a legmagasabb`}
+        delay={900}
+      />
+    )
+  }
+
+  if (isLaki && step === 4) {
+    const d = laki.humus
+    title = 'Humusz parcellánként'
+    unit = `m/m% · ${when(d.dates[0])} ○ → ● ${when(d.dates[1])} (tarló)`
+    const g = dumbbell(d.parcels, [0.42, 0.98], [0.5, 0.7, 0.9], (i) => i === humMax, 3)
+    const p = d.parcels[humMax]
+    chart = g.node
+    callouts = (
+      <Callout
+        {...box}
+        x={(g.x(p.values[0]) + g.x(p.values[1])) / 2}
+        y={g.ry(humMax)}
         side="right"
-        dy={H - FS * 2.2 - ry(mark)}
+        dy={H - FS * 2.2 - g.ry(humMax)}
+        main={`${humDelta[humMax] > 0 ? '+' : ''}${hu(humDelta[humMax], 2)} m/m%`}
+        sub={`${humUp} nőtt · ${humDown} csökkent · ${humSame} alig változott`}
+        delay={900}
+      />
+    )
+  }
+
+  if (isLaki && step === 1) {
+    const d = laki.bulkDensity
+    title = 'Térfogattömeg parcellánként'
+    unit = `g/cm³ · ${when(d.dates[0])} ○ → ● ${when(d.dates[1])} (tarló)`
+    const g = dumbbell(d.parcels, [1.36, 1.52], [1.4, 1.45, 1.5], (i) => Math.abs(lakiDelta[i]) === lakiMaxDelta)
+    const big = lakiDelta.findIndex((v) => Math.abs(v) === lakiMaxDelta && v > 0)
+    const mark = big >= 0 ? big : 0
+    chart = g.node
+    callouts = (
+      <Callout
+        {...box}
+        x={(g.x(d.parcels[mark].values[0]) + g.x(d.parcels[mark].values[1])) / 2}
+        y={g.ry(mark)}
+        side="right"
+        dy={H - FS * 2.2 - g.ry(mark)}
         main={`legfeljebb ${hu(lakiMaxDelta / 100, 2)}`}
         sub={`${lakiUp} nőtt · ${lakiDown} csökkent · ${lakiSame} nem változott`}
         delay={900}
@@ -240,7 +479,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
     )
   }
 
-  if (!isSzk && step === 2) {
+  if (isLaki && step === 2) {
     const d = laki.water
     title = 'Víztelítettség'
     unit = '10 cm · a parcellák átlagai · V/V%'
@@ -283,7 +522,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
     )
   }
 
-  if (!isSzk && step === 3) {
+  if (isLaki && step === 3) {
     const d = laki.rye
     title = `Rozs, ${when(d.date)}`
     unit = 'cm · parcellánként'
@@ -321,7 +560,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
         <span className={own.chartTitle}>{title}</span>
         <span className={own.chartUnit}>{unit}</span>
       </div>
-      <svg key={`${site}-${step}`} viewBox={`0 0 ${W} ${H}`} className={own.chart} role="img" aria-label={`${title}. ${chapters[step - 1].body}`}>
+      <svg key={`${site}-${field}-${step}`} viewBox={`0 0 ${W} ${H}`} className={own.chart} role="img" aria-label={`${title}. ${chapters[step - 1].body}`}>
         {chart}
         {callouts}
       </svg>
@@ -338,15 +577,41 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
       >
         <div className={styles.headerBadge}>
           <MapPin size={12} />
-          <span>{isSzk ? 'Szentkirály' : 'Lakitelek'}</span>
+          <span>{isLaki ? 'Lakitelek' : 'Szentkirály'}</span>
         </div>
-        <h3 className={styles.headerTitle}>{isSzk ? 'További mérések: a talaj a hagyma alatt' : 'További mérések: talaj és rozs'}</h3>
+        <h3 className={styles.headerTitle}>
+          {isLaki ? 'További mérések: talaj és rozs' : isTom ? 'További mérések: a paradicsomtábla' : 'További mérések: a talaj a hagyma alatt'}
+        </h3>
         <div className={styles.seasonRow}>
-          <SeasonOnly years={[2026]} />
+          <div className={own.metaRow}>
+            <SeasonOnly years={[2026]} />
+            {!isLaki && (
+              <div className={`${switchStyles.switch} ${switchStyles.small}`} role="group" aria-label="Tábla">
+                <span className={switchStyles.label} aria-hidden="true">Tábla</span>
+                {FIELDS.map((f) => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    className={`${switchStyles.option} ${field === f.id ? switchStyles.active : ''}`}
+                    aria-pressed={field === f.id}
+                    onClick={() => pickField(f.id)}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </motion.div>
 
-      <Story label={isSzk ? 'További mérések, Szentkirály' : 'További mérések, Lakitelek'} chapters={chapters} step={step} onStep={setStep} stage={stage} />
+      <Story
+        label={isLaki ? 'További mérések, Lakitelek' : isTom ? 'További mérések, Szentkirály, paradicsom' : 'További mérések, Szentkirály, hagyma'}
+        chapters={chapters}
+        step={step}
+        onStep={setStep}
+        stage={stage}
+      />
     </div>
   )
 }

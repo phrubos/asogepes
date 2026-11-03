@@ -13,6 +13,7 @@ import styles from './SzentkirályTimelinePage.module.css'
 import own from './LakitelekSoilLifePage.module.css'
 
 const r0 = (v: number) => String(Math.round(v))
+const hu2 = (v: number) => v.toFixed(2).replace('.', ',')
 const P = site.parcels
 const n = site.samples.length
 const col = (j: number) => P.map((p) => p.values[j])
@@ -33,6 +34,10 @@ const deep = deepIndex >= 0 ? P[deepIndex] : null
 const deepLow = deep ? site.samples.filter((_, j) => P.filter((p) => p.values[j] < deep.values[j]).length <= 1).length : 0
 /** The parcel shown in the first chapter: the spade-only one */
 const sample = Math.max(0, P.findIndex((p) => p.name === 'Ásógép'))
+/* Fungi : bacteria ratio */
+const fbAvgs = site.samples.map((_, j) => P.reduce((a, p) => a + p.fb[j], 0) / P.length)
+const fbFell = P.filter((p) => p.fb[n - 1] < p.fb[n - 2]).length
+const fbEarly = fbAvgs.slice(0, n - 1)
 const lowerDate = (j: number) => `${site.samples[j].date.month} ${site.samples[j].date.third ?? ''}`.trim().toLowerCase()
 
 const CHAPTERS = [
@@ -59,6 +64,12 @@ const CHAPTERS = [
       (deep && deepLow === n ? ` A mélyásógépes ${deep.num} parcella mind a ${n} mérésnél az alsó kettő között.` : ''),
   },
   {
+    title: 'Gomba és baktérium',
+    body:
+      `Az élő szén egy része gomba, a többi baktérium eredetű; az arány a gomba része, ha a baktériumé 1. A ${P.length} parcella átlaga ${hu2(Math.min(...fbEarly))}–${hu2(Math.max(...fbEarly))} volt, júliusban, a tarlón ${hu2(fbAvgs[n - 1])}: ` +
+      `${fbFell === P.length ? `mind a ${P.length}` : fbFell} parcellán kisebb, mint áprilisban.`,
+  },
+  {
     title: 'Kövesd egy parcellát',
     body: `Válassz parcellát a diagram alatt, és végigkövetheted a ${n} mérésen.`,
   },
@@ -70,6 +81,8 @@ export default function LakitelekSoilLifePage() {
   const [step, setStep] = useState(1)
   const [sel, setSel] = useState<number | null>(null)
   const last = CHAPTERS.length
+  const FB = last - 1
+  const fbMode = step === FB
   const onStep = (s: number) => {
     setSel(null)
     setStep(s)
@@ -92,10 +105,12 @@ export default function LakitelekSoilLifePage() {
   const t0 = Date.parse('2025-03-01')
   const t1 = Date.parse('2026-11-01')
   const X = (iso: string) => X0 + ((Date.parse(iso) - t0) / (t1 - t0)) * (X1 - X0)
-  const Y = (v: number) => yBot - ((v - 150) / (650 - 150)) * PH
+  const Yc = (v: number) => yBot - ((v - 150) / (650 - 150)) * PH
+  const Yf = (v: number) => yBot - ((v - 0.3) / (1.3 - 0.3)) * PH
+  const Y = Yc
   const xs = site.samples.map((s) => X(s.iso))
   const jitter = phone ? 6 : 9
-  const at = (i: number, j: number) => ({ x: xs[j] + (i - 3) * jitter, y: Y(P[i].values[j]) })
+  const at = (i: number, j: number) => ({ x: xs[j] + (i - 3) * jitter, y: fbMode ? Yf(P[i].fb[j]) : Yc(P[i].values[j]) })
   const bracketX = (j: number) => xs[j] + jitter * 3 + 12
 
   const traced = step === last ? sel : step === 5 && deep ? deepIndex : null
@@ -106,6 +121,7 @@ export default function LakitelekSoilLifePage() {
       case 3: return 0.2
       case 4: return j >= n - 2 ? 1 : 0.12
       case 5: return i === deepIndex || top[j] === i ? 1 : 0.16
+      case FB: return j >= n - 2 ? 1 : 0.4
       default: return sel === null || sel === i ? 1 : 0.18
     }
   }
@@ -122,6 +138,7 @@ export default function LakitelekSoilLifePage() {
     <Callout key="4" {...box} x={(d0.x + d1.x) / 2} y={(d0.y + d1.y) / 2} side="left" dy={-FS * (phone ? 4 : 6)} main={`${fell} / ${P.length} parcella`} sub="kevesebb júliusban, a rozs utáni tarlón" delay={700} />,
     deep ? <Callout key="5" {...box} x={at(deepIndex, 1).x} y={at(deepIndex, 1).y} side="right" dy={-FS * 6} main={`${deep.num} mélyásógép`} sub={`mind a ${n} mérésnél az alsó kettő között`} delay={600} /> : null,
     null,
+    null,
   ][step - 1]
 
   const bands = site.seasons.map((s, i) => {
@@ -135,7 +152,7 @@ export default function LakitelekSoilLifePage() {
       viewBox={`0 0 ${W} ${H}`}
       className={own.chart}
       role="img"
-      aria-label={`Élő mikrobiális szén Lakiteleken, ${P.length} parcella, ${n} mérésnap. Átlagok: ${avgs.map(r0).join(', ')} ${site.unit}.`}
+      aria-label={`Élő mikrobiális szén Lakiteleken, ${P.length} parcella, ${n} mérésnap. Átlagok: ${avgs.map(r0).join(', ')} ${site.unit}; gomba : baktérium arány: ${fbAvgs.map(hu2).join(', ')}.`}
     >
       {bands.map((b, i) => (
         <g key={b.year}>
@@ -144,13 +161,16 @@ export default function LakitelekSoilLifePage() {
           <text x={b.x + 10} y={FS * 2.5} fontSize={FS - 1} className={own.bandCrop}>{b.crop}</text>
         </g>
       ))}
-      {[200, 300, 400, 500, 600].map((v) => (
-        <g key={v}>
-          <line x1={X0 - 10} x2={W - 4} y1={Y(v)} y2={Y(v)} className={own.grid} />
-          <text x={X0 - 16} y={Y(v) + 4} fontSize={FS - 1} textAnchor="end" className={own.axis}>{v}</text>
-        </g>
-      ))}
-      <text x={4} y={Y(650) + 4} fontSize={FS - 1} className={own.axisUnit}>{site.unit}</text>
+      {(fbMode ? [0.4, 0.6, 0.8, 1, 1.2] : [200, 300, 400, 500, 600]).map((v) => {
+        const y = fbMode ? Yf(v) : Yc(v)
+        return (
+          <g key={v}>
+            <line x1={X0 - 10} x2={W - 4} y1={y} y2={y} className={own.grid} />
+            <text x={X0 - 16} y={y + 4} fontSize={FS - 1} textAnchor="end" className={own.axis}>{fbMode ? v.toFixed(1).replace('.', ',') : v}</text>
+          </g>
+        )
+      })}
+      <text x={4} y={Y(650) + 4} fontSize={FS - 1} className={own.axisUnit}>{fbMode ? 'gomba : baktérium' : site.unit}</text>
 
       {/* Lowest–highest parcel at each date */}
       <g className={storyStyles.focus} style={{ opacity: step === 2 ? 1 : 0 }} aria-hidden="true">
@@ -173,8 +193,28 @@ export default function LakitelekSoilLifePage() {
         points={avgs.map((a, j) => `${xs[j].toFixed(1)},${Y(a).toFixed(1)}`).join(' ')}
         pathLength={1}
         className={`${own.avgLine} ${step >= 3 ? own.drawn : ''}`}
-        style={{ opacity: step === 3 ? 1 : step > 3 ? 0.3 : 0 }}
+        style={{ opacity: step === 3 ? 1 : step > 3 && !fbMode ? 0.3 : 0 }}
       />
+
+      {/* Fungi : bacteria, the mean of the parcels at each date */}
+      {fbMode && (
+        <g key="fb" aria-hidden="true">
+          <polyline points={fbAvgs.map((a, j) => `${xs[j].toFixed(1)},${Yf(a).toFixed(1)}`).join(' ')} pathLength={1} className={`${own.avgLine} ${own.drawn}`} />
+          {fbAvgs.map((a, j) => (
+            <text
+              key={j}
+              x={j === n - 1 ? xs[j] + jitter * 3 + FS : xs[j]}
+              y={j === n - 1 ? Yf(a) + 5 : Yf(a) - 14}
+              fontSize={FS - 1}
+              textAnchor={j === n - 1 ? 'start' : 'middle'}
+              className={`${own.label} ${own.labelIn}`}
+              style={{ animationDelay: `${200 + j * 120}ms` }}
+            >
+              {hu2(a)}
+            </text>
+          ))}
+        </g>
+      )}
       <g className={storyStyles.focus} style={{ opacity: step === 3 ? 1 : 0 }} aria-hidden="true">
         {avgs.map((a, j) => (
           <g key={j}>
