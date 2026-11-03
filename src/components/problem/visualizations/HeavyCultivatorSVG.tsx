@@ -1,7 +1,8 @@
 'use client'
 
-import { useMemo } from 'react'
-import { motion } from 'framer-motion'
+import { useMemo, useRef } from 'react'
+import { useInView } from 'framer-motion'
+import hl from './SoilHighlight.module.css'
 
 const seededRandom = (seed: number) => {
     const x = Math.sin(seed) * 10000
@@ -41,6 +42,9 @@ interface ClodProps {
 }
 
 const HeavyCultivatorSVG = () => {
+    // Draws the edge of the tine tracks once, when half of the profile is on screen
+    const svgRef = useRef<SVGSVGElement>(null)
+    const inView = useInView(svgRef, { once: true, amount: 0.5 })
     // High Contrast Palette for Dark Website
     const darkPalette = [
         '#3E2723', // Deep Brown (retained for strongest contrast)
@@ -221,7 +225,7 @@ const HeavyCultivatorSVG = () => {
     }, [])
 
     return (
-        <svg viewBox="0 0 300 150" style={{ width: '100%', height: 'auto', borderRadius: '8px', overflow: 'hidden' }} preserveAspectRatio="xMidYMid slice">
+        <svg ref={svgRef} viewBox="0 0 300 150" style={{ width: '100%', height: 'auto', borderRadius: '8px', overflow: 'hidden' }} preserveAspectRatio="xMidYMid slice">
             {/* Flat Sky */}
             <rect x="0" y="0" width="300" height="45" fill={skyColor} />
 
@@ -252,6 +256,13 @@ const HeavyCultivatorSVG = () => {
             })}
 
 
+
+            {/* Edge of the loosened tine tracks: inside loose, the walls around them stay compact */}
+            <g className={`${hl.walls} ${inView ? hl.drawn : ''}`} aria-hidden="true">
+                {[50, 150, 250].map((c) => (
+                    <path key={c} pathLength={1} d={`M${c - 25},47 L${c - 25},106 Q${c - 25},124 ${c},124 Q${c + 25},124 ${c + 25},106 L${c + 25},47`} />
+                ))}
+            </g>
 
             {/* Depth Scale */}
             <g style={{ pointerEvents: 'none' }}>

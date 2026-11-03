@@ -221,18 +221,24 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
       threshold: [0, 0.1, 0.25]
     }
 
-    const observerCallback: IntersectionObserverCallback = (entries) => {
+    // The active block is the one crossing the bottom edge of the focus band (50% of the viewport),
+    // a subsection before its section. Comparing intersectionRatio of the changed entries failed for
+    // sections taller than a few screens (their ratio never reaches a threshold, so a neighbour kept winning).
+    const subsectionIds = sections.flatMap(s => s.subsections?.map(sub => sub.id) ?? [])
+    const pickActive = () => {
+      const line = window.innerHeight * 0.5
+      const contains = (id: string) => {
+        const r = document.getElementById(id)?.getBoundingClientRect()
+        return !!r && r.top <= line && r.bottom > line
+      }
+      return subsectionIds.find(contains) ?? sections.map(s => s.id).find(contains)
+    }
+
+    const observerCallback: IntersectionObserverCallback = () => {
       if (isProgrammaticScroll.current) return
 
-      // Filter intersecting entries and find the one with highest ratio
-      const intersecting = entries.filter(e => e.isIntersecting)
-      if (intersecting.length === 0) return
-
-      const bestEntry = intersecting.reduce((best, current) =>
-        current.intersectionRatio > best.intersectionRatio ? current : best
-      )
-
-      const sectionId = bestEntry.target.id
+      const sectionId = pickActive()
+      if (!sectionId) return
 
       // Check if it's a main section
       const mainSection = sections.find(s => s.id === sectionId)

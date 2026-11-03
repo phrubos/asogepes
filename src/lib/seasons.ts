@@ -339,7 +339,7 @@ export const lakitelekSeasons: { seasons: FieldSeason[] } = {
         irrigation: 'kb. 120 mm csapadék + kb. 60 mm öntözés',
         period: 'Április – Július',
         measurements: '3 alkalom, parcellánként 5 pont',
-        base: 'Művelés 2025 októberében, ugyanazon a 7 parcellán, mint 2025-ben',
+        base: 'A 2025-ös 7 parcellát 2025 októberében újra megműveltük',
       },
       title: 'A laza talajréteg mélysége, 3 mérés',
       dates: [

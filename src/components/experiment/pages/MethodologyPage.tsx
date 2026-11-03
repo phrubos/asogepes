@@ -6,6 +6,7 @@ import { Gauge } from 'lucide-react'
 import Image from 'next/image'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from './MethodologyPage.module.css'
+import PenetrometerExplainer from '../PenetrometerExplainer'
 
 export default function MethodologyPage() {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
@@ -97,6 +98,10 @@ export default function MethodologyPage() {
           src={lightboxImage || ''}
           alt="Nagyított kép"
         />
+      </div>
+
+      <div className={styles.explainer}>
+        <PenetrometerExplainer />
       </div>
     </div>
   )

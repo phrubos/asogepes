@@ -66,11 +66,11 @@ const CHAPTERS = [
   {
     title: 'Gomba és baktérium',
     body:
-      `Az élő szén egy része gomba, a többi baktérium eredetű; az arány a gomba része, ha a baktériumé 1. A ${P.length} parcella átlaga ${hu2(Math.min(...fbEarly))}–${hu2(Math.max(...fbEarly))} volt, júliusban, a tarlón ${hu2(fbAvgs[n - 1])}: ` +
-      `${fbFell === P.length ? `mind a ${P.length}` : fbFell} parcellán kisebb, mint áprilisban.`,
+      `Ennyi gombaszén jut 1 egység baktériumszénre. A ${P.length} parcella átlaga ${hu2(Math.min(...fbEarly))}–${hu2(Math.max(...fbEarly))} volt, ` +
+      `júliusban, a tarlón ${hu2(fbAvgs[n - 1])}: ${fbFell === P.length ? `mind a ${P.length}` : fbFell} parcellán kevesebb, mint áprilisban.`,
   },
   {
-    title: 'Kövesd egy parcellát',
+    title: 'Kövess egy parcellát',
     body: `Válassz parcellát a diagram alatt, és végigkövetheted a ${n} mérésen.`,
   },
 ]

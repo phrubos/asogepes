@@ -518,3 +518,19 @@
     margin-bottom: 0;
   }
 }
+
+/* Penetrometer explainer row under the two columns (PenetrometerExplainer) */
+.explainer {
+  max-width: 1400px;
+  width: 100%;
+  margin: var(--space-2xl) auto 0;
+  padding: 0 var(--space-xl);
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .explainer {
+    margin-top: 24px;
+    padding: 0;
+  }
+}

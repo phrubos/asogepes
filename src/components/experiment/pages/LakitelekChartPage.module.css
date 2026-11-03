@@ -1055,3 +1055,25 @@
     padding-right: 8px;
   }
 }
+
+/* Season switch: the results table fades in instead of swapping in one frame */
+.seasonFade {
+  /* pass-through flex column, so .resultsPanel (flex: 1) still fills the side panel */
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  animation: seasonFadeIn 220ms ease-out;
+}
+
+@keyframes seasonFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seasonFade {
+    animation: none;
+  }
+}

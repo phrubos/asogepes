@@ -116,7 +116,7 @@ export default function LakitelekInfoPage() {
               <p className={styles.treatmentsDescription}>
                 Lakiteleken 7 különböző művelési kombinációt vizsgáltunk egymás mellett, azonos körülmények között. A vizsgálati eredmények feltárják, hogy melyik művelési technológia őrzi meg legjobban a talaj optimálisan laza szerkezetét.
               </p>
-              {info.base && <p className={styles.treatmentsDescription}>{info.base}; {inYear(season.year)} a kultúra {info.crop.toLowerCase()}.</p>}
+              {info.base && <p className={styles.treatmentsDescription}>{info.base}; {inYear(season.year)} {info.crop.toLowerCase()} a kultúra.</p>}
             </div>
           </div>
         </div>

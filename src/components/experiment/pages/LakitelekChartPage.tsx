@@ -237,7 +237,10 @@ export default function LakitelekChartPage() {
             </motion.div>
 
             <div className={styles.sidePanel}>
-              <ResultsContent />
+              {/* Keyed wrapper: the values fade in when the season changes, not on every re-render */}
+              <div key={season.year} className={styles.seasonFade}>
+                <ResultsContent />
+              </div>
               {/* Conclusion hidden in embedded view per user request */}
             </div>
           </div>
@@ -326,7 +329,9 @@ export default function LakitelekChartPage() {
                     exit={{ x: 420, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   >
-                    <ResultsContent />
+                    <div key={season.year} className={styles.seasonFade}>
+                      <ResultsContent />
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

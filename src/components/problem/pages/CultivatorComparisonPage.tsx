@@ -5,6 +5,7 @@ import { Check, X } from 'lucide-react'
 import HeavyCultivatorSVG from '../visualizations/HeavyCultivatorSVG'
 import SpadingMachineSVG from '../visualizations/SpadingMachineSVG'
 import styles from '../ProblemNew.module.css'
+import hl from '../visualizations/SoilHighlight.module.css'
 
 
 
@@ -69,6 +70,10 @@ export default function CultivatorComparisonPage() {
 
                     <div className={styles.soilProfileVisual} style={{ cursor: 'default', display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem' }}>
                         <HeavyCultivatorSVG />
+                        <p className={hl.caption}>
+                            <span className={hl.swatch} aria-hidden="true" />
+                            A sárga vonalon belül, a kapák nyomában laza a talaj; körülötte tömör marad.
+                        </p>
                         <ul className={styles.comparisonList} style={{ padding: '0 0.5rem', marginTop: '0.25rem' }}>
                             {comparisonData.cultivator.items.map((item, i) => (
                                 <li key={i}><X size={14} className={styles.iconNegative} strokeWidth={3} /> {item}</li>
