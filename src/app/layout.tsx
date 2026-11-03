@@ -10,8 +10,16 @@ import MotionProvider from '@/components/providers/MotionProvider'
 const inter = Inter({ subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--font-inter' })
 const fraunces = Fraunces({ subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--font-fraunces' })
 
+// Absolute base for og:image URLs: NEXT_PUBLIC_SITE_URL overrides (e.g. a custom domain), dev serves locally
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://neumann-agroskill.vercel.app')
+
 export const metadata: Metadata = {
-  title: 'Ásógépes Talajművelés | Tudományos Kutatás 2025',
+  metadataBase: new URL(siteUrl),
+  openGraph: { type: 'website', locale: 'hu_HU', siteName: 'Ásógépes Talajművelés' },
+  twitter: { card: 'summary_large_image' },
+  title: 'Ásógépes Talajművelés | Tudományos Kutatás 2025 óta',
   description: 'Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról, öntözött kertészeti kultúrákban. Neumann János Egyetem × Agroskill Kft. együttműködés.',
 }
 

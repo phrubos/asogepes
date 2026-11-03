@@ -64,10 +64,14 @@ const sectionOffsets: Record<string, number> = {
 // Sections below the first one skip rendering until they near the viewport (content-visibility in the CSS),
 // so their height is only an estimate until scrolled past and a target can move during a smooth scroll.
 // Re-aim once the scroll stops, until the target sits at its offset; a touch or wheel by the user cancels.
+// A far target (more than ~1.5 screens away) is not smooth-scrolled the whole way: the page jumps to
+// just short of it and only the last stretch animates, so a click doesn't run through every section between.
 function scrollToElement(element: HTMLElement, offset: number) {
-  const behavior: ScrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
-  const aim = () => window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY - offset, behavior })
-  aim()
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  // 'instant', not 'auto': <html> has scroll-behavior: smooth, which 'auto' would follow
+  const behavior: ScrollBehavior = reduced ? 'instant' : 'smooth'
+  const targetTop = () => element.getBoundingClientRect().top + window.scrollY - offset
+  const aim = () => window.scrollTo({ top: targetTop(), behavior })
 
   let cancelled = false
   const cancel = () => { cancelled = true }
@@ -78,24 +82,55 @@ function scrollToElement(element: HTMLElement, offset: number) {
     window.removeEventListener('touchstart', cancel)
   }
 
-  let lastY = -1
-  let stillFrames = 0
-  let corrections = 0
-  let frames = 0
-  const tick = () => {
-    if (cancelled || ++frames > 600) return cleanup()
-    if (window.scrollY === lastY) stillFrames++
-    else { stillFrames = 0; lastY = window.scrollY }
-    if (stillFrames >= 6) {
-      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
-      if (Math.abs(element.getBoundingClientRect().top - offset) <= 2 || atBottom || corrections >= 4) return cleanup()
-      corrections++
-      stillFrames = 0
-      aim()
+  // After the (last) smooth scroll: re-aim whenever the scroll stops short of the target
+  const settle = () => {
+    let lastY = -1
+    let stillFrames = 0
+    let corrections = 0
+    let frames = 0
+    const tick = () => {
+      if (cancelled || ++frames > 600) return cleanup()
+      if (window.scrollY === lastY) stillFrames++
+      else { stillFrames = 0; lastY = window.scrollY }
+      if (stillFrames >= 6) {
+        const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
+        if (Math.abs(element.getBoundingClientRect().top - offset) <= 2 || atBottom || corrections >= 4) return cleanup()
+        corrections++
+        stillFrames = 0
+        aim()
+      }
+      requestAnimationFrame(tick)
     }
     requestAnimationFrame(tick)
   }
-  requestAnimationFrame(tick)
+
+  const distance = targetTop() - window.scrollY
+  if (reduced || Math.abs(distance) <= window.innerHeight * 1.5) {
+    aim()
+    return settle()
+  }
+
+  // Each jump renders the sections it lands on, which can move the target by thousands of px:
+  // jump again until the target stays put, then animate the last stretch. content-visibility renders
+  // the newly visible sections a frame or few after the jump, so "put" means 4 frames without moving.
+  const lead = Math.sign(distance) * window.innerHeight * 0.4
+  let jumps = 0
+  const jump = () => {
+    window.scrollTo({ top: targetTop() - lead, behavior: 'instant' })
+    let lastTop = targetTop()
+    let still = 0
+    const wait = () => {
+      if (cancelled) return cleanup()
+      const top = targetTop()
+      if (Math.abs(top - lastTop) > 2) { lastTop = top; still = 0 } else still++
+      if (still < 4) return requestAnimationFrame(wait)
+      if (Math.abs(top - lead - window.scrollY) > 4 && ++jumps < 8) return jump()
+      aim()
+      settle()
+    }
+    requestAnimationFrame(wait)
+  }
+  jump()
 }
 
 /** Fired (synchronously) before jumping to a section, so a target that is hidden, e.g. a

@@ -61,7 +61,7 @@
       "computedHash": "276fb0aadb002ab930cc2a56de89e16995a2e3e70b33587652bf0a5fb123148d"
     },
     "ui-fix-from-screenshot": {
-      "source": "local",
+      "source": "./local",
       "sourceType": "local",
       "skillPath": ".agents/skills/ui-fix-from-screenshot/SKILL.md",
       "computedHash": "ac5dc34a79d2388ae1d1feace35f4526219d5d930811e84aa3197628cbee09b6"
@@ -77,6 +77,12 @@
       "sourceType": "github",
       "skillPath": "skills/verification-before-completion/SKILL.md",
       "computedHash": "b529822bdac4b197b180fe12225cff86b930b65910435103c10622df7f041651"
+    },
+    "video-director": {
+      "source": "win4r/video-director",
+      "sourceType": "github",
+      "skillPath": "video-director/SKILL.md",
+      "computedHash": "445747588a62190791e681b2e4e89017a7fe8a3071c061f89d8b5d3ba842af0a"
     },
     "writing-plans": {
       "source": "obra/superpowers",

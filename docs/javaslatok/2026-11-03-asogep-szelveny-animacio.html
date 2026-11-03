@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ásógép-szelvény animáció</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one review column; the two profiles side by side on wide screens, stacked on phones. Project palette (earth tones), project fonts. */
+:root {
+  --bg: #f6f2ea;
+  --surface: #fffdf8;
+  --ink: #2b2118;
+  --muted: #6b5d4f;
+  --line: #ddd3c4;
+  --accent: #6b7a2f;
+  --gold: #b8892b;
+  --display: "Fraunces", Georgia, serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1d1813; --surface: #262019; --ink: #efe7da; --muted: #b3a593; --line: #3d342a; --accent: #a7b85e; --gold: #d9ad55; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1d1813; --surface: #262019; --ink: #efe7da; --muted: #b3a593; --line: #3d342a; --accent: #a7b85e; --gold: #d9ad55; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--body); }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 40px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 40px; }
+header { display: grid; gap: 10px; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 650 clamp(28px, 4vw, 40px)/1.15 var(--display); margin: 0; text-wrap: balance; }
+h2 { font: 600 22px/1.25 var(--display); margin: 0; text-wrap: balance; }
+.lede { margin: 0; max-width: 68ch; color: var(--muted); }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 760px) { .pair { grid-template-columns: 1fr; } }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; min-width: 0; align-content: start; }
+figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-weight: 600; }
+figcaption span { font-weight: 400; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+svg.profile { width: 100%; height: auto; display: block; border-radius: 8px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button { font: 500 14px var(--body); color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; min-height: 40px; cursor: pointer; }
+button:hover { border-color: var(--muted); }
+button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.scrub { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; font-size: 13px; color: var(--muted); }
+.scrub input { width: 100%; accent-color: var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--muted); }
+.legend b { color: var(--ink); font-weight: 600; }
+section { display: grid; gap: 14px; }
+.beats { display: grid; border-top: 1px solid var(--line); }
+.beat { display: grid; grid-template-columns: 90px 1fr; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.beat time { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; }
+.beat p { margin: 0; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+@media (max-width: 760px) { .cols { grid-template-columns: 1fr; } }
+ul, ol { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+li { max-width: 64ch; }
+code { font: 13px ui-monospace, "Cascadia Code", Consolas, monospace; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 1px 4px; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.src { font-size: 13px; color: var(--muted); }
+.tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+.tag.ok { color: var(--accent); border-color: var(--accent); }
+.tag.est { color: var(--gold); border-color: var(--gold); }
+.note { border-left: 3px solid var(--gold); padding: 4px 0 4px 14px; margin: 0; max-width: 72ch; }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Javaslat · 2. változat · nincs beépítve</div>
+    <h1>Ásógép-szelvény animáció</h1>
+    <p class="lede">A gépet most valós léptékben rajzoltam az Imants 38SX adatai alapján, úgy, ahogy a szelvény mellett, a talaj szintjén állva látszana. A nagy ásórotor alsó része halad át a képen, a kapák ívben vágnak a talajba, mögötte pedig a meghajtott, rugós fogú elmunkáló henger nyomja vissza és simítja el a felszínt. Az utolsó képkocka továbbra is pontosan a mostani kép.</p>
+  </header>
+
+  <div class="pair">
+    <figure>
+      <figcaption>Jelenleg <span>statikus</span></figcaption>
+      <svg class="profile" id="staticSvg" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ásógépezett talajszelvény, jelenlegi statikus változat"></svg>
+      <div class="legend"><span>Ez marad a végső kép, és ezt látja, aki csökkentett mozgást kér.</span></div>
+    </figure>
+    <figure>
+      <figcaption>Javaslat <span id="clockLabel">0,00 s</span></figcaption>
+      <svg class="profile" id="animSvg" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ásógépezett talajszelvény, animált javaslat"></svg>
+      <div class="controls">
+        <button class="primary" id="play" type="button">Lejátszás újra</button>
+        <button type="button" data-speed="1" aria-pressed="true">Fél valós sebesség</button>
+        <button type="button" data-speed="0.4" aria-pressed="false">Lassítva</button>
+        <button type="button" data-speed="2" aria-pressed="false">Valós 4,5 km/h</button>
+        <button type="button" id="reduced" aria-pressed="false">Csökkentett mozgás</button>
+      </div>
+      <label class="scrub" for="scrub"><input id="scrub" type="range" min="0" max="5" step="0.01" value="0"><span>léptetés</span></label>
+      <div class="legend"><span><b>Ásórotor</b> 7 kapasor × 4 kapa, a legközelebbi sor kiemelve</span><span><b>Elmunkáló henger</b> 406 mm, rugós fogak</span></div>
+    </figure>
+  </div>
+
+  <section>
+    <h2>Mi történik, időben</h2>
+    <div class="beats" id="beats"></div>
+  </section>
+
+  <section>
+    <h2>Mit vettem át a forrásokból</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Részlet</th><th>Az animációban</th><th>Forrás</th></tr></thead>
+      <tbody>
+        <tr><td>Forgásirány</td><td>A rotor a kerekekkel egy irányba forog, előre tolja magát: alul a kapák hátrafelé mozognak, és hátra-fel dobják a talajt. <span class="tag ok">forrás</span></td><td class="src">38SX prospektus: „Doordat de spitas zich ‘vooruit’ duwt is er weinig trekkracht nodig”</td></tr>
+        <tr><td>Kapák száma, elrendezés</td><td>7 kapasor, soronként 4 kapa (2 jobbos, 2 balos), összesen 28. Oldalról csavarvonalban eltolva látszanak: a legközelebbi sor teljes, a többi halványan. <span class="tag ok">forrás</span></td><td class="src">38SX prospektus; Agroskill 38WX oldal</td></tr>
+        <tr><td>Kapa alakja</td><td>Hátrafelé hajlított, edzett lemez, a végén behajlított ásólap. <span class="tag ok">forrás</span></td><td class="src">Landbouwmechanisatie 2006 (Imants 45-ös széria, ugyanaz a kapacsalád)</td></tr>
+        <tr><td>Munkamélység</td><td>A kapák hegye a „30 cm” jelig ér. <span class="tag ok">forrás</span></td><td class="src">38SX300H: 15–30 cm (prospektus); Agroskill: 15–35 cm</td></tr>
+        <tr><td>Elmunkáló henger</td><td>Meghajtott, sima palástú henger hajlított, rugalmas fogakkal, 406 mm átmérő. A rotor mögött a gépben van, a gép súlyát nagyrészt ez hordja. A fogak 0–6 cm mélyen dolgoznak, és kicsit gyorsabban forognak a haladásnál. <span class="tag ok">forrás</span></td><td class="src">Agroskill 38WX; 38SX prospektus; FWI („turning a little faster than forward speed”)</td></tr>
+        <tr><td>Eredmény</td><td>A fellazított réteg megemelkedik, majd a henger visszanyomja: „alul kemény, felül puha magágy”. Talpréteget nem hagy. <span class="tag ok">forrás</span></td><td class="src">Agroskill 38WX, laza talajok oldal</td></tr>
+        <tr><td>Sebesség</td><td>Valósan 4,5 km/h (900 TLT-fordulat). Alapból fél sebességgel fut, hogy követhető legyen. <span class="tag ok">forrás</span></td><td class="src">38SX prospektus; Agroskill 38WX</td></tr>
+        <tr><td>Rotor sugara</td><td>Kb. 40 cm a kapahegyig, így a tengely 10 cm-rel a talaj fölött van. <span class="tag est">becslés</span></td><td class="src">Egyik forrásban sincs benne</td></tr>
+        <tr><td>Rotor fordulatszáma</td><td>A kapahegy kerületi sebessége a haladás 1,5-szöröse (ettől „tolja előre” magát). <span class="tag est">becslés</span></td><td class="src">Egyik forrásban sincs benne</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <div class="cols">
+    <section>
+      <h2>Motion-elvek, amik maradtak</h2>
+      <ul>
+        <li><b>Egyszer fut le,</b> amikor a kép először látszik. A végén semmi nem mozog, az adat marad.</li>
+        <li><b>Egyetlen óra:</b> a gép helyéből számol minden. Egy rög akkor törik, amikor a kapahegy köre a saját mélységében eléri, ezért a mélyebb rögök később törnek.</li>
+        <li><b>Nincs teleportálás.</b> A tömör rögök szétesnek, a morzsák a rotor alól hátra-fel dobva érkeznek a helyükre.</li>
+        <li><b>A gép kívülről érkezik és ki is megy.</b> A mélységskála végig helyben marad.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Amit tisztázni kell</h2>
+      <ul>
+        <li><b>Rotorsugár és fordulatszám:</b> ez a két szám becslés. Az Agroskilltől vagy az Imants kezelési kézikönyvéből pontosítható.</li>
+        <li><b>A skála ellentmond magának:</b> a komponens megjegyzése szerint 100 egység = 30 cm (alja y = 145), a kirajzolt „30 cm” címke viszont y ≈ 115-nél van. Az animáció a látható címkét követi. A beépítés előtt érdemes egyeztetni, melyik a helyes.</li>
+        <li><b>Altalajlazító kések (38WX):</b> a kapasorok között, legfeljebb 20 cm-rel a kapák alatt dolgoznak. Ha az ábra a 38WX-et mutatja, ezek is felkerülhetnek.</li>
+        <li><b>Az égbolt kékje</b> (<code>#90CAF9</code>) eltér a földszínes palettától. Ez a jelenlegi kép része, nem változtattam rajta.</li>
+      </ul>
+    </section>
+  </div>
+
+  <section>
+    <h2>Források</h2>
+    <ul class="src">
+      <li><a href="https://www.agroskill.hu/_files/ugd/189bc6_8bae334ffc9641f19c3d8202667d99e3.pdf" target="_blank" rel="noopener">Imants 38SX prospektus (Agroskill)</a></li>
+      <li><a href="https://www.agroskill.hu/imants-38wx" target="_blank" rel="noopener">Agroskill: Imants 38WX</a> · <a href="https://www.agroskill.hu/imants-asogepek-laza-talaj" target="_blank" rel="noopener">Imants ásógépek laza talajokra</a></li>
+      <li><a href="https://www.imants.com/nl/machines/item/4/38-serie" target="_blank" rel="noopener">Imants: 38-serie</a></li>
+      <li><a href="https://maken.wikiwijs.nl/bestanden/15904/Roterend%20spitten%20in%20de%20klei.pdf" target="_blank" rel="noopener">Landbouwmechanisatie, 2006: Roterend spitten in de klei</a></li>
+      <li><a href="https://www.fwi.co.uk/machinery/cultivation-drilling/cultivators-drills-cultivators/imants-expands-spading-cultivator-range-with-6m-model" target="_blank" rel="noopener">Farmers Weekly: Imants 6 m spading cultivator</a></li>
+    </ul>
+  </section>
+</div>
+
+<script>
+(() => {
+  // ---- Scale: the visible "30 cm" mark sits at y = 115, the surface at y = 45 -> 1 cm = 70/30 units ----
+  const CM = 70 / 30;
+  const SURF = 45;
+  const T = {
+    hold: 0.5,                    // s: untouched soil first
+    speed: 4.5 / 3.6 * 100 * CM / 2, // units/s: half of 4.5 km/h
+    tipR: 40 * CM,                // rotor radius to the spade tip (estimate)
+    depth: 30 * CM,               // working depth: tips reach the 30 cm mark
+    tipRatio: 1.5,                // spade tip speed / forward speed (estimate; >1 = pushes itself forward)
+    flanges: 7, perFlange: 4,
+    rollerR: 40.6 / 2 * CM,       // 406 mm roller, tine tips
+    drumR: 14 * CM,               // smooth drum (estimate)
+    rollerDepth: 6 * CM,          // tines work 0-6 cm
+    rollerRatio: 1.1,             // roller turns a little faster than travel
+    clearance: 10,                // units between spade tips and roller tines
+    breakDur: 0.26, flight: 0.5, jitter: 0.06, landBehind: 10,
+    swell: 3.5, arc: 10, settleDur: 0.32,
+  };
+  const R = T.tipR, hubY = SURF + T.depth - R;
+  const rollerY = SURF + T.rollerDepth - T.rollerR;
+  const gap = R + T.rollerR + T.clearance;
+  const startX = -R - 15;
+  const endX = 300 + gap + T.rollerR + 5;
+
+  // ---- Clod generation: identical to SpadingMachineSVG.tsx ----
+  const seededRandom = (seed) => { const x = Math.sin(seed) * 10000; return Math.round((x - Math.floor(x)) * 10000) / 10000; };
+  const clodPath = (cx, cy, r, seed) => {
+    const pts = []; const n = 8 + Math.floor(seededRandom(seed) * 4); const step = (Math.PI * 2) / n;
+    for (let i = 0; i < n; i++) { const a = i * step; const rv = r * (0.8 + seededRandom(seed + i) * 0.3); pts.push(`${(cx + Math.cos(a) * rv).toFixed(2)},${(cy + Math.sin(a) * rv).toFixed(2)}`); }
+    return `M${pts.join(' L')} Z`;
+  };
+  const dark = ['#3E2723', '#5D4037', '#795548'];
+  const light = ['#BCAAA4', '#D7CCC8', '#F5F5F5'];
+  function buildClods() {
+    const items = []; let seed = 7777; const width = 300, surf = 45, maxDepth = 145, tS = 85, tE = 112;
+    for (let y = surf; y < tE; y += 7) {
+      for (let x = -10; x < width + 10; x += 7) {
+        const jx = x + (seededRandom(seed++) - 0.5) * 6; const jy = y + (seededRandom(seed++) - 0.5) * 6;
+        let dp = 0, dm = 0.5;
+        if (jy >= tS && jy < tE) { const p = (jy - tS) / (tE - tS); dp = p * 0.6; dm = 0.5 + p * 0.5; }
+        const isDark = seededRandom(seed++) < dp; let v, r;
+        if (isDark) { const rr = seededRandom(seed++); if (rr > 0.7) { v = 1; r = (5 + seededRandom(seed++) * 1.5) * dm; } else { v = 2; r = (4 + seededRandom(seed++) * 1) * dm; } }
+        else { const rr = seededRandom(seed++); if (y < surf + 5) { v = 2; r = 3 + seededRandom(seed++) * 1.2; } else if (rr > 0.8) { v = 0; r = 4.5 + seededRandom(seed++) * 1; } else if (rr > 0.4) { v = 1; r = 3.5 + seededRandom(seed++) * 1; } else { v = 2; r = 2.5 + seededRandom(seed++) * 1.5; } }
+        items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: (isDark ? dark : light)[v], worked: true });
+      }
+    }
+    for (let y = tE; y < maxDepth; y += 10) {
+      for (let x = -10; x < width + 10; x += 10) {
+        const jx = x + (seededRandom(seed++) - 0.5) * 8; const jy = y + (seededRandom(seed++) - 0.5) * 8;
+        const lp = Math.max(0, 0.3 - (jy - tE) * 0.015);
+        if (seededRandom(seed++) < lp) { const v = seededRandom(seed++) > 0.5 ? 0 : 1; const r = 3 + seededRandom(seed++) * 1.5; items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: light[v], worked: false }); }
+        const rr = seededRandom(seed++); let v, r;
+        if (rr > 0.6) { v = 0; r = 9 + seededRandom(seed++) * 2; } else if (rr > 0.3) { v = 1; r = 7 + seededRandom(seed++) * 1.5; } else { v = 2; r = 5 + seededRandom(seed++) * 1.5; }
+        items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: dark[v], worked: false });
+      }
+    }
+    return items.sort((a, b) => a.cy - b.cy);
+  }
+  function buildCompact() {
+    const items = []; let seed = 4242;
+    for (let y = 50; y < 112; y += 10) for (let x = -10; x < 310; x += 10) {
+      const jx = x + (seededRandom(seed++) - 0.5) * 8; const jy = y + (seededRandom(seed++) - 0.5) * 6;
+      const rr = seededRandom(seed++); const v = rr > 0.6 ? 0 : rr > 0.3 ? 1 : 2; const r = [9, 7.5, 6][v] + seededRandom(seed++) * 1.5;
+      items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: dark[v] });
+    }
+    return items;
+  }
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+  const clods = buildClods();
+  function drawBase(svg) {
+    el('rect', { x: 0, y: 0, width: 300, height: 45, fill: '#90CAF9' }, svg);
+    el('rect', { x: 0, y: 45, width: 300, height: 105, fill: '#A1887F' }, svg);
+    const g = el('g', {}, svg);
+    return clods.map((c) => el('path', { d: c.path, fill: c.fill, stroke: 'rgba(0,0,0,0.3)', 'stroke-width': 0.8 }, g));
+  }
+  function drawScale(svg) {
+    const g = el('g', { 'pointer-events': 'none' }, svg);
+    el('line', { x1: 292, y1: 45, x2: 292, y2: 115, stroke: 'rgba(255,255,255,0.4)', 'stroke-width': 1, 'stroke-dasharray': '4,3' }, g);
+    el('rect', { x: 268, y: 32, width: 28, height: 14, rx: 3, fill: 'rgba(0,0,0,0.3)' }, g);
+    el('text', { x: 282, y: 43, fill: '#fff', 'font-size': 9, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': 'Inter, sans-serif' }, g).textContent = '0 cm';
+    el('rect', { x: 250, y: 108, width: 46, height: 14, rx: 3, fill: 'rgba(0,0,0,0.4)' }, g);
+    el('text', { x: 273, y: 119, fill: '#fff', 'font-size': 9, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': 'Inter, sans-serif' }, g).textContent = '30 cm';
+  }
+
+  const staticSvg = document.getElementById('staticSvg');
+  drawBase(staticSvg); drawScale(staticSvg);
+
+  const svg = document.getElementById('animSvg');
+  const nodes = drawBase(svg);
+  const compact = buildCompact();
+  const cg = el('g', {}, svg);
+  const cNodes = compact.map((c) => el('path', { d: c.path, fill: c.fill, stroke: 'rgba(0,0,0,0.3)', 'stroke-width': 0.8 }, cg));
+
+  // ---- Machine (side view, true scale). Local origin = rotor axis. ----
+  const steel = '#33291f', plate = '#d8d0c3';
+  const machine = el('g', {}, svg);
+  // side plate joining rotor axis and roller axle, and the hitch going forward and up
+  el('path', { d: `M14,-10 L-${gap},${rollerY - hubY - 10} L-${gap},${rollerY - hubY + 10} L14,10 Z`, fill: 'rgba(51,41,31,0.16)', stroke: steel, 'stroke-width': 1.2 }, machine);
+  el('line', { x1: 10, y1: -8, x2: 70, y2: -60, stroke: steel, 'stroke-width': 2 }, machine);
+  // rotor: one spade = backward-curved arm (trailing the rotation) + bent spade blade at the tip
+  const spade = (g, strong) => {
+    const tip = R;
+    el('path', { d: `M0,7 Q${R * 0.32},${R * 0.5} ${R * 0.13},${tip - 9}`, fill: 'none', stroke: steel, 'stroke-width': strong ? 2.4 : 1.4, 'stroke-linecap': 'round', opacity: strong ? 1 : 0.28 }, g);
+    if (strong) el('path', { d: `M${R * 0.13 - 4},${tip - 11} L${R * 0.13 + 6},${tip - 8} Q${R * 0.13 + 3},${tip + 1} ${R * 0.13 - 6},${tip - 1} Z`, fill: plate, stroke: steel, 'stroke-width': 1 }, g);
+  };
+  const rotor = el('g', {}, machine);
+  const N = T.flanges * T.perFlange, step = 360 / N;
+  // far flanges first (faint), nearest flange on top (solid)
+  for (let f = T.flanges - 1; f >= 0; f--) for (let k = 0; k < T.perFlange; k++) {
+    const a = k * 90 + f * step;
+    spade(el('g', { transform: `rotate(${a})` }, rotor), f === 0);
+  }
+  el('circle', { cx: 0, cy: 0, r: 9, fill: plate, stroke: steel, 'stroke-width': 1.8 }, rotor);
+  el('circle', { cx: 0, cy: 0, r: 3, fill: steel }, rotor);
+  // roller: smooth drum + curved spring tines
+  const roller = el('g', {}, machine);
+  for (let i = 0; i < 16; i++) {
+    const tg = el('g', { transform: `rotate(${i * 22.5})` }, roller);
+    el('path', { d: `M0,${T.drumR - 1} Q5,${(T.drumR + T.rollerR) / 2} 2,${T.rollerR}`, fill: 'none', stroke: steel, 'stroke-width': 1.3, 'stroke-linecap': 'round' }, tg);
+  }
+  el('circle', { cx: 0, cy: 0, r: T.drumR, fill: plate, stroke: steel, 'stroke-width': 1.8 }, roller);
+  el('circle', { cx: 0, cy: 0, r: 3, fill: steel }, roller);
+  drawScale(svg);
+
+  // ---- Clock math ----
+  const bez = (x1, y1, x2, y2) => (x) => {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let t = x; for (let i = 0; i < 8; i++) { const f = 3 * x1 * t * (1 - t) ** 2 + 3 * x2 * t * t * (1 - t) + t ** 3 - x; const d = 3 * x1 * (1 - t) ** 2 + 6 * (x2 - x1) * t * (1 - t) + 3 * (1 - x2) * t * t; if (Math.abs(d) < 1e-6) break; t -= f / d; t = Math.min(1, Math.max(0, t)); }
+    return 3 * y1 * t * (1 - t) ** 2 + 3 * y2 * t * t * (1 - t) + t ** 3;
+  };
+  const easeOut = bez(0.23, 1, 0.32, 1), easeIn = (p) => p * p * p;
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const xAt = (t) => startX + T.speed * Math.max(0, t - T.hold);
+  const timeAtX = (x) => T.hold + (x - startX) / T.speed;
+  const TOTAL = timeAtX(endX) + 0.1;
+  // a clod at depth y is first reached where the spade-tip circle crosses that depth
+  const reach = (y) => { const dy = y - hubY; return dy >= R ? 0 : Math.sqrt(R * R - dy * dy); };
+
+  clods.forEach((c, i) => {
+    if (!c.worked) return;
+    c.tl = timeAtX(c.cx + T.landBehind) + (seededRandom(i * 7.13 + 3) - 0.5) * 2 * T.jitter;
+    c.ts = timeAtX(c.cx + gap - T.rollerR * 0.5); // roller tines reach the clod
+    c.sw = T.swell * clamp(1 - (c.cy - SURF) / 67);
+  });
+  compact.forEach((c) => { c.tb = timeAtX(c.cx - reach(Math.min(c.cy, SURF + T.depth - 1))); });
+
+  const cache = new WeakMap();
+  const set = (node, attr, val) => { let m = cache.get(node); if (!m) { m = {}; cache.set(node, m); } if (m[attr] !== val) { m[attr] = val; node.setAttribute(attr, val); } };
+
+  function render(t) {
+    const x = xAt(t), travel = x - startX;
+    set(machine, 'transform', `translate(${x.toFixed(2)},${hubY.toFixed(2)})`);
+    set(rotor, 'transform', `rotate(${(travel * T.tipRatio / R * 57.2958).toFixed(1)})`);
+    set(roller, 'transform', `translate(${-gap},${(rollerY - hubY).toFixed(2)}) rotate(${(travel * T.rollerRatio / T.drumR * 57.2958).toFixed(1)})`);
+    clods.forEach((c, i) => {
+      if (!c.worked) return;
+      const n = nodes[i];
+      if (t < c.tl) { set(n, 'opacity', '0'); return; }
+      const p = clamp((t - c.tl) / T.flight), e = easeOut(p);
+      const q = easeOut(clamp((t - c.ts) / T.settleDur));
+      const dx = (1 - e) * 22;
+      const dy = (1 - e) * 4 - c.sw * e - T.arc * Math.sin(Math.PI * p) + c.sw * q;
+      const s = 0.5 + 0.5 * e;
+      set(n, 'opacity', p >= 1 ? '1' : Math.min(1, p * 3).toFixed(2));
+      set(n, 'transform', (p >= 1 && q >= 1) ? '' : `translate(${(c.cx + dx).toFixed(2)},${(c.cy + dy).toFixed(2)}) scale(${s.toFixed(3)}) translate(${-c.cx.toFixed(2)},${-c.cy.toFixed(2)})`);
+    });
+    compact.forEach((c, i) => {
+      const n = cNodes[i]; const p = clamp((t - c.tb) / T.breakDur), e = easeIn(p);
+      if (p >= 1) { set(n, 'opacity', '0'); return; }
+      set(n, 'opacity', (1 - p).toFixed(2));
+      set(n, 'transform', p <= 0 ? '' : `translate(${c.cx.toFixed(2)},${(c.cy + 2 * e).toFixed(2)}) scale(${(1 - 0.4 * e).toFixed(3)}) translate(${-c.cx.toFixed(2)},${-c.cy.toFixed(2)})`);
+    });
+    clockLabel.textContent = t.toFixed(2).replace('.', ',') + ' s';
+    scrub.value = t;
+  }
+
+  const clockLabel = document.getElementById('clockLabel');
+  const scrub = document.getElementById('scrub');
+  scrub.max = TOTAL.toFixed(2);
+  let speed = 1, raf = 0, reducedSim = false;
+  const osReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function play() {
+    cancelAnimationFrame(raf);
+    if (reducedSim) { render(TOTAL); return; }
+    let t = 0, last = performance.now();
+    const tick = (now) => { t += (now - last) / 1000 * speed; last = now; render(Math.min(t, TOTAL)); if (t < TOTAL) raf = requestAnimationFrame(tick); };
+    render(0); raf = requestAnimationFrame(tick);
+  }
+  document.getElementById('play').addEventListener('click', () => { reducedSim = false; document.getElementById('reduced').setAttribute('aria-pressed', 'false'); play(); });
+  document.querySelectorAll('[data-speed]').forEach((b) => b.addEventListener('click', () => {
+    speed = +b.dataset.speed;
+    document.querySelectorAll('[data-speed]').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    play();
+  }));
+  document.getElementById('reduced').addEventListener('click', (e) => {
+    reducedSim = !reducedSim; e.currentTarget.setAttribute('aria-pressed', String(reducedSim));
+    cancelAnimationFrame(raf); render(reducedSim ? TOTAL : 0);
+  });
+  scrub.addEventListener('input', () => { cancelAnimationFrame(raf); render(+scrub.value); });
+
+  render(TOTAL);
+  if (!osReduced && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.5 });
+    io.observe(svg);
+  }
+
+  const fmt = (s) => s.toFixed(2).replace('.', ',') + ' s';
+  const beats = [
+    [0, 'A szelvény felső 30 cm-e még tömör, nagy, sötét rögökből áll.'],
+    [timeAtX(-reach(SURF + 2)), 'Balról beér az ásórotor, és a kapák ívben belevágnak a talajba. Egy rög akkor törik, amikor a kapahegy köre a saját mélységében eléri.'],
+    [timeAtX(T.landBehind), 'A rotor mögött hátra-fel dobott morzsák hullanak vissza. A fellazított réteg kicsit megemelkedik.'],
+    [timeAtX(gap - T.rollerR * 0.5), 'Beér a 406 mm-es elmunkáló henger. Rugós fogai 0–6 cm mélyen dolgoznak, visszanyomják és elsimítják a felszínt.'],
+    [TOTAL, 'A gép kiment a képből. A végső kép pontosan azonos a mostanival.'],
+  ];
+  document.getElementById('beats').innerHTML = beats.map(([t, txt]) => `<div class="beat"><time>${fmt(t)}</time><p>${txt}</p></div>`).join('');
+})();
+</script>
+</body>
+</html>
