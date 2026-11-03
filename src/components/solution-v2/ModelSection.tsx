@@ -10,10 +10,7 @@ import {
   CheckCircle2,
   ZoomIn,
   ArrowRight,
-  MapPin,
-  Leaf,
-  Calendar,
-  BarChart3
+  MapPin
 } from 'lucide-react'
 import { modelDetails } from '@/lib/data'
 import ImageLightbox from '@/components/ui/ImageLightbox'
@@ -25,15 +22,53 @@ interface ModelSectionProps {
   modelId: ModelId
 }
 
+const loose = (a: number, b: number) => `a laza réteg ${a} → ${b} cm (május → augusztus)`
+const sz = modelDetails['38wx'].fieldApplication
+const kec = modelDetails['40sx'].fieldApplication.locations[0]
+const kecChart = kec.chartData ?? [{ month: '', spade: 0, control: 0 }]
+const lakI = modelDetails['40sx'].fieldApplication.locations[1]
+const lastOf = <T,>(xs: T[]) => xs[xs.length - 1]
+
+/** 2025 results per model, from data.ts; each links to its block on the research page */
+const RESULTS: Record<ModelId, { place: string; section: string; fact: string }[]> = {
+  '38sx': modelDetails['38sx'].fieldApplication.treatments.map((t) => ({
+    place: `Lakitelek, ${t.parcel} parcella`,
+    section: 'lakitelek-chart',
+    fact: `${t.description}: ${loose(t.initial, t.final)}`,
+  })),
+  '38wx': [
+    {
+      place: 'Szentkirály, vöröshagyma',
+      section: 'szentkiraly-timeline',
+      fact: `${lastOf(sz.chartData).month}ban ${lastOf(sz.chartData).spade} cm laza réteg, a kontrollon ${lastOf(sz.chartData).control} cm`,
+    },
+  ],
+  '40sx': [
+    {
+      place: `${kec.name}, ipari paradicsom`,
+      section: 'kecskemet-timeline',
+      fact: `${lastOf(kecChart).month}ban ${lastOf(kecChart).spade} cm laza réteg, a kontrollon ${lastOf(kecChart).control} cm`,
+    },
+    {
+      place: lakI.name,
+      section: 'lakitelek-chart',
+      fact: `${lakI.treatment}: ${loose(lakI.initial ?? 0, lakI.final ?? 0)}`,
+    },
+  ],
+}
+
+/** Where the work went on in 2026 (Kecskemét-Borbás was not measured again) */
+const NEXT_SEASON: Record<ModelId, string> = {
+  '38sx': '2026-ban ugyanezen a 7 lakiteleki parcellán folytatódtak a mérések, rozzsal.',
+  '38wx': '2026-ban a szentkirályi hagymatáblán folytatódtak a mérések, és mellé új paradicsomtábla került.',
+  '40sx': '2026-ban Lakiteleken (rozs, a mélyásógépes I. parcellán is) és Szentkirályon folytatódtak a mérések; Kecskemét-Borbáson nem mértünk.',
+}
+const NEXT_SECTION: Record<ModelId, string> = { '38sx': 'lakitelek-chart', '38wx': 'szentkiraly-timeline', '40sx': 'lakitelek-chart' }
+
 export default function ModelSection({ modelId }: ModelSectionProps) {
   const model = modelDetails[modelId]
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
-  const experimentDescriptions: Record<ModelId, string> = {
-    '38wx': 'Szentkirály kísérleti hely: vöröshagyma kultúra, 4 hónapos mérési időszak.',
-    '38sx': 'Lakitelek kísérleti hely: III. és VII. parcella eredményei, ipari paradicsom kultúrában.',
-    '40sx': 'Kecskemét-Borbás kísérleti hely: ipari paradicsom kultúra, 45 cm mélységű műveléssel.'
-  }
 
   return (
     <section className={styles.compactSection}>
@@ -115,63 +150,43 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
           </motion.div>
         </div>
 
-        {/* Bottom Row: Results/Chart Card */}
+        {/* Bottom Row: what this model did in the field (2025), and where 2026 stands */}
         <motion.div
           className={styles.resultsCard}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-        // Click removed from container
         >
-          {/* Left: Info ... */}
           <div className={styles.resultsInfo}>
-            {/* ... content ... */}
-            <div>
-              <div className={styles.resultsHeader}>
-                <MapPin size={20} /> Kísérleti eredmények
-              </div>
-              <div className={styles.resultsDesc}>
-                {experimentDescriptions[modelId]}
-              </div>
-              <div className={styles.tagsRow}>
-                <span className={styles.resultTag}><Leaf /> {modelId === '38wx' ? 'Vöröshagyma' : 'Ipari paradicsom'}</span>
-                <span className={styles.resultTag}><Calendar /> {modelId === '38wx' ? 'Márc-Jún' : 'Máj-Aug'}</span>
-              </div>
+            <div className={styles.resultsHeader}>
+              <MapPin size={20} /> Kísérleti eredmények
             </div>
-            {/* No link here */}
+            <ul className={styles.resultList}>
+              {RESULTS[modelId].map((r) => (
+                <li key={r.place} className={styles.resultRow}>
+                  <span className={styles.yearChip}>2025</span>
+                  <span className={styles.resultText}>
+                    <Link href={`/kutatas?section=${r.section}`} className={styles.resultPlace}>
+                      {r.place}
+                    </Link>
+                    <span>{r.fact}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* Right: Chart and Link Side-by-Side */}
-          <div className={styles.chartSection}>
-            <div className={styles.chartHeader}>
-              <BarChart3 size={20} /> Mérési Adatok
+          <div className={styles.nextSeason}>
+            <div className={styles.resultsHeader}>
+              <span className={styles.yearChipOff}>2026</span> A második év
             </div>
-
-            <div className={styles.chartRow}>
-              <Link href="/kutatas?section=lakitelek" style={{ display: 'block' }}>
-                <motion.div
-                  className={styles.chartVisual}
-                  whileHover="hover"
-                  initial="initial"
-                >
-                  {/* Simplified Visual Bars - Dynamic Abstract Icon */}
-                  <div className={styles.axisY} />
-                  <div className={styles.axisX} />
-                  <div className={styles.abstractBars}>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`${styles.bar} ${styles.animBar} ${i % 2 === 0 ? styles.barGold : styles.barLight}`}
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              </Link>
-
-              <Link href="/kutatas?section=lakitelek" className={styles.detailsLink}>
-                Részletek <ArrowRight size={16} />
-              </Link>
-            </div>
+            <p className={styles.resultsDesc}>
+              {NEXT_SEASON[modelId]} A 2026-os adatokban az ásógép típusa nincs megnevezve, ezért ezeket az eredményeket nem
+              soroljuk ehhez a modellhez.
+            </p>
+            <Link href={`/kutatas?section=${NEXT_SECTION[modelId]}`} className={styles.detailsLink}>
+              A 2026-os mérések a Kutatás oldalon <ArrowRight size={16} />
+            </Link>
           </div>
         </motion.div>
       </div>

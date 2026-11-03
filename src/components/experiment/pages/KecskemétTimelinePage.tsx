@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
 import Timeline from '../Timeline'
 import { locations } from '@/lib/data'
+import SeasonOnly from '../season/SeasonOnly'
 import styles from './KecskemétTimelinePage.module.css'
 
 const data = locations.kecskemet
@@ -23,6 +24,9 @@ export default function KecskemétTimelinePage() {
           <span>Kecskemét-Borbás</span>
         </div>
         <h3 className={styles.headerTitle}>A talajszerkezet változása</h3>
+        <div className={styles.seasonRow}>
+          <SeasonOnly years={[2025]} />
+        </div>
       </motion.div>
 
       {/* Timeline Chart */}

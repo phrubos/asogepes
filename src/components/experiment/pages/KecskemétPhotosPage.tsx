@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
 import { locations } from '@/lib/data'
+import SeasonOnly from '../season/SeasonOnly'
 import styles from './KecskemétPhotosPage.module.css'
 import PhotoViewer from '@/components/shared/PhotoViewer/PhotoViewer'
 
@@ -22,6 +23,7 @@ export default function KecskemétPhotosPage() {
                     <MapPin size={12} />
                     <span>Kecskemét-Borbás</span>
                 </div>
+                <SeasonOnly years={[2025]} />
             </motion.div>
 
             {/* Content */}

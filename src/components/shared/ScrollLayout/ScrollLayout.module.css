@@ -38,7 +38,9 @@
 .sidebarContent {
   display: flex;
   flex-direction: column;
-  height: 65%;
+  /* At least 65% of the rail; grows when a section opens many subsections, so nothing overlaps */
+  min-height: 65%;
+  flex-shrink: 0;
   position: relative;
 }
 
@@ -72,7 +74,7 @@
   flex-direction: column;
   gap: 0;
   width: 100%;
-  height: 100%;
+  flex: 1;
   justify-content: space-between;
   position: relative;
   z-index: 1;
@@ -84,14 +86,19 @@
   position: relative;
   padding-left: 60px;
   min-height: 60px;
+  flex-shrink: 0;
   justify-content: center;
   cursor: pointer;
 }
 
-/* Timeline Markers */
+/* Timeline Markers: centred on the label row (left = marker offset - group padding) */
+.headRow {
+  position: relative;
+}
+
 .markerWrapper {
   position: absolute;
-  left: 8px;
+  left: -52px;
   top: 50%;
   transform: translateY(-50%);
   width: 32px;
@@ -378,7 +385,7 @@
   }
 
   .markerWrapper {
-    left: 4px;
+    left: -41px;
     width: 28px;
     height: 28px;
   }
@@ -466,92 +473,99 @@
 
 .scrollIndicator {
   position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 12px;
+  bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 10px 30px;
-  background: rgba(20, 17, 14, 0.75);
+  gap: 0;
+  padding: 0;
+  font: inherit;
+  background: rgba(20, 17, 14, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 168, 75, 0.25);
+  border: 1px solid rgba(212, 168, 75, 0.3);
   border-radius: 100px;
   color: var(--color-gold);
   cursor: pointer;
   z-index: 100;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  width: auto;
-  min-width: min-content;
-  max-width: 90vw;
 }
 
-.scrollIndicator:hover {
+.scrollIndicator:hover,
+.scrollIndicator:focus-visible {
   background: rgba(31, 26, 22, 0.95);
   border-color: rgba(212, 168, 75, 0.6);
-  transform: translateX(-50%) translateY(-2px);
   box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(212, 168, 75, 0.1);
 }
 
-.pulseContainer {
+.scrollIndicator:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* The always-visible part: a 48px round arrow button */
+.indicatorButton {
   position: relative;
-  width: 12px;
-  height: 12px;
+  flex: none;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.pulseDot {
-  width: 6px;
-  height: 6px;
-  background: var(--color-gold);
-  border-radius: 50%;
-  position: relative;
-  z-index: 2;
-  box-shadow: 0 0 10px var(--color-gold);
-}
-
 .pulseRing {
   position: absolute;
-  inset: -6px;
+  inset: 4px;
   border: 1px solid var(--color-gold);
   border-radius: 50%;
   opacity: 0;
-  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-}
-
-.pulseRing:nth-child(2) {
-  animation-delay: 0.5s;
+  animation: pulse-ring 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  pointer-events: none;
 }
 
 @keyframes pulse-ring {
   0% {
-    transform: scale(0.5);
+    transform: scale(0.7);
     opacity: 0;
   }
 
   50% {
-    opacity: 0.8;
+    opacity: 0.6;
   }
 
   100% {
-    transform: scale(1.5);
+    transform: scale(1.15);
     opacity: 0;
   }
 }
 
+/* The label opens to the left of the arrow on hover / keyboard focus */
 .indicatorText {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  align-items: center;
+  align-items: flex-end;
+  max-width: 0;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  padding-left: 0;
+  white-space: nowrap;
+  transition: max-width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease, padding-left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.scrollIndicator:hover .indicatorText,
+.scrollIndicator:focus-visible .indicatorText {
+  max-width: 320px;
+  max-height: 80px;
+  opacity: 1;
+  padding-left: 22px;
 }
 
 .indicatorLabel {
@@ -566,10 +580,10 @@
 .indicatorTitleWrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   gap: 0px;
   justify-content: center;
-  text-align: center;
+  text-align: right;
 }
 
 .indicatorSection {
@@ -613,5 +627,16 @@
 
   50% {
     transform: translateY(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulseRing,
+  .indicatorIcon {
+    animation: none;
+  }
+
+  .indicatorText {
+    transition: none;
   }
 }

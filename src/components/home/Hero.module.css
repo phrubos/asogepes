@@ -331,3 +331,157 @@
         font-size: 0.75rem;
     }
 }
+/* Every season in one glance (bottom right on desktop, under the CTA on phones) */
+.seasonCard {
+    position: absolute;
+    right: var(--space-2xl);
+    bottom: 80px;
+    z-index: 1;
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 20px;
+    border: 1px solid rgba(212, 168, 75, 0.35);
+    border-radius: 18px;
+    background: rgba(20, 17, 14, 0.82);
+    backdrop-filter: blur(8px);
+    color: var(--color-white);
+    text-decoration: none;
+    transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.seasonCard:hover {
+    border-color: var(--color-gold);
+    background: rgba(20, 17, 14, 0.9);
+}
+
+.seasonCard:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+}
+
+.seasonCardHead {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.seasonRows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.seasonRow {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+}
+
+.seasonYear {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #e8c87a;
+}
+
+.seasonBars {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.barControl,
+.barSpade {
+    display: block;
+    height: 7px;
+    border-radius: 3px;
+    transform-origin: left center;
+    animation: barGrow 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
+}
+
+.barControl {
+    background: #8a847c;
+}
+
+.barSpade {
+    background: var(--color-gold);
+}
+
+@keyframes barGrow {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+
+.seasonValue {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: nowrap;
+}
+
+.seasonFoot {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.seasonFoot > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.keyControl,
+.keySpade {
+    display: inline-block;
+    width: 12px;
+    height: 7px;
+    border-radius: 2px;
+}
+
+.keyControl {
+    background: #8a847c;
+}
+
+.keySpade {
+    background: var(--color-gold);
+}
+
+.seasonMore {
+    margin-left: auto;
+    font-weight: 600;
+    color: var(--color-gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .barControl,
+    .barSpade {
+        animation: none;
+    }
+}
+
+/* Up to 1279px there is no room beside the figures: in the flow, under the call to action */
+@media (max-width: 1279px) {
+    .hero {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-end;
+        gap: var(--space-xl);
+    }
+
+    .seasonCard {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        width: auto;
+        max-width: 420px;
+    }
+}

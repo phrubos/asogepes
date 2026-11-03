@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import PageBadge from '@/components/ui/PageBadge'
 import HungaryMap from '../ResearchHero/HungaryMap'
+import { RESEARCH_FIELDS, RESEARCH_SITES as HERO_SITES, RESEARCH_YEARS as HERO_YEARS } from '@/lib/seasons'
 import { useScrollNav } from '@/components/shared/ScrollLayout'
 import styles from '../pages/HeroPage.module.css'
 
@@ -12,6 +13,12 @@ const LOCATION_SECTION_MAP: Record<string, string> = {
   'kecskemet': 'kecskemet',
   'lakitelek': 'lakitelek',
 }
+
+const STATS = [
+  { value: HERO_SITES.length, label: 'Helyszín', detail: 'Kecskemét környékén' },
+  { value: HERO_YEARS.length, label: 'Tenyészidő', detail: HERO_YEARS.join(' és ') },
+  { value: RESEARCH_FIELDS, label: 'Kísérleti tábla', detail: 'Szentkirályon kettő' },
+]
 
 export default function ResearchHeroSection() {
   const { scrollToSection } = useScrollNav()
@@ -38,38 +45,21 @@ export default function ResearchHeroSection() {
           </h1>
 
           <p className={`${styles.description} hero-rise`} style={{ animationDelay: '200ms' }}>
-            Három helyszínen, 9 különböző művelési kombinációval,
-            hat hónapon át mértük a talajszerkezet változását.
+            Három helyszínen, {HERO_YEARS.length === 2 ? 'két' : HERO_YEARS.length} tenyészidőn át mértük, hogyan változik a talaj
+            ásógépes és hagyományos művelés után.
           </p>
 
-          {/* Stats Row */}
+          {/* Figures true for every season; the seasons themselves are on the map */}
           <div className={`${styles.statsRow} hero-rise`} style={{ animationDelay: '300ms' }}>
-            {/* Stat 1 */}
-            <div className={styles.statItem}>
-              <div className={styles.statValue}>3</div>
-              <div className={styles.statInfo}>
-                <div className={styles.statLabel}>HELYSZÍN</div>
-                <div className={styles.statDetail}>Szentkirály · Kecskemét · Lakitelek</div>
+            {STATS.map((s) => (
+              <div key={s.label} className={styles.statItem}>
+                <div className={styles.statValue}>{s.value}</div>
+                <div className={styles.statInfo}>
+                  <div className={styles.statLabel}>{s.label}</div>
+                  <div className={styles.statDetail}>{s.detail}</div>
+                </div>
               </div>
-            </div>
-
-            {/* Stat 2 */}
-            <div className={styles.statItem}>
-              <div className={styles.statValue}>9</div>
-              <div className={styles.statInfo}>
-                <div className={styles.statLabel}>KEZELÉS KOMBINÁCIÓ</div>
-                <div className={styles.statDetail}>Különböző művelési módok</div>
-              </div>
-            </div>
-
-            {/* Stat 3 */}
-            <div className={styles.statItem}>
-              <div className={styles.statValue}>6</div>
-              <div className={styles.statInfo}>
-                <div className={styles.statLabel}>HÓNAP</div>
-                <div className={styles.statDetail}>Március – Augusztus</div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 

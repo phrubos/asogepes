@@ -359,12 +359,6 @@ export const locations = {
 }
 
 // Hero statistics
-export const heroStats = [
-  { number: '3', label: 'Helyszín', sublabel: 'Szentkirály · Kecskemét · Lakitelek' },
-  { number: '9', label: 'Kezelés kombináció', sublabel: 'Különböző művelési módok' },
-  { number: '6', label: 'Hónap', sublabel: 'Március – Augusztus' },
-]
-
 // Tab 2: Miért nem elég a szántás?
 export const ploughingProblems = [
   {
@@ -452,7 +446,7 @@ export const applicationModes = [
 
 // Összehasonlító táblázat a kísérletekből
 export const treatmentComparison = [
-  { treatment: 'Mélyásógép (40 cm)', initial: 33, final: 31, change: -2, stable: true },
+  { treatment: 'Mélyásógép (45 cm)', initial: 33, final: 31, change: -2, stable: true },
   { treatment: 'Ásógép (30 cm)', initial: 22, final: 20, change: -2, stable: true },
   { treatment: 'Szántás + Ásógép', initial: 32, final: 31, change: -1, stable: true },
   { treatment: 'Lazítás + Ásógép', initial: 35, final: 28, change: -7, stable: false },
@@ -590,7 +584,7 @@ export const modelDetails = {
           ka: '27',
           irrigation: '450 mm',
           period: 'Május – Augusztus',
-          treatment: 'Mélyásógép (40 cm) önállóan',
+          treatment: 'Mélyásógép (45 cm) önállóan',
           initial: 33,
           final: 31,
           change: -2,

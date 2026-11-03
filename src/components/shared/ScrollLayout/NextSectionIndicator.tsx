@@ -58,23 +58,20 @@ export default function NextSectionIndicator() {
     return (
         <AnimatePresence>
             {nextInfo && (
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                // Collapsed to a small arrow button in the corner, so it never covers content;
+                // hover or keyboard focus opens the "Görgess lejjebb" label. Framer animates only
+                // opacity here: the CSS owns the transform.
+                <motion.button
+                    type="button"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
                     className={styles.scrollIndicator}
                     onClick={() => scrollToSection(nextInfo.id)}
-                    role="button"
                     aria-label={`Görgess ehhez: ${displayTitle}`}
                 >
-                    <div className={styles.pulseContainer}>
-                        <div className={styles.pulseDot} />
-                        <div className={styles.pulseRing} />
-                        <div className={styles.pulseRing} />
-                    </div>
-
-                    <div className={styles.indicatorText}>
+                    <div className={styles.indicatorText} aria-hidden="true">
                         <span className={styles.indicatorLabel}>Görgess lejjebb</span>
                         <div className={styles.indicatorTitleWrapper}>
                             <span className={styles.indicatorSection}>
@@ -87,8 +84,11 @@ export default function NextSectionIndicator() {
                         </div>
                     </div>
 
-                    <ArrowDown size={18} className={styles.indicatorIcon} />
-                </motion.div>
+                    <span className={styles.indicatorButton} aria-hidden="true">
+                        <span className={styles.pulseRing} />
+                        <ArrowDown size={18} className={styles.indicatorIcon} />
+                    </span>
+                </motion.button>
             )}
         </AnimatePresence>
     )

@@ -1,0 +1,14 @@
+.third {
+  margin-left: 0.4em;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--color-gold);
+}
+
+@media (max-width: 1024px) {
+  .stack {
+    display: block;
+    margin-left: 0;
+  }
+}

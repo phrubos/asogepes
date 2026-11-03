@@ -3,12 +3,23 @@
 import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
 import TemperatureChart from '../TemperatureChart'
+import TemperatureSeriesChart from '../TemperatureSeriesChart'
 import { locations } from '@/lib/data'
+import { szentkiralySeasons, findSeason } from '@/lib/seasons'
+import { useSeason } from '../season/SeasonContext'
+import SeasonSwitch from '../season/SeasonSwitch'
 import styles from './SzentkirályTempPage.module.css'
 
 const data = locations.szentkiraly
+const site = szentkiralySeasons
+const siteYears = site.seasons.map((s) => s.year)
 
 export default function SzentkirályTempPage() {
+    const { year } = useSeason()
+    const season = findSeason(site, year) ?? site.seasons[site.seasons.length - 1]
+    // One measurement day per depth (2025): the original two-depth chart; several days: the series chart
+    const single = season.temperature.depths.every((d) => d.points.length === 1)
+
     return (
         <div className={styles.container}>
             {/* Header */}
@@ -23,19 +34,22 @@ export default function SzentkirályTempPage() {
                     <span>Szentkirály</span>
                 </div>
                 <h3 className={styles.headerTitle}>Talajhőmérséklet</h3>
+                <div className={styles.seasonRow}>
+                    <SeasonSwitch years={siteYears} small />
+                </div>
             </motion.div>
 
             {/* Content */}
-            {data.temperatureData && (
-                <motion.div
-                    className={styles.chartContainer}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                >
-                    <TemperatureChart data={data.temperatureData} />
-                </motion.div>
-            )}
+            <motion.div
+                className={`${styles.chartContainer} ${single ? '' : styles.chartWide}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+            >
+                {single
+                    ? <TemperatureChart key={season.year} data={data.temperatureData} />
+                    : <TemperatureSeriesChart key={season.year} data={season.temperature} />}
+            </motion.div>
         </div>
     )
 }

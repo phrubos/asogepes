@@ -187,3 +187,77 @@
     max-width: none;
   }
 }
+
+/* ÉVAD control under the title: centred on desktop, full width on phones and tablets */
+.seasonRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+@media (max-width: 1024px) {
+  .seasonRow {
+    justify-content: flex-start;
+  }
+}
+
+/* Several measurement days (2026): the chart and its explanation side by side need more room */
+.chartWide {
+    max-width: 1100px;
+}
+
+/* Desktop: the ÉVAD control sits next to the badge (where + when in one row), above the title */
+@media (min-width: 1025px) {
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10px;
+  }
+
+  .headerBadge {
+    order: 0;
+    margin-bottom: 0;
+  }
+
+  .seasonRow {
+    order: 1;
+    margin-top: 0;
+  }
+
+  .headerTitle {
+    order: 2;
+    flex-basis: 100%;
+    margin-top: var(--space-sm);
+  }
+}
+
+/* Desktop: titles and badges align left, like on /problema and /technologia (phones already do) */
+@media (min-width: 1025px) {
+  .header {
+    justify-content: flex-start;
+    text-align: left;
+  }
+  /* the chart card starts where the title starts */
+  .chartContainer {
+    max-width: none;
+    margin-left: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Desktop: more air between the page title and the chart card */
+@media (min-width: 1025px) {
+  .container {
+    gap: 28px;
+  }
+}
+
+/* Short laptop screens: a little less air under the title so the block fits */
+@media (max-height: 820px) and (min-width: 1025px) {
+  .container {
+    gap: 20px;
+  }
+}

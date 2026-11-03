@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
 import { locations } from '@/lib/data'
+import SeasonOnly, { yearAdj } from '../season/SeasonOnly'
 import styles from './SzentkirályPhotosPage.module.css'
 import PhotoViewer from '@/components/shared/PhotoViewer/PhotoViewer'
 
@@ -22,6 +23,7 @@ export default function SzentkirályPhotosPage() {
                     <MapPin size={12} />
                     <span>Szentkirály</span>
                 </div>
+                <SeasonOnly years={[2025]} missingNote={(y) => `a ${yearAdj(y)} fotók még nincsenek fent`} />
             </motion.div>
 
             {/* Content */}

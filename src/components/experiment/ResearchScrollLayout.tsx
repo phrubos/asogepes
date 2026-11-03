@@ -7,6 +7,8 @@ import MethodologySection from './sections/MethodologySection'
 import SzentkiralyCombinedPage from './pages/SzentkiralyCombinedPage'
 import KecskemetCombinedPage from './pages/KecskemetCombinedPage'
 import LakitelekCombinedPage from './pages/LakitelekCombinedPage'
+import { SeasonProvider } from './season/SeasonContext'
+import { SEASON_YEARS } from '@/lib/seasons'
 
 export default function ResearchScrollLayout() {
     const sections: ScrollSection[] = useMemo(() => [
@@ -19,6 +21,11 @@ export default function ResearchScrollLayout() {
             id: 'methodology',
             label: 'Módszertan',
             component: <MethodologySection />,
+            subsections: [
+                { id: 'methodology-penetrometer', label: 'Penetrométer' },
+                { id: 'methodology-meresek', label: 'Mért jellemzők' },
+                { id: 'methodology-talajelet', label: 'Talajélet mérése' },
+            ],
         },
         {
             id: 'szentkiraly',
@@ -28,6 +35,9 @@ export default function ResearchScrollLayout() {
                 { id: 'szentkiraly-info', label: 'Helyszín adatok' },
                 { id: 'szentkiraly-timeline', label: 'A talajszerkezet változása' },
                 { id: 'szentkiraly-temp', label: 'Talajhőmérséklet' },
+                { id: 'szentkiraly-fejlodes', label: 'Fejlődés (2026)' },
+                { id: 'szentkiraly-meresek', label: 'További mérések (2026)' },
+                { id: 'szentkiraly-paradicsom', label: 'Paradicsomtábla (2026)' },
                 { id: 'szentkiraly-photos', label: 'Fotók' },
             ],
         },
@@ -48,10 +58,16 @@ export default function ResearchScrollLayout() {
             subsections: [
                 { id: 'lakitelek-info', label: 'Helyszín adatok' },
                 { id: 'lakitelek-chart', label: '7 művelési kombináció eredménye' },
+                { id: 'lakitelek-talajelet', label: 'Talajélet (2025–2026)' },
+                { id: 'lakitelek-meresek', label: 'További mérések (2026)' },
                 { id: 'lakitelek-photos', label: 'Fotók' },
             ],
         },
     ], [])
 
-    return <ScrollLayout sections={sections} resetEventName="reset-research-scroll" />
+    return (
+        <SeasonProvider years={SEASON_YEARS}>
+            <ScrollLayout sections={sections} resetEventName="reset-research-scroll" />
+        </SeasonProvider>
+    )
 }

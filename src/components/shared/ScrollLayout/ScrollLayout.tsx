@@ -399,17 +399,17 @@ export default function ScrollLayout({ sections, resetEventName }: ScrollLayoutP
                     role="button"
                     tabIndex={0}
                   >
-                    {/* Circle Marker */}
-                    <div className={styles.markerWrapper}>
-                      <div className={styles.marker} />
-                    </div>
-
-                    {/* Label Header */}
-                    <div className={styles.sectionHeader}>
-                      <span className={styles.sectionNumber}>
-                        {String(idx).padStart(2, '0')}
-                      </span>
-                      <span className={styles.sectionLabel}>{section.label}</span>
+                    {/* Marker beside the label, so it stays there when the subsections open */}
+                    <div className={styles.headRow}>
+                      <div className={styles.markerWrapper}>
+                        <div className={styles.marker} />
+                      </div>
+                      <div className={styles.sectionHeader}>
+                        <span className={styles.sectionNumber}>
+                          {String(idx).padStart(2, '0')}
+                        </span>
+                        <span className={styles.sectionLabel}>{section.label}</span>
+                      </div>
                     </div>
 
                     {/* Sub-sections List (Only for active section) */}

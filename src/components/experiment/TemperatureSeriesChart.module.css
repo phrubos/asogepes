@@ -1,0 +1,293 @@
+.container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(26, 23, 20, 0.95) 0%, rgba(35, 30, 25, 0.98) 100%);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: 4px;
+}
+
+.titleIcon {
+  color: #ff7043;
+  flex: none;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+/* One framed band per depth: everything about that depth stays inside it */
+.band {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 16px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.depthLabel {
+  align-self: flex-start;
+  padding: 3px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.05);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Measurement days: equal columns */
+.days {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* control bar, ásógép bar, difference: bottoms on one line */
+.plot {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+  /* the difference column on the right would pull the pair off-centre; balance it */
+  padding-left: 52px;
+}
+
+.track {
+  width: 44px;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.bar {
+  width: 100%;
+  min-height: 26px;
+  box-sizing: border-box;
+  padding-top: 5px;
+  display: flex;
+  justify-content: center;
+  border-radius: 6px 6px 3px 3px;
+  transform-origin: bottom;
+}
+
+.barControl {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.15) 100%);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.barSpade {
+  background: linear-gradient(180deg, #ff7043 0%, #e64a19 50%, #bf360c 100%);
+  box-shadow: 0 4px 15px rgba(255, 112, 67, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.barValue {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-white);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+.deltaSlot {
+  width: 46px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.delta,
+.deltaKey {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.warm {
+  border: 1px solid rgba(255, 112, 67, 0.45);
+  background: rgba(255, 112, 67, 0.14);
+  color: #ff8a65;
+}
+
+.cool {
+  border: 1px solid rgba(141, 170, 126, 0.6);
+  background: rgba(141, 170, 126, 0.14);
+  color: #b5cca8;
+}
+
+.even {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.date {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.explanation {
+  display: flex;
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid rgba(255, 112, 67, 0.15);
+  border-radius: var(--radius-md);
+  background: rgba(255, 112, 67, 0.05);
+}
+
+.explanation p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.explanation strong {
+  color: #ff8a65;
+  font-weight: 600;
+}
+
+/* Laptop screens (up to 900px tall, e.g. 1366x768, 1536x864): lower bars so the block fits */
+@media (max-height: 900px) and (min-width: 1025px) {
+  .container {
+    padding: 18px 24px;
+  }
+
+  .main {
+    gap: 8px;
+  }
+
+  .header {
+    margin-bottom: 0;
+  }
+
+  .plot {
+    height: 78px;
+  }
+
+  .band {
+    gap: 6px;
+    padding: 8px 16px;
+  }
+
+  .day {
+    gap: 4px;
+  }
+}
+
+/* Medium desktop widths: narrower bars so four days still fit a band */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .track {
+    width: 38px;
+  }
+
+  .deltaSlot {
+    width: 44px;
+  }
+
+  .plot {
+    padding-left: 0;
+  }
+}
+
+/* Phones and tablets: explanation under the chart; the four days in a 2x2 grid so bars,
+   values and differences keep their room */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .band {
+    padding: 10px 10px 12px;
+  }
+
+  .days {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 8px;
+  }
+
+  .plot {
+    height: 96px;
+    gap: 4px;
+    padding-left: 0;
+  }
+
+  .track {
+    width: 36px;
+  }
+
+  .deltaSlot {
+    width: auto;
+  }
+
+  .explanation {
+    padding: 12px 14px;
+  }
+}

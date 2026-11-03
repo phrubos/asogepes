@@ -3,18 +3,13 @@
 import { motion } from 'framer-motion'
 import { MapPin, Layers, Ruler, Leaf, Droplets, Calendar, Grid3X3 } from 'lucide-react'
 import { locations } from '@/lib/data'
+import { lakitelekSeasons, LAKITELEK_YEARS } from '@/lib/seasons'
+import { useSeason } from '../season/SeasonContext'
+import SeasonSwitch from '../season/SeasonSwitch'
+import { inYear } from '../season/SeasonOnly'
 import styles from './LakitelekInfoPage.module.css'
 
 const data = locations.lakitelek
-
-const infoItems = [
-  { icon: Layers, label: 'Talaj', value: data.soil },
-  { icon: Ruler, label: 'KA érték', value: data.ka },
-  { icon: Leaf, label: 'Kultúra', value: data.crop },
-  { icon: Droplets, label: 'Öntözés', value: data.irrigation },
-  { icon: Calendar, label: 'Vizsgált időszak', value: data.period },
-  { icon: MapPin, label: data.measurementLabel || 'Mérések', value: data.measurements },
-]
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -34,6 +29,18 @@ const itemVariants = {
 }
 
 export default function LakitelekInfoPage() {
+  const { year } = useSeason()
+  const season = lakitelekSeasons.seasons.find((s) => s.year === year) ?? lakitelekSeasons.seasons[lakitelekSeasons.seasons.length - 1]
+  const info = season.info
+  const infoItems = [
+    { icon: Layers, label: 'Talaj', value: info.soil },
+    { icon: Ruler, label: 'KA érték', value: info.ka },
+    { icon: Leaf, label: 'Kultúra', value: info.crop },
+    { icon: Droplets, label: info.irrigation.includes('csapadék') ? 'Csapadék és öntözés' : 'Öntözés', value: info.irrigation },
+    { icon: Calendar, label: 'Vizsgált időszak', value: info.period },
+    { icon: MapPin, label: data.measurementLabel || 'Mérések', value: info.measurements },
+  ]
+
   return (
     <div className={styles.infoPage}>
       {/* Header */}
@@ -48,11 +55,15 @@ export default function LakitelekInfoPage() {
           <span>03. helyszín</span>
         </div>
         <h2 className={styles.headerTitle}>{data.name}</h2>
+        <div className={styles.seasonRow}>
+          <SeasonSwitch years={LAKITELEK_YEARS} small />
+        </div>
         <div className={styles.headerLine} />
       </motion.div>
 
       {/* Info Grid - 6 cards in 2 rows */}
       <motion.div
+        key={`grid-${season.year}`}
         className={styles.infoGrid}
         variants={containerVariants}
         initial="hidden"
@@ -105,6 +116,7 @@ export default function LakitelekInfoPage() {
               <p className={styles.treatmentsDescription}>
                 Lakiteleken 7 különböző művelési kombinációt vizsgáltunk egymás mellett, azonos körülmények között. A vizsgálati eredmények feltárják, hogy melyik művelési technológia őrzi meg legjobban a talaj optimálisan laza szerkezetét.
               </p>
+              {info.base && <p className={styles.treatmentsDescription}>{info.base}; {inYear(season.year)} a kultúra {info.crop.toLowerCase()}.</p>}
             </div>
           </div>
         </div>

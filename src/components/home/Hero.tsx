@@ -3,14 +3,27 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import styles from './Hero.module.css'
-import { heroStats } from '@/lib/data'
+import { RESEARCH_FIELDS, RESEARCH_SITES, RESEARCH_YEARS, szentkiralySeasons } from '@/lib/seasons'
 import { useParallax } from '@/hooks/useParallax'
 import { useTypewriter } from '@/hooks/useTypewriter'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
 import { MagneticButton } from '@/components/ui/MagneticButton'
+
+// Figures true for every season (same source as the research page)
+const heroStats = [
+  { number: String(RESEARCH_SITES.length), label: 'Helyszín', sublabel: 'Szentkirály · Kecskemét · Lakitelek' },
+  { number: String(RESEARCH_YEARS.length), label: 'Tenyészidő', sublabel: RESEARCH_YEARS.join(' és ') },
+  { number: String(RESEARCH_FIELDS), label: 'Kísérleti tábla', sublabel: 'Szentkirályon kettő' },
+]
+
+// The one result measured in every season: Szentkirály onion, loose layer at the end of the season
+const seasonEnds = szentkiralySeasons.seasons.map((s) => ({ year: s.year, ...s.seasonEnd }))
+const endMax = Math.max(...seasonEnds.map((s) => s.spade))
+const cm = (v: number) => String(v).replace('.', ',')
 
 const VIDEO_QUERY = '(min-width: 768px) and (prefers-reduced-motion: no-preference)'
 
@@ -107,7 +120,7 @@ export default function Hero() {
         </h1>
 
         <p className={`${styles.heroSubtitle} ${styles.rise}`} style={{ animationDelay: '400ms' }}>
-          Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról, öntözött kertészeti kultúrákban
+          {RESEARCH_YEARS.length === 2 ? 'Két' : RESEARCH_YEARS.length} tenyészidő szántóföldi mérései az ásógép talajszerkezetre gyakorolt hatásáról, öntözött kertészeti kultúrákban
         </p>
 
         <div className={`${styles.heroStats} ${styles.rise}`} style={{ animationDelay: '500ms' }}>
@@ -144,6 +157,30 @@ export default function Hero() {
           </MagneticButton>
         </div>
       </div>
+
+      {/* Every season in one glance: the loose layer at the end of the season, control vs spader */}
+      <Link href="/kutatas?section=szentkiraly-timeline" className={`${styles.seasonCard} ${styles.rise}`} style={{ animationDelay: '700ms' }}>
+        <span className={styles.seasonCardHead}>Szentkirály · laza réteg a tenyészidő végén</span>
+        <span className={styles.seasonRows}>
+          {seasonEnds.map((s) => (
+            <span key={s.year} className={styles.seasonRow}>
+              <span className={styles.seasonYear}>{s.year}</span>
+              <span className={styles.seasonBars} aria-hidden="true">
+                <span className={styles.barControl} style={{ width: `${(s.control / endMax) * 100}%` }} />
+                <span className={styles.barSpade} style={{ width: `${(s.spade / endMax) * 100}%` }} />
+              </span>
+              <span className={styles.seasonValue}>
+                {cm(s.control)} → {cm(s.spade)} cm
+              </span>
+            </span>
+          ))}
+        </span>
+        <span className={styles.seasonFoot}>
+          <span><i className={styles.keyControl} />kontroll</span>
+          <span><i className={styles.keySpade} />ásógép</span>
+          <span className={styles.seasonMore}>Részletek <ArrowRight size={14} /></span>
+        </span>
+      </Link>
     </header>
   )
 }

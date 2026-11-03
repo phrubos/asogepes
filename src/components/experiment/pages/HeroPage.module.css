@@ -136,8 +136,6 @@
 .mapContainer {
   width: 100%;
   height: auto;
-  min-height: 400px;
-  max-height: 500px;
   /* Frame styles removed to avoid duplication with internal component */
   /* background: linear-gradient(135deg, rgba(26, 23, 20, 0.5) 0%, rgba(35, 30, 25, 0.6) 100%); */
   /* border: 1px solid rgba(255, 255, 255, 0.08); */
@@ -271,5 +269,24 @@
     min-height: 0;
     max-width: none;
     margin: 0;
+  }
+
+  /* The map is the picture of the page: right under the text, the figures after it */
+  .content {
+    gap: 16px;
+  }
+
+  .textColumn {
+    display: contents;
+  }
+
+  .mapColumn {
+    order: 1;
+    margin-top: 8px;
+  }
+
+  .statsRow {
+    order: 2;
+    margin-top: 8px;
   }
 }

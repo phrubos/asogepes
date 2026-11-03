@@ -1,0 +1,130 @@
+.bridge {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(212, 168, 75, 0.35);
+  background: rgba(212, 168, 75, 0.06);
+}
+
+.heading {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 1px;
+}
+
+.active,
+.active:hover {
+  background: rgba(212, 168, 75, 0.14);
+}
+
+.year {
+  width: 38px;
+  flex: none;
+  text-align: left;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.active .year {
+  color: var(--color-gold);
+}
+
+.track {
+  position: relative;
+  flex: 1 1 auto;
+  height: 14px;
+}
+
+.track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 6px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.span {
+  position: absolute;
+  top: 6px;
+  height: 2px;
+  background: rgba(212, 168, 75, 0.7);
+}
+
+.dot {
+  position: absolute;
+  top: 1px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+}
+
+.dotControl {
+  background: #8a847c;
+}
+
+.dotSpade {
+  background: var(--color-gold);
+}
+
+.value {
+  flex: none;
+  min-width: 82px;
+  text-align: right;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.note {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 1024px) {
+  .row {
+    min-height: 44px;
+  }
+}

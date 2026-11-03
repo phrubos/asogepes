@@ -109,3 +109,49 @@
     text-align: left;
   }
 }
+
+/* Desktop: titles and badges align left, like on /problema and /technologia (phones already do) */
+@media (min-width: 1025px) {
+  .header {
+    text-align: left;
+  }
+}
+
+/* Desktop: more air between the page title and the chart card */
+@media (min-width: 1025px) {
+  .timelinePage {
+    gap: 28px;
+  }
+}
+
+/* Season marker under the title (phones) / next to the badge (desktop) */
+.seasonRow {
+  display: flex;
+  margin-top: 12px;
+}
+
+@media (min-width: 1025px) {
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 10px;
+  }
+
+  .headerBadge {
+    order: 0;
+    margin-bottom: 0;
+  }
+
+  .seasonRow {
+    order: 1;
+    margin-top: 0;
+  }
+
+  .headerTitle {
+    order: 2;
+    flex-basis: 100%;
+    margin-top: var(--space-sm);
+  }
+}

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { MapPin, Layers, Ruler, Leaf, Droplets, Calendar } from 'lucide-react'
 import { locations } from '@/lib/data'
+import SeasonOnly from '../season/SeasonOnly'
 import styles from './KecskemétInfoPage.module.css'
 
 const data = locations.kecskemet
@@ -48,6 +49,9 @@ export default function KecskemétInfoPage() {
           <span>02. helyszín</span>
         </div>
         <h2 className={styles.headerTitle}>{data.name}</h2>
+        <div className={styles.seasonRow}>
+          <SeasonOnly years={[2025]} />
+        </div>
         <div className={styles.headerLine} />
       </motion.div>
 

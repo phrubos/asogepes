@@ -1,0 +1,180 @@
+/* "További mérések": one small chart per chapter (frame: story/Story) */
+
+.chartHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.chartTitle {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.chartUnit {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.grid {
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+.axis {
+  fill: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-mono, monospace);
+}
+
+.tick {
+  fill: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+}
+
+.tickGold {
+  fill: #e8c87a;
+}
+
+/* Series colour: kontroll / ásógép nélkül grey, ásógép gold */
+.control {
+  --series: #a9a39a;
+  --series-solid: rgba(169, 163, 154, 0.7);
+  --series-band: rgba(169, 163, 154, 0.28);
+}
+
+.spadeLine {
+  --series: #d4a84b;
+  --series-solid: rgba(212, 168, 75, 0.8);
+  --series-band: rgba(212, 168, 75, 0.3);
+}
+
+.soft {
+  opacity: 0.55;
+}
+
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes rise {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.line {
+  fill: none;
+  stroke: var(--series);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  animation: draw 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.mark {
+  fill: var(--series);
+  stroke: #1a1612;
+  stroke-width: 1.5;
+}
+
+.hollow {
+  fill: #1a1612;
+  stroke: var(--series);
+  stroke-width: 2;
+}
+
+.endLabel {
+  fill: var(--series);
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+}
+
+.rowName {
+  fill: var(--series, rgba(255, 255, 255, 0.8));
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.rowValue {
+  fill: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-mono, monospace);
+}
+
+.bracket {
+  fill: none;
+  stroke: #e8c87a;
+  stroke-width: 2;
+}
+
+/* Columns grow from the axis; the range band fades in after */
+.colSolid,
+.colBand {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.colSolid {
+  fill: var(--series-solid);
+  animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.colBand {
+  fill: var(--series-band);
+  animation: fade 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fadeIn {
+  animation: fade 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.soil {
+  fill: rgba(58, 47, 35, 0.5);
+}
+
+.soilLine {
+  stroke: rgba(212, 168, 75, 0.25);
+}
+
+.shoot,
+.root {
+  transform-box: fill-box;
+}
+
+.shoot {
+  fill: rgba(212, 168, 75, 0.8);
+  transform-origin: 50% 100%;
+  animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.root {
+  fill: rgba(169, 163, 154, 0.8);
+  transform-origin: 50% 0;
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line,
+  .colSolid,
+  .colBand,
+  .fadeIn,
+  .shoot,
+  .root {
+    animation: none;
+  }
+}

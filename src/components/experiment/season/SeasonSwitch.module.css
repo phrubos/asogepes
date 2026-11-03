@@ -1,0 +1,90 @@
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.label {
+  padding: 0 10px 0 12px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.option {
+  height: 32px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.option:hover {
+  color: var(--color-white);
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.active,
+.active:hover {
+  background: var(--color-gold);
+  color: #1a1612;
+}
+
+.select {
+  appearance: none;
+  padding: 0 14px;
+}
+
+.select option {
+  color: #1a1612;
+}
+
+/* Phones and tablets: full width, 44px tap targets, left aligned like the title */
+@media (max-width: 1024px) {
+  .switch {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 14px;
+  }
+
+  .option {
+    flex: 1 1 0;
+    height: 44px;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+  }
+}
+
+/* Desktop, next to the page badge: the same height as the badge */
+@media (min-width: 1025px) {
+  .small {
+    padding: 2px;
+  }
+
+  .small .label {
+    padding: 0 8px 0 10px;
+  }
+
+  .small .option {
+    height: 24px;
+    padding: 0 12px;
+    font-size: 0.75rem;
+  }
+}

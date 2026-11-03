@@ -1,0 +1,446 @@
+/* Research hero map: the big country first; with the mouse on it (a tap on phones), it shrinks and an
+   inset with the three places and their seasons grows out of the lens. */
+
+.map {
+  position: relative;
+  /* As tall as the hero allows, never wider than the column */
+  width: min(100%, calc((100vh - 200px) * 540 / 620));
+  aspect-ratio: 540 / 620;
+  margin-inline: auto;
+  border: 1px solid rgba(212, 168, 75, 0.22);
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(26, 23, 20, 0.6) 0%, rgba(35, 30, 25, 0.7) 100%);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Entrance (once, when the map comes on screen) ── */
+
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop {
+  0% { opacity: 0; transform: scale(0); }
+  70% { opacity: 1; transform: scale(1.35); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.outline {
+  fill: none;
+  stroke: var(--color-gold);
+  stroke-width: 0.35;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  animation: draw 1.5s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+.fill {
+  animation: fade 0.9s ease-out 0.7s both;
+}
+
+.river {
+  fill: none;
+  stroke: rgba(232, 200, 122, 0.5);
+  stroke-width: 0.32;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  animation: draw 1s cubic-bezier(0.22, 1, 0.36, 1) 1.1s both;
+}
+
+.late {
+  animation: fade 0.5s ease-out 1.5s both;
+}
+
+.cities {
+  fill: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-body);
+}
+
+.riverNames {
+  fill: rgba(232, 200, 122, 0.7);
+  font-family: var(--font-display);
+  font-style: italic;
+}
+
+.region {
+  fill: rgba(232, 200, 122, 0.55);
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+.spot {
+  fill: #e8c87a;
+  stroke: rgba(20, 17, 14, 0.9);
+  stroke-width: 0.22;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: fill 0.25s ease, opacity 0.25s ease;
+}
+
+.spotOn {
+  fill: var(--color-white);
+}
+
+.spotDim {
+  opacity: 0.45;
+}
+
+/* The leader appears dash by dash (delays inline), then its end point, then the callout */
+.dash {
+  stroke: rgba(232, 200, 122, 0.6);
+  stroke-width: 1;
+  animation: fade 60ms linear both;
+}
+
+.leadEnd {
+  fill: var(--color-gold);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) 2.82s both;
+}
+
+.callout {
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 2.9s both;
+}
+
+.calloutRule {
+  stroke: rgba(232, 200, 122, 0.25);
+}
+
+.calloutTitle {
+  fill: var(--color-white);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.calloutDot {
+  fill: var(--color-gold);
+}
+
+.calloutSub {
+  fill: #c9bcaa;
+  font-family: var(--font-body);
+}
+
+/* ── Closed ↔ open (follows the mouse; reverses half-way if it leaves early) ── */
+
+.land {
+  transform: var(--map-closed);
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1) 160ms;
+}
+
+.open .land {
+  transform: var(--map-open);
+  transition-delay: 0ms;
+}
+
+.lens {
+  fill: rgba(212, 168, 75, 0.14);
+  stroke: #e8c87a;
+  stroke-width: 0.3;
+  stroke-dasharray: 1 0.7;
+  /* comes with the three places */
+  animation: fade 0.35s ease-out 1.7s both;
+}
+
+/* Callout, leader and region name: only on the big map */
+.closedOnly {
+  transition: opacity 250ms ease 450ms;
+}
+
+.open .closedOnly {
+  opacity: 0;
+  transition-delay: 0ms;
+}
+
+.lensLines {
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.open .lensLines {
+  opacity: 1;
+  transition-delay: 420ms;
+}
+
+.lensLine {
+  stroke: rgba(232, 200, 122, 0.35);
+}
+
+/* The inset starts as the lens on the big map and grows to its place */
+.zoom {
+  transform: var(--zoom-from);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms ease;
+}
+
+.open .zoom {
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 90ms;
+}
+
+.inset {
+  fill: rgba(20, 17, 14, 0.92);
+  stroke: rgba(212, 168, 75, 0.35);
+}
+
+.caption {
+  fill: rgba(255, 255, 255, 0.55);
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+.pin {
+  cursor: pointer;
+  outline: none;
+  transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pinDim {
+  opacity: 0.35;
+}
+
+.hit {
+  fill: transparent;
+}
+
+.ring {
+  fill: none;
+  stroke: #e8c87a;
+  stroke-width: 1.5;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ringOn,
+.pin:focus-visible .ring {
+  opacity: 1;
+}
+
+.dot {
+  fill: var(--color-gold);
+}
+
+.num {
+  fill: #1a1612;
+  font-family: var(--font-mono, monospace);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.name {
+  fill: var(--color-white);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.tag {
+  fill: var(--color-gold);
+}
+
+.tagOff {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-dasharray: 3 2;
+}
+
+.tagText {
+  fill: #1a1612;
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+}
+
+.tagTextOff {
+  fill: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-mono, monospace);
+}
+
+/* One line under the map: the hint when closed; what was measured at the place in focus, else the key */
+.footer {
+  position: absolute;
+  left: 8.9%;
+  right: 8.9%;
+  bottom: 10px;
+  min-height: 40px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.8125rem;
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  animation: fade 0.5s ease-out 3.2s both;
+}
+
+.hintIcon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(212, 168, 75, 0.5);
+  border-radius: 50%;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--color-gold);
+}
+
+.tip {
+  color: rgba(245, 240, 232, 0.9);
+  animation: fade 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tip strong {
+  color: var(--color-white);
+}
+
+.legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.keyOn,
+.keyOff {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.keyOn {
+  background: var(--color-gold);
+}
+
+.keyOff {
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+}
+
+.country {
+  flex: none;
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Held at the first frame until the map is on screen */
+.wait .outline,
+.wait .fill,
+.wait .river,
+.wait .late,
+.wait .spot,
+.wait .lens,
+.wait .dash,
+.wait .leadEnd,
+.wait .callout,
+.wait .hint {
+  animation-play-state: paused;
+}
+
+/* Reduced motion: the finished map straight away, and no moving between closed and open */
+.still .outline,
+.still .fill,
+.still .river,
+.still .late,
+.still .spot,
+.still .lens,
+.still .dash,
+.still .leadEnd,
+.still .callout,
+.still .hint,
+.still .tip {
+  animation: none;
+}
+
+.still .land,
+.still .closedOnly,
+.still .lensLines,
+.still .zoom,
+.still .spot {
+  transition: none;
+}
+
+/* Phones and tablets: full width, the shorter phone drawing */
+.mapPhone {
+  width: 100%;
+  aspect-ratio: 350 / 460;
+  border-radius: 20px;
+}
+
+@media (max-width: 1024px) {
+  .footer {
+    left: 16px;
+    right: 16px;
+    bottom: 8px;
+    font-size: 0.875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .outline,
+  .fill,
+  .river,
+  .late,
+  .spot,
+  .lens,
+  .dash,
+  .leadEnd,
+  .callout,
+  .hint,
+  .tip {
+    animation: none;
+  }
+
+  .land,
+  .closedOnly,
+  .lensLines,
+  .zoom,
+  .pin,
+  .ring,
+  .spot {
+    transition: none;
+  }
+}

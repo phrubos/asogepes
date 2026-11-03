@@ -897,3 +897,161 @@
     display: none;
   }
 }
+
+/* Badge and ÉVAD switch in one row above the title (as on the other /kutatas blocks) */
+.badgeRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (min-width: 1025px) {
+  .headerLeft {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .badgeRow {
+    width: 100%;
+  }
+
+  .badgeRow > :last-child {
+    flex: 1 1 auto;
+  }
+}
+
+/* Seasons without a rating (2026): summary, caveat and the date order above the list */
+.seasonNote {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: var(--space-sm);
+  padding: 10px 12px;
+  border: 1px solid rgba(212, 168, 75, 0.25);
+  border-radius: 10px;
+  background: rgba(212, 168, 75, 0.06);
+}
+
+.seasonNote p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.seasonNote .seasonFlagNote {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.flag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 5px;
+  border: 1px dashed rgba(232, 200, 122, 0.6);
+  border-radius: 5px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #e8c87a;
+}
+
+.seasonNote .seasonDates {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.seasonDatesArrow {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Column heads (dates) over the values */
+.valuesHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 var(--space-md) 4px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.valuesHeadCell {
+  text-align: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* The three measured values of a parcel, in date order; the stubble one dashed */
+.resultValues {
+  display: grid;
+  grid-template-columns: repeat(3, 48px);
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.resultValue {
+  padding: 2px 0;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  text-align: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #a5d6a7;
+}
+
+.resultValueFlagged {
+  border: 1px dashed rgba(232, 200, 122, 0.55);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.valuesHeadThird {
+  display: block;
+  font-weight: 400;
+  color: var(--color-gold);
+}
+
+/* Seasons without a rating: the name with depths may wrap; rows only as tall as they need */
+.resultTreatmentWrap {
+  white-space: normal;
+  overflow: visible;
+  line-height: 1.3;
+}
+
+.resultRowCompact {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.resultsTable:has(.resultRowCompact) {
+  gap: 6px;
+}
+
+/* Phones: narrower value columns leave the treatment name room */
+@media (max-width: 600px) {
+  .resultValues {
+    grid-template-columns: repeat(3, 40px);
+    gap: 2px;
+  }
+
+  .resultRowCompact {
+    padding-left: 10px;
+    padding-right: 8px;
+  }
+
+  .valuesHead {
+    padding-right: 8px;
+  }
+}

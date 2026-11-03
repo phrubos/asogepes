@@ -9,12 +9,14 @@ interface ParcelData {
     num: string
     treatment: string
     shortName: string
-    may: number
-    jun: number
-    aug: number
-    rating: number
-    description: string
-    good: boolean
+    /** One value per measurement date; the 2025 data uses may / jun / aug */
+    values?: number[]
+    may?: number
+    jun?: number
+    aug?: number
+    rating?: number
+    description?: string
+    good?: boolean
 }
 
 interface FieldChart3DCanvasProps {
@@ -24,9 +26,15 @@ interface FieldChart3DCanvasProps {
         bestResults: string[]
     }
     isFullscreen?: boolean
+    /** Label of each measurement date (default: Május, Június, Augusztus) */
+    monthLabels?: string[]
+    /** Machine models after the names (known for 2025 only) */
+    showMachines?: boolean
 }
 
-export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen = false }: FieldChart3DCanvasProps) {
+const DEFAULT_MONTHS = ['Május', 'Június', 'Augusztus']
+
+export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen = false, monthLabels = DEFAULT_MONTHS, showMachines = true }: FieldChart3DCanvasProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
     const keysPressed = useRef<{ [key: string]: boolean }>({})
@@ -163,7 +171,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
 
         // Helper to get machine type text
         const getMachineType = (parcelNum: string, treatment: string) => {
-            if (treatment.toLowerCase().includes('ásógép')) {
+            if (showMachines && treatment.toLowerCase().includes('ásógép')) {
                 if (parcelNum === 'I.') return ' (40SX)'
                 if (['II.', 'III.', 'VI.', 'VII.'].includes(parcelNum)) return ' (38SX)'
             }
@@ -234,11 +242,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             }
 
             // Month positions (Z axis) - Inverted: May closest to user (+Z) -> Shifted North by 5 (-3, -5, -7)
-            const months = [
-                { value: parcel.may, z: -3, label: 'Máj' },  // +2 - 5 = -3
-                { value: parcel.jun, z: -5, label: 'Jún' },  // 0 - 5 = -5
-                { value: parcel.aug, z: -7, label: 'Aug' }   // -2 - 5 = -7
-            ]
+            const vals = parcel.values ?? [parcel.may ?? 0, parcel.jun ?? 0, parcel.aug ?? 0]
+            const months = vals.slice(0, 3).map((value, mi) => ({ value, z: -3 - mi * 2 }))
 
             months.forEach(({ value, z }) => {
                 const height = value * 0.12 // Height is magnitude
@@ -325,7 +330,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             numCtx.fillText(parcel.num, 48, 28)
 
             // Add star superscript for specific parcels
-            if (['I.', 'VI.', 'VII.'].includes(parcel.num)) {
+            if (isBest) {
                 numCtx.fillStyle = '#d4a84b'
                 numCtx.font = 'bold 16px system-ui, sans-serif'
                 numCtx.fillText('★', 82, 14) // Top right corner
@@ -367,8 +372,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             nameCanvas.width = 760
             nameCanvas.height = 340
 
-            // Special styling for I., VI., VII.
-            const isHighlighted = ['I.', 'VI.', 'VII.'].includes(parcel.num)
+            // Special styling for the season's best parcels (2025: I., VI., VII.)
+            const isHighlighted = isBest
 
             // Draw Background
             if (isHighlighted) {
@@ -441,7 +446,6 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
         // Month labels - Inverted Z
         // Shifted North by 5 units, but March/April pulled back South to fill space
         // Month labels - Compact depth
-        const monthLabels = ['Május', 'Június', 'Augusztus'] // March/April removed as requested implicitly by "not so deep"
         const monthZPositions = [-3, -5, -7]
         monthLabels.forEach((label, i) => {
             const canvas = document.createElement('canvas')
@@ -556,7 +560,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
                 container.removeChild(renderer.domElement)
             }
         }
-    }, [parcels, conclusions, isFullscreen])
+    }, [parcels, conclusions, isFullscreen, monthLabels, showMachines])
 
     // Prevent page scroll when mouse is over the 3D canvas
     useEffect(() => {
@@ -650,10 +654,12 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
                         <span style={{ width: '16px', height: '16px', background: 'linear-gradient(180deg, rgba(129, 199, 132, 0.8) 0%, rgba(74, 103, 65, 0.9) 100%)', borderRadius: '4px', display: 'inline-block' }}></span>
                         <span>Optimális szerkezetű talaj mélysége</span>
                     </div>
+                    {(conclusions?.bestResults.length ?? 0) > 0 && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px', marginTop: '8px' }}>
                         <span style={{ color: '#d4a84b', fontSize: '14px' }}>★</span>
                         <span>Legnagyobb hatékonyság</span>
                     </div>
+                    )}
                     <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', color: 'rgba(255, 255, 255, 0.4)', fontSize: '12px' }}>
                         WASD: Mozgás | Bal klikk: Forgatás | Jobb klikk: Mozgatás | Görgő: Zoom
                     </div>

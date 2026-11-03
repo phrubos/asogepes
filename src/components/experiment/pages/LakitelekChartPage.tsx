@@ -5,16 +5,20 @@ import { createPortal } from 'react-dom'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Maximize2, X, TrendingUp, Layers, Play } from 'lucide-react'
-import { locations } from '@/lib/data'
+import { lakitelekSeasons, LAKITELEK_YEARS, formatCm } from '@/lib/seasons'
+import { useSeason } from '../season/SeasonContext'
+import SeasonSwitch from '../season/SeasonSwitch'
 import styles from './LakitelekChartPage.module.css'
 
 const FieldChart3DCanvas = dynamic(() => import('../FieldChart3DCanvas'), { ssr: false })
 
-const data = locations.lakitelek
-const parcels = data.parcels || []
-const conclusions = data.conclusions
-
 export default function LakitelekChartPage() {
+  const { year } = useSeason()
+  const season = lakitelekSeasons.seasons.find((s) => s.year === year) ?? lakitelekSeasons.seasons[lakitelekSeasons.seasons.length - 1]
+  const parcels = season.parcels
+  const conclusions = { summary: season.summary, bestResults: season.bestResults }
+  // 2025 has the researchers' rating per parcel; later seasons show the measured values
+  const rated = parcels.every((p) => p.rating !== undefined)
   const [isChartFullscreen, setIsChartFullscreen] = useState(false)
   const [isChartLoaded, setIsChartLoaded] = useState(false)
   const [showResults, setShowResults] = useState(false)
@@ -58,13 +62,37 @@ export default function LakitelekChartPage() {
       </div>
 
       <div className={styles.resultsTableWrapper}>
+        {!rated && (
+          <div className={styles.seasonNote}>
+            <p>{season.summary}</p>
+            {season.flagNote && (
+              <p className={styles.seasonFlagNote}>
+                <span className={styles.flag}>tarló</span>
+                {season.flagNote}
+              </p>
+            )}
+          </div>
+        )}
+        {!rated && (
+          <div className={styles.valuesHead} aria-hidden="true">
+            <span>cm</span>
+            <div className={styles.resultValues}>
+              {season.dates.map((d, i) => (
+                <span key={i} className={styles.valuesHeadCell}>
+                  {d.month}
+                  {d.third && <span className={styles.valuesHeadThird}>{d.third}</span>}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
         <div className={styles.resultsTable}>
           {parcels.map((parcel, index) => {
             const isBest = isBestResult(parcel.num)
             return (
               <motion.div
                 key={parcel.num}
-                className={`${styles.resultRow} ${isBest ? styles.resultRowBest : ''}`}
+                className={`${styles.resultRow} ${isBest ? styles.resultRowBest : ''} ${rated ? '' : styles.resultRowCompact}`}
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.2 + index * 0.05 }}
@@ -75,23 +103,42 @@ export default function LakitelekChartPage() {
                     {isBest && <sup className={styles.bestGridStar}>★</sup>}
                   </span>
                   <div className={styles.resultInfo}>
-                    <span className={styles.resultTreatment}>{parcel.treatment}</span>
-                    <span className={styles.resultDesc}>{parcel.description}</span>
+                    {rated ? (
+                      <>
+                        <span className={styles.resultTreatment}>{parcel.treatment}</span>
+                        <span className={styles.resultDesc}>{parcel.description}</span>
+                      </>
+                    ) : (
+                      <span className={`${styles.resultTreatment} ${styles.resultTreatmentWrap}`}>{parcel.detail}</span>
+                    )}
                   </div>
                 </div>
+                {!rated ? (
+                  <div
+                    className={styles.resultValues}
+                    aria-label={season.dates.map((_, i) => `${formatCm(parcel.values[i])} cm`).join(', ')}
+                  >
+                    {parcel.values.map((v, i) => (
+                      <span key={i} className={`${styles.resultValue} ${season.dateFlags?.[i] ? styles.resultValueFlagged : ''}`}>
+                        {formatCm(v)}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
                 <div className={styles.resultRight}>
                   <div className={`${styles.ratingBar} ${isBest ? styles.ratingBarBest : ''}`}>
                     <motion.div
                       className={styles.ratingFill}
                       initial={{ width: 0 }}
-                      animate={{ width: `${parcel.rating}%` }}
+                      animate={{ width: `${parcel.rating ?? 0}%` }}
                       transition={{ duration: 0.8, delay: 0.4 + index * 0.05 }}
                     />
                   </div>
-                  <span className={`${styles.resultRating} ${parcel.rating >= 90 ? styles.resultRatingGood : ''}`}>
+                  <span className={`${styles.resultRating} ${(parcel.rating ?? 0) >= 90 ? styles.resultRatingGood : ''}`}>
                     {/* Percentage removed */}
                   </span>
                 </div>
+                )}
               </motion.div>
             )
           })}
@@ -113,12 +160,15 @@ export default function LakitelekChartPage() {
           transition={{ duration: 0.5 }}
         >
           <div className={styles.headerLeft}>
-            <div className={styles.headerBadge}>
-              <MapPin size={10} />
-              <span>Lakitelek</span>
+            <div className={styles.badgeRow}>
+              <div className={styles.headerBadge}>
+                <MapPin size={10} />
+                <span>Lakitelek</span>
+              </div>
+              <SeasonSwitch years={LAKITELEK_YEARS} small />
             </div>
             <div className={styles.titleGroup}>
-              <h3 className={styles.headerTitle}>A laza talajréteg mélységének változása 4 hónap alatt</h3>
+              <h3 className={styles.headerTitle}>{season.title} · {season.info.crop.toLowerCase()}</h3>
               <span className={styles.headerSubtitle}>7 művelési kombináció összehasonlítása</span>
             </div>
           </div>
@@ -178,7 +228,7 @@ export default function LakitelekChartPage() {
                       transition={{ duration: 1 }}
                       style={{ width: '100%', height: '100%' }}
                     >
-                      <FieldChart3DCanvas parcels={parcels} conclusions={conclusions} />
+                      <FieldChart3DCanvas key={season.year} parcels={parcels} conclusions={conclusions} monthLabels={season.chartLabels} showMachines={rated} />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -226,11 +276,15 @@ export default function LakitelekChartPage() {
                   <span style={{ width: '12px', height: '12px', background: 'linear-gradient(180deg, rgba(129, 199, 132, 0.8) 0%, rgba(74, 103, 65, 0.9) 100%)', borderRadius: '3px' }}></span>
                   <span>Optimális szerkezetű talaj mélysége</span>
                 </div>
+{season.bestResults.length > 0 && (
+                  <>
                 <div style={{ width: '1px', height: '14px', background: 'rgba(255, 255, 255, 0.15)' }}></div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)' }}>
                   <span style={{ color: '#d4a84b', fontSize: '14px', lineHeight: 1 }}>★</span>
                   <span>Legnagyobb hatékonyság</span>
                 </div>
+                  </>
+                )}
               </div>
               <div style={{ display: 'flex', gap: '16px' }}>
                 <motion.button
@@ -252,8 +306,11 @@ export default function LakitelekChartPage() {
               <div className={styles.fullscreenVisualization}>
                 <div className={styles.vizCanvas}>
                   <FieldChart3DCanvas
+                    key={season.year}
                     parcels={parcels}
                     conclusions={conclusions}
+                    monthLabels={season.chartLabels}
+                    showMachines={rated}
                     isFullscreen={true}
                   />
                 </div>

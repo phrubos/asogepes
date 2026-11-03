@@ -1,0 +1,48 @@
+.only {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.label {
+  padding: 0 8px 0 10px;
+}
+
+.year {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(212, 168, 75, 0.18);
+  color: var(--color-gold);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.note {
+  padding: 0 12px 0 6px;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Phones and tablets: the switch's 44px row height, so the header lines up with Szentkirály */
+@media (max-width: 1024px) {
+  .only {
+    border-radius: 14px;
+    padding: 4px;
+  }
+
+  .year {
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+  }
+}

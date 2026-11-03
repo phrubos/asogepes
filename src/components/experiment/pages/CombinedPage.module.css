@@ -83,6 +83,6 @@
 @media (max-width: 1024px) {
   .section + .section {
     content-visibility: auto;
-    contain-intrinsic-size: auto 800px;
+    contain-intrinsic-size: auto var(--phone-h, 800px);
   }
 }
