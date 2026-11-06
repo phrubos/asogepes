@@ -83,7 +83,7 @@ Use `@/` for imports from `src/` directory (configured in tsconfig.json).
 - Parallel subagents only for tickets that touch disjoint files (the board's "Fájlok" column).
 
 ## Skills
-Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `skills-lock.json`): ux-heuristics, performance-optimization, information-architecture, design-motion-principles, review-animations, find-animation-opportunities, animation-vocabulary, emil-design-eng, apple-design, systematic-debugging, verification-before-completion, writing-plans, executing-plans, and the local **ui-fix-from-screenshot** (the workflow for "this looks wrong" screenshots: trace, fix at the right breakpoint, prove with numbers).
+Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `skills-lock.json`): ux-heuristics, performance-optimization, information-architecture, design-motion-principles, review-animations, find-animation-opportunities, animation-vocabulary, emil-design-eng, apple-design, systematic-debugging, verification-before-completion, writing-plans, executing-plans, and the local **ui-fix-from-screenshot** (the workflow for "this looks wrong" screenshots: trace, fix at the right breakpoint, prove with numbers) and **asogepes-brand** (palette, fonts, partner logos and Hungarian voice for share images, films, slides and other off-site outputs).
 
 Mods (`.claude/mods/`, see its README): `asogepes-qa` (status line, `/ellenoriz`, `/mehet`, layout-check reminder) and `asogepes-elotte-utana` (`/elotte-utana` before/after pane; `scripts/qa/snap.js`).
 
@@ -91,7 +91,7 @@ Hook: `.claude/hooks/css-guard.js` runs after every Edit/Write of a `*.module.cs
 
 ## Design Notes
 
-- Avoid blue/indigo colors - use earth tones per globals.css
+- Avoid blue/indigo colors - use earth tones per globals.css. The partners (Neumann János Egyetem, Agroskill Kft.) appear only through their own logos (`src/lib/partners.ts`, `public/images/partners/`); their brand colours (Agroskill navy/yellow) stay inside the logos
 - Respect `prefers-reduced-motion` in every animation (`useReducedMotion` from `@/hooks/useReducedMotion`; Framer's `MotionConfig` skips transforms but not opacity)
 - Hover-revealed content must also open by tap and keyboard: use `useDisclosureTrigger` (`@/hooks/useDisclosureTrigger`)
 - Text: no font-size below 0.75rem (12px); body text at least 0.9375rem. Sections grow with content (`min-height`, not fixed `height` + `overflow: hidden`)

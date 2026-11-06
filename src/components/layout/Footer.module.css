@@ -23,33 +23,32 @@
     text-align: center;
 }
 
-.footerItem {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.itemName {
-    font-family: var(--font-display);
-    font-size: clamp(1.1rem, 1.5vw, 1.3rem);
-    font-weight: 700;
-    color: var(--color-white);
-    letter-spacing: 0.02em;
-}
-
-.itemDetail {
-    font-size: clamp(0.75rem, 1vw, 0.875rem);
-    color: var(--color-gold);
-    opacity: 0.8;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
 .footerDivider {
     width: 1px;
     height: 40px;
     background: linear-gradient(180deg, transparent, rgba(212, 168, 75, 0.3), transparent);
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    transition: opacity 0.3s ease;
+}
+
+/* Partner logos at one visual weight: the NJE mark has two text lines, so it sits a bit taller */
+.logo {
+    display: block;
+    width: auto;
+    height: 52px;
+}
+
+.link:last-child .logo {
+    height: 40px;
+}
+
+.link:hover {
+    opacity: 0.8;
 }
 
 @media (max-width: 768px) {
@@ -62,21 +61,17 @@
         gap: var(--space-2xl);
     }
 
+    .logo {
+        height: 44px;
+    }
+
+    .link:last-child .logo {
+        height: 34px;
+    }
+
     .footerDivider {
         width: 60px;
         height: 1px;
         background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.3), transparent);
     }
-}
-
-.link {
-    text-decoration: none;
-    transition: opacity 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.link:hover {
-    opacity: 0.8;
 }

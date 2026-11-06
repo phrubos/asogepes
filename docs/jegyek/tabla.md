@@ -18,6 +18,7 @@ Utoljára frissítve: 2026-11-06. Folyamat és státuszok: [README](README.md).
 
 | Feladat | Mikor | Hol |
 |---|---|---|
+| [003](003-partner-logok.md) Partnerlogók (lábléc, oldalvég, OG-kép) + `asogepes-brand` skill | 2026-11-06 | `lib/partners.ts`, `layout/Footer`, `shared/PageEnd`, `lib/og/renderOgImage.tsx` |
 | [002](002-mobil-hero-video.md) Mobil hero: álló videó (Imants → traktor → ásók) | 2026-11-06 | `home/Hero.tsx`, checker ellenőrizte; nyitott: LCP prod buildben |
 | Teljes `<h1>` a főoldalon (`aria-label` + gépírás `aria-hidden`) | 2026-11-05 | `home/Hero.tsx`, checker ellenőrizte |
 | Audit P1: oldalvégek, összegzés, szántás-idézet, a11y | 2026-11-03 | audit 11-03 §12 |

@@ -24,13 +24,17 @@ interface OgOptions {
 }
 
 export async function renderOgImage({ background, eyebrow, title, subtitle }: OgOptions) {
-  const [bg, fraunces, inter, interSemi] = await Promise.all([
+  const [bg, njeLogo, agroLogo, fraunces, inter, interSemi] = await Promise.all([
     readFile(join(dir, 'bg', `${background}.jpg`)),
+    readFile(join(process.cwd(), 'public/images/partners/nje-kvk.svg')),
+    readFile(join(process.cwd(), 'public/images/partners/agroskill.png')),
     readFile(join(dir, 'fonts', 'Fraunces-SemiBold.ttf')),
     readFile(join(dir, 'fonts', 'Inter-Regular.ttf')),
     readFile(join(dir, 'fonts', 'Inter-SemiBold.ttf')),
   ])
   const bgSrc = `data:image/jpeg;base64,${bg.toString('base64')}`
+  const njeSrc = `data:image/svg+xml;base64,${njeLogo.toString('base64')}`
+  const agroSrc = `data:image/png;base64,${agroLogo.toString('base64')}`
 
   return new ImageResponse(
     (
@@ -85,18 +89,13 @@ export async function renderOgImage({ background, eyebrow, title, subtitle }: Og
           <div style={{ display: 'flex', fontFamily: 'Inter', fontSize: 27, lineHeight: 1.4, color: '#E8E0D4' }}>
             {subtitle}
           </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: 40,
-              fontFamily: 'Inter',
-              fontSize: 20,
-              color: '#E8C87A',
-            }}
-          >
-            <div style={{ width: 48, height: 3, background: '#D4A84B', marginRight: 16 }} />
-            Neumann János Egyetem × Agroskill Kft.
+          {/* The partners' own logos (src/lib/partners.ts), light versions for the dark card */}
+          <div style={{ display: 'flex', alignItems: 'center', marginTop: 44 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+            <img src={njeSrc} width={289} height={50} />
+            <div style={{ width: 1, height: 40, background: 'rgba(212,168,75,0.45)', margin: '0 28px' }} />
+            {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+            <img src={agroSrc} width={184} height={40} />
           </div>
         </div>
       </div>

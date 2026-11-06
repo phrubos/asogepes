@@ -1,5 +1,7 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { PARTNERS } from '@/lib/partners'
 import styles from './PageEnd.module.css'
 
 export interface PageEndNext {
@@ -28,14 +30,18 @@ export default function PageEnd({ next }: { next: PageEndNext }) {
 
       <div className={styles.partners}>
         <span className={styles.partnersLabel}>A kutatást végezte</span>
-        <a href="https://kvk.nje.hu/" target="_blank" rel="noopener noreferrer" className={styles.partner}>
-          <span className={styles.partnerName}>Neumann János Egyetem</span>
-          <span className={styles.partnerDetail}>Kertészeti és Vidékfejlesztési Kar</span>
-        </a>
-        <a href="https://www.agroskill.hu/" target="_blank" rel="noopener noreferrer" className={styles.partner}>
-          <span className={styles.partnerName}>Agroskill Kft.</span>
-          <span className={styles.partnerDetail}>Szentkirály</span>
-        </a>
+        {PARTNERS.map((p) => (
+          <a key={p.href} href={p.href} target="_blank" rel="noopener noreferrer" className={styles.partner}>
+            <Image
+              src={p.logo}
+              alt={`${p.name} – ${p.detail}`}
+              width={p.width}
+              height={p.height}
+              unoptimized
+              className={styles.partnerLogo}
+            />
+          </a>
+        ))}
       </div>
     </div>
   )

@@ -88,28 +88,24 @@
 
 .partner {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
   min-height: 44px;
-  justify-content: center;
-  text-decoration: none;
+  transition: opacity 0.2s ease;
 }
 
-.partnerName {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-white);
+.partner:hover {
+  opacity: 0.8;
 }
 
-.partnerDetail {
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  color: var(--color-gold);
+/* One visual weight: the NJE mark has two text lines, so it sits a bit taller than the Agroskill one */
+.partnerLogo {
+  display: block;
+  width: auto;
+  height: 40px;
 }
 
-.partner:hover .partnerName {
-  color: var(--color-gold);
+.partner:last-child .partnerLogo {
+  height: 30px;
 }
 
 /* Phones and tablets: the one 20px gutter, left-aligned, no centred box */
@@ -131,7 +127,7 @@
   .partners {
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    gap: 12px;
   }
 }
 
