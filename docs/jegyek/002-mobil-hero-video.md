@@ -9,7 +9,7 @@ Telefonon a főoldal háttere ne legyen elmosódott, és látszódjon rajta az I
 ## Hatókör
 
 - `home/Hero.tsx`, `home/Hero.module.css`, csak 767 px alatt.
-- Új fájlok: `public/videos/hero_mobile_imants.mp4` (720×1280, 4 s hurok, 1,3 MB), `public/images/hero-poster-mobile.jpg` (1080×1920, a videó első kockája).
+- Új fájlok: `public/videos/hero_mobile.mp4` (720×1280, 10,25 s hurok, 3 jelenet, 2,7 MB; eredetileg `hero_mobile_imants.mp4`, 4 s, 1,3 MB), `public/images/hero-poster-mobile.jpg` (1080×1920, a videó első kockája).
 - `scripts/qa/hero-check.js`: telefonon most már szabad a mobil videó, de csak a betöltés után.
 
 ## Nem nyúlunk hozzá
@@ -21,6 +21,7 @@ Telefonon a főoldal háttere ne legyen elmosódott, és látszódjon rajta az I
 - 2026-11-06: az ok mérve: a telefon 1200×625-ös posztert kapott (`sizes="100vw"`), ~5,3× nagyítás (felhasználó: „nagyon elmosódott”).
 - 2026-11-06: a felhasználó a valódi felvételt választotta (nem AI), és kérte, hogy az Imants felirat látsszon. A 2-es jelölt lett: a `hero_background_optimized.mp4` 15,5–18,75 s része, a feliratra kockánként stabilizált 9:16-os kivágás (a recept az Eredményben), 1,5× lassítás (minterpolate), meleg színkorrekció (`cinematic-film` skill), 0,5 s áttűnéses hurok, majd fal.ai `bytedance-upscaler` (fidelity high) 1080×1920-ra, 720×1280-ban kódolva.
 - 2026-11-06: mivel a hero 390×~1014 px (keskenyebb a 9:16-nál), a videó nem tölti ki a herót (a felirat kilógna), hanem felül, teljes szélességben áll, és lefelé a sötét háttérbe olvad.
+- 2026-11-06 (bővítés): a felhasználó kérte, hogy a gép és a föld is nagyobb részben látsszon, több jelenet felváltva, átúszással. A válogatóoldalról (6 jelölt) a javaslat lett: Imants-felirat → C „traktor + gép” (forrás 11,8–14,65 s) → B „ásók közelről” (6,2–8,9 s, 405×720-as kivágás). Egyetlen fájlba vágva, nem JS-sel váltott videók (egy letöltés, nincs döccenés iPhone-on). Tág kép az egész gépről a felvételben nincs; saját felvétel vagy AI-jelenet lehetne később.
 - A videó csak `window.load` után indul, mozgáscsökkentésnél, Save-Data-nál és 2g/3g kapcsolatnál nem; képernyőn kívül megáll. Ilyenkor az álló poszter látszik.
 
 ## Kész, ha
@@ -43,3 +44,4 @@ Telefonon a főoldal háttere ne legyen elmosódott, és látszódjon rajta az I
 - perf.js, dev szerver, `/` mobile4g: FCP 0,8 s, CLS 0,001, TBT ~955 ms (a többi oldalnál kisebb). **Nyitott:** lassított mobilhálózaton az LCP-elem a `video` (18,4 s, dev); production buildben érdemes megnézni, és ha ott is így van, a videó ne legyen nagyobb LCP-jelölt a poszternél.
 - A videó receptje: kockánkénti stabilizálás az „imants” feliratra (hely + méret, PIL), 1,5× minterpolate lassítás, a `cinematic-film` színkorrekciója, 0,5 s áttűnéses hurok a legjobban illeszkedő kockák között, fal `bytedance-upscaler` (fidelity high), 720×1280-ban kódolva (CRF 26).
 - fal-költség összesen ~0,13 USD (próbákkal együtt).
+- Bővítés (3 jelenet): a két új jelenet ugyanazzal a recepttel (színkorrekció, 1,5× minterpolate, fal `bytedance-upscaler` 1,78×); 0,8 s-os áttűnések (`xfade`), a hurok a negyedik, Imants-ra visszaúszó átmenet után vágva, így a vége és az eleje folytonos (SSIM 0,57, a szomszédos kockáké a videón belül ~0,63). CRF 27, 2,7 MB. A poszter a videó első kockája 1080×1920-ban (SSIM 0,96 a videó első kockájához).

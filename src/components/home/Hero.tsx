@@ -34,7 +34,7 @@ type HeroVideo = 'desktop' | 'mobile' | null
 
 const HERO_VIDEO_SRC = {
   desktop: '/videos/hero_background_optimized.mp4',
-  mobile: '/videos/hero_mobile_imants.mp4',
+  mobile: '/videos/hero_mobile.mp4',
 } as const
 
 type NetworkInfo = { saveData?: boolean; effectiveType?: string }

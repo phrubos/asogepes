@@ -18,7 +18,7 @@ Utoljára frissítve: 2026-11-06. Folyamat és státuszok: [README](README.md).
 
 | Feladat | Mikor | Hol |
 |---|---|---|
-| [002](002-mobil-hero-video.md) Mobil hero: álló Imants-videó | 2026-11-06 | `home/Hero.tsx`, checker ellenőrizte; nyitott: LCP prod buildben |
+| [002](002-mobil-hero-video.md) Mobil hero: álló videó (Imants → traktor → ásók) | 2026-11-06 | `home/Hero.tsx`, checker ellenőrizte; nyitott: LCP prod buildben |
 | Teljes `<h1>` a főoldalon (`aria-label` + gépírás `aria-hidden`) | 2026-11-05 | `home/Hero.tsx`, checker ellenőrizte |
 | Audit P1: oldalvégek, összegzés, szántás-idézet, a11y | 2026-11-03 | audit 11-03 §12 |
 | SEO-cím „2025 óta”, OG-képek | 2026-11-03 | `app/layout.tsx`, commit 5cc8623 |
