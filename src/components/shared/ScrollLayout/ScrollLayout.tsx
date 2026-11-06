@@ -248,77 +248,64 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
     }
   }, [sections, scrollToSection])
 
-  // IntersectionObserver for tracking active section during scroll
+  // Track the active section while scrolling. The active block is the one crossing a reading line,
+  // a subsection before its section. Desktop: 50% of the viewport. Phones/tablets: 35%, because the
+  // last subsections (Fotók) are short and a 50% line switched to them while the previous block still
+  // filled the upper half of the screen. A rAF-throttled scroll listener (not IntersectionObserver
+  // thresholds) so a crossing is never missed, also for blocks taller than the screen.
   useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: '-15% 0px -50% 0px', // Top 15%, bottom 50% excluded - focus on upper-middle area
-      threshold: [0, 0.1, 0.25]
-    }
-
-    // The active block is the one crossing the bottom edge of the focus band (50% of the viewport),
-    // a subsection before its section. Comparing intersectionRatio of the changed entries failed for
-    // sections taller than a few screens (their ratio never reaches a threshold, so a neighbour kept winning).
     const subsectionIds = sections.flatMap(s => s.subsections?.map(sub => sub.id) ?? [])
+    const sectionIds = sections.map(s => s.id)
+    const narrow = window.matchMedia('(max-width: 1024px)')
+    let current = ''
+    let frame = 0
+
     const pickActive = () => {
-      const line = window.innerHeight * 0.5
+      const line = window.innerHeight * (narrow.matches ? 0.35 : 0.5)
       const contains = (id: string) => {
         const r = document.getElementById(id)?.getBoundingClientRect()
         return !!r && r.top <= line && r.bottom > line
       }
-      return subsectionIds.find(contains) ?? sections.map(s => s.id).find(contains)
+      return subsectionIds.find(contains) ?? sectionIds.find(contains)
     }
 
-    const observerCallback: IntersectionObserverCallback = () => {
+    const update = () => {
+      frame = 0
       if (isProgrammaticScroll.current) return
+      const id = pickActive()
+      if (!id || id === current) return
+      current = id
 
-      const sectionId = pickActive()
-      if (!sectionId) return
-
-      // Check if it's a main section
-      const mainSection = sections.find(s => s.id === sectionId)
+      const mainSection = sections.find(s => s.id === id)
       if (mainSection) {
-        setActiveSection(sectionId)
+        setActiveSection(id)
         // When main section is in view, activate first subsection
-        const firstSub = mainSection.subsections?.[0]
-        setActiveSubsection(firstSub?.id || null)
-
-        // Update URL silently
-        const url = new URL(window.location.href)
-        url.searchParams.set('section', sectionId)
-        window.history.replaceState({}, '', url.pathname + url.search)
+        setActiveSubsection(mainSection.subsections?.[0]?.id || null)
       } else {
-        // Check if it's a subsection
-        for (const section of sections) {
-          const sub = section.subsections?.find(s => s.id === sectionId)
-          if (sub) {
-            setActiveSection(section.id)
-            setActiveSubsection(sectionId)
-
-            // Update URL silently
-            const url = new URL(window.location.href)
-            url.searchParams.set('section', sectionId)
-            window.history.replaceState({}, '', url.pathname + url.search)
-            break
-          }
-        }
+        const parent = sections.find(s => s.subsections?.some(sub => sub.id === id))
+        if (!parent) return
+        setActiveSection(parent.id)
+        setActiveSubsection(id)
       }
+
+      // Update URL silently
+      const url = new URL(window.location.href)
+      url.searchParams.set('section', id)
+      window.history.replaceState({}, '', url.pathname + url.search)
     }
 
-    const observer = new IntersectionObserver(observerCallback, observerOptions)
-
-    // Observe all sections and subsections
-    sections.forEach(section => {
-      const element = document.getElementById(section.id)
-      if (element) observer.observe(element)
-
-      section.subsections?.forEach(sub => {
-        const subElement = document.getElementById(sub.id)
-        if (subElement) observer.observe(subElement)
-      })
-    })
-
-    return () => observer.disconnect()
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update) }
+    schedule()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    // a programmatic scroll mutes tracking for 1s; re-check once it ends
+    window.addEventListener('scrollend', schedule)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+      window.removeEventListener('scrollend', schedule)
+    }
   }, [sections])
 
   // Listen for reset event
