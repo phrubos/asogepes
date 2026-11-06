@@ -400,13 +400,16 @@
         inset: 0;
     }
 
-    .heroMedia,
-    .heroOverlay {
+    .heroMedia {
         inset: 0 0 auto;
         aspect-ratio: 9 / 16;
     }
 
+    /* 4px past the video: while the parallax moves it by fractional pixels, the video's last row
+       (its own compositing layer) otherwise peeks out under the fade as a flickering bright line */
     .heroOverlay {
+        inset: 0 0 auto;
+        height: calc(100vw * 16 / 9 + 4px);
         background: linear-gradient(180deg,
                 rgba(26, 22, 18, 0.35) 0%,
                 rgba(26, 22, 18, 0) 12%,
