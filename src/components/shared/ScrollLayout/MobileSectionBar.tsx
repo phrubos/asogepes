@@ -6,7 +6,9 @@ import { ChevronDown, X } from 'lucide-react'
 import { useScrollNav } from './ScrollLayout'
 import styles from './MobileSectionBar.module.css'
 
-const oneLine = (label: string) => label.replace(/\s*\n\s*/g, ' ')
+// "Kecskemét-\nBorbás" joins without a space after the hyphen; other line breaks become a space
+export const oneLine = (label: string) =>
+    label.replace(/-\s*\n\s*/g, '-').replace(/\s*\n\s*/g, ' ')
 
 /**
  * Phones and tablets: one sticky bar that names where the reader is, and opens a sheet with every

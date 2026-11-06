@@ -68,12 +68,12 @@
   background: linear-gradient(135deg, rgba(26, 23, 20, 0.7) 0%, rgba(35, 30, 25, 0.8) 100%);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 10px;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .infoCard:hover {
+  /* no lift: the card is not a control, and Framer owns its transform (entrance) */
   border-color: rgba(212, 168, 75, 0.2);
-  transform: translateY(-2px);
 }
 
 .infoCard.measurement {

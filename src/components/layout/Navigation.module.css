@@ -10,7 +10,15 @@
     right: 0;
     z-index: 110;
     padding: 0 var(--space-xl);
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    /* the header box is a transparent strip over the page: only its controls take clicks */
+    pointer-events: none;
+}
+
+.nav,
+.menuToggle,
+.mobileNav,
+.mobileOverlay {
+    pointer-events: auto;
 }
 
 .header::before {
@@ -76,14 +84,13 @@
     justify-content: flex-end;
     padding: var(--space-lg) 0;
     border-bottom: 1px solid transparent;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    /* scrolled: moves up by transform (space-lg -> space-md), not by animating the padding */
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
 }
 
 .header.scrolled .headerInner {
-    padding: var(--space-md) 0;
-    border-bottom-color: transparent;
-    /* Removed gray line */
+    transform: translateY(calc(var(--space-md) - var(--space-lg)));
 }
 
 /* Desktop Navigation */
@@ -104,10 +111,12 @@
     transition: color 0.3s ease;
 }
 
-/* Sliding Indicator - The magic underline */
+/* Sliding Indicator - The magic underline (100px wide; x and scaleX set by Framer) */
 .indicator {
     position: absolute;
+    left: 0;
     bottom: -2px;
+    width: 100px;
     height: 2px;
     border-radius: 1px;
     pointer-events: none;
@@ -188,7 +197,7 @@
     text-decoration: none;
     color: rgba(255, 255, 255, 0.7);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, padding-left 0.3s ease;
     position: relative;
 }
 
@@ -255,6 +264,7 @@
     .header.scrolled .headerInner {
         min-height: 56px;
         padding: 0;
+        transform: none;
     }
 
     .mobileNav,

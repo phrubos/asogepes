@@ -12,20 +12,18 @@ const data = locations.szentkiraly
 const site = szentkiralySeasons
 const siteYears = site.seasons.map((s) => s.year)
 
+// The site facts arrive together as one block (no stagger): they are a table, not a sequence
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 }
-  }
+  visible: { opacity: 1 }
 }
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
+  hidden: { opacity: 0, y: 8 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
   }
 }
 

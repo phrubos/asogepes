@@ -216,13 +216,6 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
       {/* Background Glow */}
       <div className={styles.hubGlow} />
 
-      {/* Animated Particles */}
-      <div className={styles.particles}>
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className={styles.particle} style={{ animationDelay: `${i * 0.5}s` }} />
-        ))}
-      </div>
-
       {/* Connection Lines - SVG Bezier Curves */}
       <AnimatePresence>
         {effectiveHoveredOption === 'operation' && (
@@ -331,7 +324,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               onClick={onScrollToOperation}
               onMouseEnter={() => setHoveredMiniFolder('operation')}
               onMouseLeave={() => setHoveredMiniFolder(null)}
-              whileHover={{ scale: 1.08, y: -10 }}
+              whileHover={{ y: -4 }}
             >
               <div className={`${styles.miniFolderTab} ${styles.miniFolderTabGreen}`}>
                 Elv
@@ -373,7 +366,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
                 onClick={() => onScrollToModel(model.id)}
                 onMouseEnter={() => setHoveredMiniFolder(model.id)}
                 onMouseLeave={() => setHoveredMiniFolder(null)}
-                whileHover={{ scale: 1.08, y: -10 }}
+                whileHover={{ y: -4 }}
               >
                 <div className={`${styles.miniFolderTab} ${styles[`miniFolderTab${model.color.charAt(0).toUpperCase() + model.color.slice(1)}`]}`}>
                   {model.tag}
@@ -420,7 +413,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               onClick={onScrollToGuide}
               onMouseEnter={() => setHoveredMiniFolder('guide')}
               onMouseLeave={() => setHoveredMiniFolder(null)}
-              whileHover={{ scale: 1.08, y: -10 }}
+              whileHover={{ y: -4 }}
             >
               <div className={`${styles.miniFolderTab} ${styles.miniFolderTabPurple}`}>
                 Guide

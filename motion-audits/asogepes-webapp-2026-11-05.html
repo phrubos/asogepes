@@ -1,0 +1,1306 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>asogepes-webapp — mozgás- és UX-audit · 2026-11-05</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ——— Fixed identity: COOL slate-graphite + chalk (near-achromatic) ——— */
+    --ink:        oklch(0.155 0.006 255);
+    --surface:    oklch(0.195 0.007 255);
+    --surface-2:  oklch(0.235 0.008 255);
+    --paper:      oklch(0.945 0.004 255);
+    --paper-dim:  oklch(0.800 0.006 255);
+    --muted:      oklch(0.680 0.008 255);
+    --faint:      oklch(0.505 0.008 255);
+    --line:       oklch(0.95 0.01 255 / 0.09);
+    --line-strong:oklch(0.95 0.01 255 / 0.16);
+
+    /* ——— Accent (NEUTRAL BY DEFAULT) ———
+       The report has no primary color. --accent aliases the contrast
+       neutral (--paper) so any element that historically wanted a brand
+       splash now reads as quiet chrome. An individual audit can repoint
+       these three to a sampled brand color if appropriate, but the
+       default — and the worked example — keeps the chrome neutral and
+       lets severity be the only color in the report. */
+    --accent:      var(--paper);
+    --accent-soft: var(--paper-dim);
+    --accent-tint: color-mix(in oklch, var(--paper) 12%, transparent);
+
+    /* ——— Severity (FIXED — never adaptive) ——— */
+    --crit:      oklch(0.655 0.185 25);
+    --crit-tint: oklch(0.655 0.185 25 / 0.15);
+    --imp:       oklch(0.805 0.125 78);
+    --imp-tint:  oklch(0.805 0.125 78 / 0.15);
+    --opp:       oklch(0.745 0.135 152);
+    --opp-tint:  oklch(0.745 0.135 152 / 0.15);
+
+    /* ——— Timing-budget ramp (FIXED — diagram + its legend only) ——— */
+    --t-good:  oklch(0.745 0.135 152);  /* instant + responsive */
+    --t-mid:   oklch(0.805 0.125 78);   /* deliberate           */
+    --t-slow:  oklch(0.655 0.185 25);   /* sluggish             */
+
+    /* ——— Verdict (FIXED — lens table) ——— */
+    --strong:  var(--opp);
+    --concern: var(--imp);
+    --problem: var(--crit);
+
+    /* ——— Spacing (4pt scale, semantic) ——— */
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+    --s6:32px; --s7:48px; --s8:64px; --s9:96px;
+
+    --display: "Familjen Grotesk", "Hanken Grotesk", system-ui, sans-serif;
+    --sans: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  /* ═══════════════ LIGHT-MODE OVERRIDES ═══════════════
+     Activated when the global theme toggle is set to Light. Every token
+     above gets a counterpart here — same hue, mirrored L — so the report
+     reads cleanly on light backgrounds. Hue stays 255 (cool slate) so the
+     identity is the same character, just inverted. */
+  :root:has(#theme-light:checked) {
+    --ink:        oklch(0.985 0.003 255);  /* light page bg */
+    --surface:    oklch(0.965 0.004 255);
+    --surface-2:  oklch(0.940 0.005 255);
+    --paper:      oklch(0.180 0.006 255);  /* dark text */
+    --paper-dim:  oklch(0.330 0.008 255);
+    --muted:      oklch(0.475 0.010 255);
+    --faint:      oklch(0.640 0.009 255);
+    --line:       oklch(0.180 0.010 255 / 0.12);
+    --line-strong:oklch(0.180 0.010 255 / 0.22);
+
+    /* Accent stays aliased to --paper (now the dark ink in light mode),
+       so chrome inverts automatically. No additional override needed. */
+
+    /* Severity: same hues, deeper L for legibility on light bg */
+    --crit:      oklch(0.555 0.195 25);
+    --crit-tint: oklch(0.555 0.195 25 / 0.12);
+    --imp:       oklch(0.580 0.155 78);
+    --imp-tint:  oklch(0.580 0.155 78 / 0.14);
+    --opp:       oklch(0.555 0.140 152);
+    --opp-tint:  oklch(0.555 0.140 152 / 0.13);
+
+    /* Timing ramp follows severity */
+    --t-good: oklch(0.555 0.140 152);
+    --t-mid:  oklch(0.580 0.155 78);
+    --t-slow: oklch(0.555 0.195 25);
+  }
+
+  /* SVG dot label: light text in light-mode (deeper dots), dark text in dark-mode (lighter dots) */
+  :root:has(#theme-light:checked) .tf-dot-text { fill: oklch(0.985 0.003 255); }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--accent-tint); }
+  a { color: var(--accent-soft); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: clamp(40px, 6vw, 72px) clamp(20px, 5vw, 40px) 96px; }
+
+  /* shared micro-label */
+  .mono-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  code { font-family: var(--mono); font-size: 0.86em; color: var(--paper-dim); }
+
+  /* visually-hidden (theme + stage radios) */
+  .vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* ───────────── Global theme switch ───────────── */
+  .theme-switch { display: flex; justify-content: flex-end; margin-bottom: var(--s5); }
+  .theme-switch__pill { display: inline-flex; align-items: center; gap: 0; border: 1px solid var(--line-strong); border-radius: 100px; overflow: hidden; }
+  .theme-switch__pill label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); padding: 6px 14px; cursor: pointer; user-select: none; transition: background 0.15s ease, color 0.15s ease; }
+  #theme-dark:checked  ~ .theme-switch__pill label[for="theme-dark"],
+  #theme-light:checked ~ .theme-switch__pill label[for="theme-light"] { background: var(--accent-tint); color: var(--accent-soft); }
+
+  /* ───────────── Header ───────────── */
+  header.doc { padding-bottom: var(--s7); margin-bottom: var(--s8); border-bottom: 1px solid var(--line); }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); display: inline-flex; align-items: center; gap: var(--s3);
+  }
+  .eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--accent); display: inline-block; }
+  h1.title {
+    font-family: var(--display);
+    font-size: clamp(38px, 6vw, 60px);
+    font-weight: 700; letter-spacing: -0.025em; line-height: 1.02;
+    margin: var(--s5) 0 var(--s4); color: var(--paper); max-width: 17ch;
+  }
+  .lede { font-size: clamp(17px, 2.2vw, 19px); color: var(--paper-dim); max-width: 66ch; line-height: 1.6; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: var(--s6); margin-top: var(--s6); }
+  .meta-row .k { display: block; margin-bottom: 4px; }
+  .meta-row .v { font-size: 15px; color: var(--paper); }
+
+  .stats { display: flex; gap: clamp(20px, 4vw, 44px); margin-top: var(--s7); flex-wrap: wrap; }
+  .stat .num { font-family: var(--display); font-size: 40px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat.crit .num { color: var(--crit); }
+  .stat.imp .num  { color: var(--imp); }
+  .stat.opp .num  { color: var(--opp); }
+  .stat .lbl { margin-top: var(--s2); }
+  .stat a { color: inherit; text-decoration: none; }
+  .stat a:hover .num { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 2px; }
+
+  /* ───────────── Section scaffolding ───────────── */
+  section { margin-bottom: var(--s9); }
+  .sec-index { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; color: var(--accent-soft); }
+  h2.section-title {
+    font-family: var(--display);
+    font-size: clamp(24px, 3.4vw, 32px);
+    font-weight: 600; letter-spacing: -0.02em; line-height: 1.1;
+    margin: var(--s2) 0 var(--s4); color: var(--paper);
+  }
+  .section-sub { color: var(--paper-dim); max-width: 74ch; margin: 0 0 var(--s6); }
+  .section-sub em { color: var(--paper); font-style: italic; }
+
+  /* ───────────── Overall assessment ───────────── */
+  .assessment { border-top: 1px solid var(--line); padding-top: var(--s6); }
+  .assessment .mono-label { color: var(--accent-soft); }
+  .assessment p { font-family: var(--display); font-weight: 400; font-size: clamp(20px, 2.8vw, 26px); line-height: 1.42; letter-spacing: -0.01em; color: var(--paper); max-width: 34ch; margin: var(--s4) 0 0; }
+  .assessment p em { font-style: italic; color: var(--accent-soft); }
+
+  /* ───────────── Lens summary table ───────────── */
+  .lens-table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); }
+  .lens-table th, .lens-table td { padding: var(--s4) var(--s5); text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .lens-table tr:last-child td { border-bottom: none; }
+  .lens-table thead th { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); font-weight: 500; }
+  .lens-table tbody tr:hover { background: oklch(0.95 0.01 255 / 0.018); }
+  .lens-name { font-weight: 600; color: var(--paper); width: 28%; }
+  .lens-name .who { display: block; margin-top: 2px; color: var(--muted); font-weight: 400; font-size: 13.5px; }
+  .lens-name .weight { display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .lens-read { color: var(--paper-dim); }
+  .lens-read em { color: var(--paper); font-style: italic; }
+  .verdict { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
+  .verdict::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .v-strong  { color: var(--strong); }  .v-strong::before  { background: var(--strong); }
+  .v-concern { color: var(--concern); } .v-concern::before { background: var(--concern); }
+  .v-problem { color: var(--problem); } .v-problem::before { background: var(--problem); }
+  .v-mixed   { color: var(--muted); }   .v-mixed::before   { background: var(--muted); }
+
+  /* ───────────── Timing-budget diagram ───────────── */
+  .timing-grid { display: grid; grid-template-columns: 1fr 320px; gap: clamp(28px, 5vw, 56px); align-items: start; }
+  @media (max-width: 860px) { .timing-grid { grid-template-columns: 1fr; } }
+  .timing-figure { width: 100%; height: auto; }
+  .timing-key h4 { margin: 0 0 var(--s4); }
+  .key-list { list-style: none; margin: 0 0 var(--s6); padding: 0; display: grid; gap: 2px; }
+  .key-list li { display: grid; grid-template-columns: 22px 1fr auto; align-items: baseline; gap: var(--s3); padding: var(--s2) 0; border-bottom: 1px solid var(--line); }
+  .key-list li:last-child { border-bottom: none; }
+  .key-list .kn { font-family: var(--mono); font-size: 12px; color: var(--paper); font-variant-numeric: tabular-nums; }
+  .key-list .ka { color: var(--paper-dim); }
+  .key-list .kt { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+  .kt.good { color: var(--t-good); }
+  .kt.mid  { color: var(--t-mid); }
+  .kt.slow { color: var(--t-slow); }
+  .kt.none { color: var(--faint); }
+  .zone-defs { display: grid; gap: var(--s3); margin-top: var(--s5); }
+  .zone-def { display: grid; grid-template-columns: 12px 1fr; gap: var(--s3); align-items: start; }
+  .zone-def .dot { width: 11px; height: 11px; border-radius: 50%; margin-top: 6px; }
+  .zone-def .zt { font-weight: 600; color: var(--paper); }
+  .zone-def .zd { font-size: 13.5px; color: var(--muted); }
+  .whats-off { margin-top: var(--s5); padding-top: var(--s5); border-top: 1px solid var(--line); }
+  .whats-off .mono-label { color: var(--accent-soft); }
+  .whats-off p { margin: var(--s2) 0 0; color: var(--paper-dim); font-size: 14px; max-width: 60ch; }
+
+  /* ───────────── Per-lens sections ───────────── */
+  .lens-sec { margin-bottom: var(--s9); padding-top: var(--s6); border-top: 1px solid var(--line); }
+  .lens-sec__head { display: flex; align-items: baseline; gap: var(--s4); flex-wrap: wrap; margin-bottom: var(--s2); }
+  .lens-sec__head h3 { font-family: var(--display); font-size: clamp(22px, 3vw, 28px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; margin: 0; color: var(--paper); }
+  .lens-sec__weight { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-soft); border: 1px solid var(--line-strong); border-radius: 100px; padding: 4px 10px; }
+  .lens-sec__verdict { margin: 0 0 var(--s6); }
+
+  .lens-block { margin: var(--s6) 0; }
+  .lens-block > .mono-label { display: block; margin-bottom: var(--s4); }
+  .lens-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); max-width: 78ch; }
+  .lens-list li { display: grid; grid-template-columns: 22px 1fr; gap: var(--s2); align-items: start; color: var(--paper-dim); }
+  .lens-list .mk { font-family: var(--mono); font-size: 13px; line-height: 1.5; }
+  .lens-list.good .mk { color: var(--strong); }
+  .lens-list.opp .mk  { color: var(--accent-soft); }
+  .lens-list li em { color: var(--paper); font-style: italic; }
+
+  .lens-take { margin-top: var(--s6); background: var(--surface-2); border-radius: 10px; padding: var(--s5); }
+  .lens-take .mono-label { color: var(--accent-soft); display: block; margin-bottom: var(--s2); }
+  .lens-take p { margin: 0; color: var(--paper); max-width: 70ch; }
+
+  .lens-empty { font-style: italic; color: var(--faint); padding: var(--s3) 0; }
+
+  /* ───────────── Finding rows (prose + live demo card) ───────────── */
+  .findings { display: flex; flex-direction: column; gap: var(--s5); }
+  .finding-row { display: grid; grid-template-columns: 1fr 380px; gap: clamp(24px, 3vw, 36px); align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: clamp(22px, 3vw, 30px); }
+  .finding-row[data-sev="crit"] { border-color: var(--crit-tint); }
+  @media (max-width: 860px) { .finding-row { grid-template-columns: 1fr; } }
+
+  .find-tags { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; margin-bottom: var(--s3); }
+  .severity { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500; padding: 4px 9px; border-radius: 100px; }
+  .severity.crit { background: var(--crit-tint); color: var(--crit); }
+  .severity.imp  { background: var(--imp-tint);  color: var(--imp); }
+  .severity.opp  { background: var(--opp-tint);  color: var(--opp); }
+  .lens-chip { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 4px 9px; border: 1px solid var(--line-strong); border-radius: 100px; }
+  .find-title { font-family: var(--display); font-size: clamp(19px, 2.4vw, 23px); font-weight: 600; letter-spacing: -0.015em; line-height: 1.22; margin: 0 0 var(--s4); color: var(--paper); }
+  .find-body { display: grid; gap: var(--s4); }
+  .find-body p { margin: 0; color: var(--paper-dim); }
+  .find-body p em { color: var(--paper); font-style: italic; }
+  .find-body .label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 3px; }
+  .fix { background: var(--surface-2); border-radius: 8px; padding: var(--s4) var(--s5); }
+  .fix .label { color: var(--accent-soft); }
+  .fix p { color: var(--paper); }
+  .find-loc { font-size: 13px; }
+
+  /* ───────────── Demo card (the centerpiece) ───────────── */
+  .demo { position: relative; align-self: start; position: sticky; top: var(--s5); }
+  @media (max-width: 860px) { .demo { position: static; } }
+  .demo__bar { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s3); margin-bottom: var(--s3); }
+  .demo__meta { min-width: 0; }
+  .demo__title { display: block; font-size: 13.5px; font-weight: 600; color: var(--paper); line-height: 1.3; }
+  .demo__timing { display: block; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .demo__controls { display: flex; align-items: center; gap: var(--s3); flex-shrink: 0; }
+  .demo__loop { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+
+  /* segmented Auto/Light/Dark stage toggle (pure CSS).
+     Auto = follow global theme via theme tokens. Light/Dark = locked overrides. */
+  .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 100px; overflow: hidden; }
+  .seg label { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 4px 9px; cursor: pointer; user-select: none; transition: background 0.15s ease, color 0.15s ease; }
+  .demo input[id$="-a"]:checked ~ .demo__bar .seg label[for$="-a"],
+  .demo input[id$="-l"]:checked ~ .demo__bar .seg label[for$="-l"],
+  .demo input[id$="-d"]:checked ~ .demo__bar .seg label[for$="-d"] { background: var(--accent-tint); color: var(--accent-soft); }
+
+  .demo__stage {
+    /* AUTO default — stage uses the report's elevated surface, follows theme */
+    --st-bg: var(--surface-2);
+    --st-fg: var(--paper);
+    --st-line: var(--line-strong);
+    --st-dim: color-mix(in oklch, var(--paper) 55%, transparent);
+    background: var(--st-bg); color: var(--st-fg);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: var(--s6) var(--s5); min-height: 168px;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  /* Locked Light: hardcoded light, regardless of report theme */
+  .demo input[id$="-l"]:checked ~ .demo__stage {
+    --st-bg: oklch(0.985 0.003 255);
+    --st-fg: oklch(0.180 0.006 255);
+    --st-line: oklch(0.180 0.010 255 / 0.18);
+    --st-dim: oklch(0.180 0.010 255 / 0.45);
+  }
+  /* Locked Dark: hardcoded dark, regardless of report theme */
+  .demo input[id$="-d"]:checked ~ .demo__stage {
+    --st-bg: oklch(0.180 0.006 255);
+    --st-fg: oklch(0.985 0.003 255);
+    --st-line: oklch(0.985 0.010 255 / 0.18);
+    --st-dim: oklch(0.985 0.010 255 / 0.50);
+  }
+
+  /* generic demo primitives, themed by the stage vars
+     (intentionally follow --st-fg/--st-bg, NOT the page accent — so they
+     contrast correctly even when a stage is locked to a different theme
+     than the page). */
+  .ui-btn { display: inline-flex; align-items: center; justify-content: center; padding: 9px 18px; border-radius: 8px; background: var(--st-fg); color: var(--st-bg); font-family: var(--sans); font-size: 13px; font-weight: 600; }
+  .ui-card { background: var(--st-bg); border: 1px solid var(--st-line); border-radius: 10px; padding: 14px 16px; min-width: 180px; box-shadow: 0 8px 24px oklch(0 0 0 / 0.12); }
+  .ui-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--st-fg); }
+  .ui-check { width: 22px; height: 22px; border-radius: 7px; background: var(--st-fg); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ui-check svg { width: 13px; height: 13px; stroke: var(--st-bg); }
+  .ui-num { font-family: var(--display); font-size: 34px; font-weight: 700; color: var(--st-fg); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .ui-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--st-dim); }
+  /* milestone badge + sparks read off stage tokens (--st-fg disc, --st-bg ink),
+     set inline on the elements — same contract as every other stage primitive,
+     never --accent, correct in any locked stage. */
+
+  /* ───────────── Combined recommendations ───────────── */
+  .rec { margin-bottom: var(--s7); }
+  .rec .tier-label { display: flex; align-items: center; gap: var(--s4); margin: 0 0 var(--s4); }
+  .rec .tier-label .mono-label { white-space: nowrap; }
+  .rec .tier-label .rule { height: 1px; background: var(--line); flex: 1; }
+  .rec .tier-label .count { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .rec.crit .mono-label { color: var(--crit); }
+  .rec.imp  .mono-label { color: var(--imp); }
+  .rec.opp  .mono-label { color: var(--opp); }
+  .rec-table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); font-size: 14px; }
+  .rec-table th, .rec-table td { text-align: left; padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); vertical-align: top; }
+  .rec-table tr:last-child td { border-bottom: none; }
+  .rec-table thead th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); font-weight: 500; }
+  .rec-table td:first-child { color: var(--paper); }
+  .rec-table td:nth-child(2) { white-space: nowrap; }
+  .rec-table td { color: var(--paper-dim); }
+
+  /* ───────────── Reference summary (closing) ───────────── */
+  .ref-summary { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: clamp(24px, 4vw, 40px); }
+  .ref-summary .big { font-family: var(--display); font-size: clamp(18px, 2.4vw, 22px); font-weight: 600; letter-spacing: -0.015em; color: var(--paper); margin: var(--s2) 0 0; }
+  .ref-summary .why { color: var(--paper-dim); margin: var(--s3) 0 var(--s6); max-width: 64ch; }
+  .ref-lean { display: grid; gap: var(--s3); margin: 0; padding: 0; list-style: none; }
+  .ref-lean li { display: grid; grid-template-columns: 130px 1fr; gap: var(--s4); padding: var(--s3) 0; border-top: 1px solid var(--line); color: var(--paper-dim); font-size: 14px; }
+  .ref-lean .nm { font-weight: 600; color: var(--paper); }
+
+  footer.doc { margin-top: var(--s8); padding-top: var(--s5); border-top: 1px solid var(--line); font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--s3); }
+
+  /* ───────────── Narrow screens ───────────── */
+  @media (max-width: 600px) {
+    .lens-table { display: block; padding: var(--s2) var(--s4); }
+    .lens-table thead { display: none; }
+    .lens-table tbody, .lens-table tr, .lens-table td { display: block; }
+    .lens-table tr { padding: var(--s4) 0; border-bottom: 1px solid var(--line); }
+    .lens-table tr:last-child { border-bottom: none; }
+    .lens-table td { padding: 0; border: none; }
+    .lens-table .lens-name { width: auto; margin-bottom: var(--s2); }
+    .lens-table .verdict { margin-bottom: var(--s2); }
+    .ref-lean li { grid-template-columns: 1fr; gap: var(--s1); }
+  }
+
+
+  /* ───────────── Scorecard (audit-specific) ───────────── */
+  .score-hero { display: grid; grid-template-columns: auto 1fr; gap: clamp(20px, 4vw, 48px); align-items: center; margin-bottom: var(--s6); }
+  .score-big { font-family: var(--display); font-size: clamp(64px, 10vw, 104px); font-weight: 700; letter-spacing: -0.04em; line-height: 0.9; font-variant-numeric: tabular-nums; }
+  .score-big small { font-size: 0.32em; color: var(--muted); font-weight: 500; letter-spacing: 0; }
+  .score-hero p { margin: 0; color: var(--paper-dim); max-width: 60ch; }
+  @media (max-width: 600px) { .score-hero { grid-template-columns: 1fr; } }
+
+  .score-table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); font-size: 14.5px; }
+  .score-table th, .score-table td { padding: var(--s3) var(--s4); text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .score-table tr:last-child td { border-bottom: none; }
+  .score-table thead th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); font-weight: 500; }
+  .score-table td:first-child { color: var(--paper); font-weight: 600; }
+  .score-table td { color: var(--paper-dim); }
+  .score-table .num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .score-table .prev { color: var(--faint); }
+  .bar { display: flex; align-items: center; gap: 10px; min-width: 150px; }
+  .bar__track { flex: 1; height: 6px; border-radius: 3px; background: var(--line-strong); overflow: hidden; }
+  .bar__fill { display: block; height: 100%; border-radius: 3px; }
+  .bar__fill.hi  { background: var(--opp); }
+  .bar__fill.mid { background: var(--imp); }
+  .bar__fill.lo  { background: var(--crit); }
+  .bar b { font-family: var(--mono); font-size: 13px; color: var(--paper); font-variant-numeric: tabular-nums; min-width: 2.6ch; text-align: right; }
+  .delta { font-family: var(--mono); font-size: 12px; }
+  .delta.up { color: var(--opp); } .delta.same { color: var(--faint); } .delta.new { color: var(--muted); }
+  @media (max-width: 700px) {
+    .score-table, .score-table tbody, .score-table tr, .score-table td { display: block; }
+    .score-table thead { display: none; }
+    .score-table tr { padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); }
+    .score-table td { border: none; padding: 2px 0; }
+  }
+
+  .diag { width: 100%; border-collapse: collapse; border: 1px solid var(--line); font-size: 14px; }
+  .diag th, .diag td { padding: var(--s3) var(--s4); text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--paper-dim); }
+  .diag thead th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); font-weight: 500; }
+  .diag td:first-child { color: var(--paper); }
+  .pass { color: var(--opp); font-family: var(--mono); font-size: 12px; white-space: nowrap; }
+  .fail { color: var(--imp); font-family: var(--mono); font-size: 12px; white-space: nowrap; }
+  .na   { color: var(--faint); font-family: var(--mono); font-size: 12px; white-space: nowrap; }
+
+  .area { margin: var(--s6) 0; padding-top: var(--s5); border-top: 1px solid var(--line); }
+  .area h3 { font-family: var(--display); font-size: clamp(19px, 2.4vw, 22px); font-weight: 600; letter-spacing: -0.015em; margin: 0 0 var(--s2); display: flex; gap: var(--s3); align-items: baseline; flex-wrap: wrap; }
+  .area h3 .sc { font-family: var(--mono); font-size: 13px; color: var(--muted); font-weight: 500; }
+  .area p, .area li { color: var(--paper-dim); }
+  .area ul { margin: var(--s2) 0 0; padding-left: 1.2em; display: grid; gap: 6px; max-width: 80ch; }
+  .area li em { color: var(--paper); font-style: normal; font-weight: 600; }
+  .tbl-scroll { overflow-x: auto; }
+
+  /* demo primitives specific to this audit */
+  .ui-track { position: relative; width: 6px; height: 120px; border-radius: 3px; background: var(--st-line); }
+  .ui-fill { position: absolute; inset: 0; border-radius: 3px; background: var(--st-fg); transform-origin: top; transform: scaleY(0.66); }
+  .ui-mk { position: absolute; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--st-bg); border: 2px solid var(--st-fg); }
+  .ui-mk.on { width: 22px; height: 22px; margin-left: -11px; background: var(--st-fg); }
+  .ui-play { width: 72px; height: 72px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--st-line); background: color-mix(in oklch, var(--st-fg) 8%, transparent); }
+  .ui-play svg { width: 26px; height: 26px; fill: var(--st-fg); margin-left: 4px; }
+  .ui-pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 100px; border: 1px solid var(--st-line); font-size: 13px; color: var(--st-fg); }
+  .ui-pill svg { width: 14px; height: 14px; stroke: var(--st-fg); fill: none; stroke-width: 2; }
+  .ui-ring { width: 120px; height: 120px; }
+  .ui-ring circle { fill: none; stroke: var(--st-fg); stroke-width: 1.5; stroke-dasharray: 340; stroke-dashoffset: 0; opacity: 0.6; }
+  .ui-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 100px; background: var(--st-fg); color: var(--st-bg); font-size: 12px; font-weight: 600; }
+  .ui-h { font-family: var(--display); font-size: 24px; font-weight: 700; color: var(--st-fg); letter-spacing: -0.02em; line-height: 1.15; text-align: left; }
+  .ui-h .acc { display: inline-block; clip-path: inset(0 0 0 0); }
+  .ui-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+  .ui-tile { height: 64px; border-radius: 8px; border: 1px solid var(--st-line); background: color-mix(in oklch, var(--st-fg) 6%, transparent); }
+
+  /* ───────────── The ONLY animation in the report: the demo cards ───────────── */
+  @media (prefers-reduced-motion: no-preference) {
+    .lens-table tbody tr, .finding-row { transition: border-color 0.2s ease; }
+
+    /* 01 · progress fill via scaleY + active marker via scale — 240ms ease-out */
+    @keyframes m4 {
+      0%   { transform: scaleY(0.33); }
+      10%  { transform: scaleY(0.66); }
+      100% { transform: scaleY(0.66); }
+    }
+    @keyframes m4mk {
+      0%   { transform: scale(0.55); }
+      10%  { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+    .demo-4__mt .ui-fill { animation: m4 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+    .demo-4__mt .ui-mk.on { animation: m4mk 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+    /* 02 · one owner: colour/shadow by CSS transition, press by transform — 160ms */
+    @keyframes m1 {
+      0%   { transform: scale(1);    box-shadow: 0 0 0 0 transparent; background: color-mix(in oklch, var(--st-fg) 8%, transparent); }
+      20%  { transform: scale(1);    box-shadow: 0 10px 30px oklch(0 0 0 / 0.25); background: color-mix(in oklch, var(--st-fg) 16%, transparent); }
+      30%  { transform: scale(0.97); box-shadow: 0 6px 18px oklch(0 0 0 / 0.22); background: color-mix(in oklch, var(--st-fg) 18%, transparent); }
+      36%  { transform: scale(1);    box-shadow: 0 10px 30px oklch(0 0 0 / 0.25); background: color-mix(in oklch, var(--st-fg) 16%, transparent); }
+      70%  { transform: scale(1);    box-shadow: 0 10px 30px oklch(0 0 0 / 0.25); background: color-mix(in oklch, var(--st-fg) 16%, transparent); }
+      80%  { transform: scale(1);    box-shadow: 0 0 0 0 transparent; background: color-mix(in oklch, var(--st-fg) 8%, transparent); }
+      100% { transform: scale(1);    box-shadow: 0 0 0 0 transparent; background: color-mix(in oklch, var(--st-fg) 8%, transparent); }
+    }
+    .demo-1__mt .ui-play { animation: m1 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+    /* 03 · one nudge on arrival, then still — 400ms ease-in-out, once */
+    @keyframes m5 {
+      0%   { opacity: 0; transform: translateY(6px); }
+      8%   { opacity: 1; transform: translateY(0); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes m5arrow {
+      0%, 14% { transform: translateY(0); }
+      20%     { transform: translateY(3px); }
+      27%     { transform: translateY(0); }
+      100%    { transform: translateY(0); }
+    }
+    .demo-5__mt .ui-pill { animation: m5 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+    .demo-5__mt .ui-pill svg { animation: m5arrow 3s ease-in-out infinite; }
+
+    /* 04 · ring draws in once, then rests — 900ms ease-out (rare, hero) */
+    @keyframes m8 {
+      0%   { stroke-dashoffset: 340; }
+      35%  { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 0; }
+    }
+    .demo-8__mt .ui-ring circle { animation: m8 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+    /* 05 · badge enters from 0.9, no bounce — 220ms ease-out */
+    @keyframes m2 {
+      0%   { opacity: 0; transform: scale(0.9); }
+      8%   { opacity: 1; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .demo-2__mt .ui-badge { animation: m2 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+    /* 06 · headline in the HTML, accent words revealed once — 600ms ease-out */
+    @keyframes m6 {
+      0%   { clip-path: inset(0 100% 0 0); }
+      22%  { clip-path: inset(0 0 0 0); }
+      100% { clip-path: inset(0 0 0 0); }
+    }
+    .demo-6__mt .acc { animation: m6 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+    /* 07 · the group arrives together — 240ms ease-out, no stagger */
+    @keyframes m7 {
+      0%   { opacity: 0; transform: translateY(6px); }
+      9%   { opacity: 1; transform: translateY(0); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .demo-7__mt .ui-grid3 { animation: m7 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+    /* 08 · calm card hover — 3px lift + shadow, 200ms ease-out */
+    @keyframes m3 {
+      0%   { transform: translateY(0);    box-shadow: 0 2px 8px oklch(0 0 0 / 0.08); }
+      8%   { transform: translateY(-3px); box-shadow: 0 10px 24px oklch(0 0 0 / 0.16); }
+      62%  { transform: translateY(-3px); box-shadow: 0 10px 24px oklch(0 0 0 / 0.16); }
+      70%  { transform: translateY(0);    box-shadow: 0 2px 8px oklch(0 0 0 / 0.08); }
+      100% { transform: translateY(0);    box-shadow: 0 2px 8px oklch(0 0 0 / 0.08); }
+    }
+    .demo-3__mt .ui-card { animation: m3 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .demo__loop { display: none; }
+    [class*="__mt"], [class*="__mt"] * { animation: none !important; transition: none !important; }
+  }
+
+  /* narrow-screen wrapping for long file paths */
+  code { overflow-wrap: anywhere; }
+  .lens-list li { grid-template-columns: 22px minmax(0, 1fr); }
+  .finding-row__prose { min-width: 0; }
+  .score-table thead th { white-space: nowrap; }
+  @media (max-width: 600px) {
+    .rec-table, .rec-table tbody, .rec-table tr, .rec-table td { display: block; }
+    .rec-table thead { display: none; }
+    .rec-table tr { padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); }
+    .rec-table td { border: none; padding: 2px 0; }
+    .rec-table td:nth-child(2) { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="theme-switch" role="radiogroup" aria-label="A riport témája">
+    <input class="vh" type="radio" name="theme" id="theme-dark" checked>
+    <input class="vh" type="radio" name="theme" id="theme-light">
+    <div class="theme-switch__pill">
+      <label for="theme-dark">Sötét</label>
+      <label for="theme-light">Világos</label>
+    </div>
+  </div>
+
+  <!-- ═══════════ HEADER ═══════════ -->
+  <header class="doc">
+    <div class="eyebrow">Mozgás- és UX-audit · design-motion-principles + ux-heuristics</div>
+    <h1 class="title">Ásógépes Talajművelés — hány pontot ér most</h1>
+    <p class="lede">
+      A négy oldal (főoldal, Probléma, Technológia, Kutatás) átvizsgálása kilenc szempontból: mozgás három nézőpontból
+      (Jakub · Emil · Jhey), Nielsen/Krug-heurisztikák, mobil, layout, tipográfia, akadálymentesség, teljesítmény, SEO és karbantartás.
+      Összevetve a 2026-11-03-i audittal.
+    </p>
+    <div class="meta-row">
+      <div><span class="mono-label k">Mi ez</span><span class="v">Kutatást bemutató, történetmesélő webhely, magyarul</span></div>
+      <div><span class="mono-label k">Stack</span><span class="v">Next.js 15 · React 18 · Framer Motion 11 · three · CSS Modules</span></div>
+      <div><span class="mono-label k">Mérve</span><span class="v">dev szerver (localhost:3000), ág <code>preview/megrendelo-2026-11</code></span></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="num">8</div><div class="mono-label lbl">Mozgás-találat</div></div>
+      <div class="stat crit"><a href="#rec-crit"><div class="num">1</div><div class="mono-label lbl">Kritikus</div></a></div>
+      <div class="stat imp"><a href="#rec-imp"><div class="num">7</div><div class="mono-label lbl">Fontos</div></a></div>
+      <div class="stat opp"><a href="#rec-opp"><div class="num">6</div><div class="mono-label lbl">Lehetőség</div></a></div>
+    </div>
+  </header>
+
+  <!-- ═══════════ 00 · SCORECARD ═══════════ -->
+  <section id="pontok">
+    <div class="sec-index">00</div>
+    <h2 class="section-title">Pontszámok</h2>
+    <div class="score-hero">
+      <div class="score-big">7,6<small> / 10</small></div>
+      <p>A kilenc terület számtani átlaga. A 11-03-i P1-es javítások (oldalvégek, Összegzés, szántás-idézet,
+        skip-link, gombnevek) beértek: a mobil, a tipográfia és a layout lényegében kész. Most a <em>mozgás</em> húzza le
+        a legjobban az átlagot (díszítő ciklusok, <code>transition: all</code>, layout-animációk), majd a <em>SEO-alapok</em>,
+        amelyek a 11-03 óta nyitottak.</p>
+    </div>
+    <div class="tbl-scroll">
+    <table class="score-table">
+      <thead><tr><th>Terület</th><th>11-03</th><th>Most</th><th>Változás</th><th>Legsúlyosabb mostani gond</th></tr></thead>
+      <tbody>
+        <tr><td>UX-heurisztikák (Nielsen/Krug)</td><td class="num prev">8</td><td><div class="bar"><span class="bar__track"><span class="bar__fill mid" style="width:80%"></span></span><b>8</b></div></td><td><span class="delta same">=</span></td><td>Angol alapértelmezett 404-oldal; a főcím 10 s-onként kitörlődik</td></tr>
+        <tr><td>Mozgás (Jakub · Emil · Jhey)</td><td class="num prev">—</td><td><div class="bar"><span class="bar__track"><span class="bar__fill lo" style="width:60%"></span></span><b>6</b></div></td><td><span class="delta new">új</span></td><td>Layout-animáció a tartós navigációban; 9 végtelen díszítő ciklus; 41× <code>transition: all</code></td></tr>
+        <tr><td>Mobil nézet (≤1024 px)</td><td class="num prev">9</td><td><div class="bar"><span class="bar__track"><span class="bar__fill hi" style="width:90%"></span></span><b>9</b></div></td><td><span class="delta same">=</span></td><td>— minden szkript zöld; a <code>/kutatas</code> továbbra is ~20 képernyő</td></tr>
+        <tr><td>Layout / vizuális design</td><td class="num prev">8</td><td><div class="bar"><span class="bar__track"><span class="bar__fill hi" style="width:85%"></span></span><b>8,5</b></div></td><td><span class="delta up">+0,5</span></td><td>Útmutató-link asztalon csak hoverre; „05. 02-<br>án” dátumtörés</td></tr>
+        <tr><td>Tipográfia</td><td class="num prev">9</td><td><div class="bar"><span class="bar__track"><span class="bar__fill hi" style="width:90%"></span></span><b>9</b></div></td><td><span class="delta same">=</span></td><td>— medián 15–20 px, 12 px alatti szöveg nincs</td></tr>
+        <tr><td>Akadálymentesség</td><td class="num prev">7</td><td><div class="bar"><span class="bar__track"><span class="bar__fill mid" style="width:75%"></span></span><b>7,5</b></div></td><td><span class="delta up">+0,5</span></td><td>PhotoViewer: gomb a gombban; fókuszálhatatlan görgethető régiók; címsorrend</td></tr>
+        <tr><td>Teljesítmény</td><td class="num prev">—</td><td><div class="bar"><span class="bar__track"><span class="bar__fill mid" style="width:70%"></span></span><b>7</b></div></td><td><span class="delta new">új</span></td><td>Becsült (production mérés nincs); hub-ciklusok képernyőn kívül is futnak</td></tr>
+        <tr><td>SEO / metaadatok</td><td class="num prev">—</td><td><div class="bar"><span class="bar__track"><span class="bar__fill lo" style="width:60%"></span></span><b>6</b></div></td><td><span class="delta new">új</span></td><td>Nincs favicon, robots, sitemap, magyar 404; csonka SSR <code>&lt;h1&gt;</code></td></tr>
+        <tr><td>Karbantartás / kód</td><td class="num prev">8</td><td><div class="bar"><span class="bar__track"><span class="bar__fill mid" style="width:75%"></span></span><b>7,5</b></div></td><td><span class="delta">−0,5</span></td><td>Halott <code>BookLayout</code>; elavult e2e; a <code>nav-check</code> hamisan piros</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="section-sub" style="margin-top:var(--s4)">Pontozás: minden terület 10-ről indul; súlyosság-3+ hiba ~2, súlyosság-1–2 hiba ~0,5–1 pontot von le (a ux-heurisztikák skill Quick Diagnostic-módszere, a többi területre is ugyanígy alkalmazva). A teljesítmény becsült: production build nem készült, a 11-01-i production mérésekből és a kód változásaiból.</p>
+  </section>
+
+  <!-- ═══════════ ASSESSMENT ═══════════ -->
+  <section class="assessment">
+    <span class="mono-label">Összkép</span>
+    <p>
+      A webhely <em>tartalmilag és szerkezetileg érett</em>: a 2026-os Story-blokkok, a mobil minták és a reduced-motion
+      kezelés kifejezetten jók. A mozgás viszont két korszakból áll: az új részek visszafogottak és pontosak, a régebbiek
+      (Technológia-hub, Probléma-hero, 3D-gomb) <em>folyton mozgó díszítést</em> hordoznak, ami egy tudományos szöveg mellett az olvasótól veszi el a figyelmet.
+    </p>
+  </section>
+
+  <!-- ═══════════ 01 · LENS SUMMARY ═══════════ -->
+  <section>
+    <div class="sec-index">01</div>
+    <h2 class="section-title">Hogyan látja a három nézőpont</h2>
+    <p class="section-sub">
+      Súlyozás erre a kontextusra: kutatást bemutató oldal, ahol hosszan kell olvasni. A mozgásnak a megértést kell segítenie,
+      nem a figyelmet elvinnie. A navigáció gyakori, a díszítés ritkán indokolt.
+    </p>
+    <table class="lens-table">
+      <thead><tr><th>Nézőpont</th><th>Ítélet</th><th>Egy mondatban</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="lens-name">Production Polish <span class="who">Jakub Krehel</span><span class="weight">Elsődleges</span></td>
+          <td><span class="verdict v-concern">Aggály</span></td>
+          <td class="lens-read">Az új blokkok kidolgozottak, de sok elemen <em>több rendszer animálja ugyanazt</em> (CSS + Framer + <code>transition: all</code>), és a belépők skálázása ugrál.</td>
+        </tr>
+        <tr>
+          <td class="lens-name">Restraint &amp; Speed <span class="who">Emil Kowalski</span><span class="weight">Másodlagos</span></td>
+          <td><span class="verdict v-problem">Probléma</span></td>
+          <td class="lens-read">Olvasás közben folyamatosan pulzál, pattog vagy újraíródik valami; a tartós navigáció layout-tulajdonságokat animál.</td>
+        </tr>
+        <tr>
+          <td class="lens-name">Experimentation &amp; Delight <span class="who">Jhey Tompkins</span><span class="weight">Szelektív</span></td>
+          <td><span class="verdict v-mixed">Vegyes</span></td>
+          <td class="lens-read">A magyarázó animációk (talajszelvények, tömörödés) jók. A hub keringő részecskéi viszont dísznek kevés, magyarázatnak semmi.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══════════ 02 · TIMING ═══════════ -->
+  <section>
+    <div class="sec-index">02</div>
+    <h2 class="section-title">Hová esnek az időzítések</h2>
+    <p class="section-sub">
+      Az időtartam költségvetés: egy 300 ms-os lap rendben van, egy 700 ms-os rugó a szekciósínen, ami minden szekcióváltáskor
+      lefut, nincs. Minden pötty egy mai animáció, ott ábrázolva, ahol most fut.
+    </p>
+    <div class="timing-grid">
+      <svg class="timing-figure" viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Időtartam-skála 0 és 600 ms között: hová esnek a webhely animációi az azonnali, reszponzív, megfontolt és lassú zónákban">
+        <style>
+          .tf-track-stop-good { stop-color: var(--t-good); }
+          .tf-track-stop-mid  { stop-color: var(--t-mid); }
+          .tf-track-stop-slow { stop-color: var(--t-slow); }
+          .tf-track-stroke { stroke: var(--line-strong); }
+          .tf-grid { stroke: var(--line-strong); }
+          .tf-axis { fill: var(--faint); }
+          .tf-freq { fill: var(--muted); }
+          .tf-bracket { stroke: var(--faint); fill: none; }
+          .tf-zone-good { fill: var(--t-good); }
+          .tf-zone-mid  { fill: var(--t-mid); }
+          .tf-zone-slow { fill: var(--t-slow); }
+          .tf-dot-good  { fill: var(--t-good); }
+          .tf-dot-mid   { fill: var(--t-mid); }
+          .tf-dot-slow  { fill: var(--t-slow); }
+          .tf-dot-text  { fill: oklch(0.165 0.006 255); }
+          .tf-missing-ring { stroke: var(--faint); }
+          .tf-missing-text { fill: var(--muted); }
+        </style>
+        <defs>
+          <linearGradient id="track" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   class="tf-track-stop-good" stop-opacity="0.30"/>
+            <stop offset="50%"  class="tf-track-stop-good" stop-opacity="0.22"/>
+            <stop offset="58%"  class="tf-track-stop-mid"  stop-opacity="0.26"/>
+            <stop offset="83%"  class="tf-track-stop-mid"  stop-opacity="0.26"/>
+            <stop offset="90%"  class="tf-track-stop-slow" stop-opacity="0.36"/>
+            <stop offset="100%" class="tf-track-stop-slow" stop-opacity="0.42"/>
+          </linearGradient>
+        </defs>
+        <rect x="40" y="118" width="600" height="58" rx="10" fill="url(#track)" class="tf-track-stroke"/>
+        <g class="tf-grid" stroke-dasharray="2 5">
+          <line x1="140" y1="112" x2="140" y2="182"/>
+          <line x1="340" y1="112" x2="340" y2="182"/>
+          <line x1="540" y1="112" x2="540" y2="182"/>
+        </g>
+        <g font-family="Geist Mono, monospace" font-size="11" class="tf-axis" text-anchor="middle">
+          <text x="40"  y="204">0</text>
+          <text x="140" y="204">100</text>
+          <text x="340" y="204">300</text>
+          <text x="540" y="204">500</text>
+          <text x="636" y="204" text-anchor="end">600+ms</text>
+        </g>
+        <g font-family="Geist Mono, monospace" font-size="9.5" letter-spacing="1.6">
+          <text x="90"  y="106" text-anchor="middle" class="tf-zone-good">AZONNALI</text>
+          <text x="240" y="106" text-anchor="middle" class="tf-zone-good">RESZPONZÍV</text>
+          <text x="440" y="106" text-anchor="middle" class="tf-zone-mid">MEGFONTOLT</text>
+          <text x="592" y="106" text-anchor="middle" class="tf-zone-slow">LASSÚ</text>
+        </g>
+        <!-- 11 · missing: 3D chart loading has no indicator -->
+        <circle cx="40" cy="147" r="11" fill="none" class="tf-missing-ring" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <text x="40" y="151" font-family="Geist Mono, monospace" font-size="10" font-weight="600" text-anchor="middle" class="tf-missing-text">11</text>
+        <g font-family="Geist Mono, monospace" font-size="10.5" font-weight="600" text-anchor="middle">
+          <circle cx="260" cy="136" r="11" class="tf-dot-good"/><text x="260" y="140" class="tf-dot-text">3</text>
+          <circle cx="290" cy="136" r="11" class="tf-dot-good"/><text x="290" y="140" class="tf-dot-text">2</text>
+          <circle cx="320" cy="136" r="11" class="tf-dot-good"/><text x="320" y="140" class="tf-dot-text">1</text>
+          <circle cx="340" cy="160" r="11" class="tf-dot-mid"/><text x="340" y="164" class="tf-dot-text">5</text>
+          <circle cx="440" cy="136" r="11" class="tf-dot-mid"/><text x="440" y="140" class="tf-dot-text">6</text>
+          <circle cx="440" cy="160" r="11" class="tf-dot-mid"/><text x="440" y="164" class="tf-dot-text">8</text>
+          <circle cx="490" cy="136" r="11" class="tf-dot-mid"/><text x="490" y="140" class="tf-dot-text">4</text>
+          <circle cx="540" cy="136" r="11" class="tf-dot-slow"/><text x="540" y="140" class="tf-dot-text">7</text>
+          <circle cx="610" cy="136" r="11" class="tf-dot-slow"/><text x="610" y="140" class="tf-dot-text">9</text>
+          <circle cx="634" cy="160" r="11" class="tf-dot-slow"/><text x="634" y="164" class="tf-dot-text">10</text>
+        </g>
+        <path class="tf-bracket" stroke-width="1" d="M440 218 L440 224 L610 224 L610 218 M525 224 L525 230"/>
+        <text x="525" y="244" font-family="Public Sans, sans-serif" font-size="11" text-anchor="middle" class="tf-freq">minden görgetésnél / szekcióváltáskor fut</text>
+      </svg>
+
+      <div class="timing-key">
+        <h4 class="mono-label">Az animációk</h4>
+        <ol class="key-list">
+          <li><span class="kn">1</span><span class="ka">Mobil Tartalom-lap (rugó 420/40)</span><span class="kt good">~280ms</span></li>
+          <li><span class="kn">2</span><span class="ka">Fő menü csúszó jelölője</span><span class="kt good">~250ms</span></li>
+          <li><span class="kn">3</span><span class="ka">ÉVAD-váltás (fade)</span><span class="kt good">220ms</span></li>
+          <li><span class="kn">4</span><span class="ka">Story lépésváltás (opacity)</span><span class="kt mid">450ms</span></li>
+          <li><span class="kn">5</span><span class="ka">Útmutató-kártya hover (y −12 px)</span><span class="kt mid">300ms</span></li>
+          <li><span class="kn">6</span><span class="ka">PhotoViewer átmenetek</span><span class="kt mid">400ms</span></li>
+          <li><span class="kn">7</span><span class="ka">Fejléc <code>transition: all</code></span><span class="kt slow">500ms</span></li>
+          <li><span class="kn">8</span><span class="ka">Szekciósín jelölő (width/height)</span><span class="kt mid">400ms</span></li>
+          <li><span class="kn">9</span><span class="ka">Szekciósín kitöltés (rugó 100/20, <code>height</code>)</span><span class="kt slow">~700ms</span></li>
+          <li><span class="kn">10</span><span class="ka">Probléma-hero kártyák (késleltetés + stagger + rugó)</span><span class="kt slow">~1500ms</span></li>
+          <li><span class="kn">11</span><span class="ka">3D-diagram betöltése (nincs jelző)</span><span class="kt none">nincs</span></li>
+        </ol>
+
+        <div class="zone-defs">
+          <div class="zone-def"><span class="dot" style="background:var(--t-good)"></span><div><span class="zt">Azonnali / reszponzív</span> · 0–300 ms — <span class="zd">koppintás, váltás, hover, navigáció.</span></div></div>
+          <div class="zone-def"><span class="dot" style="background:var(--t-mid)"></span><div><span class="zt">Megfontolt</span> · 300–500 ms — <span class="zd">nagy felületek: lap, teljes képernyős fotó, tartalomcsere.</span></div></div>
+          <div class="zone-def"><span class="dot" style="background:var(--t-slow)"></span><div><span class="zt">Lassú</span> · 500 ms+ — <span class="zd">csak ritka, szándékos pillanatnak (hero), gyakori mozgásnak soha.</span></div></div>
+        </div>
+
+        <div class="whats-off">
+          <span class="mono-label">Mi a gond</span>
+          <p>A leggyakoribb mozgások (7, 8, 9: fejléc és szekciósín) a leglassabbak, ráadásul layout-tulajdonságot animálnak. Ezen felül <em>9 végtelen ciklus</em> fut (pulzáló gyűrűk, pattogó nyíl, keringő gyűrű, részecskék, gépíró-hurok). Ezek nem férnek fel a skálára, mert soha nem érnek véget.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 03 · JAKUB (primary) ═══════════ -->
+  <section class="lens-sec">
+    <div class="sec-index">03</div>
+    <div class="lens-sec__head">
+      <h3>Jakub Krehel — Production Polish</h3>
+      <span class="lens-sec__weight">Elsődleges nézőpont</span>
+    </div>
+    <p class="lens-sec__verdict"><span class="verdict v-concern">Aggály</span></p>
+
+    <div class="lens-block">
+      <span class="mono-label">Ami jól működik</span>
+      <ul class="lens-list good">
+        <li><span class="mk">✓</span><span>A 2026-os Story-blokkok csak a szükséges tulajdonságokat animálják (<code>background-color</code>, <code>border-color</code>, <code>opacity</code>), saját görbével, és reduced motion mellett kikapcsolnak. <code>experiment/story/Story.module.css:30, 50, 260</code></span></li>
+        <li><span class="mk">✓</span><span>A mobil Tartalom-lap pattogás nélküli rugóval (420/40) jön be, a háttér 200 ms alatt fade-el, és <code>AnimatePresence</code> miatt <em>ki is animál</em>. <code>shared/ScrollLayout/MobileSectionBar.tsx:84–100</code></span></li>
+        <li><span class="mk">✓</span><span>A lightbox kilépője visszafogottabb a belépőnél (scale 0,9, 200 ms), ez pontosan Jakub szabálya. <code>ui/ImageLightbox/ImageLightbox.tsx:35</code></span></li>
+        <li><span class="mk">✓</span><span>A hero szövege CSS-sel emelkedik be, így a szerver HTML-ben is benne van, és hidratálás előtt látszik. <code>app/globals.css:101</code></span></li>
+      </ul>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Javítandó</span>
+      <div class="findings">
+
+        <!-- FINDING 1 -->
+        <div class="finding-row" data-sev="imp" id="finding-1">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="severity imp">Fontos</span><span class="lens-chip">Jakub</span><span class="lens-chip">Emil</span></div>
+            <h4 class="find-title">A 3D-gomb transformját négy rendszer animálja egyszerre, és még 41 <code>transition: all</code> maradt</h4>
+            <div class="find-body">
+              <p><span class="label">Mi</span>A Lakitelek „3D modell betöltése” gombon egy végtelen CSS <code>pulse</code> (scale 1→1,05), egy CSS <code>:hover { transform: scale(1.1) }</code>, egy túllövő <code>transition: all 0.4s cubic-bezier(.175,.885,.32,1.275)</code> és a Framer <code>whileHover={{ scale: 1.1 }}</code> versenyez ugyanazért a <code>transform</code>-ért. A CSS-animáció felülírja a Framer inline stílusát, így hover alatt a gomb a kettő között ugrál. A CLAUDE.md kifejezetten tiltja a <code>transition: all</code>-t Framer-elemen. Az élő kódban még 41 ilyen sor van (a halott <code>BookLayout</code> nélkül), köztük a fejlécen és a szekciósínen.</p>
+              <p><span class="label">Miért számít</span>Ez a 3D-diagram egyetlen belépési pontja. Ha a hover rángat, az olcsónak hat, pont ott, ahol a legértékesebb tartalom kezdődik. A <code>transition: all</code> ráadásul olyan tulajdonságokat is animál (padding, width, box-shadow), amelyeket senki nem szánt animálni.</p>
+              <div class="fix"><p><span class="label">Javasolt mozgás</span>Egy gazda: a <code>transform</code> a Frameré (<code>whileHover</code> helyett csak <code>whileTap={{ scale: 0.97 }}</code>), a CSS csak a <code>background</code>, <code>border-color</code> és <code>box-shadow</code> tulajdonságot animálja, 160 ms ease-out alatt. A pulzálás törölhető, a gomb a felirattal együtt elég hívogató. A többi <code>transition: all</code> sort érdemes egy körben explicit tulajdonságlistára cserélni.</p></div>
+              <p class="find-loc"><code>experiment/pages/LakitelekChartPage.tsx:204–210</code> · <code>LakitelekChartPage.module.css:690, 693–694, 754</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st1" id="st1-a" checked>
+            <input class="vh" type="radio" name="st1" id="st1-l">
+            <input class="vh" type="radio" name="st1" id="st1-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Hover = szín + árnyék, nyomás = 0,97</span><span class="demo__timing">160ms · ease-out</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st1-a">Auto</label><label for="st1-l">Light</label><label for="st1-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-1__mt"><span class="ui-play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FINDING 2 -->
+        <div class="finding-row" data-sev="imp" id="finding-2">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="severity imp">Fontos</span><span class="lens-chip">Jakub</span><span class="lens-chip">Emil</span></div>
+            <h4 class="find-title">Belépők <code>scale(0)</code>-ról, forgással és pattogó rugóval</h4>
+            <div class="find-body">
+              <p><span class="label">Mi</span>A „VS” kör <code>scale: 0, rotate: -180</code>-ról pörög be (rugó 200/15), a „Legjobb” jelvény <code>scale: 0, rotate: -10</code>-ről indul 0,8 s késleltetéssel, és a rugó csillapítás nélkül (stiffness 400, alapértelmezett damping 10) túllő. A Probléma-hero ásó-kártyái 50 px-ről esnek le pattogó rugóval (120/12), kártyánként 150 ms-os lépcsővel.</p>
+              <p><span class="label">Miért számít</span>A nulláról növekvő elem „a semmiből” jön, a pattogás játékos hangot üt meg egy tudományos oldalon, a 180°-os pörgés pedig vestibuláris inger. A hero-kártyák teljes belépője ~1,5 s, ennyit vár az olvasó, mire kattinthat.</p>
+              <div class="fix"><p><span class="label">Javasolt mozgás</span><code>initial={{ opacity: 0, scale: 0.9 }}</code> → <code>{{ opacity: 1, scale: 1 }}</code>, 220 ms, <code>ease: [0.22, 1, 0.36, 1]</code>, forgás és pattogás nélkül (vagy <code>type: 'spring', bounce: 0</code>). A hero-kártyák lépcsője legyen legfeljebb 60 ms, késleltetés nélkül.</p></div>
+              <p class="find-loc"><code>problem/PloughingSoilComparison.tsx:350–356</code> · <code>solution-v2/ApplicationGuide.tsx:164–168</code> · <code>problem/sections/ProblemHeroSection.tsx:105–107</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st2" id="st2-a" checked>
+            <input class="vh" type="radio" name="st2" id="st2-l">
+            <input class="vh" type="radio" name="st2" id="st2-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Jelvény 0,9-ről, pattogás nélkül</span><span class="demo__timing">220ms · ease-out-quint</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st2-a">Auto</label><label for="st2-l">Light</label><label for="st2-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-2__mt"><span class="ui-badge">★ Legjobb</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FINDING 3 -->
+        <div class="finding-row" data-sev="imp" id="finding-3">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="severity imp">Fontos</span><span class="lens-chip">Jakub</span></div>
+            <h4 class="find-title">Túlmozgatott hover: emelés, csillogás, csillag-rázás, végtelen nyíl, és csak hoverre látszó link</h4>
+            <div class="find-body">
+              <p><span class="label">Mi</span>Az Alkalmazási útmutató kártyája hoverre 12 px-et emelkedik, átfut rajta egy csillogás, a csillag megrázkódik (±15°), a „Lásd a kísérletben” link felcsúszik, a nyíl pedig végtelen ciklusban bólogat. A Technológia-hub mini mappái <code>scale: 1.08, y: −10</code>, a lightbox és a Lakitelek-gombok <code>scale: 1.05–1.1</code>. Ez legalább hat komponens ugyanazzal a hover-skálázással.</p>
+              <p><span class="label">Miért számít</span>Ha a hover az élmény főszereplője, az olvasó a mozgást nézi, nem a tartalmat. A link asztalon egérrel csak hoverre látszik (a 11-03-i L4, még nyitott; billentyűzetes fókuszra megjelenik, ez rendben van). Ami nem látszik, azt az olvasó nem keresi.</p>
+              <div class="fix"><p><span class="label">Javasolt mozgás</span>3 px emelés + árnyék, 200 ms ease-out, csillogás, rázás és végtelen nyíl nélkül. A „Lásd a kísérletben” link mindig látszik (a hover legfeljebb a színét erősíti). A skálázás a gombokról lekerül, helyette színváltás és <code>:active</code> 0,97.</p></div>
+              <p class="find-loc"><code>solution-v2/ApplicationGuide.tsx:147–151, 168–173, 279–292</code> · <code>solution-v2/HubFolder.tsx:334, 376, 423</code> · <code>ui/ImageLightbox/ImageLightbox.tsx:190–211</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st3" id="st3-a" checked>
+            <input class="vh" type="radio" name="st3" id="st3-l">
+            <input class="vh" type="radio" name="st3" id="st3-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Nyugodt kártya-hover</span><span class="demo__timing">200ms · ease-out · 3px</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st3-a">Auto</label><label for="st3-l">Light</label><label for="st3-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-3__mt">
+                <div class="ui-card" style="box-shadow: 0 2px 8px oklch(0 0 0 / 0.08);">
+                  <div class="ui-label" style="margin-bottom:6px;">Alkalmazási mód</div>
+                  <div class="ui-row" style="justify-content:space-between;gap:18px;"><span>Ásógép + kultivátor</span><span>›</span></div>
+                  <div class="ui-label" style="margin-top:8px;">Lásd a kísérletben →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Lehetőségek</span>
+      <ul class="lens-list opp">
+        <li><span class="mk">→</span><span>A PhotoViewer teljes képernyős nézete a bélyegkép helyéről nőhetne ki (<code>layoutId</code>, megosztott elem), így látszana, honnan jött a kép. <code>shared/PhotoViewer/PhotoViewer.tsx</code></span></li>
+        <li><span class="mk">→</span><span>Egy közös görbe- és időtartam-készlet a <code>globals.css</code>-ben (pl. <code>--ease-out: cubic-bezier(.22,1,.36,1)</code>, <code>--dur-fast: 160ms</code>, <code>--dur-base: 240ms</code>). Most 6–8 különböző görbe él egymás mellett.</span></li>
+      </ul>
+    </div>
+
+    <div class="lens-take">
+      <span class="mono-label">Jakub szemüvegén át</span>
+      <p>Az új kód már Jakub-féle: célzott tulajdonságok, saját görbe, csendes kilépők. A régi komponensekben viszont a mozgás <em>hangosabb</em> a tartalomnál. Egy elemen egy rendszer animáljon, és a hover legyen érezhető, ne látványos.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 04 · EMIL (secondary) ═══════════ -->
+  <section class="lens-sec">
+    <div class="sec-index">04</div>
+    <div class="lens-sec__head">
+      <h3>Emil Kowalski — Restraint &amp; Speed</h3>
+      <span class="lens-sec__weight">Másodlagos nézőpont</span>
+    </div>
+    <p class="lens-sec__verdict"><span class="verdict v-problem">Probléma</span></p>
+
+    <div class="lens-block">
+      <span class="mono-label">Ami jól működik</span>
+      <ul class="lens-list good">
+        <li><span class="mk">✓</span><span>A reduced motion három rétegben van kezelve: <code>MotionConfig reducedMotion="user"</code>, <code>useReducedMotion</code> 13 fájlban, és egy globális CSS-blokk, amely minden animációt és átmenetet kikapcsol. A <code>motion-check</code> zöld. <code>app/globals.css:422</code></span></li>
+        <li><span class="mk">✓</span><span>A nehéz ciklusok (tömörödés, szántott szelvény) <code>useLoopActive</code>-vel képernyőn kívül megállnak, a hero-videó telefonon, reduced motion és Save-Data mellett nem töltődik be.</span></li>
+        <li><span class="mk">✓</span><span>A <code>mobile-static</code> osztály a Framer belépőket telefonon azonnal láthatóvá teszi, így nem marad üres sáv görgetés előtt.</span></li>
+      </ul>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Javítandó</span>
+      <div class="findings">
+
+        <!-- FINDING 4 (CRITICAL) -->
+        <div class="finding-row" data-sev="crit" id="finding-4">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="severity crit">Kritikus</span><span class="lens-chip">Emil</span><span class="lens-chip">Jakub</span></div>
+            <h4 class="find-title">A tartós navigáció layout-tulajdonságokat animál, lassan</h4>
+            <div class="find-body">
+              <p><span class="label">Mi</span>A szekciósín kitöltése <code>animate={{ height }}</code> egy lassú rugóval (100/20, ~700 ms), az aktív jelölő <code>transition: all 0.4s</code> alatt nő 12-ről 32 px-re (<code>width</code>/<code>height</code>), a fejléc <code>transition: all 0.5s</code> a <code>padding</code>-et animálja görgetési küszöbnél, a fő menü csúszkája pedig <code>left</code>/<code>width</code>-et.</p>
+              <p><span class="label">Miért számít</span>Ezek a webhely leggyakoribb mozgásai: minden szekcióváltáskor és görgetéskor lefutnak, egy olyan oldalon, ahol a <code>content-visibility</code> miatt a fő szál amúgy is dolgozik. A layout-animáció minden képkockán újratördelést kér. A 700 ms-os rugó miatt a sín lemarad a görgetéstől.</p>
+              <div class="fix"><p><span class="label">Javasolt mozgás</span>Kitöltés: teljes magasságú elem <code>transform-origin: top</code> + <code>scaleY(progress)</code>, 240 ms ease-out (vagy rugó 400/40). Jelölő: fix 32 px-es kör, <code>transform: scale(0.4 → 1)</code>. Fejléc: csak <code>background-color</code>/<code>opacity</code>. Menü-csúszka: <code>x</code> + <code>scaleX</code>, vagy <code>layoutId</code>.</p></div>
+              <p class="find-loc"><code>shared/ScrollLayout/ScrollLayout.tsx:423–428</code> · <code>ScrollLayout.module.css:119, 141–146</code> · <code>layout/Navigation.module.css:13, 79</code> · <code>layout/Navigation.tsx:116–121</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st4" id="st4-a" checked>
+            <input class="vh" type="radio" name="st4" id="st4-l">
+            <input class="vh" type="radio" name="st4" id="st4-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Sín: scaleY kitöltés + scale jelölő</span><span class="demo__timing">240ms · ease-out-quint</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st4-a">Auto</label><label for="st4-l">Light</label><label for="st4-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-4__mt" style="display:flex;gap:18px;align-items:center;">
+                <div class="ui-track">
+                  <span class="ui-fill"></span>
+                  <span class="ui-mk" style="top:-6px;background:var(--st-fg);"></span>
+                  <span class="ui-mk" style="top:34px;background:var(--st-fg);"></span>
+                  <span class="ui-mk on" style="top:68px;"></span>
+                  <span class="ui-mk" style="top:114px;"></span>
+                </div>
+                <div style="display:grid;gap:14px;">
+                  <span class="ui-label">01 Módszertan</span>
+                  <span class="ui-label">02 Szentkirály</span>
+                  <span class="ui-row" style="font-weight:600;">03 Kecskemét</span>
+                  <span class="ui-label">04 Lakitelek</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FINDING 5 -->
+        <div class="finding-row" data-sev="imp" id="finding-5">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="severity imp">Fontos</span><span class="lens-chip">Emil</span></div>
+            <h4 class="find-title">Pulzáló jelzők: a „Következő” jelző olvasás közben végig pulzál és pattog</h4>
+            <div class="find-body">
+              <p><span class="label">Mi</span>Öt pulzáló vagy lélegző ciklus fut: a <code>NextSectionIndicator</code> gyűrűje (2,4 s ∞) és nyila (2 s ∞), a Működési elv pöttye (2 s ∞), a 3D-gomb (2 s ∞) és a hub fénye (<code>glowPulse</code> 4 s ∞). A Következő-jelző asztalon <em>folyamatosan</em> látszik, tehát olvasás közben is mozog a látómező szélén.</p>
+              <p><span class="label">Miért számít</span>A perifériás látás a mozgásra a legérzékenyebb: egy állandóan pulzáló elem minden bekezdésnél elhúzza a szemet. A pulzálás a „nézz ide” eszköze, egy folyamatosan jelen lévő navigációs elemnél nincs mire figyelmeztetnie.</p>
+              <div class="fix"><p><span class="label">Javasolt mozgás</span>A jelző megjelenéskor <em>egyszer</em> bólint (3 px, 400 ms), utána mozdulatlan. Ha emlékeztetni kell, csak hosszabb (pl. 6 s) görgetési szünet után, és csak egyszer. A többi pulzálás törlendő, helyette álló gyűrű vagy szín jelzi a kattinthatóságot.</p></div>
+              <p class="find-loc"><code>shared/ScrollLayout/ScrollLayout.module.css:528, 617</code> · <code>solution-v2/OperationPrinciple.module.css:234</code> · <code>LakitelekChartPage.module.css:754</code> · <code>solution-v2/HubFolder.module.css:142</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st5" id="st5-a" checked>
+            <input class="vh" type="radio" name="st5" id="st5-l">
+            <input class="vh" type="radio" name="st5" id="st5-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Egy bólintás megjelenéskor, utána csend</span><span class="demo__timing">400ms · egyszer</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st5-a">Auto</label><label for="st5-l">Light</label><label for="st5-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-5__mt"><span class="ui-pill">Következő: Kecskemét <svg viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FINDING 6 -->
+        <div class="finding-row" data-sev="imp" id="finding-6">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="severity imp">Fontos</span><span class="lens-chip">Emil</span><span class="lens-chip">UX · SEO</span></div>
+            <h4 class="find-title">A főcím gépíró-effektje 10 másodpercenként kitörli a fő állítást</h4>
+            <div class="find-body">
+              <p><span class="label">Mi</span>A <code>useTypewriter</code> üres szövegről indul: a szerver HTML-ben az <code>&lt;h1&gt;</code> csak „A talaj nem”, a „végtelen erőforrás” JS után, 1 s várakozás és 18 × 80 ms gépelés után jelenik meg. Utána 10 s-onként kitörlődik és újraíródik, a kurzor pedig végig villog. (A 11-03-i 4.6, még nyitott.)</p>
+              <p><span class="label">Miért számít</span>A webhely legfontosabb mondata időszakosan félbe van vágva: a kereső, a JS nélküli olvasó és a képernyőolvasó csonka címet kap, a látogató pedig egy állandóan mozgó főcímet.</p>
+              <div class="fix"><p><span class="label">Javasolt mozgás</span>A teljes cím a DOM-ban van. A kiemelt szavak egyszer, 600 ms alatt <code>clip-path</code>-szal tűnnek elő (CSS, a hero-rise mintájára), törlés és villogó kurzor nélkül.</p></div>
+              <p class="find-loc"><code>home/Hero.tsx:47–53, 103–110</code> · <code>hooks/useTypewriter.ts</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st6" id="st6-a" checked>
+            <input class="vh" type="radio" name="st6" id="st6-l">
+            <input class="vh" type="radio" name="st6" id="st6-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">A cím a HTML-ben, egyszeri felfedés</span><span class="demo__timing">600ms · ease-out · egyszer</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st6-a">Auto</label><label for="st6-l">Light</label><label for="st6-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-6__mt"><div class="ui-h">A talaj nem<br><span class="acc">végtelen erőforrás</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FINDING 7 -->
+        <div class="finding-row" data-sev="imp" id="finding-7">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="severity imp">Fontos</span><span class="lens-chip">Emil</span><span class="lens-chip">Jakub</span></div>
+            <h4 class="find-title">Lépcsőzés minden listán: 12 <code>staggerChildren</code></h4>
+            <div class="find-body">
+              <p><span class="label">Mi</span>Tizenkét komponens lépcsőzi a gyermekeit (0,08–0,15 s, plusz 0,1–0,2 s <code>delayChildren</code>), a Probléma oldalon egy képernyőn belül több is. Egy 6 elemes lista így 0,9–1,1 s alatt áll össze, minden alkalommal ugyanúgy.</p>
+              <p><span class="label">Miért számít</span>Egy alkalommal a lépcső elmond valamit („ezek sorban jönnek”), mindenhol viszont csak lassít, és jellegzetes AI-sablonnak hat. Az olvasó a lista végére vár, nem a ritmusra.</p>
+              <div class="fix"><p><span class="label">Javasolt mozgás</span>A lépcső csak ott marad, ahol a sorrend jelentés (pl. Timeline hónapjai, talajrétegek). Máshol a csoport együtt érkezik: opacity + 6 px, 240 ms ease-out.</p></div>
+              <p class="find-loc"><code>problem/pages/{CompactionStats, CultivatorComparison, CultivatorProblems, PloughingEffects, PloughingStructure}Page.tsx</code> · <code>experiment/pages/*InfoPage.tsx</code> · <code>solution-v2/{ApplicationGuide, OperationPrinciple}.tsx</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st7" id="st7-a" checked>
+            <input class="vh" type="radio" name="st7" id="st7-l">
+            <input class="vh" type="radio" name="st7" id="st7-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">A csoport együtt érkezik</span><span class="demo__timing">240ms · ease-out · lépcső nélkül</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st7-a">Auto</label><label for="st7-l">Light</label><label for="st7-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-7__mt" style="width:100%;"><div class="ui-grid3"><span class="ui-tile"></span><span class="ui-tile"></span><span class="ui-tile"></span></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Lehetőségek</span>
+      <ul class="lens-list opp">
+        <li><span class="mk">→</span><span>A 3D-diagram dinamikus importjának nincs <code>loading</code> állapota: a gomb kilép (<code>AnimatePresence mode="wait"</code>), és amíg a <code>three</code> letöltődik, üres a doboz. Egy kis talaj-betöltő (<code>ui/SoilLoader</code> már létezik) 300 ms után megjelenve elég. <code>experiment/pages/LakitelekChartPage.tsx:13, 193</code></span></li>
+      </ul>
+    </div>
+
+    <div class="lens-take">
+      <span class="mono-label">Emil szemüvegén át</span>
+      <p>Az alapok kiválóak: reduced motion, ciklus-szüneteltetés, mobil-statikus belépők. A gond a <em>gyakoriság</em>: ami minden görgetésnél fut, legyen a leggyorsabb és transformos, ami pedig olvasás közben a látómezőben marad, ne mozogjon.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 05 · JHEY (selective) ═══════════ -->
+  <section class="lens-sec">
+    <div class="sec-index">05</div>
+    <div class="lens-sec__head">
+      <h3>Jhey Tompkins — Experimentation &amp; Delight</h3>
+      <span class="lens-sec__weight">Szelektív nézőpont</span>
+    </div>
+    <p class="lens-sec__verdict"><span class="verdict v-mixed">Vegyes</span></p>
+
+    <div class="lens-block">
+      <span class="mono-label">Ami jól működik</span>
+      <ul class="lens-list good">
+        <li><span class="mk">✓</span><span>A talajszelvény-SVG-k, a tömörödés-animáció és a penetrométer-magyarázó a mozgással <em>magyaráz</em>: a rögök, a rétegek és a mélység változása a mozgásból érthető. Ez a webhely legjobb mozgása. <code>problem/visualizations/</code> · <code>experiment/PenetrometerExplainer.tsx</code></span></li>
+        <li><span class="mk">✓</span><span>A 2026-os Story-blokkok léptetése (Vissza / Tovább, „1 / 3”) egyszerre egy fókuszt mutat: a mozgás itt tempót ad, nem díszít.</span></li>
+      </ul>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Javítandó</span>
+      <div class="findings">
+
+        <!-- FINDING 8 -->
+        <div class="finding-row" data-sev="imp" id="finding-8">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="severity imp">Fontos</span><span class="lens-chip">Jhey</span><span class="lens-chip">Emil</span></div>
+            <h4 class="find-title">A Technológia-hub örökké kering, és semmit nem magyaráz</h4>
+            <div class="find-body">
+              <p><span class="label">Mi</span>A hub mögött négy végtelen ciklus fut: keringő gyűrű (<code>orbitSpin</code> 30 s), lélegző gyűrű (<code>orbitPulse</code> 6 s), fénypulzálás (<code>glowPulse</code> 4 s) és hat lebegő részecske (<code>particleFloat</code> 6 s). Egyik sem áll meg, amikor a hub kikerül a képből (nincs <code>useLoopActive</code>). Reduced motion mellett kikapcsolnak.</p>
+              <p><span class="label">Miért számít</span>Jhey mércéje: „mivé válhatna ez?” A részecskéknek nincs jelentésük, egy általános „tech-háttér”. A webhely témája viszont adna valódi mozgást (ásólapát-ciklus, talajrögök, mélység). A díszítő ciklus fogyasztja a GPU-t, és a pulzáló minta AI-sablonnak hat.</p>
+              <div class="fix"><p><span class="label">Javasolt mozgás</span>A részecskék és a pulzálás törlendők. A gyűrű egyszer rajzolódik ki (900 ms, <code>stroke-dashoffset</code>), utána áll. Ha kell élet, az a talajból jöjjön: a félretett ásógép-animációs javaslat (<code>docs/javaslatok</code>) való ide.</p></div>
+              <p class="find-loc"><code>solution-v2/HubFolder.module.css:142, 174, 241, 255</code> · <code>solution-v2/HubFolder.tsx:220–222</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st8" id="st8-a" checked>
+            <input class="vh" type="radio" name="st8" id="st8-l">
+            <input class="vh" type="radio" name="st8" id="st8-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">A gyűrű egyszer kirajzolódik, utána áll</span><span class="demo__timing">900ms · ease-out · egyszer</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st8-a">Auto</label><label for="st8-l">Light</label><label for="st8-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-8__mt"><svg class="ui-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="54"/></svg></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Lehetőségek</span>
+      <ul class="lens-list opp">
+        <li><span class="mk">→</span><span>Ásógép-ciklus görgetésre: a parkolt javaslat (<code>docs/javaslatok</code>, memória: „spading animation proposal”) a Működési elv szekcióban a hub díszítését válthatná le, és a technológiát magyarázná.</span></li>
+        <li><span class="mk">→</span><span>Az ÉVAD-váltásnál a számok gördülhetnének (<code>ui/AnimatedNumber</code> már van): a 2025 → 2026 különbség a mozgásból is látszana. 200 ms, blur 4 px → 0.</span></li>
+        <li><span class="mk">→</span><span>Story-lépésnél irányos váltás: „Tovább” balról, „Vissza” jobbról (x ±8 px + opacity, 240 ms), így a lépések sorrendje térben is érthető.</span></li>
+      </ul>
+    </div>
+
+    <div class="lens-take">
+      <span class="mono-label">Jhey szemüvegén át</span>
+      <p>Ahol a mozgás a talajról szól, ott a webhely jó. Ahol általános dísz (részecskék, pulzálás), ott sablonos. A játékosság helye a magyarázó vizualizáció, nem a háttér.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 06 · UX HEURISTICS ═══════════ -->
+  <section id="ux">
+    <div class="sec-index">06</div>
+    <h2 class="section-title">UX-heurisztikák (Nielsen · Krug)</h2>
+    <p class="section-sub">Quick Diagnostic, Trunk Test és a 10 Nielsen-heurisztika a négy oldalon, asztalon és telefonon. Súlyosság 0–4.</p>
+    <div class="tbl-scroll">
+    <table class="diag">
+      <thead><tr><th>Kérdés</th><th>Eredmény</th><th>Megjegyzés</th></tr></thead>
+      <tbody>
+        <tr><td>Azonnal látszik, milyen oldal ez?</td><td><span class="pass">✓ igen</span></td><td>Logó, oldalcím, aktív menüpont, PageBadge. A Trunk Test mind a 6 kérdése teljesül (a keresés 4 oldalnál nem szükséges).</td></tr>
+        <tr><td>Egyértelmű a fő teendő?</td><td><span class="pass">✓ igen</span></td><td>Főoldal: egy CTA. A tartalmi oldalak végén a PageEnd vezet tovább (11-03 óta).</td></tr>
+        <tr><td>Világos a navigáció?</td><td><span class="pass">✓ igen</span></td><td>Szekciósín (asztal), sticky szekciósáv + Tartalom-lap (telefon), <code>?section=</code> deep linkek. Mérve: menü → új oldal 229–379 ms; a <code>?section=</code> linkek célba érnek.</td></tr>
+        <tr><td>Megtalálható a keresés?</td><td><span class="na">— n/a</span></td><td>Négy oldal, nem kell.</td></tr>
+        <tr><td>Látszik, mi történik?</td><td><span class="fail">✗ súly. 1</span></td><td>A 3D-diagram betöltésekor (a <code>three</code> letöltése alatt) nincs jelző. Minden más állapot látszik (Story „1 / 3”, ÉVAD <code>aria-pressed</code>).</td></tr>
+        <tr><td>Segítőek a hibaüzenetek?</td><td><span class="fail">✗ súly. 2</span></td><td>Nincs <code>not-found</code>: egy elírt URL a Next angol „This page could not be found.” oldalát adja, menü és visszaút nélkül.</td></tr>
+        <tr><td>Vissza lehet lépni?</td><td><span class="pass">✓ igen</span></td><td>A böngésző Vissza gombja működik, a lightbox Esc-re zár, a Story-ban van Vissza.</td></tr>
+        <tr><td>Működik hover nélkül?</td><td><span class="pass">✓ igen*</span></td><td><code>touch-check</code> 23/23: koppintás, egér, Enter mind nyit/zár. *Kivétel: az útmutató „Lásd a kísérletben” linkje asztalon csak hoverre látszik (súly. 1).</td></tr>
+        <tr><td>Minden vezérlőnek van neve?</td><td><span class="pass">✓ igen</span></td><td>Az axe <code>button-name</code> hibája (3D-gomb) megszűnt; a PhotoViewer-feliratok magyarok.</td></tr>
+        <tr><td>Van, ami miatt „hm?”-et mondok?</td><td><span class="fail">✗ súly. 2</span></td><td>A főcím 10 s-onként kitörlődik, és újraíródik (6. találat). A folyamatosan pulzáló Következő-jelző (5. találat).</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="area">
+      <h3>Nielsen-megjegyzések</h3>
+      <ul>
+        <li><em>#1 Rendszerállapot:</em> erős (Story-számláló, aktív szekció, ÉVAD), kivéve a 3D-betöltést.</li>
+        <li><em>#2 Valós világ:</em> a szakszavak (penetrométer, kultivátor) magyarázva vannak; a jelölők (<code>n=1</code>, „tarló”) őszintén mutatják a bizonytalanságot.</li>
+        <li><em>#4 Következetesség:</em> az oldalcímek márkaneve eltér (<code>/problema</code>: „Ásógépes Technológia”, a többi: „Ásógépes Talajművelés”). Súly. 1.</li>
+        <li><em>#6 Felismerés:</em> a hover-only CTA az útmutatóban (súly. 1).</li>
+        <li><em>#8 Esztétika és minimalizmus:</em> a díszítő ciklusok (5., 8. találat) versenyeznek a tartalommal.</li>
+        <li><em>#9 Hibákból felállás:</em> magyar 404-oldal hiányzik (súly. 2).</li>
+      </ul>
+      <p style="margin-top:var(--s3)">Pontszám: 10 − 2 (hibaoldal) − 1 („hm?”, mozgás) − 0,5 (rendszerállapot) − 0,5 (következetesség, hover-only) = <strong>8</strong>. Súlyosság-3+ hiba már nincs: a 11-03-i zsákutca-oldalvégek és a hiányzó összegzés megoldódtak.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 07 · OTHER AREAS ═══════════ -->
+  <section id="teruletek">
+    <div class="sec-index">07</div>
+    <h2 class="section-title">A többi terület részletesen</h2>
+    <div class="area">
+      <h3>Mobil nézet <span class="sc">9 / 10</span></h3>
+      <ul>
+        <li><em>Mérve:</em> <code>clip-check</code> 0 levágás (5 szélesség × 4 oldal), <code>mobile-check</code> 0 üres sáv / 0 átfedés / 0 kis célterület (390 és 360 px), <code>layout-check</code> zöld, <code>touch-check</code> 23/23.</li>
+        <li>Nyitott: a <code>/kutatas</code> telefonon ~20 képernyő (11-03 M1). Az Összegzés a végére került; egy rövid „Fő eredmények” blokk a hero alatt (linkekkel az alszakaszokra) adná a hiányzó pontot.</li>
+      </ul>
+    </div>
+    <div class="area">
+      <h3>Layout / vizuális design <span class="sc">8,5 / 10</span></h3>
+      <ul>
+        <li><em>Javult:</em> a szántás-idézet 22 sor helyett 4 sor (1201–1600 px); az útmutató-alcímek már nincsenek levágva (1440 px-en mérve 0 ellipszis).</li>
+        <li>Nyitott: az útmutató „Lásd a kísérletben” linkje asztalon hover nélkül <code>opacity: 0</code> (11-03 L4).</li>
+        <li>Új, apró: a Lakitelek fotóleírásában a dátum a kötőjelnél törik („05. 02-” / „án”). Nem törő kötőjel (U+2011) vagy <code>white-space: nowrap</code> a dátumon.</li>
+      </ul>
+    </div>
+    <div class="area">
+      <h3>Tipográfia <span class="sc">9 / 10</span></h3>
+      <ul>
+        <li><code>type-check</code>: törzsszöveg-medián 15–20 px minden oldalon és szélességen, 12 px alatti szöveg nincs.</li>
+        <li>A 10-es ponthoz: a dátumtörés (lásd fent) és a gépíró-kurzor villogása a főcímben.</li>
+      </ul>
+    </div>
+    <div class="area">
+      <h3>Akadálymentesség <span class="sc">7,5 / 10</span></h3>
+      <ul>
+        <li><em>axe-core</em> (WCAG 2.1 AA + best practice, 1440 és 390 px, reduced motion): főoldal 0 szabály, <code>/technologia</code> 0–1, <code>/problema</code> 1, <code>/kutatas</code> 3–4.</li>
+        <li><em>Javult 11-03 óta:</em> skip-link célpont, a 3D-gomb neve, <code>aria-prohibited-attr</code>, magyar PhotoViewer-feliratok: mind eltűntek az eredményből.</li>
+        <li><em>Súlyos ×2 – nested-interactive:</em> a PhotoViewer előnézete (<code>aria-label="Teljes képernyős nézet"</code>) gomb, és benne lapozó gombok vannak (Szentkirály, Kecskemét fotók). 11-03 A2, nyitott.</li>
+        <li><em>Súlyos ×3 – scrollable-region-focusable:</em> a Timeline vízszintes görgetése és a PhotoViewer leírása billentyűzettel nem görgethető. <code>tabIndex={0}</code> + <code>role="region"</code> + <code>aria-label</code>. 11-03 A3, nyitott.</li>
+        <li><em>Mérsékelt – heading-order:</em> Probléma-hero kártyacímek, StaticChallenge, hub-cím, Penetrométer-fejléc. 11-03 A4, nyitott.</li>
+        <li>Az axe két kontraszthibát is jelzett a Lakitelek-fotóknál (1,84:1). Ellenőrizve: álpozitív, a valódi háttér sötét (#1f1a16), az arany szöveg olvasható.</li>
+      </ul>
+    </div>
+    <div class="area">
+      <h3>Teljesítmény (becsült) <span class="sc">7 / 10</span></h3>
+      <ul>
+        <li>A dev szerveren nem mérhető érdemben; production build nem készült (a dev szerveres munkamód szerint). Az utolsó production mérés (11-01): mobil TBT 280–440 ms, LCP 0,8–3,2 s, CLS ≤ 0,011.</li>
+        <li>Mérve most: a hero címe 99–244 ms alatt látszik, lassú 4G-n is (<code>hero-check</code>); telefonon 0 videókérés; menü → új oldal 229–379 ms (<code>nav-check</code>, dev).</li>
+        <li>Kockázat: a hub négy végtelen CSS-ciklusa és a szekciósín layout-animációja; 2899 SVG-csomópont a <code>/problema</code>-n (11-03 M3). Javaslat: egy <code>perf.js</code> futás QA-buildön a <code>main</code>-re vitel előtt.</li>
+      </ul>
+    </div>
+    <div class="area">
+      <h3>SEO / metaadatok <span class="sc">6 / 10</span></h3>
+      <ul>
+        <li><em>Kész:</em> oldalankénti OG-képek (<code>opengraph-image.tsx</code> mind a 4 útvonalon), <code>lang="hu"</code>, leírás, minden oldalon SSR <code>&lt;h1&gt;</code>.</li>
+        <li><em>Hiányzik:</em> <code>app/icon</code> (a <code>/favicon.ico</code> 404, minden böngészőfülön üres ikon), <code>app/robots.ts</code>, <code>app/sitemap.ts</code>, <code>app/not-found.tsx</code> (most angol Next-oldal, menü nélkül).</li>
+        <li>A főoldali <code>&lt;h1&gt;</code> a szerver HTML-ben „A talaj nem” – a kulcsállítás hiányzik (6. találat).</li>
+        <li>A <code>/problema</code> címe „A Probléma | Ásógépes Technológia”, a többié „… | Ásógépes Talajművelés”.</li>
+      </ul>
+    </div>
+    <div class="area">
+      <h3>Karbantartás / kód <span class="sc">7,5 / 10</span></h3>
+      <ul>
+        <li><code>tsc --noEmit</code>: a <code>src</code>-ben 0 hiba; 5 hiba a régi <code>.next-qa/types</code>-ból jön (a törölt <code>kutatas/layout</code>-ra hivatkozik): egy friss QA-build vagy a mappa törlése megoldja.</li>
+        <li><code>npm run lint</code>: 0 hiba, 4 <code>exhaustive-deps</code> figyelmeztetés (egy a halott <code>BookLayout</code>-ban). <code>npm audit</code>: a <code>next</code> által hozott <code>postcss</code> (build idejű, Next 16-ig elfogadható).</li>
+        <li><em>Halott kód:</em> <code>experiment/BookLayout/*</code> és <code>pages/HeroPage.tsx</code> + a <code>pages/index.ts</code> barrel. A 11-03 óta nyitott, és 5 <code>transition: all</code>, 2 végtelen ciklus is ott ül.</li>
+        <li><em>QA-eszköz:</em> a <code>nav-check</code> 4 sora piros („Suspense boundary”), de ez álpozitív: az OG-képek óta a Next a metaadatot egy rejtett, üres Suspense-határban streameli a <code>&lt;body&gt;</code> elején, az <code>&lt;h1&gt;</code> nincs mögötte. A szabálynak azt kell vizsgálnia, hogy az <code>&lt;h1&gt;</code> egy <code>&lt;div hidden id="S:…"&gt;</code>-ben van-e.</li>
+        <li>Az e2e tesztek (<code>tests/</code>) még a 2025-ös tartalmat tesztelik. A munkafa szinte tiszta: 2 módosított fájl.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════ 08 · COMBINED RECOMMENDATIONS ═══════════ -->
+  <section>
+    <div class="sec-index">08</div>
+    <h2 class="section-title">Összesített javaslatok</h2>
+
+    <div class="rec crit" id="rec-crit">
+      <div class="tier-label"><span class="mono-label">Kritikus · javítandó</span><span class="rule"></span><span class="count">1</span></div>
+      <table class="rec-table">
+        <thead><tr><th>Gond</th><th>Fájl</th><th>Javítás</th></tr></thead>
+        <tbody>
+          <tr><td>A szekciósín és a fejléc layout-tulajdonságokat animál (height, width, padding, left), lassan</td><td><code>ScrollLayout.tsx:426</code></td><td><code>scaleY</code> + <code>transform-origin: top</code>, a jelölőn <code>scale</code>, a fejlécen csak szín/opacity, 240 ms</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rec imp" id="rec-imp">
+      <div class="tier-label"><span class="mono-label">Fontos · érdemes javítani</span><span class="rule"></span><span class="count">7</span></div>
+      <table class="rec-table">
+        <thead><tr><th>Gond</th><th>Fájl</th><th>Javítás</th></tr></thead>
+        <tbody>
+          <tr><td>3D-gomb: négy transform-gazda; 41 <code>transition: all</code></td><td><code>LakitelekChartPage.tsx:204</code></td><td>Egy gazda (Framer <code>whileTap</code>), CSS csak szín/árnyék; <code>all</code> → explicit lista</td></tr>
+          <tr><td><code>scale(0)</code> + forgás + pattogó rugó a belépőkön</td><td><code>PloughingSoilComparison.tsx:352</code></td><td>0,9 → 1, opacity, 220 ms, <code>bounce: 0</code></td></tr>
+          <tr><td>Túlmozgatott hover, hover-only link</td><td><code>ApplicationGuide.tsx:147</code></td><td>3 px emelés + árnyék, link mindig látszik</td></tr>
+          <tr><td>Pulzáló jelzők (5 ciklus), a Következő-jelző végig mozog</td><td><code>ScrollLayout.module.css:528</code></td><td>Egy bólintás megjelenéskor, utána álló állapot</td></tr>
+          <tr><td>Gépíró-hurok a főcímben, csonka SSR <code>&lt;h1&gt;</code></td><td><code>home/Hero.tsx:47</code></td><td>Teljes cím a DOM-ban, egyszeri <code>clip-path</code>-felfedés</td></tr>
+          <tr><td>12 lépcsőzött lista</td><td><code>problem/pages/*</code></td><td>Lépcső csak a sorrend-jelentésű listán, máshol csoportos 240 ms</td></tr>
+          <tr><td>A hub örök díszítő ciklusai, képernyőn kívül is futnak</td><td><code>HubFolder.module.css:142</code></td><td>Részecskék és pulzálás törlése, egyszeri gyűrű-rajzolás</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rec opp" id="rec-opp">
+      <div class="tier-label"><span class="mono-label">Lehetőségek</span><span class="rule"></span><span class="count">6</span></div>
+      <table class="rec-table">
+        <thead><tr><th>Fejlesztés</th><th>Hol</th><th>Haszon</th></tr></thead>
+        <tbody>
+          <tr><td>Megosztott elem a fotó-nagyításnál (<code>layoutId</code>)</td><td><code>PhotoViewer.tsx</code></td><td>Látszik, honnan jön a kép</td></tr>
+          <tr><td>Közös görbe- és időtartam-tokenek</td><td><code>app/globals.css</code></td><td>6–8 görbe helyett 2–3, egységes érzet</td></tr>
+          <tr><td>Betöltésjelző a 3D-diagramhoz</td><td><code>LakitelekChartPage.tsx:13</code></td><td>Rendszerállapot a <code>three</code> letöltése alatt</td></tr>
+          <tr><td>Ásógép-ciklus a hub helyett</td><td><code>docs/javaslatok</code></td><td>A mozgás a technológiát magyarázza</td></tr>
+          <tr><td>Gördülő számok ÉVAD-váltáskor</td><td><code>ui/AnimatedNumber</code></td><td>A két év különbsége mozgásból is látszik</td></tr>
+          <tr><td>Irányos Story-váltás</td><td><code>experiment/story/Story.tsx</code></td><td>A lépések sorrendje térben is érthető</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="area">
+      <h3>Nem mozgással kapcsolatos teendők a 10/10-hez</h3>
+      <table class="rec-table">
+        <thead><tr><th>Teendő</th><th>Terület</th><th>Méret</th></tr></thead>
+        <tbody>
+          <tr><td><code>app/not-found.tsx</code> magyarul, menüvel és „Vissza a főoldalra” linkkel</td><td>UX · SEO</td><td>S</td></tr>
+          <tr><td><code>app/icon.png</code> (vagy <code>.svg</code>), <code>app/robots.ts</code>, <code>app/sitemap.ts</code></td><td>SEO</td><td>S</td></tr>
+          <tr><td>PhotoViewer: a nyitó elem egy külön „Teljes kép” gomb, ne az egész előnézet</td><td>A11y</td><td>S</td></tr>
+          <tr><td>Görgethető régiók: <code>tabIndex={0}</code> + <code>role="region"</code> + <code>aria-label</code> (Timeline, fotóleírás)</td><td>A11y</td><td>S</td></tr>
+          <tr><td>Címsorrend: kártyacímek <code>h3</code> vagy <code>p</code> (Probléma-hero, StaticChallenge, hub, Penetrométer)</td><td>A11y</td><td>S</td></tr>
+          <tr><td>Útmutató-link mindig látható; dátumokban nem törő kötőjel; egységes márkanév az oldalcímekben</td><td>Layout · UX</td><td>S</td></tr>
+          <tr><td>„Fő eredmények” rövid blokk a <code>/kutatas</code> hero alatt</td><td>Mobil · IA</td><td>M</td></tr>
+          <tr><td><code>BookLayout</code> + <code>HeroPage</code> törlése; <code>.next-qa</code> frissítése; <code>nav-check</code> Suspense-szabály pontosítása; e2e sorsa</td><td>Karbantartás</td><td>S</td></tr>
+          <tr><td><code>perf.js</code> QA-buildön, mielőtt a <code>main</code>-re megy</td><td>Teljesítmény</td><td>S</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 09 · LENS REFERENCE SUMMARY ═══════════ -->
+  <section>
+    <div class="sec-index">09</div>
+    <div class="ref-summary">
+      <span class="mono-label">A leggyakrabban használt nézőpont</span>
+      <p class="big">Emil Kowalski — Restraint &amp; Speed</p>
+      <p class="why">Bár Jakub az elsődleges lencse, a legtöbb találat Emil kérdésére adott „nem” válasz: <em>kell-e ennek egyáltalán mozognia?</em> Egy hosszan olvasott kutatási oldalon a folyamatos mozgás és a lassú navigáció többet árt, mint amennyit a kidolgozottság hozzátesz.</p>
+      <ul class="ref-lean">
+        <li><span class="nm">Szigorúbb Emil</span><span>Minden végtelen ciklus törlése (a magyarázó animációk kivételével), a navigáció 200 ms alatt, a lépcsőzések és a hover-skálázás teljes eltávolítása.</span></li>
+        <li><span class="nm">Szigorúbb Jakub</span><span>Blur a belépőkben (opacity + 6 px + blur 4 px → 0) a szekciófejléceken, árnyék a keretek helyett a világos kártyákon, közös görbe-tokenek.</span></li>
+        <li><span class="nm">Szigorúbb Jhey</span><span>Az ásógép-ciklus megépítése scroll-driven animációval (<code>animation-timeline: view()</code>), gördülő évadszámok, a talajrétegek „feltárása” görgetésre.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="doc">
+    <span>asogepes-webapp · mozgás- és UX-audit · 2026-11-05</span>
+    <span>1 kritikus · 7 fontos · 6 lehetőség · összpontszám 7,6 / 10</span>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -76,7 +76,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-md);
   padding: var(--space-md);
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
   display: flex;
   gap: var(--space-md);
   align-items: flex-start;
@@ -229,21 +229,9 @@
   transform: translate(-50%, -50%);
   width: 14px;
   height: 14px;
+  /* a still ring: the label sits on a moving video, a pulse here would only compete with it */
   border: 1px solid rgba(212, 168, 75, 0.5);
   border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.8;
-  }
-
-  100% {
-    transform: translate(-50%, -50%) scale(1.8);
-    opacity: 0;
-  }
 }
 
 .labelLeft {

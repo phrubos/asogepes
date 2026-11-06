@@ -1,17 +1,18 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import Image from 'next/image'
+import { useState, useRef, useEffect, type CSSProperties } from 'react'
+import { getImageProps } from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import styles from './Hero.module.css'
 import { RESEARCH_FIELDS, RESEARCH_SITES, RESEARCH_YEARS, szentkiralySeasons } from '@/lib/seasons'
 import { useParallax } from '@/hooks/useParallax'
-import { useTypewriter } from '@/hooks/useTypewriter'
-import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { useLoopActive } from '@/hooks/useLoopActive'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
 import { MagneticButton } from '@/components/ui/MagneticButton'
+
+// Typed once in the hero title (see .typeChar in Hero.module.css)
+const HERO_ACCENT = 'végtelen erőforrás'
 
 // Figures true for every season (same source as the research page)
 const heroStats = [
@@ -25,75 +26,115 @@ const seasonEnds = szentkiralySeasons.seasons.map((s) => ({ year: s.year, ...s.s
 const endMax = Math.max(...seasonEnds.map((s) => s.spade))
 const cm = (v: number) => String(v).replace('.', ',')
 
-const VIDEO_QUERY = '(min-width: 768px) and (prefers-reduced-motion: no-preference)'
+// Desktop and tablet: the landscape film. Phones (<768px): a portrait loop of the same real footage
+// (Imants 38SX, the brand on the rotor hood kept in frame). Neither with reduced motion or Save-Data;
+// on phones not on a 2g/3g connection either. The poster is shown until the video plays, and instead of it.
+type HeroVideo = 'desktop' | 'mobile' | null
 
-function useHeroVideo() {
-  const [enabled, setEnabled] = useState(false)
+const HERO_VIDEO_SRC = {
+  desktop: '/videos/hero_background_optimized.mp4',
+  mobile: '/videos/hero_mobile_imants.mp4',
+} as const
+
+type NetworkInfo = { saveData?: boolean; effectiveType?: string }
+
+function useHeroVideo(): HeroVideo {
+  const [kind, setKind] = useState<HeroVideo>(null)
   useEffect(() => {
-    const mq = window.matchMedia(VIDEO_QUERY)
-    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true
-    const update = () => setEnabled(mq.matches && !saveData)
+    const wide = window.matchMedia('(min-width: 768px)')
+    const motionOk = window.matchMedia('(prefers-reduced-motion: no-preference)')
+    const conn = (navigator as Navigator & { connection?: NetworkInfo }).connection
+    const update = () => {
+      if (!motionOk.matches || conn?.saveData === true) setKind(null)
+      else if (wide.matches) setKind('desktop')
+      else setKind(/2g|3g/.test(conn?.effectiveType ?? '') ? null : 'mobile')
+    }
     update()
-    mq.addEventListener('change', update)
-    return () => mq.removeEventListener('change', update)
+    wide.addEventListener('change', update)
+    motionOk.addEventListener('change', update)
+    return () => {
+      wide.removeEventListener('change', update)
+      motionOk.removeEventListener('change', update)
+    }
   }, [])
-  return enabled
+  return kind
 }
+
+// Art direction: phones get the portrait poster (the first frame of the mobile loop), the rest the landscape one
+const posterDesktop = getImageProps({
+  src: '/images/hero-poster-frame.jpg',
+  alt: '',
+  fill: true,
+  priority: true,
+  sizes: '100vw',
+}).props
+const posterMobile = getImageProps({
+  src: '/images/hero-poster-mobile.jpg',
+  alt: '',
+  width: 1080,
+  height: 1920,
+  priority: true,
+  sizes: '100vw',
+}).props
 
 export default function Hero() {
   const { style: parallaxStyle } = useParallax({ speed: 0.3, maxOffset: 150 })
 
-  // Typewriter effect
-  const typewriterText = useTypewriter({
-    text: 'végtelen erőforrás',
-    typingSpeed: 80,
-    deletingSpeed: 40,
-    pauseBeforeDelete: 10000,
-    pauseBeforeRestart: 500
-  })
-
-  const reducedMotion = useReducedMotion()
-  const showVideo = useHeroVideo()
+  const videoKind = useHeroVideo()
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+  const [videoStarted, setVideoStarted] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const heroRef = useRef<HTMLElement>(null)
+  const loopActive = useLoopActive(heroRef)
 
+  // Load only after the page has loaded, so the video never competes with the poster and the text
   useEffect(() => {
+    setIsVideoPlaying(false)
+    setVideoStarted(false)
     const video = videoRef.current
-    if (!showVideo || !video) return
+    if (!videoKind || !video) return
     const start = () => {
       video.load()
-      video.play().catch(() => {})
+      setVideoStarted(true)
     }
     if (document.readyState === 'complete') start()
     else window.addEventListener('load', start, { once: true })
     return () => window.removeEventListener('load', start)
-  }, [showVideo])
+  }, [videoKind])
+
+  // Play only while the hero is on screen
+  useEffect(() => {
+    const video = videoRef.current
+    if (!videoStarted || !video) return
+    if (loopActive) video.play().catch(() => {})
+    else video.pause()
+  }, [videoStarted, loopActive])
 
   return (
-    <header className={styles.hero}>
+    <header ref={heroRef} className={styles.hero}>
       <div className={styles.heroBg} style={parallaxStyle}>
-        <Image
-          src="/images/hero-poster-frame.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className={styles.heroPoster}
-        />
-        {showVideo && (
-          <video
-            ref={videoRef}
-            loop
-            muted
-            playsInline
-            preload="none"
-            aria-hidden="true"
-            className={`${styles.heroVideo} ${isVideoPlaying ? styles.heroVideoPlaying : ''}`}
-            onPlaying={() => setIsVideoPlaying(true)}
-          >
-            <source src="/videos/hero_background_optimized.mp4" type="video/mp4" />
-          </video>
-        )}
+        <div className={styles.heroMedia}>
+          <picture>
+            <source media="(max-width: 767px)" srcSet={posterMobile.srcSet} sizes={posterMobile.sizes} />
+            {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- getImageProps for art direction; alt="" (decorative) is in the props */}
+            <img {...posterDesktop} className={styles.heroPoster} />
+          </picture>
+          {videoKind && (
+            <video
+              key={videoKind}
+              ref={videoRef}
+              loop
+              muted
+              playsInline
+              preload="none"
+              aria-hidden="true"
+              className={`${styles.heroVideo} ${isVideoPlaying ? styles.heroVideoPlaying : ''}`}
+              onPlaying={() => setIsVideoPlaying(true)}
+            >
+              <source src={HERO_VIDEO_SRC[videoKind]} type="video/mp4" />
+            </video>
+          )}
+        </div>
         <div className={styles.heroOverlay}></div>
       </div>
       <div className={styles.heroContent}>
@@ -101,20 +142,18 @@ export default function Hero() {
           Neumann János Egyetem × Agroskill Kft.
         </div>
 
-        <h1 className={styles.heroTitle}>
+        <h1 className={styles.heroTitle} aria-label={`A talaj nem ${HERO_ACCENT}`}>
           <span className={`${styles.titleLine} ${styles.rise}`} style={{ animationDelay: '100ms' }}>
             A talaj nem{' '}
-            <span className={styles.titleAccent}>
-              {typewriterText}
-              {!reducedMotion && (
-                <motion.span
-                  className={styles.cursor}
-                  animate={{ opacity: [1, 0] }}
-                  transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }}
-                >
-                  |
-                </motion.span>
-              )}
+            {/* Typed once, by CSS only: every letter is in the server HTML (search, link previews) and
+                appears in turn; the caret blinks a few times at the end, then goes. The heading is read
+                from aria-label, so screen readers never get it letter by letter. */}
+            <span className={styles.titleAccent} aria-hidden="true">
+              {[...HERO_ACCENT].map((ch, i) => (
+                <span key={i} className={styles.typeChar} style={{ '--i': i } as CSSProperties}>
+                  {ch}
+                </span>
+              ))}
             </span>
           </span>
         </h1>

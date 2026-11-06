@@ -1,5 +1,6 @@
 // Fails (exit 1) when the home hero is blocked: (a) video blocked → title visible within 3s,
-// (b) slow 4G phone → title visible within 4s and no .mp4 request, (c) slow desktop → title within 3s.
+// (b) slow 4G phone → title visible within 4s; no desktop film, and the small portrait loop only after load
+// (or not at all on 2g/3g), (c) slow desktop → title within 3s.
 // "Visible" = the element at the h1's centre is the h1 (nothing covers it) and it is opaque.
 // usage: node scripts/qa/hero-check.js [baseUrl]
 const path = require('path')
@@ -46,11 +47,18 @@ async function throttle(ctx, page, down, latency, cpu) {
   {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }); const page = await ctx.newPage()
     await throttle(ctx, page, 1.6e6, 150, 4)
-    let mp4 = 0; page.on('request', r => { if (/\.mp4/.test(r.url())) mp4++ })
+    let desktopMp4 = 0, earlyMp4 = 0
+    await page.addInitScript(() => addEventListener('load', () => { window.__loaded = true }))
+    page.on('request', async r => {
+      if (!/\.mp4/.test(r.url())) return
+      if (!/hero_mobile/.test(r.url())) desktopMp4++
+      else if (!(await page.evaluate(() => window.__loaded === true).catch(() => true))) earlyMp4++
+    })
     const t = await timeToTitle(page, 4000)
     await page.waitForTimeout(4000)
     results.push(['slow 4G phone: title visible', t, 4000])
-    results.push(['slow 4G phone: .mp4 requests', mp4, 0]); await ctx.close()
+    results.push(['slow 4G phone: desktop .mp4 requests', desktopMp4, 0])
+    results.push(['slow 4G phone: .mp4 requests before load', earlyMp4, 0]); await ctx.close()
   }
   // (c) slow desktop
   {

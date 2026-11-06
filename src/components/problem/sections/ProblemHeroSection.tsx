@@ -102,9 +102,10 @@ export default function ProblemHeroSection() {
                                         '--card-accent': item.accent,
                                         zIndex: 10 + index
                                     } as React.CSSProperties}
-                                    initial={{ opacity: 0, y: -50, scale: 0.9 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    transition={{ delay: 0.4 + (index * 0.15), type: 'spring', stiffness: 120, damping: 12 }}
+                                    // settle into the soil: a short drop, no bounce, a 60ms step between the three depths
+                                    initial={{ opacity: 0, y: -16 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.15 + index * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                                 >
                                     <div
                                         className={`${styles.spadeCard} ${hoveredId === item.id ? styles.spadeCardActive : ''}`}

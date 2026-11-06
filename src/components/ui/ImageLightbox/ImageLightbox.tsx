@@ -187,8 +187,7 @@ export default function ImageLightbox({
             <motion.button
               className={styles.controlBtn}
               onClick={handleZoomOut}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.97 }}
               aria-label="Kicsinyítés"
               disabled={zoom <= 0.5}
             >
@@ -198,8 +197,7 @@ export default function ImageLightbox({
             <motion.button
               className={styles.controlBtn}
               onClick={handleZoomIn}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.97 }}
               aria-label="Nagyítás"
               disabled={zoom >= 4}
             >
@@ -208,8 +206,7 @@ export default function ImageLightbox({
             <motion.button
               className={styles.controlBtn}
               onClick={handleReset}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.97 }}
               aria-label="Visszaállítás"
             >
               <RotateCcw size={20} />

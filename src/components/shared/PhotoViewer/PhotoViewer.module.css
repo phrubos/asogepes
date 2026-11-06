@@ -25,7 +25,7 @@
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     /* Deep shadow */
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.4s ease;
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 .imageWrapper:hover {
@@ -133,7 +133,7 @@
     /* Stronger border */
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(4px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     /* Shadow for pop */
@@ -166,7 +166,7 @@
     height: 10px;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .activeIndicator {
@@ -471,7 +471,7 @@
     color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
     border-radius: 4px;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 
 .zoomBtn:hover:not(:disabled) {
@@ -507,7 +507,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 .closeButton:hover {

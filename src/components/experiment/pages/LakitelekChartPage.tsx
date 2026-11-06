@@ -93,9 +93,10 @@ export default function LakitelekChartPage() {
               <motion.div
                 key={parcel.num}
                 className={`${styles.resultRow} ${isBest ? styles.resultRowBest : ''} ${rated ? '' : styles.resultRowCompact}`}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 + index * 0.05 }}
+                // the table arrives as one block; Framer animates only opacity, the hover nudge is CSS's
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.15 }}
               >
                 <div className={styles.resultLeft}>
                   <span className={`${styles.resultNum} ${isBest ? styles.resultNumBest : ''}`}>
@@ -129,9 +130,10 @@ export default function LakitelekChartPage() {
                   <div className={`${styles.ratingBar} ${isBest ? styles.ratingBarBest : ''}`}>
                     <motion.div
                       className={styles.ratingFill}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${parcel.rating ?? 0}%` }}
-                      transition={{ duration: 0.8, delay: 0.4 + index * 0.05 }}
+                      style={{ originX: 0 }}
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: (parcel.rating ?? 0) / 100 }}
+                      transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
                     />
                   </div>
                   <span className={`${styles.resultRating} ${(parcel.rating ?? 0) >= 90 ? styles.resultRatingGood : ''}`}>
@@ -176,8 +178,7 @@ export default function LakitelekChartPage() {
           <motion.button
             className={styles.fullscreenButton}
             onClick={toggleFullscreen}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.97 }}
             title="Teljes képernyő"
           >
             <Maximize2 size={18} />
@@ -202,11 +203,10 @@ export default function LakitelekChartPage() {
                       <div className={styles.fakeChartBlur} />
                       <div className={styles.playButtonContainer}>
                         <motion.button
-                          className={`${styles.playButton} ${styles.playButtonPulse}`}
+                          className={styles.playButton}
                           onClick={() => setIsChartLoaded(true)}
                           aria-label="3D modell betöltése"
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
+                          whileTap={{ scale: 0.97 }}
                         >
                           <Play size={40} className={styles.playIcon} fill="currentColor" />
                         </motion.button>
@@ -294,8 +294,7 @@ export default function LakitelekChartPage() {
                 <motion.button
                   className={styles.actionButton}
                   onClick={() => setShowResults(!showResults)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileTap={{ scale: 0.97 }}
                 >
                   <Layers size={18} />
                   <span>{showResults ? 'Eredmények elrejtése' : 'Eredmények mutatása'}</span>

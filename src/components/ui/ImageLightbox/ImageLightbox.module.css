@@ -52,7 +52,7 @@
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 
 .controlBtn:hover:not(:disabled) {
@@ -90,7 +90,7 @@
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   z-index: 10;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .closeBtn:hover {
@@ -115,7 +115,7 @@
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   z-index: 10;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .navBtn:hover {

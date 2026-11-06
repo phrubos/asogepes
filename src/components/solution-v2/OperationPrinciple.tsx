@@ -48,7 +48,7 @@ export default function OperationPrinciple() {
   // Reuse existing animation variants...
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.2 } }
+    visible: { opacity: 1 }
   }
   const itemVariants = {
     hidden: { opacity: 0, scale: 0.95 },

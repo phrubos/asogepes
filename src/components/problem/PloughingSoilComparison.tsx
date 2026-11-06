@@ -270,20 +270,18 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
 export default function PloughingSoilComparison() {
   const [hoveredSide, setHoveredSide] = useState<'ploughed' | 'spaded' | null>(null)
 
+  // Header and comparison arrive together (no stagger), no bounce
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.15, delayChildren: 0.1 }
-    }
+    visible: { opacity: 1 }
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 8 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: 'spring', stiffness: 100, damping: 15 }
+      transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
     }
   }
 
@@ -324,35 +322,30 @@ export default function PloughingSoilComparison() {
             <ScaleOverlays type="ploughed" />
           </div>
 
-          <motion.ul className={styles.problemList} style={{ padding: '0.5rem', gap: '0.25rem' }}>
+          <ul className={styles.problemList} style={{ padding: '0.5rem', gap: '0.25rem' }}>
             {ploughedProblems.map((item, i) => (
-              <motion.li
+              <li
                 key={i}
                 className={styles.problemItem}
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 + i * 0.05 }}
                 style={{ padding: '0.25rem 0.5rem' }}
               >
                 <X size={12} className={styles.iconBad} strokeWidth={3} />
                 <div>
                   <span className={styles.itemText} style={{ fontSize: '0.75rem' }}>{item.text}</span>
                 </div>
-              </motion.li>
+              </li>
             ))}
-          </motion.ul>
+          </ul>
         </motion.div>
 
         {/* VS divider */}
         <div className={styles.divider} style={{ padding: '0.5rem 0' }}>
           <motion.div
             className={styles.vsCircle}
-            initial={{ scale: 0, rotate: -180 }}
-            whileInView={{ scale: 1, rotate: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.3 }}
-            whileHover={{ scale: 1.1, rotate: 10 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
           >
             VS
           </motion.div>
@@ -379,24 +372,20 @@ export default function PloughingSoilComparison() {
             <ScaleOverlays type="spaded" />
           </div>
 
-          <motion.ul className={styles.benefitList} style={{ padding: '0.5rem', gap: '0.25rem' }}>
+          <ul className={styles.benefitList} style={{ padding: '0.5rem', gap: '0.25rem' }}>
             {spadedBenefits.map((item, i) => (
-              <motion.li
+              <li
                 key={i}
                 className={styles.benefitItem}
-                initial={{ opacity: 0, x: 10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 + i * 0.05 }}
                 style={{ padding: '0.25rem 0.5rem' }}
               >
                 <Check size={12} className={styles.iconGood} strokeWidth={3} />
                 <div>
                   <span className={styles.itemText} style={{ fontSize: '0.75rem' }}>{item.text}</span>
                 </div>
-              </motion.li>
+              </li>
             ))}
-          </motion.ul>
+          </ul>
         </motion.div>
       </motion.div>
 

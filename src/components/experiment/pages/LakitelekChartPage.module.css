@@ -75,7 +75,7 @@
   border-radius: 10px;
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   font-size: 0.8125rem;
   font-weight: 500;
 }
@@ -157,7 +157,7 @@
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow:
     0 4px 20px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -166,7 +166,6 @@
 .actionButton:hover {
   background: rgba(212, 168, 75, 0.2);
   border-color: rgba(212, 168, 75, 0.5);
-  transform: translateY(-2px);
   box-shadow:
     0 8px 30px rgba(212, 168, 75, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -276,7 +275,7 @@
   border-radius: 14px;
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .closeButton:hover {
@@ -309,7 +308,6 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   overflow: hidden;
   position: relative;
-  transition: all 0.3s ease;
 }
 
 /* Right: Results Panel - Absolute Layout to prevent canvas resize */
@@ -411,7 +409,7 @@
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 10px;
-  transition: all 0.25s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
   flex: 1;
   /* Distribute height evenly */
   min-height: 60px;
@@ -505,6 +503,8 @@
 }
 
 .ratingFill {
+  /* full width; the rating is drawn with scaleX (Framer), so filling never re-lays out the row */
+  width: 100%;
   height: 100%;
   background: linear-gradient(90deg, #d4a84b 0%, rgba(212, 168, 75, 0.6) 100%);
   border-radius: 2px;
@@ -687,21 +687,17 @@
   box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.5),
     inset 0 0 20px rgba(212, 168, 75, 0.1);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* one owner per property: Framer has the transform (whileTap), CSS only colour and shadow */
+  transition: background-color 0.16s ease-out, border-color 0.16s ease-out, box-shadow 0.16s ease-out;
 }
 
 .playButton:hover {
-  transform: scale(1.1);
   background: rgba(212, 168, 75, 0.25);
   border-color: #d4a84b;
   box-shadow:
     0 30px 60px rgba(0, 0, 0, 0.6),
     0 0 30px rgba(212, 168, 75, 0.3),
     inset 0 0 30px rgba(212, 168, 75, 0.2);
-}
-
-.playButton:active {
-  transform: scale(0.95);
 }
 
 .playIcon {
@@ -731,31 +727,6 @@
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.6);
   font-weight: 500;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0.4);
-  }
-
-  70% {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 15px rgba(212, 168, 75, 0);
-  }
-
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0);
-  }
-}
-
-.playButtonPulse {
-  animation: pulse 2s infinite;
-}
-
-.playButtonPulse:hover {
-  animation: none;
 }
 
 /* Phones and tablets: the page margin comes from the layout; the block grows with its content */

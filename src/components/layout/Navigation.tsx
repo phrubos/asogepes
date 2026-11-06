@@ -13,6 +13,9 @@ const navItems = [
   { href: '/kutatas', label: 'Kutatás' },
 ]
 
+/** Layout width of the sliding underline; its visible width comes from scaleX */
+const INDICATOR_BASE = 100
+
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -110,15 +113,17 @@ export default function Navigation() {
       <div className={styles.headerInner}>
         {/* Desktop Navigation */}
         <nav className={styles.nav} ref={navRef} aria-label="Fő navigáció">
-          {/* Sliding Indicator - only render after mount */}
+          {/* Sliding Indicator - only render after mount. A 100px line moved by x and stretched by
+              scaleX (transform only), so hovering the menu never re-lays out the header */}
           {mounted && (
             <motion.div
               className={styles.indicator}
+              style={{ originX: 0 }}
               animate={{
-                left: indicatorStyle.left,
-                width: indicatorStyle.width,
+                x: indicatorStyle.left,
+                scaleX: indicatorStyle.width / INDICATOR_BASE,
               }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 40 }}
             />
           )}
 

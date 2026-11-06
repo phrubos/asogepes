@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowDown } from 'lucide-react'
 import { useScrollNav } from './ScrollLayout'
+import { oneLine } from './MobileSectionBar'
 import styles from './ScrollLayout.module.css'
 
 export default function NextSectionIndicator() {
@@ -25,7 +26,7 @@ export default function NextSectionIndicator() {
         if (currentSubIndex !== -1 && currentSubIndex < subsections.length - 1) {
             const nextSub = subsections[currentSubIndex + 1]
             return {
-                sectionName: currentSection.label.replace('\n', ' '),
+                sectionName: oneLine(currentSection.label),
                 subsectionName: nextSub.label,
                 id: nextSub.id
             }
@@ -37,7 +38,7 @@ export default function NextSectionIndicator() {
             // If next section has subsections, go to first subsection
             const firstSub = nextSection.subsections?.[0]
             return {
-                sectionName: nextSection.label.replace('\n', ' '),
+                sectionName: oneLine(nextSection.label),
                 subsectionName: firstSub?.label || null,
                 id: firstSub?.id || nextSection.id
             }
@@ -84,9 +85,10 @@ export default function NextSectionIndicator() {
                         </div>
                     </div>
 
+                    {/* No looping pulse: the arrow nods once when the target changes (keyed remount),
+                        then stays still while the reader reads */}
                     <span className={styles.indicatorButton} aria-hidden="true">
-                        <span className={styles.pulseRing} />
-                        <ArrowDown size={18} className={styles.indicatorIcon} />
+                        <ArrowDown key={nextInfo.id} size={18} className={styles.indicatorIcon} />
                     </span>
                 </motion.button>
             )}

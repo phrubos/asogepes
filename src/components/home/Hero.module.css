@@ -73,6 +73,11 @@
     will-change: transform;
 }
 
+.heroMedia {
+    position: absolute;
+    inset: 0;
+}
+
 .heroPoster {
     object-fit: cover;
     object-position: center;
@@ -105,7 +110,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .rise {
+    /* the whole title at once, no caret */
+    .rise,
+    .heroTitle .typeChar,
+    .heroTitle .typeChar::after {
         animation: none;
     }
 
@@ -171,22 +179,64 @@
 }
 
 .titleAccent {
-    animation-delay: 0.2s;
     color: var(--color-gold);
-    /* Pure gold color */
     font-style: normal;
-    /* Remove italic for more modern look */
     display: inline-block;
-    min-width: 18ch;
-    /* Reserve space for "végtelen erőforrás" */
     white-space: nowrap;
 }
 
-.cursor {
-    display: inline-block;
-    margin-left: 2px;
-    font-weight: 300;
-    color: var(--color-gold);
+/* One-time typewriter: letter i appears at 700ms + i × 75ms (the line has risen by then) and is
+   never deleted. The full text sits in the DOM from the first byte; only its opacity steps in. */
+.typeChar {
+    --type-at: calc(700ms + var(--i) * 75ms);
+    position: relative;
+    animation: typeIn 1ms linear var(--type-at) both;
+}
+
+/* caret: shown right after the newest letter until the next one lands */
+.typeChar::after {
+    content: '';
+    position: absolute;
+    top: 0.14em;
+    bottom: 0.06em;
+    right: -0.08em;
+    width: max(2px, 0.05em);
+    background: currentColor;
+    opacity: 0;
+    /* no fill: outside its 75ms window the caret falls back to opacity 0 */
+    animation: caretStep 75ms linear var(--type-at);
+}
+
+/* after the last letter it blinks three times, then disappears for good */
+.typeChar:last-child::after {
+    animation: caretBlink 1060ms linear var(--type-at) 3;
+}
+
+@keyframes typeIn {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes caretStep {
+
+    from,
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes caretBlink {
+
+    0%,
+    49.9% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
 }
 
 /* ... */
@@ -305,7 +355,7 @@
         font-size: clamp(1.75rem, 7.5vw, 2.5rem);
     }
 
-    /* own line instead of an 18ch reservation, so typing never reflows the title */
+    /* phones: the accent gets its own line */
     .titleAccent {
         display: block;
         min-width: 0;
@@ -331,6 +381,41 @@
         font-size: 0.75rem;
     }
 }
+/* Phones: the portrait loop stands at the top, full width (the hero is narrower than 9:16, so covering
+   it would crop the Imants lettering off the sides), and fades into the page colour behind the text */
+@media (max-width: 767px) {
+    .hero {
+        background: var(--color-earth-900);
+        /* the text starts in the lower part of the 9:16 video, well under the lettering (~20–30%),
+           so the rotor and the flying soil stay in view above it */
+        padding-top: calc(100vw * 16 / 9 * 0.6);
+    }
+
+    /* two figures in one row; the field count is told by the research page */
+    .stat:nth-child(3) {
+        display: none;
+    }
+
+    .heroBg {
+        inset: 0;
+    }
+
+    .heroMedia,
+    .heroOverlay {
+        inset: 0 0 auto;
+        aspect-ratio: 9 / 16;
+    }
+
+    .heroOverlay {
+        background: linear-gradient(180deg,
+                rgba(26, 22, 18, 0.35) 0%,
+                rgba(26, 22, 18, 0) 12%,
+                rgba(26, 22, 18, 0) 42%,
+                rgba(26, 22, 18, 0.75) 62%,
+                var(--color-earth-900) 100%);
+    }
+}
+
 /* Every season in one glance (bottom right on desktop, under the CTA on phones) */
 .seasonCard {
     position: absolute;

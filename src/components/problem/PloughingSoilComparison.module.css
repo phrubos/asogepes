@@ -234,7 +234,6 @@
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
-  transition: all 0.2s ease;
   cursor: default;
 }
 

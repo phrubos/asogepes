@@ -77,6 +77,11 @@ Use `@/` for imports from `src/` directory (configured in tsconfig.json).
 ## Analysis / audit
 - UI/UX, mobile and performance analysis: `docs/2026-10-31-ui-ux-performance-analysis.md`
 
+## Tickets and verification
+- Bigger tasks (new feature, new data, animation, multi-page change) get a ticket in `docs/jegyek/` (template `_sablon.md`, workflow in its README); the board `docs/jegyek/tabla.md` lists every open item with status and touched files. Screenshot fixes need no ticket. Keep the board up to date when an item starts or finishes.
+- Before calling a ticket or a non-trivial change done, run the `checker` subagent (`.claude/agents/checker.md`, read-only, Sonnet) with the changed files/pages and the ticket's "Kész, ha" list; it verifies on the dev server and reports numbers. Relay its verdict.
+- Parallel subagents only for tickets that touch disjoint files (the board's "Fájlok" column).
+
 ## Skills
 Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `skills-lock.json`): ux-heuristics, performance-optimization, information-architecture, design-motion-principles, review-animations, find-animation-opportunities, animation-vocabulary, emil-design-eng, apple-design, systematic-debugging, verification-before-completion, writing-plans, executing-plans, and the local **ui-fix-from-screenshot** (the workflow for "this looks wrong" screenshots: trace, fix at the right breakpoint, prove with numbers).
 

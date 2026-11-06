@@ -348,9 +348,10 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
 
   // Ref for the sidebar content container to verify positions relative to it
   const sidebarContentRef = useRef<HTMLDivElement>(null)
-  const [progressHeight, setProgressHeight] = useState(0)
+  // Share of the rail that is filled (0..1); drawn with scaleY so the fill never re-lays out the rail
+  const [progressScale, setProgressScale] = useState(0)
 
-  // Calculate progress bar height based on active element position
+  // Calculate the progress fill based on the active element's position
   useEffect(() => {
     const calculateProgress = () => {
       if (!sidebarContentRef.current) return
@@ -392,21 +393,26 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
         }
       }
 
-      if (targetTop > 0) {
-        setProgressHeight(targetTop)
+      const railHeight = sidebarContentRef.current.clientHeight
+      if (targetTop > 0 && railHeight > 0) {
+        setProgressScale(Math.min(1, targetTop / railHeight))
       }
     }
 
     // Run calculation
     calculateProgress()
 
-    // Re-calculate on resize
+    // Re-calculate on resize, and whenever the rail itself changes height (subsections opening):
+    // the fill is a share of the rail, so a taller rail would otherwise stretch it past the marker
     window.addEventListener('resize', calculateProgress)
+    const railObserver = new ResizeObserver(calculateProgress)
+    if (sidebarContentRef.current) railObserver.observe(sidebarContentRef.current)
 
     // Also re-calculate after a short delay to allow for animations (like subpages expanding)
     const timeoutId = setTimeout(calculateProgress, 350)
 
     return () => {
+      railObserver.disconnect()
       window.removeEventListener('resize', calculateProgress)
       clearTimeout(timeoutId)
     }
@@ -422,9 +428,9 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
             <div className={styles.timelineTrack}>
               <motion.div
                 className={styles.timelineProgress}
-                initial={{ height: 0 }}
-                animate={{ height: progressHeight }}
-                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: progressScale }}
+                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
               />
             </div>
 
