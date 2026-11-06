@@ -21,11 +21,12 @@ A két partner a saját logójával jelenjen meg, ne csak szövegként. Ezzel az
 
 - 2026-11-06: A brandből csak a logó jön át, a színek nem (a felhasználó jóváhagyta: „oké csináld”).
 - NJE: a kvk.nje.hu saját SVG-je, a sötét szöveg a site fehérjére (`#FDFCFA`) cserélve. Agroskill: az agroskill.hu fejléclogója, a szélekre vágva, 551×120 PNG.
+- 2026-11-06: Világos alapon az Agroskill hivatalos világos logója (`agroskill-light.png`: sötétkék AGRO és fogaskerék, sárga SKILL), doboz nélkül; a sötét lapos megoldást a felhasználó elvetette.
 - Optikai egyensúly: az NJE kétsoros felirata miatt kb. 1,3× magasabb (oldalvég 40/30 px, lábléc 52/40, mobil 44/34, OG 50/40).
 
 ## Nyitott kérdések
 
-- [ ] Kérjünk az Agroskilltől vektoros (SVG) logót, és egy szóbeli jóváhagyást a használatra. Az NJE-logó használatát is érdemes az egyetemmel jóváhagyatni.
+- [ ] Kérjünk az Agroskilltől vektoros (SVG) logót, a sötét és a világos változatot is, és egy szóbeli jóváhagyást a használatra. Az NJE-logó használatát is érdemes az egyetemmel jóváhagyatni.
 
 ## Kész, ha
 

@@ -32,8 +32,9 @@ One research site, two partners. The site has its own earth-tone identity; the p
 
 ## Partner logos (`src/lib/partners.ts`, files in `public/images/partners/`)
 
-- `nje-kvk.svg` — Neumann János Egyetem, Kertészeti és Vidékfejlesztési Kar. Light version (orange `#F59B3F` + white) for dark backgrounds. For a light background use the original from `https://kvk.nje.hu/img/logo-kvk.nje.hu.svg` (dark text `#222527`).
-- `agroskill.png` — Agroskill Kft. White "AGRO" + yellow "SKILL", navy/yellow mark in a white gear. Dark backgrounds only; on light ones put it on a dark earth chip, never on cream as is.
+- `nje-kvk.svg` — Neumann János Egyetem, Kertészeti és Vidékfejlesztési Kar. Light version (orange `#F59B3F` + white) for dark backgrounds. For a light background use `nje-kvk-dark.svg` (the original, dark text `#222527`).
+- `agroskill.png` — Agroskill Kft. White "AGRO" + yellow "SKILL", navy/yellow mark in a white gear. Dark backgrounds only.
+- `agroskill-light.png` — Agroskill's own light version (navy `#0F344F` "AGRO" and gear, yellow "SKILL"), as on agroskill.hu. Use it on cream and white, straight on the surface: no dark chip or box behind it (user decision, 2026-11-06).
 - Order: NJE first, then Agroskill, separated by a thin gold line. The NJE mark has two text lines, so set it ~1.3× the Agroskill height (40px / 30px on page ends, 50 / 40 on 1200×630 images).
 - Don't recolour, crop, outline or animate the logos. Alt text: "Neumann János Egyetem – Kertészeti és Vidékfejlesztési Kar", "Agroskill Kft. – Szentkirály".
 - Agroskill's own palette (navy `#0F344F`, yellow `#FFD90A`) and fonts (Jura, Jockey One) stay inside their logo. Don't use them for the site, charts or text.
