@@ -8,6 +8,7 @@ import styles from './Hero.module.css'
 import { RESEARCH_FIELDS, RESEARCH_SITES, RESEARCH_YEARS, szentkiralySeasons } from '@/lib/seasons'
 import { useParallax } from '@/hooks/useParallax'
 import { useLoopActive } from '@/hooks/useLoopActive'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 
@@ -78,7 +79,10 @@ const posterMobile = getImageProps({
 }).props
 
 export default function Hero() {
-  const { style: parallaxStyle } = useParallax({ speed: 0.3, maxOffset: 150 })
+  // No parallax on phones: the portrait video stands at the top, and moving its layer made the
+  // footer's top line flicker where the hero clips it (fractional offsets, own compositing layer)
+  const wide = useMediaQuery('(min-width: 768px)')
+  const { style: parallaxStyle } = useParallax({ speed: 0.3, maxOffset: 150, enabled: wide === true })
 
   const videoKind = useHeroVideo()
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)

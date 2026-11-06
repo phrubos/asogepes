@@ -6,30 +6,36 @@ import { useReducedMotion } from './useReducedMotion'
 interface ParallaxOptions {
   speed?: number
   maxOffset?: number
+  /** false: no scroll listener, no transform (e.g. phones) */
+  enabled?: boolean
 }
 
 export function useParallax(options: ParallaxOptions = {}) {
-  const { speed = 0.3, maxOffset = 100 } = options
+  const { speed = 0.3, maxOffset = 100, enabled = true } = options
   const [offset, setOffset] = useState(0)
   const isReduced = useReducedMotion()
+  const active = enabled && !isReduced
 
   const handleScroll = useCallback(() => {
-    if (isReduced) return
+    if (!active) return
 
     const scrollY = window.scrollY
     const newOffset = Math.min(scrollY * speed, maxOffset)
     setOffset(newOffset)
-  }, [speed, maxOffset, isReduced])
+  }, [speed, maxOffset, active])
 
   useEffect(() => {
-    if (isReduced) return
+    if (!active) {
+      setOffset(0)
+      return
+    }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [handleScroll, isReduced])
+  }, [handleScroll, active])
 
   return {
     offset,
-    style: isReduced ? {} : { transform: `translateY(${offset}px)` }
+    style: active ? { transform: `translateY(${offset}px)` } : {}
   }
 }

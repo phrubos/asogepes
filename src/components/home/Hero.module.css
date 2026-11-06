@@ -396,8 +396,10 @@
         display: none;
     }
 
+    /* no parallax on phones (Hero.tsx), so no layer of its own either */
     .heroBg {
         inset: 0;
+        will-change: auto;
     }
 
     .heroMedia {
