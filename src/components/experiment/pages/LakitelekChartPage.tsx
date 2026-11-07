@@ -61,7 +61,13 @@ export default function LakitelekChartPage() {
         </div>
       </div>
 
-      <div className={styles.resultsTableWrapper}>
+      {/* scrolls inside the desktop panel, so it takes keyboard focus */}
+      <div
+        className={styles.resultsTableWrapper}
+        tabIndex={0}
+        role="region"
+        aria-label="Eredmények összefoglalása – táblázat"
+      >
         {!rated && (
           <div className={styles.seasonNote}>
             <p>{season.summary}</p>

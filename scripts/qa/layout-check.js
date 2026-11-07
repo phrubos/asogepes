@@ -84,7 +84,8 @@ const MAX_BADGE_GAP = 16
 
         // 2. titles and badges outside cards: at the gutter, left aligned, close to their content
         for (const e of main.querySelectorAll('h1, h2, h3, [class*=adge]')) {
-          if (!vis(e) || skip(e) || inCard(e) || !text(e)) continue
+          // .sr-only headings are not on screen (1px clipped), so they have no gap to measure
+          if (!vis(e) || skip(e) || inCard(e) || !text(e) || e.classList.contains('sr-only')) continue
           const isBadge = !/^H\d$/.test(e.tagName)
           const cs = getComputedStyle(e)
           const r = e.getBoundingClientRect()

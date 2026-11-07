@@ -166,8 +166,12 @@ export default function Timeline({
           ))}
         </div>
 
+        {/* scrolls sideways on narrow screens, so it takes keyboard focus */}
         <motion.div
           className={styles.timeline}
+          tabIndex={0}
+          role="region"
+          aria-label={`Idővonal: ${title}`}
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}

@@ -8,6 +8,8 @@ export default function PloughingSection() {
     return (
         <div className={styles.scrollSection}>
             <div className={styles.contentWrapper}>
+                {/* section heading for screen readers and the outline (the visible titles are the hero cards) */}
+                <h2 className="sr-only">A szántás korlátai</h2>
                 {/* Effects subsection */}
                 <div id="ploughing-effects" className={styles.combinedSectionCompact}>
                     <PloughingEffectsPage />

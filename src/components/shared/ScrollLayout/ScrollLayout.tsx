@@ -433,21 +433,25 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
                     data-sidebar-section={section.id}
                     className={`${styles.sectionGroup} ${isActive ? styles.active : ''} ${isPast ? styles.past : ''}`}
                     onClick={() => handleSectionClick(section.id)}
-                    role="button"
-                    tabIndex={0}
                   >
-                    {/* Marker beside the label, so it stays there when the subsections open */}
-                    <div className={styles.headRow}>
-                      <div className={styles.markerWrapper}>
-                        <div className={styles.marker} />
-                      </div>
-                      <div className={styles.sectionHeader}>
+                    {/* Marker beside the label, so it stays there when the subsections open.
+                        The label row is the button (keyboard); a click anywhere in the group bubbles
+                        up to the group's handler, so the subsection buttons are not nested in a button. */}
+                    <button
+                      type="button"
+                      className={styles.headRow}
+                      aria-current={isActive ? 'true' : undefined}
+                    >
+                      <span className={styles.markerWrapper}>
+                        <span className={styles.marker} />
+                      </span>
+                      <span className={styles.sectionHeader}>
                         <span className={styles.sectionNumber}>
                           {String(idx).padStart(2, '0')}
                         </span>
                         <span className={styles.sectionLabel}>{section.label}</span>
-                      </div>
-                    </div>
+                      </span>
+                    </button>
 
                     {/* Sub-sections List (Only for active section) */}
                     {isActive && section.subsections && section.subsections.length > 0 && (

@@ -5,19 +5,16 @@ import Navigation from '@/components/layout/Navigation'
 import Footer from '@/components/layout/Footer'
 import { HydrationErrorBoundary } from '@/components/error/HydrationErrorBoundary'
 import MotionProvider from '@/components/providers/MotionProvider'
+import { SITE_NAME, SITE_URL } from '@/lib/site'
 
 // Self-hosted at build time (no request to fonts.googleapis.com); exposed as CSS variables for globals.css
 const inter = Inter({ subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--font-inter' })
 const fraunces = Fraunces({ subsets: ['latin', 'latin-ext'], display: 'swap', variable: '--font-fraunces' })
 
-// Absolute base for og:image URLs: NEXT_PUBLIC_SITE_URL overrides (e.g. a custom domain), dev serves locally
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://neumann-agroskill.vercel.app')
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  openGraph: { type: 'website', locale: 'hu_HU', siteName: 'Ásógépes Talajművelés' },
+  // absolute base for og:image URLs
+  metadataBase: new URL(SITE_URL),
+  openGraph: { type: 'website', locale: 'hu_HU', siteName: SITE_NAME },
   twitter: { card: 'summary_large_image' },
   title: 'Ásógépes Talajművelés | Tudományos Kutatás 2025 óta',
   description: 'Tudományos kutatás a szántóföldi ásógép talajszerkezetre gyakorolt hatásáról, öntözött kertészeti kultúrákban. Neumann János Egyetem × Agroskill Kft. együttműködés.',

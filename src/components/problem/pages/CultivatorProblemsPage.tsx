@@ -107,7 +107,7 @@ export default function CultivatorProblemsPage() {
                                         >
                                             {iconMap[problem.icon]}
                                         </motion.div>
-                                        <h4 className={styles.problemCardTitle}>{problem.title}</h4>
+                                        <h3 className={styles.problemCardTitle}>{problem.title}</h3>
                                         <p className={styles.problemCardDesc}>{problem.description}</p>
                                     </div>
                                 </div>

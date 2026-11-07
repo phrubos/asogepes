@@ -99,25 +99,28 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
         ? (sliderPos >= 50 ? currentItem.leftDescription : currentItem.rightDescription)
         : currentItem.description
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            setIsModalOpen(true)
-        }
-    }
-
     return (
         <div className={styles.container}>
-            {/* Main Image Viewer */}
+            {/* Main Image Viewer: a click on the photo opens the fullscreen view; keyboard users get the
+                expand button below (the wrapper holds the prev/next buttons, so it can't be a button itself) */}
             <div
                 className={styles.imageWrapper}
                 onClick={() => setIsModalOpen(true)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={handleKeyDown}
-                aria-label="Teljes képernyős nézet"
                 data-preview
                 style={{ aspectRatio: currentItem.aspectRatio }}
             >
+                <button
+                    type="button"
+                    className={styles.expandButton}
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        setIsModalOpen(true)
+                    }}
+                >
+                    <Maximize2 size={16} aria-hidden="true" />
+                    Teljes képernyős nézet
+                </button>
+
                 {/* Loading Indicator Overlay */}
                 <AnimatePresence>
                     {isLoading && (
@@ -267,7 +270,13 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
             </button>
 
             {/* Description Area */}
-            <div className={styles.descriptionArea}>
+            {/* Desktop: a fixed-height scroll box, so it takes keyboard focus to be scrolled */}
+            <div
+                className={styles.descriptionArea}
+                tabIndex={0}
+                role="region"
+                aria-label={`${currentItem.title || 'Fotó'} – leírás`}
+            >
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={currentIndex}

@@ -34,7 +34,7 @@ export default function Navigation() {
   // Find active index based on pathname
   useEffect(() => {
     const index = navItems.findIndex(item => item.href === pathname)
-    setActiveIndex(index >= 0 ? index : 0)
+    setActiveIndex(index) // -1 off the menu (e.g. the 404 page): no item underlined
     setScrolled(false) // Reset scrolled state on route change
   }, [pathname])
 
@@ -43,6 +43,10 @@ export default function Navigation() {
     const updateIndicator = () => {
       if (!navRef.current || !mounted) return
       const targetIndex = hoverIndex !== null ? hoverIndex : activeIndex
+      if (targetIndex < 0) {
+        setIndicatorStyle(prev => ({ ...prev, width: 0 }))
+        return
+      }
       const links = navRef.current.querySelectorAll('a')
       const activeLink = links[targetIndex] as HTMLElement
 

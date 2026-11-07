@@ -497,7 +497,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
           <div className={styles.hubContent}>
             {/* Header */}
             <div className={styles.hubHeader}>
-              <h3 className={styles.hubTitle}>Technológia</h3>
+              <h2 className={styles.hubTitle}>Technológia</h2>
               <span className={styles.hubSubtitle}>Válasszon témát</span>
             </div>
 

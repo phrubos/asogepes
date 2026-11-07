@@ -124,7 +124,7 @@ export default function ProblemHeroSection() {
                                     >
                                         <span className={styles.spadeNumber}>{item.number}</span>
                                         <div className={styles.spadeIcon}>{item.icon}</div>
-                                        <h3 className={styles.spadeTitle}>{item.title}</h3>
+                                        <h2 className={styles.spadeTitle}>{item.title}</h2>
                                     </div>
                                 </motion.div>
                             )

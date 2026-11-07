@@ -48,6 +48,10 @@ One research site, two partners. The site has its own earth-tone identity; the p
 - Neutral address on the site (no "te", no sales pitch). Agroskill's own warm "Ön" tone and their Funkciógarancia belong to their channels, not to the research pages; quote them only in a clearly marked contact or partner block.
 - Correct accents always (ő, ű, á); technical words as on the site: ásógép, talajtömörödés, eketalp, penetrométer, lazítás forgatás nélkül.
 
+## Site icon
+
+- `src/app/icon.svg` (favicon) and `src/app/apple-icon.tsx` (180px): the Fraunces "A" in cream `#F5F0E8` on an earth-900 tile, the acute accent drawn as a gold `#D4A84B` blade, so it reads "Á". The letter is the outlined glyph (no font needed). Reuse this mark for small avatars; don't redraw it (user choice, 2026-11-07).
+
 ## Imagery
 
 - Real field photos from `public/images/kutatás_pics` first. Warm, low sun, soil texture visible; no stock-like people shots.

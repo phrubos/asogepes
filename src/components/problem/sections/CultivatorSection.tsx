@@ -8,6 +8,8 @@ export default function CultivatorSection() {
     return (
         <div className={styles.scrollSection}>
             <div className={styles.contentWrapper}>
+                {/* section heading for screen readers and the outline (the visible titles are the hero cards) */}
+                <h2 className="sr-only">A szántóföldi nehézkultivátor korlátai</h2>
                 {/* Problems subsection */}
                 <div id="cultivator-problems" className={styles.combinedSection}>
                     <CultivatorProblemsPage />

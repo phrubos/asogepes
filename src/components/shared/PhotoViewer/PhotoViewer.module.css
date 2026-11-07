@@ -630,6 +630,42 @@
 .labelRight {
     right: 20px;
 }
+/* Keyboard entry to the fullscreen view: hidden until focused, so the photo looks unchanged */
+.expandButton {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    z-index: 20;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--color-gold, #d4a84b);
+    border-radius: 999px;
+    background: rgba(26, 22, 18, 0.9);
+    color: var(--color-gold, #d4a84b);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transform: translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.expandButton:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+    outline: 2px solid var(--color-gold, #d4a84b);
+    outline-offset: 2px;
+}
+
+.descriptionArea:focus-visible {
+    outline: 2px solid var(--color-gold, #d4a84b);
+    outline-offset: 2px;
+}
+
 .zoomHint {
     display: none;
 }

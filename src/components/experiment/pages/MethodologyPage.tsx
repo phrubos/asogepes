@@ -26,7 +26,7 @@ export default function MethodologyPage() {
               <Gauge size={28} />
             </div>
             <div>
-              <h1 className={styles.title}>A penetrométeres mérés</h1>
+              <h2 className={styles.title}>A penetrométeres mérés</h2>
               <span className={styles.badge}>Módszertan</span>
             </div>
           </div>

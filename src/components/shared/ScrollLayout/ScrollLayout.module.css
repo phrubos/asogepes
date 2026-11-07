@@ -96,6 +96,21 @@
 /* Timeline Markers: centred on the label row (left = marker offset - group padding) */
 .headRow {
   position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.headRow:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 .markerWrapper {

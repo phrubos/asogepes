@@ -1,7 +1,7 @@
 import ProblemScrollLayout from '@/components/problem/ProblemScrollLayout'
 
 export const metadata = {
-  title: 'A Probléma | Ásógépes Technológia',
+  title: 'Probléma | Ásógépes Talajművelés',
   description: 'Miért nem elég a hagyományos szántás? Ismerje meg a talajtömörödés és a forgatásos művelés hátrányait.',
 }
 
