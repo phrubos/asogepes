@@ -255,8 +255,9 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
     const containerRef = useRef<HTMLDivElement>(null)
     const keysPressed = useRef<{ [key: string]: boolean }>({})
     const [showInfo, setShowInfo] = useState(false)
-    const [sel, setSel] = useState<Selection>({ p: 3, m: 0 })
-    const selectRef = useRef<(s: Selection) => void>(() => {})
+    // nothing selected at first: the card would cover the model on phones; it appears on tap
+    const [sel, setSel] = useState<Selection | null>(null)
+    const selectRef = useRef<(s: Selection | null) => void>(() => {})
 
     const valuesOf = (p: ParcelData) => (p.values ?? [p.may ?? 0, p.jun ?? 0, p.aug ?? 0]).slice(0, 3)
 
@@ -499,14 +500,14 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
         let intro: { t0: number; dur: number } | null = reduced ? null : { t0: performance.now() + 600, dur: 2200 }
 
         // selection: highlight one cylinder, the card shows its value
-        selectRef.current = ({ p, m }) => {
+        selectRef.current = (s) => {
             pickables.forEach((c) => {
-                const on = c.userData.p === p && c.userData.m === m
+                const on = !!s && c.userData.p === s.p && c.userData.m === s.m
                 ;(c.material as THREE.MeshStandardMaterial).emissiveIntensity = on ? 0.45 : 0.08
             })
-            setSel({ p, m })
+            setSel(s)
         }
-        selectRef.current({ p: Math.min(3, nP - 1), m: 0 })
+        setSel(null)
 
         const ray = new THREE.Raycaster()
         const ndc = new THREE.Vector2()
@@ -522,7 +523,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
         const onUp = (ev: PointerEvent) => {
             if (!down || Math.hypot(ev.clientX - down[0], ev.clientY - down[1]) > 6) return
             const hit = pick(ev)
-            if (hit) selectRef.current(hit.userData as Selection)
+            // a tap beside the cylinders closes the card
+            selectRef.current(hit ? (hit.userData as Selection) : null)
         }
         const onMove = (ev: PointerEvent) => {
             if (ev.pointerType === 'mouse') renderer.domElement.style.cursor = pick(ev) ? 'pointer' : 'grab'
@@ -620,8 +622,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
         return () => container.removeEventListener('wheel', preventScroll)
     }, [])
 
-    const selParcel = parcels[sel.p]
-    const selValue = selParcel ? valuesOf(selParcel)[sel.m] : undefined
+    const selParcel = sel ? parcels[sel.p] : undefined
+    const selValue = sel && selParcel ? valuesOf(selParcel)[sel.m] : undefined
     const selZone = selValue !== undefined ? zoneOf(selValue) : 'green'
 
     const panel: CSSProperties = {
@@ -636,14 +638,14 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             <div ref={containerRef} style={{ position: 'absolute', inset: 0 }} />
 
             {/* Selected cylinder */}
-            {selParcel && selValue !== undefined && (
+            {/* Tapped cylinder: a slim strip at the bottom, hidden while the legend is open */}
+            {sel && selParcel && selValue !== undefined && !showInfo && (
                 <div
                     aria-live="polite"
-                    style={{ ...panel, position: 'absolute', top: '16px', right: '16px', zIndex: 10, padding: '10px 14px', maxWidth: 'min(280px, calc(100% - 88px))', pointerEvents: 'none', display: 'grid', gap: '2px' }}
+                    style={{ ...panel, position: 'absolute', bottom: '16px', left: '16px', right: '16px', marginInline: 'auto', zIndex: 10, padding: '8px 14px', maxWidth: '460px', pointerEvents: 'none', display: 'grid', gap: '2px' }}
                 >
-                    <span style={{ fontSize: '12px', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)' }}>{selParcel.treatment}</span>
-                    <span style={{ fontFamily: 'var(--font-fraunces), Georgia, serif', fontWeight: 600, fontSize: '17px', color: '#f3ece2' }}>
-                        {selParcel.num} parcella · {monthLabels[sel.m]}
+                    <span style={{ fontFamily: 'var(--font-fraunces), Georgia, serif', fontWeight: 600, fontSize: '15px', color: '#f3ece2' }}>
+                        {selParcel.num} parcella · {monthLabels[sel.m]} <span style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', fontWeight: 400, fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>· {selParcel.treatment}</span>
                     </span>
                     <span style={{ fontSize: '14px', color: '#f3ece2', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: ZONE_CSS[selZone], flex: 'none' }} />
