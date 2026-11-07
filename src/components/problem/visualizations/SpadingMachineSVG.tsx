@@ -1,18 +1,14 @@
 'use client'
 
-import { useCallback, useId, useMemo, useRef } from 'react'
-import { useInView } from 'framer-motion'
-import { FADE, METAL, around, clamp01, easeIn, easeInOut, easeOut, f2, makeAttrSetter } from './soilAnimation'
-import { useSoilPlayback } from './useSoilPlayback'
-import SoilPlayButton from './SoilPlayButton'
-import ui from './SoilPlayButton.module.css'
+import { FADE, METAL, clamp01, easeIn, easeInOut, easeOut, f2, makeAttrSetter } from './soilAnimation'
+import SoilLayers, { DepthScale, GONE, REST, type Scene } from './SoilLayers'
 import hl from './SoilHighlight.module.css'
 
 /*
  * Spaded soil profile. On request (small play button) an Imants spading machine passes once (ticket 001):
  * drawn after the OperationPrinciple video (public/videos/Andornak.mp4), mirrored because it travels to the
  * right here, the spade rotor in front and the driven tine roller behind it. Every pass ends on the static
- * picture, which is also the server render and the reduced-motion view.
+ * picture, which is also the server render and the reduced-motion view. Played by SoilLayers (clods move in groups).
  */
 
 const seededRandom = (seed: number) => {
@@ -299,141 +295,114 @@ const Gear = ({ d, ri }: { d: string; ri: number }) => (
     </>
 )
 
-const SpadingMachineSVG = () => {
-    const uid = useId().replace(/:/g, '')
-    const svgRef = useRef<SVGSVGElement>(null)
-    // draws the yellow line once, when half of the profile is on screen (like the cultivator's U)
-    const lineInView = useInView(svgRef, { once: true, amount: 0.5 })
+/** The machine (spade rotor in front, tine roller behind), parked off the right edge; moved by the frame renderer. */
+export const SpaderMachine = ({ uid }: { uid: string }) => (
+    <>
+        <defs>
+            <g id={`${uid}spade`}>
+                <path d={ARM} fill={METAL.body} stroke={METAL.line} strokeWidth={0.8} strokeLinejoin="round" />
+                <path d={ARM_HI} fill={METAL.hi} opacity={0.85} />
+                <path d={PLATE} fill={METAL.plate} stroke={METAL.line} strokeWidth={0.8} strokeLinejoin="round" />
+                <circle cx={f2(BOLT[0])} cy={f2(BOLT[1])} r={1.5} fill={METAL.edge} />
+            </g>
+        </defs>
+        {/* The machine; parked off the right edge in the finished picture */}
+        <g data-machine="" transform={`translate(${f2(END_X)},${f2(HUB_Y)})`}>
+            <g transform={`translate(${f2(-GAP)},${f2(ROLLER_DY)})`}>
+                <g data-roller="">
+                    <circle r={f2(DRUM_R)} fill={METAL.drum} stroke={METAL.edge} strokeWidth={1.2} />
+                    <circle r={f2(DRUM_R * 0.8)} fill="none" stroke={METAL.drumIn} strokeWidth={f2(DRUM_R * 0.22)} />
+                    {TINE_RINGS.map(([r, w, dash]) => (
+                        <circle key={r} r={f2(r)} fill="none" stroke={METAL.tine} strokeWidth={w} strokeDasharray={dash} strokeLinecap="round" />
+                    ))}
+                    <Gear d={ROLLER_GEAR} ri={DRUM_R * 0.36} />
+                </g>
+            </g>
+            <g data-rotor="">
+                <circle r={f2(R * 0.3)} fill={METAL.disc} stroke={METAL.line} strokeWidth={0.8} />
+                {[0, 1, 2, 3, 4, 5].map((k) => <use key={k} href={`#${uid}spade`} transform={`rotate(${k * 60})`} />)}
+                <Gear d={ROTOR_GEAR} ri={R * 0.17} />
+            </g>
+        </g>
+    </>
+)
 
-    const clods = useMemo(buildClods, [])
-    const compact = useMemo(buildCompact, [])
-
-    const setup = useCallback((svg: SVGSVGElement) => {
-        const machine = svg.querySelector('[data-machine]')!, rotor = svg.querySelector('[data-rotor]')!, roller = svg.querySelector('[data-roller]')!
-        const line = svg.querySelector<SVGPathElement>('[data-line]')!
-        const workedNodes = Array.from(svg.querySelectorAll('[data-worked]'))
-        const compactNodes = Array.from(svg.querySelectorAll('[data-compact]'))
-        const worked = clods.filter((c) => c.worked).map((c, i) => ({
-            n: workedNodes[i],
-            cx: c.cx,
-            cy: c.cy,
+/** The pass as a scene for SoilLayers: the spaded layer is thrown up behind the rotor, the compact soil breaks in front of it. */
+const spaderScene = (): Scene => {
+    const clods = buildClods()
+    const fill = (c: ClodProps) => (c.isDark ? darkPalette[c.variantIndex] : lightPalette[c.variantIndex])
+    const worked = clods.filter((c) => c.worked).map((c, i) => ({
+        path: c.path, fill: fill(c), cx: c.cx, cy: c.cy,
+        p: {
             tl: timeAtX(c.cx + 10) + (seededRandom(i * 7.13 + 3) - 0.5) * 0.12, // lands behind the rotor
             ts: timeAtX(c.cx + GAP - ROLLER_R * 0.5), // the roller tines press it back
             sw: 3.5 * clamp01(1 - (c.cy - SURF) / 67), // the loosened layer swells, the roller settles it
-        }))
-        const soil = compact.map((c, i) => ({ n: compactNodes[i], cx: c.cx, cy: c.cy, tb: timeAtX(c.cx - reach(Math.min(c.cy, SURF + 30 * CM - 1))) }))
-        const set = makeAttrSetter()
-        line.style.transition = 'none' // the CSS draw-in would lag behind the frames
+        },
+    }))
+    const compact = buildCompact().map((c) => ({ ...c, p: { tb: timeAtX(c.cx - reach(Math.min(c.cy, SURF + 30 * CM - 1))) } }))
 
-        return (t: number) => {
-            const x = START_X + SPEED * Math.min(WORK, Math.max(0, t - START)), travel = x - START_X
-            set(machine, 'transform', `translate(${f2(x)},${f2(HUB_Y)})`)
-            set(rotor, 'transform', `rotate(${((travel * TIP_RATIO / R) * 57.2958).toFixed(1)})`)
-            set(roller, 'transform', `rotate(${((travel * ROLLER_RATIO / ROLLER_R) * 57.2958).toFixed(1)})`)
-            const lp = easeInOut(clamp01((t - LINE_AT) / 1.0))
-            line.style.strokeDashoffset = t < FADE ? '0' : (1 - lp).toFixed(3)
-            line.style.opacity = t < FADE ? (1 - easeInOut(t / FADE)).toFixed(2) : lp > 0 ? '1' : '0'
-            if (t < FADE) { // crossfade from the finished profile to the compact soil
-                const p = easeInOut(t / FADE)
-                worked.forEach((c) => { set(c.n, 'opacity', (1 - p).toFixed(2)); set(c.n, 'transform', '') })
-                soil.forEach((c) => { set(c.n, 'opacity', p.toFixed(2)); set(c.n, 'transform', '') })
-                return
-            }
-            worked.forEach((c) => {
-                if (t < c.tl) { set(c.n, 'opacity', '0'); return }
-                const p = clamp01((t - c.tl) / 0.5), e = easeOut(p)
-                const q = easeOut(clamp01((t - c.ts) / 0.32))
-                const dy = (1 - e) * 4 - c.sw * e - 10 * Math.sin(Math.PI * p) + c.sw * q
-                set(c.n, 'opacity', p >= 1 ? '1' : Math.min(1, p * 3).toFixed(2))
-                set(c.n, 'transform', p >= 1 && q >= 1 ? '' : around(c.cx, c.cy, (1 - e) * 22, dy, 0.5 + 0.5 * e))
-            })
-            soil.forEach((c) => {
-                const p = clamp01((t - c.tb) / 0.26), e = easeIn(p)
-                if (p >= 1) { set(c.n, 'opacity', '0'); return }
-                set(c.n, 'opacity', (1 - p).toFixed(2))
-                set(c.n, 'transform', p <= 0 ? '' : around(c.cx, c.cy, 0, 2 * e, 1 - 0.4 * e))
-            })
-        }
-    }, [clods, compact])
-
-    const { state, toggle, showButton } = useSoilPlayback(svgRef, DURATION, setup)
-
-    return (
-        <div className={ui.frame}>
-            <svg ref={svgRef} viewBox="0 0 300 150" className={ui.svg} preserveAspectRatio="xMidYMid slice">
-                <defs>
-                    <g id={`${uid}spade`}>
-                        <path d={ARM} fill={METAL.body} stroke={METAL.line} strokeWidth={0.8} strokeLinejoin="round" />
-                        <path d={ARM_HI} fill={METAL.hi} opacity={0.85} />
-                        <path d={PLATE} fill={METAL.plate} stroke={METAL.line} strokeWidth={0.8} strokeLinejoin="round" />
-                        <circle cx={f2(BOLT[0])} cy={f2(BOLT[1])} r={1.5} fill={METAL.edge} />
-                    </g>
-                </defs>
-
-                {/* Flat Sky */}
-                <rect x="0" y="0" width="300" height="45" fill={skyColor} />
-
-                {/* Flat Soil Background */}
-                <rect x="0" y="45" width="300" height="105" fill={soilBgColor} />
-
-                {/* Particles: the finished profile */}
-                {clods.map((item) => (
-                    <path
-                        key={item.id}
-                        d={item.path}
-                        fill={item.isDark ? darkPalette[item.variantIndex] : lightPalette[item.variantIndex]}
-                        stroke="rgba(0,0,0,0.3)"
-                        strokeWidth={0.8}
-                        data-worked={item.worked ? '' : undefined}
-                    />
-                ))}
-
-                {/* Compact soil before the pass; hidden in the finished picture */}
-                <g>
-                    {compact.map((c, i) => (
-                        <path key={i} d={c.path} fill={c.fill} stroke="rgba(0,0,0,0.3)" strokeWidth={0.8} opacity={0} data-compact="" />
-                    ))}
-                </g>
-
+    return {
+        sky: skyColor,
+        soil: soilBgColor,
+        duration: DURATION,
+        base: clods.map((c) => ({ path: c.path, fill: fill(c), cx: c.cx, cy: c.cy, g: c.worked })),
+        groups: [
+            {
+                clods: worked,
+                cell: (c) => `${Math.floor((c.cx + 20) / 12)}:${Math.floor((c.cy - 41) / 23)}`,
+                motion: (t, { tl, ts, sw }) => {
+                    if (t < FADE) return { ...REST, op: 1 - easeInOut(t / FADE) } // the finished picture fades out
+                    if (t < tl) return GONE
+                    const p = clamp01((t - tl) / 0.5), e = easeOut(p)
+                    const q = easeOut(clamp01((t - ts) / 0.32))
+                    if (p >= 1 && q >= 1) return REST
+                    return {
+                        op: p >= 1 ? 1 : Math.min(1, p * 3),
+                        dx: (1 - e) * 22,
+                        dy: (1 - e) * 4 - sw * e - 10 * Math.sin(Math.PI * p) + sw * q,
+                        s: 0.5 + 0.5 * e,
+                    }
+                },
+            },
+            {
+                clods: compact,
+                cell: (c) => `${Math.floor((c.cx + 20) / 20)}:${Math.floor((c.cy - 45) / 21)}`,
+                motion: (t, { tb }) => {
+                    if (t < FADE) return { ...REST, op: easeInOut(t / FADE) } // ... into the compact soil
+                    const p = clamp01((t - tb) / 0.26), e = easeIn(p)
+                    if (p >= 1) return GONE
+                    return p <= 0 ? REST : { op: 1 - p, dx: 0, dy: 2 * e, s: 1 - 0.4 * e }
+                },
+            },
+        ],
+        Overlay: ({ uid, inView }) => (
+            <>
                 {/* Bottom of the loosened layer: loose above it across the whole width */}
-                <g className={`${hl.walls} ${lineInView ? hl.drawn : ''}`} aria-hidden="true">
+                <g className={`${hl.walls} ${inView ? hl.drawn : ''}`}>
                     <path pathLength={1} d={LINE_PATH} data-line="" />
                 </g>
-
-                {/* The machine; parked off the right edge in the finished picture */}
-                <g data-machine="" transform={`translate(${f2(END_X)},${f2(HUB_Y)})`}>
-                    <g transform={`translate(${f2(-GAP)},${f2(ROLLER_DY)})`}>
-                        <g data-roller="">
-                            <circle r={f2(DRUM_R)} fill={METAL.drum} stroke={METAL.edge} strokeWidth={1.2} />
-                            <circle r={f2(DRUM_R * 0.8)} fill="none" stroke={METAL.drumIn} strokeWidth={f2(DRUM_R * 0.22)} />
-                            {TINE_RINGS.map(([r, w, dash]) => (
-                                <circle key={r} r={f2(r)} fill="none" stroke={METAL.tine} strokeWidth={w} strokeDasharray={dash} strokeLinecap="round" />
-                            ))}
-                            <Gear d={ROLLER_GEAR} ri={DRUM_R * 0.36} />
-                        </g>
-                    </g>
-                    <g data-rotor="">
-                        <circle r={f2(R * 0.3)} fill={METAL.disc} stroke={METAL.line} strokeWidth={0.8} />
-                        {[0, 1, 2, 3, 4, 5].map((k) => <use key={k} href={`#${uid}spade`} transform={`rotate(${k * 60})`} />)}
-                        <Gear d={ROTOR_GEAR} ri={R * 0.17} />
-                    </g>
-                </g>
-
-                {/* Depth Scale */}
-                <g style={{ pointerEvents: 'none' }}>
-                    <line x1="292" y1="45" x2="292" y2="115" stroke="rgba(255,255,255,0.4)" strokeWidth="1" strokeDasharray="4,3" />
-                    <rect x="268" y="32" width="28" height="14" rx="3" fill="rgba(0,0,0,0.3)" />
-                    <text x="282" y="43" fill="#FFFFFF" fontSize="9" fontWeight="600" textAnchor="middle">0 cm</text>
-
-                    {/* 30cm label at y=125 */}
-                    <rect x="250" y="108" width="46" height="14" rx="3" fill="rgba(0,0,0,0.4)" />
-                    <text x="273" y="119" fill="#FFFFFF" fontSize="9" fontWeight="600" textAnchor="middle">30 cm</text>
-                </g>
-            </svg>
-
-            {showButton && <SoilPlayButton state={state} onClick={toggle} />}
-        </div>
-    )
+                <SpaderMachine uid={uid} />
+                <DepthScale />
+            </>
+        ),
+        setupOverlay: (svg) => {
+            const machine = svg.querySelector('[data-machine]')!, rotor = svg.querySelector('[data-rotor]')!, roller = svg.querySelector('[data-roller]')!
+            const line = svg.querySelector<SVGPathElement>('[data-line]')!
+            const set = makeAttrSetter()
+            line.style.transition = 'none' // the CSS draw-in would lag behind the frames
+            return (t) => {
+                const x = START_X + SPEED * Math.min(WORK, Math.max(0, t - START)), travel = x - START_X
+                set(machine, 'transform', `translate(${f2(x)},${f2(HUB_Y)})`)
+                set(rotor, 'transform', `rotate(${((travel * TIP_RATIO / R) * 57.2958).toFixed(1)})`)
+                set(roller, 'transform', `rotate(${((travel * ROLLER_RATIO / ROLLER_R) * 57.2958).toFixed(1)})`)
+                const lp = easeInOut(clamp01((t - LINE_AT) / 1.0))
+                line.style.strokeDashoffset = t < FADE ? '0' : (1 - lp).toFixed(3)
+                line.style.opacity = t < FADE ? (1 - easeInOut(t / FADE)).toFixed(2) : lp > 0 ? '1' : '0'
+            }
+        },
+    }
 }
+
+const SpadingMachineSVG = () => <SoilLayers scene={spaderScene} />
 
 export default SpadingMachineSVG

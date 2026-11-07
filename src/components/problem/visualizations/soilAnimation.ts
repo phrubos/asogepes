@@ -27,10 +27,6 @@ export const easeInOut = bezier(0.65, 0, 0.35, 1)
 /** Fixed precision: server and browser Math.sin/cos may differ in the last digits. */
 export const f2 = (v: number) => v.toFixed(2)
 
-/** Move by (dx, dy) and scale around the clod's own centre. */
-export const around = (cx: number, cy: number, dx: number, dy: number, s: number) =>
-    `translate(${f2(cx + dx)},${f2(cy + dy)}) scale(${s.toFixed(3)}) translate(${f2(-cx)},${f2(-cy)})`
-
 /** setAttribute that only writes when the value changes (most clods are at rest in most frames). */
 export const makeAttrSetter = () => {
     const cache = new Map<Element, Record<string, string>>()

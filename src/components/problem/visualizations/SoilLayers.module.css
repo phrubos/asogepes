@@ -1,0 +1,27 @@
+/* Soil profile playback layers (ticket 001); the stage clips them to the rounded picture */
+.stage {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Absolutely positioned over the base svg, which gives the frame its height */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cell {
+  position: absolute;
+  overflow: visible;
+  transform-origin: 50% 50%;
+  pointer-events: none;
+}
+
+/* While playing, the moving clods are drawn by their layers instead of the base picture */
+.hideMovers [data-g] {
+  visibility: hidden;
+}

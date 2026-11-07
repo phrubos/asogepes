@@ -1,6 +1,6 @@
 # 001 · Ásógép-animáció a talajszelvényen
 
-**Státusz:** folyamatban (2026-11-07) · **Létrehozva:** 2026-11-05 · **Méret:** M
+**Státusz:** kész (2026-11-07) · **Létrehozva:** 2026-11-05 · **Méret:** M
 
 ## Cél
 
@@ -91,13 +91,15 @@ A felhasználónak tetszik a demó ötlete, de a gépnek jobban kell hasonlítan
 
 ## Kész, ha
 
-- [ ] Alapból mindkét kártyán a kész kép látszik (a szerveroldali HTML-ben a kompakt rögök `opacity="0"`, a gép rejtve)
-- [ ] A kis gomb (24 px-es ikon, 44 px-es tapintási felület, billentyűzettel is) egyszer lejátssza az animációt: ásógép ~9,2 s, kultivátor ~5,3 s; futás közben megállít, és a kész képre ugrik; a végén újrajátszás ikon
-- [ ] Ha a kártya futás közben kigördül a képből, megáll a kész képen; csökkentett mozgásnál nincs gomb
-- [ ] A sárga U és az ásógépes vonal a menet végén rajzolódik be; a görgetéskori berajzolás megmaradt
-- [ ] `motion-check.js`, `mobile-check.js`, `layout-check.js` a /problema oldalon rendben; mobil TBT nem nő (kattintásig nem fut semmi)
-- [ ] `npx tsc --noEmit` hibamentes; képernyőkép 390 és 1440 px-en
+- [x] Alapból mindkét kártyán a kész kép látszik (a szerveroldali HTML-ben a kompakt rögök `opacity="0"`, a gép rejtve)
+- [x] A kis gomb (24 px-es ikon, 44 px-es tapintási felület, billentyűzettel is) egyszer lejátssza az animációt: ásógép ~9,2 s, kultivátor ~5,3 s; futás közben megállít, és a kész képre ugrik; a végén újrajátszás ikon
+- [x] Ha a kártya futás közben kigördül a képből, megáll a kész képen; csökkentett mozgásnál nincs gomb
+- [x] A sárga U és az ásógépes vonal a menet végén rajzolódik be; a görgetéskori berajzolás megmaradt
+- [x] `motion-check.js`, `mobile-check.js`, `layout-check.js` a /problema oldalon rendben; mobil TBT nem nő (kattintásig nem fut semmi)
+- [x] `npx tsc --noEmit` hibamentes; képernyőkép 390 és 1440 px-en
 
 ## Eredmény
 
-—
+2026-11-07, commit 84da2a1 (preview/megrendelo-2026-11). Checker: minden pont rendben. A szerveroldali HTML-ben a 360 kompakt rög opacity 0, a gép parkolva; a gomb 44×44 px, egérrel és billentyűzettel is működik; ha a kártya kigördül a képből, vagy a felhasználó megállítja, a kész képre ugrik; csökkentett mozgásnál 0 gomb. A motion-, mobile- és layout-check átment, a tsc és az eslint hibamentes. A /problema mobil TBT-je a dev szerveren 1897 ms (az ismétlődő változatnál 3260 ms volt), asztalon 559 ms.
+
+Nyitva marad: a rotorsugár és a fordulatszám becsült érték; a skála-ellentmondás a komponens megjegyzésében; a 38WX altalajlazító kései; a TBT újramérése QA-buildön.

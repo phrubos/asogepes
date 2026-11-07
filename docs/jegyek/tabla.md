@@ -4,7 +4,6 @@ Utoljára frissítve: 2026-11-07. Folyamat és státuszok: [README](README.md).
 
 | # | Feladat | Státusz | Fájlok | Párhuzamosan? | Forrás / megjegyzés |
 |---|---|---|---|---|---|
-| [001](001-asogep-animacio.md) | Ásógép-animáció a talajszelvényen | folyamatban | `problem/visualizations/*` (SpadingMachineSVG, HeavyCultivatorSVG, soilAnimation, useSoilPlayback, SoilPlayButton), `pages/CultivatorComparisonPage.tsx` | igen | 11-07: beépítve (A kultivátor + ásógép, play gombbal, sárga vonal mindkettőn); checker fut |
 | — | 2026-os fotók feltöltése a kutatás oldalra | vár (fotókra) | `public/images/kutatás_pics`, `src/lib/data.ts` | igen | audit 11-03 §10 |
 | — | Lakitelek: melyik mérés az évek közötti híd (2026 júl. vége tarlón készült) | vár (kutatókra) | `experiment/pages/Lakitelek*`, `seasons.ts` | igen | adatdok. 11-02 §7–8 |
 | — | 2026-os géptípusok (38SX / 38WX / 40SX) helyszínenként | vár (kutatókra) | `src/lib/data.ts`, `experiment/pages/*` | igen | adatdok. 11-02 §7 |
@@ -21,6 +20,7 @@ Utoljára frissítve: 2026-11-07. Folyamat és státuszok: [README](README.md).
 
 | Feladat | Mikor | Hol |
 |---|---|---|
+| [001](001-asogep-animacio.md) Szelvény-animációk play gombbal (ásógép + nehézkultivátor A változat, sárga vonal mindkettőn); checker: minden pont rendben, mobil TBT a dev szerveren 1897 ms | 2026-11-07 | `problem/visualizations/*`, `CultivatorComparisonPage.tsx`, commit 84da2a1 |
 | UX-pontozás P1: magyar 404 (menüpont nélkül aláhúzás), `robots`/`sitemap`/`icon.svg`/`apple-icon`, `/problema` cím; axe 0 mind az 5 oldalon 1440 és 390 px-en (sín: a címsor a gomb; PhotoViewer: fókuszra megjelenő „Teljes képernyős nézet” gomb; görgethető dobozok fókuszálhatók; címsorrend). A webhelynév a fejlécben elvetve (felhasználói döntés: a „Főoldal” menüpont ugyanaz) | 2026-11-06 | `app/not-found.tsx`, `app/robots.ts`, `app/sitemap.ts`, `app/icon.svg`, `lib/site.ts`, `ScrollLayout`, `PhotoViewer`, `Timeline`, `LakitelekChartPage`, problem szekciók |
 | [003](003-partner-logok.md) Partnerlogók (lábléc, oldalvég, OG-kép) + `asogepes-brand` skill | 2026-11-06 | `lib/partners.ts`, `layout/Footer`, `shared/PageEnd`, `lib/og/renderOgImage.tsx` |
 | [002](002-mobil-hero-video.md) Mobil hero: álló videó (Imants → traktor → ásók) | 2026-11-06 | `home/Hero.tsx`, checker ellenőrizte; nyitott: LCP prod buildben |

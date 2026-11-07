@@ -9,12 +9,12 @@ export type PlayState = 'idle' | 'playing' | 'done'
 /**
  * Plays a soil-profile animation once, on request. The finished picture is what React renders, so
  * stopping (by the button, by scrolling away or by turning on reduced motion) jumps back to it.
- * `setup` receives the svg once and returns the frame renderer `render(t)`, t in seconds, 0..duration.
+ * `setup` receives the element once and returns the frame renderer `render(t)`, t in seconds, 0..duration.
  */
-export function useSoilPlayback(
-    svgRef: RefObject<SVGSVGElement | null>,
+export function useSoilPlayback<E extends Element>(
+    svgRef: RefObject<E | null>,
     duration: number,
-    setup: (svg: SVGSVGElement) => (t: number) => void,
+    setup: (el: E) => (t: number) => void,
 ) {
     const reduced = useReducedMotion()
     const inView = useInView(svgRef, { margin: '100px' })
