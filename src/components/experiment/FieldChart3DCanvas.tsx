@@ -285,12 +285,15 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
 
         const placeCamera = () => {
             const aspect = container.clientWidth / Math.max(1, container.clientHeight)
-            // fit the width: block + depth scale + date labels (~37 units) fill ~85% of the view (user, 2026-11-07)
-            const halfW = 18.5
-            const fit = halfW / (Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * aspect) / 0.85
+            // fit the width: the block and the depth scale (~34 units) just fill the view; the embedded
+            // box is narrow (~1.1 : 1) beside the results panel, so a looser fit leaves it tiny (user, 2026-11-07)
+            const halfW = 18.2 // the near-left corner (scale, probe) is larger in perspective
+            const fit = halfW / (Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * aspect) / 0.97
             const dist = Math.min(68, Math.max(24, fit)) * (isFullscreen ? 0.92 : 1)
-            const t = new THREE.Vector3(-0.6, -1.8, -0.6)
-            const dir = new THREE.Vector3(-6.5, 3.6, 27).sub(t).normalize()
+            const t = new THREE.Vector3(-1.4, -1.8, -0.6)
+            // in a tall-ish box look from higher up, so the field fills more of the height
+            const lift = Math.max(0, 1.5 - aspect) * 14
+            const dir = new THREE.Vector3(-7.3, 3.6 + lift, 27).sub(t).normalize()
             camera.position.copy(t).addScaledVector(dir, dist)
             controls.target.copy(t)
             controls.update()
@@ -341,7 +344,8 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             gPos[i * 3] = xL + Math.random() * W
             gPos[i * 3 + 1] = yB + Math.random() * -yB
             gPos[i * 3 + 2] = Z_BACK + Math.random() * depth
-            tmpC.setHSL(0.08, 0.35 + Math.random() * 0.2, 0.22 + Math.random() * 0.18)
+            // sRGB: HSL read as linear came out almost white
+            tmpC.setHSL(0.08, 0.35 + Math.random() * 0.2, 0.22 + Math.random() * 0.18, THREE.SRGBColorSpace)
             gCol[i * 3] = tmpC.r; gCol[i * 3 + 1] = tmpC.g; gCol[i * 3 + 2] = tmpC.b
         }
         const gGeo = new THREE.BufferGeometry()
