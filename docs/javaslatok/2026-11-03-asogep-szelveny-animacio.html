@@ -41,6 +41,10 @@ figure { margin: 0; background: var(--surface); border: 1px solid var(--line); b
 figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-weight: 600; }
 figcaption span { font-weight: 400; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 svg.profile { width: 100%; height: auto; display: block; border-radius: 8px; }
+/* "Kilóg a kép fölé": room above the profile for the top of the rotor (71 of 300 viewBox units = 24% of the width) */
+.stage { min-width: 0; }
+.over .stage { padding-top: 24%; }
+.over svg.profile { overflow: visible; }
 .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 button { font: 500 14px var(--body); color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; min-height: 40px; cursor: pointer; }
 button:hover { border-color: var(--muted); }
@@ -78,9 +82,9 @@ a { color: var(--accent); }
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Javaslat · 2. változat · nincs beépítve</div>
+    <div class="eyebrow">Javaslat · 3. változat · nincs beépítve</div>
     <h1>Ásógép-szelvény animáció</h1>
-    <p class="lede">A gépet most valós léptékben rajzoltam az Imants 38SX adatai alapján, úgy, ahogy a szelvény mellett, a talaj szintjén állva látszana. A nagy ásórotor alsó része halad át a képen, a kapák ívben vágnak a talajba, mögötte pedig a meghajtott, rugós fogú elmunkáló henger nyomja vissza és simítja el a felszínt. Az utolsó képkocka továbbra is pontosan a mostani kép.</p>
+    <p class="lede">A gép most a Technológia oldal működési elv videóját követi, tükrözve, mert itt jobbra halad. Elöl az ásórotor: fogaskerék-agy, mögötte tárcsa, 6 sarlóívű kapakar, a végükön csavarozott, hegyes ásólap, a hegy a forgás irányába mutat. Mögötte az elmunkáló henger: sötét dob, fogaskerék-agy, körülötte a forgó rugós fogak szaggatott ívei. A váz elmaradt. A lépték és a végső kép nem változott. Az „Előző gép” gombbal visszanézhető a 2. változat, a „Kilóg a kép fölé” gombbal pedig az, hogy milyen, ha az egész rotor látszik.</p>
   </header>
 
   <div class="pair">
@@ -91,7 +95,11 @@ a { color: var(--accent); }
     </figure>
     <figure>
       <figcaption>Javaslat <span id="clockLabel">0,00 s</span></figcaption>
-      <svg class="profile" id="animSvg" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ásógépezett talajszelvény, animált javaslat"></svg>
+      <div class="stage"><svg class="profile" id="animSvg" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ásógépezett talajszelvény, animált javaslat"></svg></div>
+      <div class="controls">
+        <button type="button" id="overflowBtn" aria-pressed="false">Kilóg a kép fölé</button>
+        <button type="button" id="oldBtn" aria-pressed="false">Előző gép</button>
+      </div>
       <div class="controls">
         <button class="primary" id="play" type="button">Lejátszás újra</button>
         <button type="button" data-speed="1" aria-pressed="true">Fél valós sebesség</button>
@@ -100,7 +108,7 @@ a { color: var(--accent); }
         <button type="button" id="reduced" aria-pressed="false">Csökkentett mozgás</button>
       </div>
       <label class="scrub" for="scrub"><input id="scrub" type="range" min="0" max="5" step="0.01" value="0"><span>léptetés</span></label>
-      <div class="legend"><span><b>Ásórotor</b> 7 kapasor × 4 kapa, a legközelebbi sor kiemelve</span><span><b>Elmunkáló henger</b> 406 mm, rugós fogak</span></div>
+      <div class="legend"><span><b>Ásórotor</b> 6 kapa egy tárcsán, mint a videóban</span><span><b>Elmunkáló henger</b> 406 mm, rugós fogak</span></div>
     </figure>
   </div>
 
@@ -115,8 +123,8 @@ a { color: var(--accent); }
       <thead><tr><th>Részlet</th><th>Az animációban</th><th>Forrás</th></tr></thead>
       <tbody>
         <tr><td>Forgásirány</td><td>A rotor a kerekekkel egy irányba forog, előre tolja magát: alul a kapák hátrafelé mozognak, és hátra-fel dobják a talajt. <span class="tag ok">forrás</span></td><td class="src">38SX prospektus: „Doordat de spitas zich ‘vooruit’ duwt is er weinig trekkracht nodig”</td></tr>
-        <tr><td>Kapák száma, elrendezés</td><td>7 kapasor, soronként 4 kapa (2 jobbos, 2 balos), összesen 28. Oldalról csavarvonalban eltolva látszanak: a legközelebbi sor teljes, a többi halványan. <span class="tag ok">forrás</span></td><td class="src">38SX prospektus; Agroskill 38WX oldal</td></tr>
-        <tr><td>Kapa alakja</td><td>Hátrafelé hajlított, edzett lemez, a végén behajlított ásólap. <span class="tag ok">forrás</span></td><td class="src">Landbouwmechanisatie 2006 (Imants 45-ös széria, ugyanaz a kapacsalád)</td></tr>
+        <tr><td>Kapák száma, elrendezés</td><td>6 kapa egy tárcsán, ahogy a működési elv videója mutatja (a hátsó tárcsák nem látszanak). A valós 38SX-en 7 tárcsa van, tárcsánként 4 kapával. <span class="tag est">egyszerűsítés</span></td><td class="src">Technológia oldal, működési elv videó; 38SX prospektus</td></tr>
+        <tr><td>Kapa alakja</td><td>Széles, sarlóívű acélkar, a végén csavarozott, hegyes ásólap; a hegy a forgás irányába mutat, ahogy a videóban. <span class="tag ok">forrás</span></td><td class="src">Technológia oldal, működési elv videó; Landbouwmechanisatie 2006</td></tr>
         <tr><td>Munkamélység</td><td>A kapák hegye a „30 cm” jelig ér. <span class="tag ok">forrás</span></td><td class="src">38SX300H: 15–30 cm (prospektus); Agroskill: 15–35 cm</td></tr>
         <tr><td>Elmunkáló henger</td><td>Meghajtott, sima palástú henger hajlított, rugalmas fogakkal, 406 mm átmérő. A rotor mögött a gépben van, a gép súlyát nagyrészt ez hordja. A fogak 0–6 cm mélyen dolgoznak, és kicsit gyorsabban forognak a haladásnál. <span class="tag ok">forrás</span></td><td class="src">Agroskill 38WX; 38SX prospektus; FWI („turning a little faster than forward speed”)</td></tr>
         <tr><td>Eredmény</td><td>A fellazított réteg megemelkedik, majd a henger visszanyomja: „alul kemény, felül puha magágy”. Talpréteget nem hagy. <span class="tag ok">forrás</span></td><td class="src">Agroskill 38WX, laza talajok oldal</td></tr>
@@ -173,7 +181,7 @@ a { color: var(--accent); }
     tipRatio: 1.5,                // spade tip speed / forward speed (estimate; >1 = pushes itself forward)
     flanges: 7, perFlange: 4,
     rollerR: 40.6 / 2 * CM,       // 406 mm roller, tine tips
-    drumR: 14 * CM,               // smooth drum (estimate)
+    drumR: 40.6 / 2 * CM * 0.78,  // dark drum inside the tine rings (proportion from the video)
     rollerDepth: 6 * CM,          // tines work 0-6 cm
     rollerRatio: 1.1,             // roller turns a little faster than travel
     clearance: 10,                // units between spade tips and roller tines
@@ -252,40 +260,95 @@ a { color: var(--accent); }
   drawBase(staticSvg); drawScale(staticSvg);
 
   const svg = document.getElementById('animSvg');
-  const nodes = drawBase(svg);
+  const defs = el('defs', {}, svg);
+  // the soil scene is always clipped to the frame; the machine to the frame, or (overflow mode) to the frame plus the space above it
+  el('rect', { x: 0, y: 0, width: 300, height: 150, rx: 5 }, el('clipPath', { id: 'clipFrame' }, defs));
+  el('rect', { x: 0, y: -120, width: 300, height: 270, rx: 5 }, el('clipPath', { id: 'clipTall' }, defs));
+  const scene = el('g', { 'clip-path': 'url(#clipFrame)' }, svg);
+  const nodes = drawBase(scene);
   const compact = buildCompact();
-  const cg = el('g', {}, svg);
+  const cg = el('g', {}, scene);
   const cNodes = compact.map((c) => el('path', { d: c.path, fill: c.fill, stroke: 'rgba(0,0,0,0.3)', 'stroke-width': 0.8 }, cg));
 
-  // ---- Machine (side view, true scale). Local origin = rotor axis. ----
+  const machineClip = el('g', { 'clip-path': 'url(#clipFrame)' }, svg);
+  const machine = el('g', {}, machineClip);
+  const rollerOffset = `translate(${-gap},${(rollerY - hubY).toFixed(2)})`;
+  const pts = (arr) => 'M' + arr.map((p) => `${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(' L') + ' Z';
+
+  // ---- Machine v3: after the OperationPrinciple video (Andornak.mp4), mirrored. Local origin = rotor axis. ----
+  // The rotor turns clockwise (like the wheels, it pushes itself forward), so the spade tips lead clockwise:
+  // an arm drawn pointing down bends towards -x.
+  const M = { body: '#8f877c', edge: '#3f382f', hi: '#c9c1b3', plate: '#ddd6c9', hub: '#e7e1d6', disc: '#746c61', drum: '#3a332c', drumIn: '#4d453b', tine: '#ecdfc6', line: 'rgba(0,0,0,0.4)' };
+  const gearPath = (teeth, ro, ri) => {
+    const p = [], pitch = (Math.PI * 2) / teeth;
+    for (let j = 0; j < teeth; j++) [[0, ri], [0.18, ro], [0.47, ro], [0.65, ri]].forEach(([f, r]) => {
+      const a = (j + f) * pitch; p.push([Math.cos(a) * r, Math.sin(a) * r]);
+    });
+    return pts(p);
+  };
+  const gear = (parent, teeth, ro, ri) => {
+    el('path', { d: gearPath(teeth, ro, ri), fill: M.hub, stroke: M.edge, 'stroke-width': 0.9, 'stroke-linejoin': 'round' }, parent);
+    el('circle', { r: ri * 0.62, fill: 'none', stroke: M.edge, 'stroke-width': 0.7, opacity: 0.6 }, parent);
+    for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + Math.PI / 4; el('circle', { cx: Math.cos(a) * ri * 0.4, cy: Math.sin(a) * ri * 0.4, r: ri * 0.08, fill: M.edge }, parent); }
+    el('circle', { r: ri * 0.13, fill: M.edge }, parent);
+  };
+  const SWEEP = 1.05; // rad the arm turns between hub and tip
+  const centre = (u) => { const r = R * (0.16 + 0.84 * u), a = SWEEP * u * u; return [-Math.sin(a) * r, Math.cos(a) * r]; };
+  // a strip along the arm's centre line: half width w(t), shifted sideways by off(t)
+  const band = (u0, u1, w, off = () => 0, steps = 16) => {
+    const a = [], b = [];
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps, u = u0 + (u1 - u0) * t;
+      const [x, y] = centre(u), [x1, y1] = centre(Math.max(0, u - 0.01)), [x2, y2] = centre(Math.min(1, u + 0.01));
+      const l = Math.hypot(x2 - x1, y2 - y1), nx = -(y2 - y1) / l, ny = (x2 - x1) / l;
+      const o = off(t), hw = w(t);
+      a.push([x + nx * (o + hw), y + ny * (o + hw)]); b.push([x + nx * (o - hw), y + ny * (o - hw)]);
+    }
+    return pts([...a, ...b.reverse()]);
+  };
+  const spadeDef = el('g', { id: 'spade3' }, defs);
+  el('path', { d: band(0, 0.8, (t) => R * (0.078 - 0.04 * t)), fill: M.body, stroke: M.line, 'stroke-width': 0.8, 'stroke-linejoin': 'round' }, spadeDef);
+  el('path', { d: band(0.05, 0.78, (t) => R * 0.011, (t) => R * (0.045 - 0.025 * t)), fill: M.hi, opacity: 0.85 }, spadeDef);
+  el('path', { d: band(0.74, 1, (t) => R * 0.058 * (1 - t ** 2.2) + 0.3, () => R * 0.008), fill: M.plate, stroke: M.line, 'stroke-width': 0.8, 'stroke-linejoin': 'round' }, spadeDef);
+  const [bx, by] = centre(0.8);
+  el('circle', { cx: bx, cy: by, r: 1.5, fill: M.edge }, spadeDef);
+
+  const v3 = el('g', {}, machine);
+  const rollerPos3 = el('g', { transform: rollerOffset }, v3);
+  const roller3 = el('g', {}, rollerPos3);
+  const dR = T.drumR;
+  el('circle', { r: dR, fill: M.drum, stroke: M.edge, 'stroke-width': 1.2 }, roller3);
+  el('circle', { r: dR * 0.8, fill: 'none', stroke: M.drumIn, 'stroke-width': dR * 0.22 }, roller3);
+  // the spring tines, seen edge on while spinning: broken rings just outside the drum, the outer one at the tine tips
+  [[dR + 3, 2.2, '34 10 18 14'], [dR + 6.5, 1.8, '22 16 40 12'], [T.rollerR - 0.9, 1.5, '16 22 30 18']].forEach(([r, w, da]) =>
+    el('circle', { r, fill: 'none', stroke: M.tine, 'stroke-width': w, 'stroke-dasharray': da, 'stroke-linecap': 'round' }, roller3));
+  gear(roller3, 12, dR * 0.42, dR * 0.36);
+
+  const rotor3 = el('g', {}, v3);
+  el('circle', { r: R * 0.3, fill: M.disc, stroke: M.line, 'stroke-width': 0.8 }, rotor3);
+  for (let k = 0; k < 6; k++) el('use', { href: '#spade3', transform: `rotate(${k * 60})` }, rotor3);
+  gear(rotor3, 12, R * 0.2, R * 0.17);
+
+  // ---- Machine v2 (previous proposal), kept for comparison ----
   const steel = '#33291f', plate = '#d8d0c3';
-  const machine = el('g', {}, svg);
-  // side plate joining rotor axis and roller axle, and the hitch going forward and up
-  el('path', { d: `M14,-10 L-${gap},${rollerY - hubY - 10} L-${gap},${rollerY - hubY + 10} L14,10 Z`, fill: 'rgba(51,41,31,0.16)', stroke: steel, 'stroke-width': 1.2 }, machine);
-  el('line', { x1: 10, y1: -8, x2: 70, y2: -60, stroke: steel, 'stroke-width': 2 }, machine);
-  // rotor: one spade = backward-curved arm (trailing the rotation) + bent spade blade at the tip
+  const v2 = el('g', { display: 'none' }, machine);
+  el('path', { d: `M14,-10 L-${gap},${rollerY - hubY - 10} L-${gap},${rollerY - hubY + 10} L14,10 Z`, fill: 'rgba(51,41,31,0.16)', stroke: steel, 'stroke-width': 1.2 }, v2);
+  el('line', { x1: 10, y1: -8, x2: 70, y2: -60, stroke: steel, 'stroke-width': 2 }, v2);
   const spade = (g, strong) => {
     const tip = R;
     el('path', { d: `M0,7 Q${R * 0.32},${R * 0.5} ${R * 0.13},${tip - 9}`, fill: 'none', stroke: steel, 'stroke-width': strong ? 2.4 : 1.4, 'stroke-linecap': 'round', opacity: strong ? 1 : 0.28 }, g);
     if (strong) el('path', { d: `M${R * 0.13 - 4},${tip - 11} L${R * 0.13 + 6},${tip - 8} Q${R * 0.13 + 3},${tip + 1} ${R * 0.13 - 6},${tip - 1} Z`, fill: plate, stroke: steel, 'stroke-width': 1 }, g);
   };
-  const rotor = el('g', {}, machine);
+  const rotor2 = el('g', {}, v2);
   const N = T.flanges * T.perFlange, step = 360 / N;
-  // far flanges first (faint), nearest flange on top (solid)
-  for (let f = T.flanges - 1; f >= 0; f--) for (let k = 0; k < T.perFlange; k++) {
-    const a = k * 90 + f * step;
-    spade(el('g', { transform: `rotate(${a})` }, rotor), f === 0);
-  }
-  el('circle', { cx: 0, cy: 0, r: 9, fill: plate, stroke: steel, 'stroke-width': 1.8 }, rotor);
-  el('circle', { cx: 0, cy: 0, r: 3, fill: steel }, rotor);
-  // roller: smooth drum + curved spring tines
-  const roller = el('g', {}, machine);
-  for (let i = 0; i < 16; i++) {
-    const tg = el('g', { transform: `rotate(${i * 22.5})` }, roller);
-    el('path', { d: `M0,${T.drumR - 1} Q5,${(T.drumR + T.rollerR) / 2} 2,${T.rollerR}`, fill: 'none', stroke: steel, 'stroke-width': 1.3, 'stroke-linecap': 'round' }, tg);
-  }
-  el('circle', { cx: 0, cy: 0, r: T.drumR, fill: plate, stroke: steel, 'stroke-width': 1.8 }, roller);
-  el('circle', { cx: 0, cy: 0, r: 3, fill: steel }, roller);
+  for (let f = T.flanges - 1; f >= 0; f--) for (let k = 0; k < T.perFlange; k++) spade(el('g', { transform: `rotate(${k * 90 + f * step})` }, rotor2), f === 0);
+  el('circle', { r: 9, fill: plate, stroke: steel, 'stroke-width': 1.8 }, rotor2);
+  el('circle', { r: 3, fill: steel }, rotor2);
+  const roller2 = el('g', {}, el('g', { transform: rollerOffset }, v2));
+  const oldDrum = 14 * CM;
+  for (let i = 0; i < 16; i++) el('path', { d: `M0,${oldDrum - 1} Q5,${(oldDrum + T.rollerR) / 2} 2,${T.rollerR}`, fill: 'none', stroke: steel, 'stroke-width': 1.3, 'stroke-linecap': 'round', transform: `rotate(${i * 22.5})` }, roller2);
+  el('circle', { r: oldDrum, fill: plate, stroke: steel, 'stroke-width': 1.8 }, roller2);
+  el('circle', { r: 3, fill: steel }, roller2);
   drawScale(svg);
 
   // ---- Clock math ----
@@ -316,8 +379,10 @@ a { color: var(--accent); }
   function render(t) {
     const x = xAt(t), travel = x - startX;
     set(machine, 'transform', `translate(${x.toFixed(2)},${hubY.toFixed(2)})`);
-    set(rotor, 'transform', `rotate(${(travel * T.tipRatio / R * 57.2958).toFixed(1)})`);
-    set(roller, 'transform', `translate(${-gap},${(rollerY - hubY).toFixed(2)}) rotate(${(travel * T.rollerRatio / T.drumR * 57.2958).toFixed(1)})`);
+    const rotA = `rotate(${(travel * T.tipRatio / R * 57.2958).toFixed(1)})`;
+    const rolA = `rotate(${(travel * T.rollerRatio / T.rollerR * 57.2958).toFixed(1)})`;
+    set(rotor3, 'transform', rotA); set(rotor2, 'transform', rotA);
+    set(roller3, 'transform', rolA); set(roller2, 'transform', rolA);
     clods.forEach((c, i) => {
       if (!c.worked) return;
       const n = nodes[i];
@@ -363,6 +428,19 @@ a { color: var(--accent); }
     cancelAnimationFrame(raf); render(reducedSim ? TOTAL : 0);
   });
   scrub.addEventListener('input', () => { cancelAnimationFrame(raf); render(+scrub.value); });
+  const figure = svg.closest('figure');
+  document.getElementById('overflowBtn').addEventListener('click', (e) => {
+    const on = figure.classList.toggle('over');
+    e.currentTarget.setAttribute('aria-pressed', String(on));
+    machineClip.setAttribute('clip-path', on ? 'url(#clipTall)' : 'url(#clipFrame)');
+    if (!reducedSim) play();
+  });
+  document.getElementById('oldBtn').addEventListener('click', (e) => {
+    const old = v2.getAttribute('display') === 'none';
+    v2.setAttribute('display', old ? 'inline' : 'none'); v3.setAttribute('display', old ? 'none' : 'inline');
+    e.currentTarget.setAttribute('aria-pressed', String(old));
+    if (!reducedSim) play();
+  });
 
   render(TOTAL);
   if (!osReduced && 'IntersectionObserver' in window) {

@@ -1,8 +1,19 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
+import { useCallback, useId, useMemo, useRef } from 'react'
 import { useInView } from 'framer-motion'
+import { FADE, METAL, around, clamp01, easeIn, easeInOut, easeOut, f2, makeAttrSetter } from './soilAnimation'
+import { useSoilPlayback } from './useSoilPlayback'
+import SoilPlayButton from './SoilPlayButton'
+import ui from './SoilPlayButton.module.css'
 import hl from './SoilHighlight.module.css'
+
+/*
+ * Heavy-cultivated soil profile, seen from the front: the three U shapes are three tine tracks side by side.
+ * On request (small play button) the cultivator comes towards us through the section plane once (ticket 001):
+ * the compact soil in the tracks breaks and the crumbs rise, the ridges between them stay, and the yellow
+ * edge of the tracks is drawn in at the end. The finished picture is the server render and the reduced-motion view.
+ */
 
 const seededRandom = (seed: number) => {
     const x = Math.sin(seed) * 10000
@@ -41,10 +52,41 @@ interface ClodProps {
     variantIndex?: number
 }
 
+const U_CENTERS = [50, 150, 250]
+const SURF = 45
+const U_BOTTOM = 125
+
+// The compact soil inside the future tine tracks (shown only during the animation)
+const buildCompact = () => {
+    const items: { cx: number; cy: number; path: string; fill: string }[] = []
+    const dark = ['#3E2723', '#5D4037', '#795548']
+    let seed = 9191
+    for (let y = 50; y < 120; y += 9) for (let x = 0; x <= 300; x += 9) {
+        const jx = x + (seededRandom(seed++) - 0.5) * 6
+        const jy = y + (seededRandom(seed++) - 0.5) * 6
+        const yy = Math.min(jy, U_BOTTOM - 11)
+        if (!(yy >= SURF && yy < U_BOTTOM - 10 && U_CENTERS.some((c) => Math.abs(jx - c) < 25))) { seed += 2; continue }
+        const rr = seededRandom(seed++)
+        const v = rr > 0.6 ? 0 : rr > 0.3 ? 1 : 2
+        const r = [9, 7.5, 6.5][v] + seededRandom(seed++) * 1.5
+        items.push({ cx: jx, cy: jy, path: generateClodPath(jx, jy, r, seed++), fill: dark[v] })
+    }
+    return items
+}
+
+// ---- Timeline (s): crossfade, a still moment, the approach, crossing the plane, then the yellow U ----
+const APPROACH_AT = FADE + 0.8
+const APPROACH = 1.8
+const CROSS = APPROACH_AT + APPROACH
+const U_AT = CROSS + 0.75
+const DURATION = U_AT + 1.3
+const Z0 = 0.8 // how far behind the section plane the machine starts (perspective)
+
 const HeavyCultivatorSVG = () => {
     // Draws the edge of the tine tracks once, when half of the profile is on screen
     const svgRef = useRef<SVGSVGElement>(null)
     const inView = useInView(svgRef, { once: true, amount: 0.5 })
+    const uid = useId().replace(/:/g, '')
     // High Contrast Palette for Dark Website
     const darkPalette = [
         '#3E2723', // Deep Brown (retained for strongest contrast)
@@ -224,57 +266,139 @@ const HeavyCultivatorSVG = () => {
 
     }, [])
 
+    const compact = useMemo(buildCompact, [])
+
+    const setup = useCallback((svg: SVGSVGElement) => {
+        const sky = svg.querySelector('[data-sky]')!, under = svg.querySelector('[data-under]')!
+        const uGroup = svg.querySelector<SVGGElement>('[data-u]')!
+        const uPaths = Array.from(uGroup.querySelectorAll('path'))
+        const fillNodes = Array.from(svg.querySelectorAll('[data-fill]'))
+        const compactNodes = Array.from(svg.querySelectorAll('[data-compact]'))
+        const fills = clods.filter((c) => c.type === 'fill').map((c, i) => ({
+            n: fillNodes[i],
+            cx: c.cx,
+            cy: c.cy,
+            tl: CROSS + 0.04 + clamp01((U_BOTTOM - c.cy) / 80) * 0.32 + (seededRandom(i * 3.7 + 1) - 0.5) * 0.1, // deeper ones first
+            heave: 5 * clamp01(1 - (c.cy - SURF) / 60),
+        }))
+        const soil = compact.map((c, i) => ({ n: compactNodes[i], cx: c.cx, cy: c.cy, tb: CROSS - 0.06 + clamp01((U_BOTTOM - c.cy) / 80) * 0.25 }))
+        const set = makeAttrSetter()
+        uPaths.forEach((u) => { u.style.transition = 'none' }) // the CSS draw-in would lag behind the frames
+
+        return (t: number) => {
+            // perspective: z > 0 behind the section plane, 0 on it, < 0 in front of it (towards the viewer)
+            const z = (Z0 * (CROSS - t)) / APPROACH
+            const s = 1 / (1 + Math.max(-0.6, z))
+            const tf = `translate(150,70) scale(${s.toFixed(4)}) translate(-150,-70)`
+            const vis = clamp01((t - APPROACH_AT) / 0.6) * (1 - clamp01((t - CROSS - 0.12) / 0.5))
+            const ghost = z > 0 ? 0.3 + 0.7 * clamp01(1 - z / 0.12) : 1 // inside the soil block it shows ghosted, on the plane fully
+            set(sky, 'transform', tf); set(under, 'transform', tf)
+            set(sky, 'opacity', vis.toFixed(2)); set(under, 'opacity', (vis * ghost).toFixed(2))
+            if (t < FADE) { // crossfade from the finished profile to the compact soil
+                const p = easeInOut(t / FADE)
+                fills.forEach((c) => { set(c.n, 'opacity', (1 - p).toFixed(2)); set(c.n, 'transform', '') })
+                soil.forEach((c) => { set(c.n, 'opacity', p.toFixed(2)); set(c.n, 'transform', '') })
+                uGroup.style.opacity = (1 - p).toFixed(2)
+                uPaths.forEach((u) => { u.style.strokeDashoffset = '0'; u.style.opacity = '1' })
+                return
+            }
+            fills.forEach((c) => {
+                if (t < c.tl) { set(c.n, 'opacity', '0'); return }
+                const p = clamp01((t - c.tl) / 0.55), e = easeOut(p)
+                set(c.n, 'opacity', p >= 1 ? '1' : Math.min(1, p * 3).toFixed(2))
+                set(c.n, 'transform', p >= 1 ? '' : around(c.cx, c.cy, 0, (1 - e) * 10 - c.heave * Math.sin(Math.PI * p), 0.5 + 0.5 * e))
+            })
+            soil.forEach((c) => {
+                const p = clamp01((t - c.tb) / 0.3), e = easeIn(p)
+                if (p >= 1) { set(c.n, 'opacity', '0'); return }
+                set(c.n, 'opacity', (1 - p).toFixed(2))
+                set(c.n, 'transform', p <= 0 ? '' : around(c.cx, c.cy, 0, -2 * e, 1 - 0.4 * e))
+            })
+            uGroup.style.opacity = '1'
+            uPaths.forEach((u, i) => {
+                const p = easeInOut(clamp01((t - U_AT - i * 0.15) / 0.9))
+                u.style.strokeDashoffset = (1 - p).toFixed(3)
+                u.style.opacity = p > 0 ? '1' : '0' // the round cap would show a dot before the line starts
+            })
+        }
+    }, [clods, compact])
+
+    const { state, toggle, showButton } = useSoilPlayback(svgRef, DURATION, setup)
+
     return (
-        <svg ref={svgRef} viewBox="0 0 300 150" style={{ width: '100%', height: 'auto', borderRadius: '8px', overflow: 'hidden' }} preserveAspectRatio="xMidYMid slice">
-            {/* Flat Sky */}
-            <rect x="0" y="0" width="300" height="45" fill={skyColor} />
+        <div className={ui.frame}>
+            <svg ref={svgRef} viewBox="0 0 300 150" className={ui.svg} preserveAspectRatio="xMidYMid slice">
+                <defs>
+                    <clipPath id={`${uid}sky`}><rect x="-200" y="-300" width="700" height="345" /></clipPath>
+                    <clipPath id={`${uid}soil`}><rect x="-200" y="45" width="700" height="400" /></clipPath>
+                    {/* the cultivator from the front: one beam, three rigid tines with winged points reaching the U bottom */}
+                    <g id={`${uid}machine`}>
+                        <rect x="6" y="6" width="288" height="11" rx="2" fill={METAL.body} stroke={METAL.line} strokeWidth={0.8} />
+                        <rect x="8" y="7.5" width="284" height="2.4" rx="1" fill={METAL.hi} opacity={0.85} />
+                        {U_CENTERS.map((c) => (
+                            <g key={c}>
+                                <path d={`M${c - 3.6},16 L${c + 3.6},16 L${c + 3.6},106 L${c - 3.6},106 Z`} fill={METAL.body} stroke={METAL.line} strokeWidth={0.8} />
+                                <rect x={c - 2.4} y="18" width="1.6" height="86" fill={METAL.hi} opacity={0.85} />
+                                <rect x={c - 9} y="3" width="18" height="17" rx="2" fill={METAL.disc} stroke={METAL.line} strokeWidth={0.8} />
+                                <circle cx={c - 4.5} cy="11.5" r="1.4" fill={METAL.edge} />
+                                <circle cx={c + 4.5} cy="11.5" r="1.4" fill={METAL.edge} />
+                                <path d={`M${c - 3.6},103 L${c + 3.6},103 L${c + 17},117 L${c + 4},120.5 L${c},124 L${c - 4},120.5 L${c - 17},117 Z`} fill={METAL.plate} stroke={METAL.line} strokeWidth={0.8} strokeLinejoin="round" />
+                                <circle cx={c} cy="109" r="1.4" fill={METAL.edge} />
+                            </g>
+                        ))}
+                    </g>
+                </defs>
 
-            {/* Flat Soil Background */}
-            <rect x="0" y="45" width="300" height="105" fill={soilBgColor} />
+                {/* Flat Sky */}
+                <rect x="0" y="0" width="300" height="45" fill={skyColor} />
 
-            {/* Particles (static: the staggered pop-in ran offscreen at page load and cost thousands of style writes) */}
-            {clods.map((item) => {
-                let fill = '#000'
-                if (item.type === 'outline') {
-                    // Dark Palette
-                    fill = darkPalette[item.variantIndex!]
-                } else {
-                    // Light Palette
-                    fill = lightPalette[item.variantIndex!]
-                }
+                {/* Flat Soil Background */}
+                <rect x="0" y="45" width="300" height="105" fill={soilBgColor} />
 
-                return (
+                {/* Particles: the finished profile */}
+                {clods.map((item) => (
                     <path
                         key={item.id}
                         d={item.path}
-                        fill={fill}
-                        // Add Outline/Stroke
+                        fill={item.type === 'outline' ? darkPalette[item.variantIndex!] : lightPalette[item.variantIndex!]}
                         stroke="rgba(0,0,0,0.3)"
                         strokeWidth={0.8}
+                        data-fill={item.type === 'fill' ? '' : undefined}
                     />
-                )
-            })}
-
-
-
-            {/* Edge of the loosened tine tracks: inside loose, the walls around them stay compact */}
-            <g className={`${hl.walls} ${inView ? hl.drawn : ''}`} aria-hidden="true">
-                {[50, 150, 250].map((c) => (
-                    <path key={c} pathLength={1} d={`M${c - 25},47 L${c - 25},106 Q${c - 25},124 ${c},124 Q${c + 25},124 ${c + 25},106 L${c + 25},47`} />
                 ))}
-            </g>
 
-            {/* Depth Scale */}
-            <g style={{ pointerEvents: 'none' }}>
-                <line x1="292" y1="45" x2="292" y2="115" stroke="rgba(255,255,255,0.4)" strokeWidth="1" strokeDasharray="4,3" />
-                <rect x="268" y="32" width="28" height="14" rx="3" fill="rgba(0,0,0,0.3)" />
-                <text x="282" y="43" fill="#FFFFFF" fontSize="9" fontWeight="600" textAnchor="middle">0 cm</text>
+                {/* Compact soil in the tracks before the pass; hidden in the finished picture */}
+                <g>
+                    {compact.map((c, i) => (
+                        <path key={i} d={c.path} fill={c.fill} stroke="rgba(0,0,0,0.3)" strokeWidth={0.8} opacity={0} data-compact="" />
+                    ))}
+                </g>
 
-                {/* 30cm label moved to align with U-pattern bottom (approx 20-22cm visual depth before compaction starts) */}
-                <rect x="250" y="108" width="46" height="14" rx="3" fill="rgba(0,0,0,0.4)" />
-                <text x="273" y="119" fill="#FFFFFF" fontSize="9" fontWeight="600" textAnchor="middle">30 cm</text>
-            </g>
-        </svg>
+                {/* Edge of the loosened tine tracks: inside loose, the walls around them stay compact */}
+                <g className={`${hl.walls} ${inView ? hl.drawn : ''}`} aria-hidden="true" data-u="">
+                    {U_CENTERS.map((c) => (
+                        <path key={c} pathLength={1} d={`M${c - 25},47 L${c - 25},106 Q${c - 25},124 ${c},124 Q${c + 25},124 ${c + 25},106 L${c + 25},47`} />
+                    ))}
+                </g>
+
+                {/* The machine: above ground solid, inside the soil block ghosted until it reaches the plane */}
+                <g clipPath={`url(#${uid}sky)`}><use href={`#${uid}machine`} opacity={0} data-sky="" /></g>
+                <g clipPath={`url(#${uid}soil)`}><use href={`#${uid}machine`} opacity={0} data-under="" /></g>
+
+                {/* Depth Scale */}
+                <g style={{ pointerEvents: 'none' }}>
+                    <line x1="292" y1="45" x2="292" y2="115" stroke="rgba(255,255,255,0.4)" strokeWidth="1" strokeDasharray="4,3" />
+                    <rect x="268" y="32" width="28" height="14" rx="3" fill="rgba(0,0,0,0.3)" />
+                    <text x="282" y="43" fill="#FFFFFF" fontSize="9" fontWeight="600" textAnchor="middle">0 cm</text>
+
+                    {/* 30cm label moved to align with U-pattern bottom (approx 20-22cm visual depth before compaction starts) */}
+                    <rect x="250" y="108" width="46" height="14" rx="3" fill="rgba(0,0,0,0.4)" />
+                    <text x="273" y="119" fill="#FFFFFF" fontSize="9" fontWeight="600" textAnchor="middle">30 cm</text>
+                </g>
+            </svg>
+
+            {showButton && <SoilPlayButton state={state} onClick={toggle} />}
+        </div>
     )
 }
 

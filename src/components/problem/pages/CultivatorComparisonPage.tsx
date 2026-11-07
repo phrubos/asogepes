@@ -90,6 +90,10 @@ export default function CultivatorComparisonPage() {
 
                     <div className={styles.soilProfileVisual} style={{ cursor: 'default', display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem' }}>
                         <SpadingMachineSVG />
+                        <p className={hl.caption}>
+                            <span className={hl.swatch} aria-hidden="true" />
+                            A sárga vonal fölött a teljes szélességben laza a talaj.
+                        </p>
                         <ul className={styles.comparisonList} style={{ padding: '0 0.5rem', marginTop: '0.25rem' }}>
                             {comparisonData.spade.items.map((item, i) => (
                                 <li key={i}><Check size={14} className={styles.iconPositive} strokeWidth={3} /> {item}</li>

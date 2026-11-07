@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Szelvény-animációk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,650&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Page chrome follows the theme; the two cards copy the site's dark comparison cards on purpose. */
+:root {
+  --bg: #f3eee6; --ink: #2b2118; --muted: #6b5d4f; --line: #ddd3c4; --accent: #6b7a2f;
+  --display: "Fraunces", Georgia, serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gold: #D4A84B;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #15120f; --ink: #efe7da; --muted: #b3a593; --line: #3a3128; --accent: #a7b85e; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #15120f; --ink: #efe7da; --muted: #b3a593; --line: #3a3128; --accent: #a7b85e; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 40px 16px 64px; display: grid; gap: 36px; }
+header { display: grid; gap: 10px; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 650 clamp(28px, 4vw, 40px)/1.15 var(--display); margin: 0; text-wrap: balance; }
+h2 { font: 600 22px/1.25 var(--display); margin: 0; }
+h3 { font: 600 17px/1.3 var(--display); margin: 0; }
+.lede { margin: 0; max-width: 72ch; color: var(--muted); }
+
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+@media (max-width: 820px) { .pair { grid-template-columns: 1fr; } }
+
+/* site card */
+.card { background: linear-gradient(135deg, rgba(26, 23, 20, .96) 0%, rgba(35, 30, 25, .98) 100%); border: 1px solid rgba(255, 255, 255, .08); border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .3); color: #efe7da; min-width: 0; }
+.cardHead { display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: rgba(212, 168, 75, .1); font: 600 15px var(--display); color: var(--gold); }
+.cardBody { display: grid; gap: 8px; padding: 16px; }
+.caption { display: flex; gap: 8px; margin: 0; padding: 0 8px; font-size: 13px; line-height: 1.45; color: rgba(255, 255, 255, .65); }
+.swatch { flex-shrink: 0; width: 16px; height: 3px; margin-top: .55em; border-radius: 2px; background: #f2c94c; }
+.list { list-style: none; margin: 4px 0 0; padding: 0 8px; display: grid; gap: 10px; font-size: 15px; color: rgba(255, 255, 255, .82); }
+.list li { display: flex; gap: 10px; align-items: baseline; }
+.no { color: #e57373; font-weight: 700; }
+.yes { color: #8bab6e; font-weight: 700; }
+
+/* the profile, its overflow room and the small tools */
+.stage { min-width: 0; }
+.frame { position: relative; }
+svg.profile { display: block; width: 100%; height: auto; border-radius: 8px; overflow: hidden; }
+.tools { position: absolute; top: 0; left: 0; display: flex; }
+.tool { width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 0; background: none; color: #fff; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.tool + .tool { margin-left: -12px; }
+.tool span { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 6px; background: rgba(0, 0, 0, .3); opacity: .7; transition: opacity .2s ease, background-color .2s ease; }
+.tool:hover span, .tool[aria-pressed="true"] span, .tool[data-state="stop"] span { opacity: 1; background: rgba(0, 0, 0, .45); }
+.tool:focus-visible { outline: none; }
+.tool:focus-visible span { opacity: 1; outline: 2px solid var(--gold); outline-offset: 1px; }
+.tool svg { width: 13px; height: 13px; }
+
+/* demo-only controls, outside the card */
+.demo { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; margin-top: 10px; font-size: 13px; color: var(--muted); }
+.demo input { width: 100%; accent-color: var(--accent); }
+.demo output { font-variant-numeric: tabular-nums; min-width: 4.5ch; text-align: right; }
+
+section { display: grid; gap: 14px; }
+.variants { gap: 8px; }
+.segs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); }
+.segs button { font: 500 14px var(--body); color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; min-height: 40px; cursor: pointer; }
+.segs button:hover { border-color: var(--muted); }
+.segs button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.segs button:focus-visible, .demoCheck input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+#variantText { margin: 0; color: var(--muted); max-width: 80ch; }
+.demoCheck { display: flex; gap: 8px; align-items: center; margin-top: 6px; font-size: 13px; color: var(--muted); cursor: pointer; }
+.demoCheck input { width: 18px; height: 18px; accent-color: var(--accent); }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+@media (max-width: 820px) { .cols { grid-template-columns: 1fr; } }
+.beats { display: grid; border-top: 1px solid var(--line); }
+.beat { display: grid; grid-template-columns: 92px 1fr; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.beat time { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; }
+.beat p { margin: 0; }
+ul.notes { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+ul.notes li { max-width: 66ch; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Javaslat · demó 2 · nincs beépítve</div>
+    <h1>Szelvény-animációk lejátszás gombbal</h1>
+    <p class="lede">Alapból mindkét kártyán a kész szelvény látszik, ugyanaz, mint most az oldalon. A kép bal felső sarkában lévő kis ▶ gombbal indul el a gép, egyszer fut le, és a kész képen áll meg. Futás közben a gomb megállít, és rögtön a végeredményre ugrik. A nehézkultivátor ábrája szemből mutatja a szelvényt (a három U három kapa nyoma); ehhez három animációs változat van, fent lehet váltani köztük. A sárga U mindhárom változatban csak a menet végén rajzolódik be. Az ásógépnél kipróbálható egy sárga vonal is a laza réteg alján (a kártya alatti jelölőnégyzettel).</p>
+  </header>
+
+  <section class="variants" aria-label="Kultivátor-animáció változatai (csak a demóban)">
+    <div class="segs">
+      <span>Kultivátor-változat:</span>
+      <button type="button" data-variant="A" aria-pressed="true">A · Áthaladás</button>
+      <button type="button" data-variant="B" aria-pressed="false">B · Ék és repedések</button>
+      <button type="button" data-variant="C" aria-pressed="false">C · Rezgő kapák</button>
+      <button type="button" data-variant="D" aria-pressed="false">D · Rezgő kapák, jön-megy</button>
+    </div>
+    <p id="variantText"></p>
+  </section>
+
+  <div class="pair">
+    <div>
+      <article class="card">
+        <div class="cardHead"><span aria-hidden="true">✕</span><span>Nehézkultivátorozott talaj</span></div>
+        <div class="cardBody">
+          <div class="stage"><div class="frame">
+            <svg class="profile" id="cuSvg" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Nehézkultivátorozott talajszelvény: csak a kapák nyomában laza, körülötte tömör"></svg>
+            <div class="tools"><button class="tool" type="button" id="cuPlay"></button></div>
+          </div></div>
+          <p class="caption"><span class="swatch" aria-hidden="true"></span>A sárga vonalon belül, a kapák nyomában laza a talaj; körülötte tömör marad.</p>
+          <ul class="list">
+            <li><span class="no">✕</span>A szármaradványok elégtelen beforgatása</li>
+            <li><span class="no">✕</span>A lazítás egyenletlen, főként a kapák nyomában történik</li>
+            <li><span class="no">✕</span>Ültetésre közvetlenül nem alkalmas</li>
+          </ul>
+        </div>
+      </article>
+      <label class="demo" for="cuScrub"><span>Csak a demóban:</span><input id="cuScrub" type="range" min="0" step="0.01" value="0"><output id="cuClock">–</output></label>
+    </div>
+
+    <div>
+      <article class="card">
+        <div class="cardHead"><span aria-hidden="true">✓</span><span>Ásógépezett talaj</span></div>
+        <div class="cardBody">
+          <div class="stage" id="spStage"><div class="frame">
+            <svg class="profile" id="spSvg" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ásógépezett talajszelvény: felül egyenletesen apró morzsák, talpréteg nélkül"></svg>
+            <div class="tools"><button class="tool" type="button" id="spPlay"></button></div>
+          </div></div>
+          <p class="caption" id="spCaption"><span class="swatch" aria-hidden="true"></span>A sárga vonal fölött a teljes szélességben laza a talaj.</p>
+          <ul class="list">
+            <li><span class="yes">✓</span>A szármaradványok a felszín alá kerülnek</li>
+            <li><span class="yes">✓</span>Egyenletesen laza szelvény alakul ki</li>
+            <li><span class="yes">✓</span>A vetés és ültetés rögtön kezdődhet</li>
+          </ul>
+        </div>
+      </article>
+      <label class="demo" for="spScrub"><span>Csak a demóban:</span><input id="spScrub" type="range" min="0" step="0.01" value="0"><output id="spClock">–</output></label>
+      <label class="demoCheck" for="spLine"><input id="spLine" type="checkbox" checked> Sárga vonal az ásógépes szelvényen is</label>
+    </div>
+  </div>
+
+  <div class="cols">
+    <section>
+      <h2>Nehézkultivátor, időben</h2>
+      <div class="beats" id="cuBeats"></div>
+    </section>
+    <section>
+      <h2>Ásógép, időben</h2>
+      <div class="beats" id="spBeats"></div>
+    </section>
+  </div>
+
+  <div class="cols">
+    <section>
+      <h3>Döntések ebben a változatban</h3>
+      <ul class="notes">
+        <li><b>Lejátszás csak kérésre.</b> Alapból a kész kép látszik, így az összehasonlítás és a listák nyugodtan olvashatók.</li>
+        <li><b>Egyszer fut le,</b> és a kész képen áll meg. A ▶ gomb ezután újrajátszás ikonra vált.</li>
+        <li><b>Nincs ugrás az elején:</b> a kész kép 0,6 s alatt áttűnik a tömör talajba, csak utána indul a gép.</li>
+        <li><b>Ásógép:</b> a valós 4,5 km/h harmadával halad (≈1,5 km/h), lassabban, mint a korábbi „fél valós sebesség”.</li>
+        <li><b>Kultivátor:</b> egy közös gerendán három kapa, szárnyas kapavéggel, mindhárom változatban. Az A változat a gép mozgását mutatja, a B a talaj törését (ék és repedések), a C a lazulás terjedését. A kapák közötti bordák mindháromban érintetlenek maradnak, és a sárga U csak a végén rajzolódik be.</li>
+        <li><b>Az „egész gép” kapcsoló kikerült</b> az ásógépes kártyáról.</li>
+      </ul>
+    </section>
+    <section>
+      <h3>Beépítéskor</h3>
+      <ul class="notes">
+        <li>Ha a kártya futás közben kigördül a képből, az animáció megáll, és a kész képre ugrik.</li>
+        <li>Csökkentett mozgásnál nincs gomb, csak a kész kép látszik.</li>
+        <li>A gombok kicsik és halványak (24 px-es ikon), de a tapintási felületük 44 px, és billentyűzettel is működnek.</li>
+        <li>Az ásógépes kártyán most ismétlődő változat van az oldalon. Ha ez a demó jó, azt erre cserélem.</li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ---------- shared ----------
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+  const seededRandom = (seed) => { const x = Math.sin(seed) * 10000; return Math.round((x - Math.floor(x)) * 10000) / 10000; };
+  const clodPath = (cx, cy, r, seed) => {
+    const pts = []; const n = 8 + Math.floor(seededRandom(seed) * 4); const step = (Math.PI * 2) / n;
+    for (let i = 0; i < n; i++) { const a = i * step; const rv = r * (0.8 + seededRandom(seed + i) * 0.3); pts.push(`${(cx + Math.cos(a) * rv).toFixed(2)},${(cy + Math.sin(a) * rv).toFixed(2)}`); }
+    return `M${pts.join(' L')} Z`;
+  };
+  const dark = ['#3E2723', '#5D4037', '#795548'];
+  const light = ['#BCAAA4', '#D7CCC8', '#F5F5F5'];
+  const bez = (x1, y1, x2, y2) => (x) => {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let t = x; for (let i = 0; i < 8; i++) { const f = 3 * x1 * t * (1 - t) ** 2 + 3 * x2 * t * t * (1 - t) + t ** 3 - x; const d = 3 * x1 * (1 - t) ** 2 + 6 * (x2 - x1) * t * (1 - t) + 3 * (1 - x2) * t * t; if (Math.abs(d) < 1e-6) break; t -= f / d; t = Math.min(1, Math.max(0, t)); }
+    return 3 * y1 * t * (1 - t) ** 2 + 3 * y2 * t * t * (1 - t) + t ** 3;
+  };
+  const easeOut = bez(0.23, 1, 0.32, 1), easeInOut = bez(0.65, 0, 0.35, 1), easeIn = (p) => p * p * p;
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const cache = new WeakMap();
+  const set = (node, attr, val) => { let m = cache.get(node); if (!m) { m = {}; cache.set(node, m); } if (m[attr] !== val) { m[attr] = val; node.setAttribute(attr, val); } };
+  const around = (cx, cy, dx, dy, s) => `translate(${(cx + dx).toFixed(2)},${(cy + dy).toFixed(2)}) scale(${s.toFixed(3)}) translate(${(-cx).toFixed(2)},${(-cy).toFixed(2)})`;
+  const M = { body: '#8f877c', edge: '#3f382f', hi: '#c9c1b3', plate: '#ddd6c9', hub: '#e7e1d6', disc: '#746c61', drum: '#3a332c', drumIn: '#4d453b', tine: '#ecdfc6', line: 'rgba(0,0,0,0.4)' };
+  const toPath = (arr) => 'M' + arr.map((p) => `${p[0].toFixed(2)},${p[1].toFixed(2)}`).join(' L') + ' Z';
+  const base = (parent) => { el('rect', { x: 0, y: 0, width: 300, height: 45, fill: '#90CAF9' }, parent); el('rect', { x: 0, y: 45, width: 300, height: 105, fill: '#A1887F' }, parent); };
+  const drawClods = (list, parent) => { const g = el('g', {}, parent); return list.map((c) => el('path', { d: c.path, fill: c.fill, stroke: 'rgba(0,0,0,0.3)', 'stroke-width': 0.8 }, g)); };
+  function drawScale(svg) {
+    const g = el('g', { 'pointer-events': 'none' }, svg);
+    el('line', { x1: 292, y1: 45, x2: 292, y2: 115, stroke: 'rgba(255,255,255,0.4)', 'stroke-width': 1, 'stroke-dasharray': '4,3' }, g);
+    el('rect', { x: 268, y: 32, width: 28, height: 14, rx: 3, fill: 'rgba(0,0,0,0.3)' }, g);
+    el('text', { x: 282, y: 43, fill: '#fff', 'font-size': 9, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': 'Inter, sans-serif' }, g).textContent = '0 cm';
+    el('rect', { x: 250, y: 108, width: 46, height: 14, rx: 3, fill: 'rgba(0,0,0,0.4)' }, g);
+    el('text', { x: 273, y: 119, fill: '#fff', 'font-size': 9, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': 'Inter, sans-serif' }, g).textContent = '30 cm';
+  }
+  const gearPath = (teeth, ro, ri) => {
+    const p = [], pitch = (Math.PI * 2) / teeth;
+    for (let j = 0; j < teeth; j++) [[0, ri], [0.18, ro], [0.47, ro], [0.65, ri]].forEach(([f, r]) => { const a = (j + f) * pitch; p.push([Math.cos(a) * r, Math.sin(a) * r]); });
+    return toPath(p);
+  };
+  const gear = (parent, teeth, ro, ri) => {
+    el('path', { d: gearPath(teeth, ro, ri), fill: M.hub, stroke: M.edge, 'stroke-width': 0.9, 'stroke-linejoin': 'round' }, parent);
+    el('circle', { r: ri * 0.62, fill: 'none', stroke: M.edge, 'stroke-width': 0.7, opacity: 0.6 }, parent);
+    for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + Math.PI / 4; el('circle', { cx: Math.cos(a) * ri * 0.4, cy: Math.sin(a) * ri * 0.4, r: ri * 0.08, fill: M.edge }, parent); }
+    el('circle', { r: ri * 0.13, fill: M.edge }, parent);
+  };
+  const FADE = 0.6; // the finished picture fades into the compact soil before the machine starts
+
+  // ---------- spading machine (side view, travels right) ----------
+  function spader(svg) {
+    const CM = 70 / 30, SURF = 45;
+    const R = 40 * CM, hubY = SURF + 30 * CM - R;
+    const rollerR = 20.3 * CM, drumR = rollerR * 0.78, rollerY = SURF + 6 * CM - rollerR;
+    const gap = R + rollerR + 10, startX = -R - 15, endX = 300 + gap + rollerR + 5;
+    const speed = 4.5 / 3.6 * 100 * CM / 3; // a third of the real 4.5 km/h
+    const INTRO = 1.0, start = FADE + INTRO, WORK = (endX - startX) / speed, L0 = start + WORK + 0.2, DUR = L0 + 1.1;
+    const timeAtX = (x) => start + (x - startX) / speed;
+    const reach = (y) => { const dy = y - hubY; return dy >= R ? 0 : Math.sqrt(R * R - dy * dy); };
+
+    const clods = (() => {
+      const items = []; let seed = 7777; const width = 300, surf = 45, maxDepth = 145, tS = 85, tE = 112;
+      for (let y = surf; y < tE; y += 7) for (let x = -10; x < width + 10; x += 7) {
+        const jx = x + (seededRandom(seed++) - 0.5) * 6; const jy = y + (seededRandom(seed++) - 0.5) * 6;
+        let dp = 0, dm = 0.5;
+        if (jy >= tS && jy < tE) { const p = (jy - tS) / (tE - tS); dp = p * 0.6; dm = 0.5 + p * 0.5; }
+        const isDark = seededRandom(seed++) < dp; let v, r;
+        if (isDark) { const rr = seededRandom(seed++); if (rr > 0.7) { v = 1; r = (5 + seededRandom(seed++) * 1.5) * dm; } else { v = 2; r = (4 + seededRandom(seed++) * 1) * dm; } }
+        else { const rr = seededRandom(seed++); if (y < surf + 5) { v = 2; r = 3 + seededRandom(seed++) * 1.2; } else if (rr > 0.8) { v = 0; r = 4.5 + seededRandom(seed++) * 1; } else if (rr > 0.4) { v = 1; r = 3.5 + seededRandom(seed++) * 1; } else { v = 2; r = 2.5 + seededRandom(seed++) * 1.5; } }
+        items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: (isDark ? dark : light)[v], worked: true });
+      }
+      for (let y = tE; y < maxDepth; y += 10) for (let x = -10; x < width + 10; x += 10) {
+        const jx = x + (seededRandom(seed++) - 0.5) * 8; const jy = y + (seededRandom(seed++) - 0.5) * 8;
+        const lp = Math.max(0, 0.3 - (jy - tE) * 0.015);
+        if (seededRandom(seed++) < lp) { const v = seededRandom(seed++) > 0.5 ? 0 : 1; const r = 3 + seededRandom(seed++) * 1.5; items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: light[v], worked: false }); }
+        const rr = seededRandom(seed++); let v, r;
+        if (rr > 0.6) { v = 0; r = 9 + seededRandom(seed++) * 2; } else if (rr > 0.3) { v = 1; r = 7 + seededRandom(seed++) * 1.5; } else { v = 2; r = 5 + seededRandom(seed++) * 1.5; }
+        items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: dark[v], worked: false });
+      }
+      return items.sort((a, b) => a.cy - b.cy);
+    })();
+    const compact = (() => {
+      const items = []; let seed = 4242;
+      for (let y = 50; y < 112; y += 10) for (let x = -10; x < 310; x += 10) {
+        const jx = x + (seededRandom(seed++) - 0.5) * 8; const jy = y + (seededRandom(seed++) - 0.5) * 6;
+        const rr = seededRandom(seed++); const v = rr > 0.6 ? 0 : rr > 0.3 ? 1 : 2; const r = [9, 7.5, 6][v] + seededRandom(seed++) * 1.5;
+        items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: dark[v] });
+      }
+      return items;
+    })();
+
+    const defs = el('defs', {}, svg);
+    el('rect', { x: 0, y: 0, width: 300, height: 150, rx: 4 }, el('clipPath', { id: 'spFrame' }, defs));
+    const scene = el('g', { 'clip-path': 'url(#spFrame)' }, svg);
+    base(scene);
+    const nodes = drawClods(clods, scene);
+    const cNodes = drawClods(compact, scene);
+    cNodes.forEach((n) => set(n, 'opacity', '0'));
+    // optional yellow line: loose above it across the whole width (drawn in at the end, like the cultivator's U)
+    const lineG = el('g', { fill: 'none', stroke: '#f2c94c', 'stroke-width': 2.2, 'stroke-linecap': 'round' }, scene);
+    const line = el('path', { d: 'M6,106 Q43,102 80,106 T154,106 T228,106 T294,106', pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 0 }, lineG);
+
+    const machineClip = el('g', { 'clip-path': 'url(#spFrame)' }, svg);
+    const machine = el('g', {}, machineClip);
+    // spade arm, drawn pointing down; the rotor turns clockwise, so the tip leads clockwise (bends towards -x)
+    const SWEEP = 1.05;
+    const centre = (u) => { const r = R * (0.16 + 0.84 * u), a = SWEEP * u * u; return [-Math.sin(a) * r, Math.cos(a) * r]; };
+    const band = (u0, u1, w, off = () => 0, steps = 16) => {
+      const a = [], b = [];
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps, u = u0 + (u1 - u0) * t;
+        const [x, y] = centre(u), [x1, y1] = centre(Math.max(0, u - 0.01)), [x2, y2] = centre(Math.min(1, u + 0.01));
+        const l = Math.hypot(x2 - x1, y2 - y1), nx = -(y2 - y1) / l, ny = (x2 - x1) / l, o = off(t), hw = w(t);
+        a.push([x + nx * (o + hw), y + ny * (o + hw)]); b.push([x + nx * (o - hw), y + ny * (o - hw)]);
+      }
+      return toPath([...a, ...b.reverse()]);
+    };
+    const spadeDef = el('g', { id: 'spSpade' }, defs);
+    el('path', { d: band(0, 0.8, (t) => R * (0.078 - 0.04 * t)), fill: M.body, stroke: M.line, 'stroke-width': 0.8, 'stroke-linejoin': 'round' }, spadeDef);
+    el('path', { d: band(0.05, 0.78, () => R * 0.011, (t) => R * (0.045 - 0.025 * t)), fill: M.hi, opacity: 0.85 }, spadeDef);
+    el('path', { d: band(0.74, 1, (t) => R * 0.058 * (1 - t ** 2.2) + 0.3, () => R * 0.008), fill: M.plate, stroke: M.line, 'stroke-width': 0.8, 'stroke-linejoin': 'round' }, spadeDef);
+    const [bx, by] = centre(0.8);
+    el('circle', { cx: bx, cy: by, r: 1.5, fill: M.edge }, spadeDef);
+    const roller = el('g', {}, el('g', { transform: `translate(${-gap},${(rollerY - hubY).toFixed(2)})` }, machine));
+    el('circle', { r: drumR, fill: M.drum, stroke: M.edge, 'stroke-width': 1.2 }, roller);
+    el('circle', { r: drumR * 0.8, fill: 'none', stroke: M.drumIn, 'stroke-width': drumR * 0.22 }, roller);
+    [[drumR + 3, 2.2, '34 10 18 14'], [drumR + 6.5, 1.8, '22 16 40 12'], [rollerR - 0.9, 1.5, '16 22 30 18']].forEach(([r, w, da]) =>
+      el('circle', { r, fill: 'none', stroke: M.tine, 'stroke-width': w, 'stroke-dasharray': da, 'stroke-linecap': 'round' }, roller));
+    gear(roller, 12, drumR * 0.42, drumR * 0.36);
+    const rotor = el('g', {}, machine);
+    el('circle', { r: R * 0.3, fill: M.disc, stroke: M.line, 'stroke-width': 0.8 }, rotor);
+    for (let k = 0; k < 6; k++) el('use', { href: '#spSpade', transform: `rotate(${k * 60})` }, rotor);
+    gear(rotor, 12, R * 0.2, R * 0.17);
+    drawScale(svg);
+
+    const worked = [];
+    clods.forEach((c, i) => {
+      if (!c.worked) return;
+      worked.push({ n: nodes[i], cx: c.cx, cy: c.cy,
+        tl: timeAtX(c.cx + 10) + (seededRandom(i * 7.13 + 3) - 0.5) * 0.12,
+        ts: timeAtX(c.cx + gap - rollerR * 0.5),
+        sw: 3.5 * clamp(1 - (c.cy - SURF) / 67) });
+    });
+    compact.forEach((c) => { c.tb = timeAtX(c.cx - reach(Math.min(c.cy, SURF + 30 * CM - 1))); });
+
+    function render(t) {
+      const x = startX + speed * Math.min(WORK, Math.max(0, t - start)), travel = x - startX;
+      set(machine, 'transform', `translate(${x.toFixed(2)},${hubY.toFixed(2)})`);
+      set(rotor, 'transform', `rotate(${(travel * 1.5 / R * 57.2958).toFixed(1)})`);
+      set(roller, 'transform', `rotate(${(travel * 1.1 / rollerR * 57.2958).toFixed(1)})`);
+      const lp = easeInOut(clamp((t - L0) / 1.0));
+      set(line, 'stroke-dashoffset', t < FADE ? '0' : (1 - lp).toFixed(3));
+      set(line, 'opacity', t < FADE ? (1 - easeInOut(t / FADE)).toFixed(2) : lp > 0 ? '1' : '0');
+      if (t < FADE) {
+        const p = easeInOut(t / FADE);
+        worked.forEach((c) => { set(c.n, 'opacity', (1 - p).toFixed(2)); set(c.n, 'transform', ''); });
+        cNodes.forEach((n) => { set(n, 'opacity', p.toFixed(2)); set(n, 'transform', ''); });
+        return;
+      }
+      worked.forEach((c) => {
+        if (t < c.tl) { set(c.n, 'opacity', '0'); return; }
+        const p = clamp((t - c.tl) / 0.5), e = easeOut(p), q = easeOut(clamp((t - c.ts) / 0.32));
+        const dy = (1 - e) * 4 - c.sw * e - 10 * Math.sin(Math.PI * p) + c.sw * q;
+        set(c.n, 'opacity', p >= 1 ? '1' : Math.min(1, p * 3).toFixed(2));
+        set(c.n, 'transform', p >= 1 && q >= 1 ? '' : around(c.cx, c.cy, (1 - e) * 22, dy, 0.5 + 0.5 * e));
+      });
+      compact.forEach((c, i) => {
+        const n = cNodes[i], p = clamp((t - c.tb) / 0.26), e = easeIn(p);
+        if (p >= 1) { set(n, 'opacity', '0'); return; }
+        set(n, 'opacity', (1 - p).toFixed(2));
+        set(n, 'transform', p <= 0 ? '' : around(c.cx, c.cy, 0, 2 * e, 1 - 0.4 * e));
+      });
+    }
+    const beats = [
+      [0, 'A kész szelvény áttűnik a tömör, nagy rögös talajba.'],
+      [start, 'Balról beér az ásórotor, a kapák ívben vágnak bele a talajba.'],
+      [timeAtX(10), 'A rotor mögött a hátra-fel dobott morzsák visszahullanak, a fellazított réteg kicsit megemelkedik.'],
+      [timeAtX(gap - rollerR * 0.5), 'Beér az elmunkáló henger, a fogai visszanyomják és elsimítják a felszínt.'],
+      [L0, 'A gép kiment a képből. Ha be van kapcsolva, berajzolódik a sárga vonal.'],
+      [DUR, 'A kész szelvény marad.'],
+    ];
+    return { render, DUR, beats, setLine: (on) => lineG.setAttribute('display', on ? 'inline' : 'none') };
+  }
+
+  // ---------- heavy cultivator (front view: the three U shapes are three tine tracks side by side) ----------
+  // Three variants share the soil, the machine and the yellow U; each has its own timeline.
+  function cultivator(svg) {
+    const SURF = 45, uCenters = [50, 150, 250], uOuterWidth = 96, uInnerWidth = 50, uBottom = 125;
+    const getZone = (x, y) => {
+      for (const center of uCenters) {
+        const dx = Math.abs(x - center); const dy = y - SURF;
+        if (dy < 0) continue;
+        if (dx < uInnerWidth / 2 && y < uBottom - 10) return 'inside';
+        const inOuter = dx < uOuterWidth / 2, inInner = dx < uInnerWidth / 2;
+        const isBottom = y > uBottom - 15 && y < uBottom + 10 && dx < uOuterWidth / 2;
+        if ((inOuter && !inInner) || isBottom) return 'outline';
+      }
+      return 'outside';
+    };
+    // identical to HeavyCultivatorSVG.tsx
+    const clods = (() => {
+      const items = []; let seed = 4444; const width = 300, maxDepth = 145;
+      for (let y = SURF; y < maxDepth + 10; y += 8.3) for (let x = -10; x < width + 10; x += 8.3) {
+        const zone = getZone(x, y);
+        if (zone === 'inside') continue;
+        const jx = x + (seededRandom(seed++) - 0.5) * 8; const jy = y + (seededRandom(seed++) - 0.5) * 8;
+        if (jy > maxDepth + 5) continue;
+        const rRand = seededRandom(seed++); let variant = 0, r = 8;
+        if (rRand > 0.6) { variant = 0; r = 9 + seededRandom(seed++) * 2; } else if (rRand > 0.3) { variant = 1; r = 7 + seededRandom(seed++) * 1.5; } else { variant = 2; r = 5 + seededRandom(seed++) * 1.5; }
+        if (zone === 'outline') for (const center of uCenters) { const dx = Math.abs(x - center); if (dx >= 25 && dx <= 38 && y < uBottom + 5) { variant = 0; r = 10 + seededRandom(seed++) * 1.5; break; } }
+        for (const center of uCenters) { const dx = Math.abs(x - center); if (dx < uInnerWidth / 2 + 5 && y >= uBottom - 5 && y <= uBottom + 20) { variant = 0; r = 10 + seededRandom(seed++) * 1.5; break; } }
+        if (zone === 'outline' && variant === 2) { if (seededRandom(seed++) > 0.5) variant = 1; }
+        items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: dark[variant], fillClod: false });
+      }
+      for (let y = SURF; y < uBottom - 5; y += 6) for (let x = 10; x < width - 10; x += 6) {
+        const jx = x + (seededRandom(seed++) - 0.5) * 4; const jy = y + (seededRandom(seed++) - 0.5) * 4;
+        if (getZone(jx, jy) === 'inside') {
+          const rRand = seededRandom(seed++); let variant = 0, r = 4;
+          if (rRand > 0.7) { variant = 0; r = 4.5 + seededRandom(seed++) * 1; } else if (rRand > 0.3) { variant = 1; r = 3.5 + seededRandom(seed++) * 1; } else { variant = 2; r = 2 + seededRandom(seed++) * 1.5; }
+          items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: light[variant], fillClod: true });
+        }
+      }
+      return items.sort((a, b) => a.cy - b.cy);
+    })();
+    // the compact soil inside the future tine tracks
+    const compact = (() => {
+      const items = []; let seed = 9191;
+      for (let y = 50; y < 120; y += 9) for (let x = 0; x <= 300; x += 9) {
+        const jx = x + (seededRandom(seed++) - 0.5) * 6; const jy = y + (seededRandom(seed++) - 0.5) * 6;
+        if (getZone(jx, Math.min(jy, uBottom - 11)) !== 'inside') { seed += 2; continue; }
+        const rr = seededRandom(seed++); const v = rr > 0.6 ? 0 : rr > 0.3 ? 1 : 2; const r = [9, 7.5, 6.5][v] + seededRandom(seed++) * 1.5;
+        items.push({ cx: jx, cy: jy, path: clodPath(jx, jy, r, seed++), fill: dark[v] });
+      }
+      return items;
+    })();
+
+    const defs = el('defs', {}, svg);
+    el('rect', { x: 0, y: 0, width: 300, height: 150, rx: 4 }, el('clipPath', { id: 'cuFrame' }, defs));
+    el('rect', { x: -200, y: -300, width: 700, height: 345 }, el('clipPath', { id: 'cuSky' }, defs));
+    el('rect', { x: -200, y: 45, width: 700, height: 400 }, el('clipPath', { id: 'cuSoil' }, defs));
+    const scene = el('g', { 'clip-path': 'url(#cuFrame)' }, svg);
+    base(scene);
+    const nodes = drawClods(clods, scene);
+    const cNodes = drawClods(compact, scene);
+    cNodes.forEach((n) => set(n, 'opacity', '0'));
+    // variant B: failure cracks fanning from the tine point up to the surface
+    const crackG = el('g', { fill: 'none', stroke: 'rgba(24,14,8,0.85)', 'stroke-width': 1.3, 'stroke-linecap': 'butt', opacity: 0 }, scene);
+    const cracks = [];
+    uCenters.forEach((c) => [-1, 1].forEach((sd) => {
+      cracks.push(el('path', { d: `M${c + sd * 6},113 Q${c + sd * 21},86 ${c + sd * 27},46`, pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, crackG));
+      cracks.push(el('path', { d: `M${c + sd * 4},101 Q${c + sd * 11},80 ${c + sd * 12},46`, pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1, 'stroke-width': 0.9 }, crackG));
+    }));
+    // the yellow edge of the loosened tracks, drawn in at the very end
+    const uG = el('g', { fill: 'none', stroke: '#f2c94c', 'stroke-width': 2.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, scene);
+    const uPaths = uCenters.map((c) => el('path', { d: `M${c - 25},47 L${c - 25},106 Q${c - 25},124 ${c},124 Q${c + 25},124 ${c + 25},106 L${c + 25},47`, pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 0 }, uG));
+
+    // cultivator seen from the front: one beam, three rigid tines with winged points; tips reach the U bottom
+    const mDef = el('g', { id: 'cuMachine' }, defs);
+    el('rect', { x: 6, y: 6, width: 288, height: 11, rx: 2, fill: M.body, stroke: M.line, 'stroke-width': 0.8 }, mDef);
+    el('rect', { x: 8, y: 7.5, width: 284, height: 2.4, rx: 1, fill: M.hi, opacity: 0.85 }, mDef);
+    uCenters.forEach((c) => {
+      el('path', { d: `M${c - 3.6},16 L${c + 3.6},16 L${c + 3.6},106 L${c - 3.6},106 Z`, fill: M.body, stroke: M.line, 'stroke-width': 0.8 }, mDef);
+      el('rect', { x: c - 2.4, y: 18, width: 1.6, height: 86, fill: M.hi, opacity: 0.85 }, mDef);
+      el('rect', { x: c - 9, y: 3, width: 18, height: 17, rx: 2, fill: M.disc, stroke: M.line, 'stroke-width': 0.8 }, mDef);
+      el('circle', { cx: c - 4.5, cy: 11.5, r: 1.4, fill: M.edge }, mDef);
+      el('circle', { cx: c + 4.5, cy: 11.5, r: 1.4, fill: M.edge }, mDef);
+      el('path', { d: `M${c - 3.6},103 L${c + 3.6},103 L${c + 17},117 L${c + 4},120.5 L${c},124 L${c - 4},120.5 L${c - 17},117 Z`, fill: M.plate, stroke: M.line, 'stroke-width': 0.8, 'stroke-linejoin': 'round' }, mDef);
+      el('circle', { cx: c, cy: 109, r: 1.4, fill: M.edge }, mDef);
+    });
+    const mWrap = el('g', { 'clip-path': 'url(#cuFrame)' }, svg);
+    const skyUse = el('use', { href: '#cuMachine', opacity: 0 }, el('g', { 'clip-path': 'url(#cuSky)' }, mWrap));
+    const soilUse = el('use', { href: '#cuMachine', opacity: 0 }, el('g', { 'clip-path': 'url(#cuSoil)' }, mWrap));
+    drawScale(svg);
+
+    const fills = [];
+    clods.forEach((c, i) => { if (c.fillClod) fills.push({ n: nodes[i], cx: c.cx, cy: c.cy, j: seededRandom(i * 3.7 + 1) - 0.5, heave: 5 * clamp(1 - (c.cy - SURF) / 60) }); });
+    compact.forEach((c, i) => { c.n = cNodes[i]; c.j = seededRandom(i * 5.3 + 2) - 0.5; });
+    // distance to the nearest tine point (variant C: the loosening spreads out from there)
+    const tipDist = (c) => Math.min(...uCenters.map((u) => Math.hypot(c.cx - u, c.cy - 118)));
+    fills.forEach((c) => { c.d = tipDist(c); });
+    compact.forEach((c) => { c.d = tipDist(c); });
+
+    // ---- shared pieces of every frame ----
+    const machineAt = (tf, sky, soil) => { set(skyUse, 'transform', tf); set(soilUse, 'transform', tf); set(skyUse, 'opacity', sky.toFixed(2)); set(soilUse, 'opacity', soil.toFixed(2)); };
+    const crackAt = (t0, groupOpacity) => {
+      set(crackG, 'opacity', groupOpacity.toFixed(2));
+      cracks.forEach((cr, i) => { const p = t0 === null ? 0 : easeOut(clamp((t0 - (i % 2) * 0.08) / 0.4)); set(cr, 'stroke-dashoffset', (1 - p).toFixed(3)); });
+    };
+    const fadeIn = (t) => { // the finished picture fades into the compact soil before the machine starts
+      if (t >= FADE) return false;
+      const p = easeInOut(t / FADE);
+      fills.forEach((c) => { set(c.n, 'opacity', (1 - p).toFixed(2)); set(c.n, 'transform', ''); });
+      compact.forEach((c) => { set(c.n, 'opacity', p.toFixed(2)); set(c.n, 'transform', ''); });
+      set(uG, 'opacity', (1 - p).toFixed(2)); uPaths.forEach((u) => { set(u, 'stroke-dashoffset', '0'); set(u, 'opacity', '1'); });
+      return true;
+    };
+    const drawU = (t, U0) => {
+      set(uG, 'opacity', '1');
+      uPaths.forEach((u, i) => {
+        const p = easeInOut(clamp((t - U0 - i * 0.15) / 0.9));
+        set(u, 'stroke-dashoffset', (1 - p).toFixed(3));
+        set(u, 'opacity', p > 0 ? '1' : '0'); // the round cap would show a dot before the line starts
+      });
+    };
+    const crumbs = (t, key, flight, motion) => fills.forEach((c) => {
+      if (t < c[key]) { set(c.n, 'opacity', '0'); return; }
+      const p = clamp((t - c[key]) / flight), e = easeOut(p);
+      set(c.n, 'opacity', p >= 1 ? '1' : Math.min(1, p * 3).toFixed(2));
+      if (p >= 1) { set(c.n, 'transform', ''); return; }
+      const [dx, dy, s] = motion(c, p, e);
+      set(c.n, 'transform', around(c.cx, c.cy, dx, dy, s));
+    });
+    const breakUp = (t, key, dur, motion) => compact.forEach((c) => {
+      const p = clamp((t - c[key]) / dur), e = easeIn(p);
+      if (p >= 1) { set(c.n, 'opacity', '0'); return; }
+      set(c.n, 'opacity', (1 - p).toFixed(2));
+      const [dx, dy, s] = motion(c, p, e);
+      set(c.n, 'transform', dx === 0 && dy === 0 && s === 1 ? '' : around(c.cx, c.cy, dx, dy, s));
+    });
+    const plunge = (t, down0, downDur, up0, upDur) => { // B, C: the tines are pushed straight into the section and pulled out again
+      const H = -135;
+      if (t < down0 || t > up0 + upDur) return null;
+      if (t < down0 + downDur) return H * (1 - easeInOut((t - down0) / downDur));
+      if (t > up0) return H * easeIn((t - up0) / upDur);
+      return 0;
+    };
+
+    const V = {};
+
+    // ---- A: the machine comes towards us through the section plane ----
+    {
+      const a0 = FADE + 0.8, APPROACH = 1.8, CROSS = a0 + APPROACH, U0 = CROSS + 0.75, DUR = U0 + 1.3, Z0 = 0.8;
+      fills.forEach((c) => { c.A = CROSS + 0.04 + clamp((uBottom - c.cy) / 80) * 0.32 + c.j * 0.1; });
+      compact.forEach((c) => { c.A = CROSS - 0.06 + clamp((uBottom - c.cy) / 80) * 0.25; });
+      V.A = {
+        DUR,
+        render(t) {
+          const z = Z0 * (CROSS - t) / APPROACH, s = 1 / (1 + Math.max(-0.6, z));
+          const vis = clamp((t - a0) / 0.6) * (1 - clamp((t - CROSS - 0.12) / 0.5));
+          const under = z > 0 ? 0.3 + 0.7 * clamp(1 - z / 0.12) : 1; // inside the soil block it shows ghosted, on the plane fully
+          machineAt(`translate(150,70) scale(${s.toFixed(4)}) translate(-150,-70)`, vis, vis * under);
+          crackAt(null, 0);
+          if (fadeIn(t)) return;
+          crumbs(t, 'A', 0.55, (c, p, e) => [0, (1 - e) * 10 - c.heave * Math.sin(Math.PI * p), 0.5 + 0.5 * e]);
+          breakUp(t, 'A', 0.3, (c, p, e) => (p <= 0 ? [0, 0, 1] : [0, -2 * e, 1 - 0.4 * e]));
+          drawU(t, U0);
+        },
+        beats: [
+          [0, 'A kész szelvény áttűnik: a kapák helyén is tömör, nagy rögös talaj van.'],
+          [a0, 'Mögülünk közelít a kultivátor. A gerenda és a kapák a föld fölött teljesen, a talajban halványan látszanak.'],
+          [CROSS, 'A kapák áthaladnak a szelvény síkján. A nyomukban a rögök szétesnek, a morzsák alulról felemelkednek; a bordák nem mozdulnak.'],
+          [U0, 'A gép kiment felénk. Berajzolódik a sárga U.'],
+          [DUR, 'A kész szelvény marad.'],
+        ],
+      };
+    }
+
+    // ---- B: wedge and cracks: the tines go in, cracks fan out to the surface, the wedge heaves and crumbles ----
+    {
+      const b1 = FADE + 0.6, DOWN = 1.0, CR = b1 + DOWN + 0.1, HEAVE = CR + 0.4, BRK = HEAVE + 0.3, UP = BRK + 0.9, UPD = 0.6, U0 = UP + UPD, DUR = U0 + 1.3;
+      compact.forEach((c) => { c.B = BRK + clamp((c.cy - SURF) / 70) * 0.3 + c.j * 0.06; });
+      fills.forEach((c) => { c.B = BRK + 0.05 + clamp((c.cy - SURF) / 75) * 0.32 + c.j * 0.06; });
+      V.B = {
+        DUR,
+        render(t) {
+          const y = plunge(t, b1, DOWN, UP, UPD);
+          machineAt(`translate(0,${(y ?? -135).toFixed(2)})`, y === null ? 0 : 1, y === null ? 0 : 1);
+          crackAt(t < CR ? null : t - CR, t < CR ? 0 : 1 - clamp((t - BRK - 0.45) / 0.4));
+          if (fadeIn(t)) return;
+          const lift = -4 * easeOut(clamp((t - HEAVE) / 0.3)); // the wedge above the point lifts as one block
+          crumbs(t, 'B', 0.4, (c, p, e) => [0, -4 * (1 - e), 0.7 + 0.3 * e]);
+          breakUp(t, 'B', 0.28, (c, p, e) => [0, lift + e, 1 - 0.4 * e]);
+          drawU(t, U0);
+        },
+        beats: [
+          [0, 'A kész szelvény áttűnik a tömör talajba.'],
+          [b1, 'A három merev kapa a szelvény síkjában belenyomódik a talajba, a kapavég a 30 cm-es jel alá ér.'],
+          [CR, 'A kapavégtől repedések futnak a felszínig: a talaj ék alakban törik.'],
+          [HEAVE, 'Az ék egyben megemelkedik, majd felülről lefelé morzsákra esik. A kapák közötti bordák egyben maradnak.'],
+          [UP, 'A kapák kihúzódnak, a repedések eltűnnek a morzsák alatt.'],
+          [U0, 'Berajzolódik a sárga U.'],
+          [DUR, 'A kész szelvény marad.'],
+        ],
+      };
+    }
+
+    // ---- C: vibrating spring tines: the loosening spreads out from the tine points ----
+    {
+      const c1 = FADE + 0.5, DOWN = 0.8, W0 = c1 + DOWN, WORK = 3.0, UP = W0 + WORK, UPD = 0.6, U0 = UP + UPD + 0.1, DUR = U0 + 1.3, RMAX = 82;
+      const timeAtDist = (d) => W0 + (1 - Math.sqrt(1 - Math.min(d, RMAX - 0.1) / RMAX)) * WORK; // front radius grows fast, then slows down
+      compact.forEach((c) => { c.C = timeAtDist(c.d) + c.j * 0.08; });
+      fills.forEach((c) => { c.C = timeAtDist(c.d) + 0.1 + c.j * 0.08; });
+      V.C = {
+        DUR,
+        render(t) {
+          const y = plunge(t, c1, DOWN, UP, UPD);
+          const env = clamp((t - W0) / 0.2) * clamp((UP - t) / 0.2);
+          const dx = 1.6 * Math.sin(2 * Math.PI * 7 * (t - W0)) * env;
+          machineAt(`translate(${dx.toFixed(2)},${(y ?? -135).toFixed(2)})`, y === null ? 0 : 1, y === null ? 0 : 1);
+          crackAt(null, 0);
+          if (fadeIn(t)) return;
+          crumbs(t, 'C', 0.35, (c, p, e) => [c.j * 3 * (1 - e), -3 * Math.sin(Math.PI * p), 0.6 + 0.4 * e]);
+          breakUp(t, 'C', 0.25, (c, p, e) => (p <= 0 ? [0, 0, 1] : [c.j * 2 * e, 0, 1 - 0.4 * e]));
+          drawU(t, U0);
+        },
+        beats: [
+          [0, 'A kész szelvény áttűnik a tömör talajba.'],
+          [c1, 'A rugós kapák a szelvény síkjában a talajba nyomódnak.'],
+          [W0, 'A kapák rezegnek. A kapavég körül a talaj lazulni kezd, és a lazulás körben terjed felfelé, de lassul, ahogy távolodik.'],
+          [UP, 'A lazulás a kapák nyomán belül marad, a bordákig nem ér el. A kapák kihúzódnak.'],
+          [U0, 'Berajzolódik a sárga U.'],
+          [DUR, 'A kész szelvény marad.'],
+        ],
+      };
+    }
+
+    // ---- D: C with the come-and-go of A: the tines arrive from behind, vibrate in the section plane, then leave towards us ----
+    {
+      // it comes from our side (z < 0, large) and goes away from us into the soil block (z > 0, smaller, ghosted underground)
+      const d0 = FADE + 0.6, APPROACH = 1.4, W0 = d0 + APPROACH, WORK = 3.0, W1 = W0 + WORK, LEAVE = 1.2, U0 = W1 + LEAVE - 0.1, DUR = U0 + 1.3, RMAX = 82, ZSTART = -0.4, ZEND = 0.8;
+      const timeAtDist = (d) => W0 + (1 - Math.sqrt(1 - Math.min(d, RMAX - 0.1) / RMAX)) * WORK;
+      compact.forEach((c) => { c.D = timeAtDist(c.d) + c.j * 0.08; });
+      fills.forEach((c) => { c.D = timeAtDist(c.d) + 0.1 + c.j * 0.08; });
+      const brake = bez(0.2, 0.6, 0.35, 1); // arrives and slows down into the plane
+      V.D = {
+        DUR,
+        render(t) {
+          let z;
+          if (t < W0) z = ZSTART * (1 - brake(clamp((t - d0) / APPROACH)));
+          else if (t < W1) z = 0;
+          else z = ZEND * easeIn(clamp((t - W1) / LEAVE));
+          const s = 1 / (1 + z);
+          const vis = clamp((t - d0) / 0.4) * (1 - clamp((t - W1 - 0.6) / 0.6));
+          const under = z > 0 ? 0.3 + 0.7 * clamp(1 - z / 0.12) : 1; // inside the soil block ghosted, on the plane fully
+          const env = clamp((t - W0) / 0.2) * clamp((W1 - t) / 0.2);
+          const dx = 1.6 * Math.sin(2 * Math.PI * 7 * (t - W0)) * env;
+          machineAt(`translate(${dx.toFixed(2)},0) translate(150,70) scale(${s.toFixed(4)}) translate(-150,-70)`, vis, vis * under);
+          crackAt(null, 0);
+          if (fadeIn(t)) return;
+          crumbs(t, 'D', 0.35, (c, p, e) => [c.j * 3 * (1 - e), -3 * Math.sin(Math.PI * p), 0.6 + 0.4 * e]);
+          breakUp(t, 'D', 0.25, (c, p, e) => (p <= 0 ? [0, 0, 1] : [c.j * 2 * e, 0, 1 - 0.4 * e]));
+          drawU(t, U0);
+        },
+        beats: [
+          [0, 'A kész szelvény áttűnik a tömör talajba.'],
+          [d0, 'A kultivátor felőlünk érkezik, nagyban, és lassulva ér a szelvény síkjába.'],
+          [W0, 'A rugós kapák a szelvény síkjában rezegnek. A kapavég körül a talaj lazul, és a lazulás körben terjed felfelé, egyre lassabban.'],
+          [W1, 'A lazulás a kapák nyomán belül marad, a bordákig nem ér el. A gép felgyorsul, és távolodik: a talajban már csak halványan látszik, aztán eltűnik.'],
+          [U0, 'Berajzolódik a sárga U.'],
+          [DUR, 'A kész szelvény marad.'],
+        ],
+      };
+    }
+
+    return V;
+  }
+
+  // ---------- player: shows the finished picture, plays once on request ----------
+  const ICON = {
+    play: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="7 4 20 12 7 20 7 4"/></svg>',
+    stop: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>',
+    replay: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>',
+    expand: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
+    shrink: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>',
+  };
+  const LABEL = { play: 'Animáció lejátszása', stop: 'Megállítás, a kész kép mutatása', replay: 'Animáció újrajátszása' };
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fmt = (s) => s.toFixed(2).replace('.', ',') + ' s';
+
+  function player(api, btn, scrub, clock) {
+    let raf = 0, playing = false, played = false;
+    const icon = (s) => { btn.innerHTML = `<span aria-hidden="true">${ICON[s]}</span>`; btn.setAttribute('aria-label', LABEL[s]); btn.title = LABEL[s]; btn.dataset.state = s; };
+    const show = (t) => { api.render(t); scrub.value = t; clock.textContent = fmt(t); };
+    const idle = () => { playing = false; icon(played ? 'replay' : 'play'); };
+    const stop = () => { cancelAnimationFrame(raf); show(api.DUR); idle(); };
+    const start = () => {
+      cancelAnimationFrame(raf); playing = true; played = true; icon('stop');
+      let t = 0, last = performance.now(); show(0);
+      const tick = (now) => { t += Math.min(0.1, (now - last) / 1000); last = now; show(Math.min(t, api.DUR)); if (t < api.DUR) raf = requestAnimationFrame(tick); else idle(); };
+      raf = requestAnimationFrame(tick);
+    };
+    btn.addEventListener('click', () => (playing ? stop() : start()));
+    scrub.addEventListener('input', () => { cancelAnimationFrame(raf); playing = false; api.render(+scrub.value); clock.textContent = fmt(+scrub.value); icon(played ? 'replay' : 'play'); });
+    const refresh = () => { cancelAnimationFrame(raf); playing = false; played = false; scrub.max = api.DUR.toFixed(2); icon('play'); show(api.DUR); };
+    refresh();
+    if (reduced) btn.closest('.tools').hidden = true;
+    return { refresh };
+  }
+
+  const beatsHtml = (b) => b.map(([t, txt]) => `<div class="beat"><time>${fmt(t)}</time><p>${txt}</p></div>`).join('');
+  const cuV = cultivator(document.getElementById('cuSvg'));
+  const cuApi = { v: 'A', get DUR() { return cuV[this.v].DUR; }, render(t) { cuV[this.v].render(t); } };
+  const cuPlayer = player(cuApi, document.getElementById('cuPlay'), document.getElementById('cuScrub'), document.getElementById('cuClock'));
+  const sp = spader(document.getElementById('spSvg'));
+  player(sp, document.getElementById('spPlay'), document.getElementById('spScrub'), document.getElementById('spClock'));
+
+  const VARIANT_TEXT = {
+    A: 'A gép mögülünk közelít, áthalad a szelvény síkján, és kimegy felénk.',
+    B: 'A kapák a szelvény síkjában nyomódnak a talajba; a kapavégtől repedések futnak a felszínig, és az ék megemelkedve morzsákra esik.',
+    C: 'Rugós kapák rezegnek a talajban; a lazulás a kapavégek körül körben terjed, és a bordákig nem ér el.',
+    D: 'Mint a C, de a kapák nem felülről jönnek: a gép felőlünk érkezik, a szelvény síkjában rezeg, amíg a lazulás szétterjed, aztán távolodva kimegy, be a talajba.',
+  };
+  const showVariant = (v) => {
+    cuApi.v = v;
+    document.querySelectorAll('[data-variant]').forEach((o) => o.setAttribute('aria-pressed', String(o.dataset.variant === v)));
+    document.getElementById('variantText').textContent = VARIANT_TEXT[v];
+    document.getElementById('cuBeats').innerHTML = beatsHtml(cuV[v].beats);
+    cuPlayer.refresh();
+  };
+  document.querySelectorAll('[data-variant]').forEach((b) => b.addEventListener('click', () => showVariant(b.dataset.variant)));
+  showVariant('A');
+
+  const lineBox = document.getElementById('spLine');
+  const applyLine = () => { sp.setLine(lineBox.checked); document.getElementById('spCaption').hidden = !lineBox.checked; };
+  lineBox.addEventListener('change', applyLine);
+  applyLine();
+  document.getElementById('spBeats').innerHTML = beatsHtml(sp.beats);
+})();
+</script>
+</body>
+</html>

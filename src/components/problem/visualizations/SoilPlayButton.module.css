@@ -1,0 +1,56 @@
+/* Soil profile with a play-on-request animation (ticket 001) */
+.frame {
+  position: relative;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Small, quiet button in the sky corner; the button itself stays a 44px tap target */
+.button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0.7;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.button:hover .icon,
+.button[data-state='playing'] .icon {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.button:focus-visible {
+  outline: none;
+}
+
+.button:focus-visible .icon {
+  opacity: 1;
+  outline: 2px solid var(--color-gold);
+  outline-offset: 1px;
+}
