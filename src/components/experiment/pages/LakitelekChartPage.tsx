@@ -282,10 +282,14 @@ export default function LakitelekChartPage() {
                 border: '1px solid rgba(255, 255, 255, 0.08)',
                 margin: '0 32px'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)' }}>
-                  <span style={{ width: '12px', height: '12px', background: 'linear-gradient(180deg, rgba(129, 199, 132, 0.8) 0%, rgba(74, 103, 65, 0.9) 100%)', borderRadius: '3px' }}></span>
-                  <span>Optimális szerkezetű talaj mélysége</span>
-                </div>
+                <span style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.6)' }}>Laza réteg:</span>
+                {/* same colours as the cylinders in FieldChart3DCanvas */}
+                {([['#d0563f', '≤ 10 cm'], ['#e2b93b', '10–25 cm'], ['#74ad5c', '> 25 cm']] as const).map(([color, text]) => (
+                  <div key={text} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)', marginLeft: '-12px' }}>
+                    <span style={{ width: '12px', height: '12px', background: color, borderRadius: '3px' }}></span>
+                    <span>{text}</span>
+                  </div>
+                ))}
 {season.bestResults.length > 0 && (
                   <>
                 <div style={{ width: '1px', height: '14px', background: 'rgba(255, 255, 255, 0.15)' }}></div>

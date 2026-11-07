@@ -4,6 +4,7 @@ Utoljára frissítve: 2026-11-07. Folyamat és státuszok: [README](README.md).
 
 | # | Feladat | Státusz | Fájlok | Párhuzamosan? | Forrás / megjegyzés |
 |---|---|---|---|---|---|
+| [004](004-lakitelek-3d-fold-alatt.md) | Lakitelek 3D: hengerek a föld alatt (rizotron), színkód, penetrométer | folyamatban (dev szerveres ellenőrzés hátra) | `experiment/FieldChart3DCanvas.tsx`, `experiment/pages/LakitelekChartPage.tsx` | igen | Attila üzenete 11-07; nyitott kérdések a jegyben |
 | — | 2026-os fotók feltöltése a kutatás oldalra | vár (fotókra) | `public/images/kutatás_pics`, `src/lib/data.ts` | igen | audit 11-03 §10 |
 | — | Lakitelek: melyik mérés az évek közötti híd (2026 júl. vége tarlón készült) | vár (kutatókra) | `experiment/pages/Lakitelek*`, `seasons.ts` | igen | adatdok. 11-02 §7–8 |
 | — | 2026-os géptípusok (38SX / 38WX / 40SX) helyszínenként | vár (kutatókra) | `src/lib/data.ts`, `experiment/pages/*` | igen | adatdok. 11-02 §7 |
