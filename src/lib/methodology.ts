@@ -3,7 +3,7 @@
 // HalasiErnő-Vöröshagyma-MK-2026, VD-paradicsom-2026, Lakitelek ásógépes kísérlet 1-7-2026,
 // MikrobioMeter-2025-2026. The 2025 entries come from `data.ts`.
 
-import { lakitelekSoilLife } from './seasons'
+import { lakitelekSoil2026, lakitelekSoilLife } from './seasons'
 
 export interface MeasuredProperty {
   name: string
@@ -49,7 +49,7 @@ export const MEASURED_PROPERTIES: MeasuredProperty[] = [
     name: 'Térfogattömeg',
     what: 'Mennyire tömör a talaj; kisebb = lazább',
     unit: 'g/cm³',
-    how: 'a mintavételi pontok átlaga',
+    how: 'hengeres minta 10–15 cm-ről, a pontok átlaga',
     years: [2026],
   },
   {
@@ -103,3 +103,60 @@ export const MICROBIOMETER_ROUNDS = [
   { when: '2026 április', where: 'Lakitelek, Szentkirály (2 tábla)' },
   { when: '2026 július–augusztus', where: 'Lakitelek, Szentkirály (2 tábla)' },
 ]
+
+/** Bulk density: the sampling steps, photographed at Lakitelek on 2026-04-06 (Drive "Képek-Univ-Lakitelek") */
+export interface BulkDensityStep {
+  title: string
+  text: string
+  /** File stem under BULK_DENSITY_IMAGE_DIR; `-wide` (3:2) and `-square` (1:1) exist. The lab step has none. */
+  image?: string
+  alt: string
+}
+
+export const BULK_DENSITY_IMAGE_DIR = '/images/kutatás_pics/Lakitelek/terfogattomeg'
+
+export const BULK_DENSITY_STEPS: BulkDensityStep[] = [
+  {
+    title: 'Gödör',
+    text: '10–15 cm mélyre ásunk, ahol a talaj tömörödni kezd.',
+    image: 'terfogattomeg-1-asas',
+    alt: 'Kis gödör a gabonatáblában, az aljára állított acélhenger',
+  },
+  {
+    title: 'Henger',
+    text: 'A 100 cm³-es, két végén nyitott acélhengert függőlegesen a gödör aljába nyomjuk, amíg a pereme egy szintbe kerül a talajjal.',
+    image: 'terfogattomeg-2-beveres',
+    alt: 'A henger a gödör aljába nyomva, csak a pereme látszik',
+  },
+  {
+    title: 'Kiemelés',
+    text: 'Körülássuk, és a földdel együtt egyben emeljük ki. A kilógó földet a peremnél levágjuk, így pontosan 100 cm³ marad benne.',
+    image: 'terfogattomeg-3-kiemeles',
+    alt: 'A henger mellől kiásott föld, a henger kiemelés előtt',
+  },
+  {
+    title: 'Lezárás',
+    text: 'Mindkét végére kupak kerül, rá a mérési pont jele, és mehet a laborba.',
+    image: 'terfogattomeg-4-lezaras',
+    alt: 'A két végén lezárt henger a gödör szélén, a gödör alján a helye',
+  },
+  {
+    title: 'Labor',
+    text: '105 °C-on kiszárítjuk és lemérjük. A száraz tömeg osztva 100 cm³-rel: ez a térfogattömeg.',
+    alt: 'Szárítás és mérés a laborban',
+  },
+]
+
+/** The worked example: Lakitelek, the sampling day of the photos (ÁPR. eleje), mean of the parcels */
+const bdApril = lakitelekSoil2026.bulkDensity.parcels.map((p) => p.values[0])
+const bdMean = Math.round((bdApril.reduce((a, b) => a + b, 0) / bdApril.length) * 100) / 100
+export const BULK_DENSITY_EXAMPLE = {
+  place: 'Lakitelek',
+  when: '2026 április eleje',
+  parcels: bdApril.length,
+  /** g/cm³, rounded to 2 decimals */
+  value: bdMean,
+  /** grams of dry soil in the 100 cm³ cylinder */
+  grams: Math.round(bdMean * 100),
+  photoDate: '2026. április 6.',
+}

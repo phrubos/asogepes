@@ -1,0 +1,431 @@
+/* Módszertan: bulk density sampling, photo stepper + section diagram (frame: SzentkirályTimelinePage + MethodologyBlocks) */
+
+.layout {
+  /* left: the photo with the step rail under it; right: one explanation card (step text + section diagram)
+     as tall as both; then one note across */
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  grid-template-areas:
+    'photo card'
+    'steps card'
+    'foot foot';
+  column-gap: 40px;
+  row-gap: 16px;
+  align-items: start;
+}
+
+/* ── Photo stepper ── */
+
+.frame {
+  grid-area: photo;
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border: 1px solid rgba(212, 168, 75, 0.3);
+  border-radius: 20px;
+  overflow: hidden;
+  background: #14110e;
+  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+  cursor: grab;
+  user-select: none;
+}
+
+.frame:active {
+  cursor: grabbing;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* the crop has the frame's ratio; min-height covers rounding (the layer is absolute, so % resolves) */
+  min-height: 100%;
+  pointer-events: none;
+}
+
+.zoom {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  background: rgba(20, 17, 14, 0.55);
+  backdrop-filter: blur(6px);
+  color: var(--color-white);
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.zoom:hover {
+  background: rgba(20, 17, 14, 0.8);
+  border-color: rgba(212, 168, 75, 0.5);
+}
+
+.zoom:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Lab step (no photo) ── */
+
+.lab {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  padding: 32px 36px 56px;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(212, 168, 75, 0.12), transparent 60%),
+    #1a1612;
+}
+
+.labFlow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.labFlow li {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9375rem;
+  color: rgba(245, 240, 232, 0.85);
+}
+
+.labFlow li svg {
+  flex: none;
+  color: var(--color-gold);
+}
+
+.labFlow li + li::before {
+  content: '';
+  width: 22px;
+  height: 1px;
+  background: rgba(212, 168, 75, 0.5);
+}
+
+.formula {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: rgba(245, 240, 232, 0.85);
+}
+
+.op {
+  color: var(--color-gold);
+}
+
+.formula strong {
+  font-size: 3.25rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-white);
+}
+
+.formula small {
+  font-family: var(--font-mono, monospace);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e8c87a;
+}
+
+.labCaption {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Step rail ── */
+
+.steps {
+  grid-area: steps;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stepBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 44px;
+  padding: 0 2px 6px;
+  border: 0;
+  background: none;
+  color: rgba(245, 240, 232, 0.55);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.stepBtn:hover {
+  color: rgba(245, 240, 232, 0.9);
+}
+
+.stepBtn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.bar {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 3px;
+  margin-bottom: 6px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.stepDone .bar {
+  background: rgba(212, 168, 75, 0.45);
+}
+
+.stepOn .bar {
+  background: var(--color-gold);
+}
+
+/* autoplay progress: the active bar fills over one step */
+.stepOn .bar:has(.fill) {
+  background: rgba(212, 168, 75, 0.25);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-gold);
+  transform-origin: left;
+  animation: bdFill 5s linear forwards;
+}
+
+@keyframes bdFill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.stepOn {
+  color: var(--color-white);
+}
+
+.stepNum {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: inherit;
+}
+
+.stepOn .stepNum {
+  color: #e8c87a;
+}
+
+.stepName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.card {
+  grid-area: card;
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 24px 12px;
+  border: 1px solid rgba(212, 168, 75, 0.3);
+  border-radius: 20px;
+  background:
+    radial-gradient(120% 70% at 0% 0%, rgba(212, 168, 75, 0.1), transparent 60%),
+    rgba(20, 17, 14, 0.6);
+}
+
+/* a gold ring that fades out when the step changes */
+.cardFlash {
+  position: absolute;
+  inset: -1px;
+  border: 1px solid var(--color-gold);
+  border-radius: inherit;
+  box-shadow: 0 0 24px -6px rgba(212, 168, 75, 0.55);
+  pointer-events: none;
+}
+
+.stepText {
+  /* fits the longest step, so the diagram does not jump between steps */
+  min-height: var(--bd-text-h, 136px);
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #e8c87a;
+}
+
+.stepTitle {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-white);
+}
+
+.stepBody {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: rgba(245, 240, 232, 0.9);
+}
+
+.diagram {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(212, 168, 75, 0.25);
+}
+
+.foot {
+  grid-area: foot;
+  max-width: 80ch;
+  margin: 8px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(245, 240, 232, 0.8);
+}
+
+.credit {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Laptops: a bit shorter so the block fits one screen */
+@media (max-height: 900px) and (min-width: 1025px) {
+  .layout {
+    column-gap: 32px;
+  }
+
+  .card {
+    padding: 20px 20px 8px;
+    gap: 12px;
+  }
+
+  .stepTitle {
+    font-size: 1.375rem;
+  }
+
+  .stepBody {
+    font-size: 1rem;
+  }
+}
+
+/* Phones and tablets: one column, square photo */
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'photo'
+      'steps'
+      'card'
+      'foot';
+    gap: 16px;
+  }
+
+  .frame {
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+  }
+
+  .lab {
+    padding: 24px 20px 52px;
+    gap: 18px;
+  }
+
+  .labFlow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .labFlow li + li::before {
+    display: none;
+  }
+
+  .formula {
+    font-size: 1.375rem;
+  }
+
+  .formula strong {
+    font-size: 2.5rem;
+  }
+
+  .stepText {
+    --bd-text-h: 162px;
+  }
+
+  .foot {
+    margin-top: 0;
+  }
+
+  .card {
+    padding: 18px 16px 8px;
+    gap: 12px;
+    border-radius: 16px;
+  }
+
+  .stepTitle {
+    font-size: 1.375rem;
+  }
+
+  .stepBody {
+    font-size: 1rem;
+  }
+
+  .diagram {
+    padding-top: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .stepName {
+    font-size: 0.75rem;
+  }
+}

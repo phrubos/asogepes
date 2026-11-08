@@ -26,6 +26,7 @@ export default function ResearchScrollLayout() {
             subsections: [
                 { id: 'methodology-penetrometer', label: 'Penetrométer' },
                 { id: 'methodology-meresek', label: 'Mért jellemzők' },
+                { id: 'methodology-terfogattomeg', label: 'Térfogattömeg mérése' },
                 { id: 'methodology-talajelet', label: 'Talajélet mérése' },
             ],
         },

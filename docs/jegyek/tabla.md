@@ -1,6 +1,6 @@
 # Tábla
 
-Utoljára frissítve: 2026-11-07. Folyamat és státuszok: [README](README.md).
+Utoljára frissítve: 2026-11-08. Folyamat és státuszok: [README](README.md).
 
 | # | Feladat | Státusz | Fájlok | Párhuzamosan? | Forrás / megjegyzés |
 |---|---|---|---|---|---|
@@ -21,6 +21,7 @@ Utoljára frissítve: 2026-11-07. Folyamat és státuszok: [README](README.md).
 
 | Feladat | Mikor | Hol |
 |---|---|---|
+| [005](005-terfogattomeg-modszertan.md) Módszertan: a térfogattömeg mérése (fotóváltó 4 egységesített képpel, laborkártya, magyarázó kártya metszetrajzzal, Újra gomb); checker: minden pont rendben | 2026-11-08 | `experiment/pages/BulkDensity*`, `sections/MethodologySection.tsx`, `lib/methodology.ts`, `public/images/kutatás_pics/Lakitelek/terfogattomeg/` |
 | [001](001-asogep-animacio.md) Szelvény-animációk play gombbal (ásógép + nehézkultivátor A változat, sárga vonal mindkettőn); checker: minden pont rendben, mobil TBT a dev szerveren 1897 ms | 2026-11-07 | `problem/visualizations/*`, `CultivatorComparisonPage.tsx`, commit 84da2a1 |
 | UX-pontozás P1: magyar 404 (menüpont nélkül aláhúzás), `robots`/`sitemap`/`icon.svg`/`apple-icon`, `/problema` cím; axe 0 mind az 5 oldalon 1440 és 390 px-en (sín: a címsor a gomb; PhotoViewer: fókuszra megjelenő „Teljes képernyős nézet” gomb; görgethető dobozok fókuszálhatók; címsorrend). A webhelynév a fejlécben elvetve (felhasználói döntés: a „Főoldal” menüpont ugyanaz) | 2026-11-06 | `app/not-found.tsx`, `app/robots.ts`, `app/sitemap.ts`, `app/icon.svg`, `lib/site.ts`, `ScrollLayout`, `PhotoViewer`, `Timeline`, `LakitelekChartPage`, problem szekciók |
 | [003](003-partner-logok.md) Partnerlogók (lábléc, oldalvég, OG-kép) + `asogepes-brand` skill | 2026-11-06 | `lib/partners.ts`, `layout/Footer`, `shared/PageEnd`, `lib/og/renderOgImage.tsx` |
