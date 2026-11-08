@@ -126,7 +126,8 @@ export default function LakitelekSoilLifePage() {
     }
   }
 
-  const box = { fs: FS, w: W, h: H }
+  // phones: callouts stay inside the plot, above the date labels (they ran into ÁPR. / JÚL.)
+  const box = { fs: FS, w: W, h: phone ? yBot + 4 : H }
   const ws = spreads[widest]
   const wsMid = (Y(ws.hi) + Y(ws.lo)) / 2
   const d0 = at(biggestDrop, n - 2)
