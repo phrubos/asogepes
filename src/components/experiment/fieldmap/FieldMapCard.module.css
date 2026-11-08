@@ -1,0 +1,453 @@
+/* ============================================
+   FIELD MAP CARD — squared paper scrap with a zooming map (ticket 006)
+   ============================================ */
+
+.card {
+  --paper: #231c16;
+  --paper-ink: #e9dfcc;
+  --paper-line: rgba(232, 200, 122, 0.22);
+  --paper-muted: #b8ab97;
+  --paper-dim: #85786a;
+  position: relative;
+  min-width: 0;
+}
+
+/* The tilt and shadow are static: animating them would blur the paper (see the component comment) */
+.wrap {
+  position: relative;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+  transform: rotate(-1.6deg);
+  transform-origin: 50% 0;
+}
+
+.paper {
+  position: relative;
+  /* the page's own brown, a squared grid, a soft light top-left and a darker corner */
+  background:
+    radial-gradient(110% 70% at 15% 0%, rgba(245, 240, 232, 0.06), transparent 60%),
+    radial-gradient(80% 60% at 100% 100%, rgba(0, 0, 0, 0.28), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(232, 200, 122, 0.075) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(90deg, rgba(232, 200, 122, 0.075) 0 1px, transparent 1px 22px),
+    var(--paper);
+  color: var(--paper-ink);
+  padding: 30px 28px 22px;
+}
+
+.tape {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  z-index: 2;
+  width: 128px;
+  height: 30px;
+  transform: translateX(-50%) rotate(2.4deg);
+  background: linear-gradient(180deg, rgba(232, 200, 122, 0.42), rgba(212, 168, 75, 0.32));
+  clip-path: polygon(0 8%, 4% 0, 8% 10%, 12% 2%, 100% 0, 97% 30%, 100% 55%, 96% 78%, 100% 100%, 6% 100%, 2% 85%, 5% 60%, 1% 35%);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--paper-line);
+  padding-bottom: 4px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.125rem;
+}
+
+/* Map margin, as on printed maps: zoom level + coordinates above the frame, furniture below it */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin-top: 10px;
+}
+
+.stageTag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+.coord {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--paper-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.map {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-width: 100%;
+  margin-top: 8px;
+  border: 1px solid var(--paper-line);
+}
+
+/* fills the square frame: absolutely placed, and square like it (an svg needs a width or it falls back to 300 × 150) */
+.map > .svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: block;
+  overflow: hidden;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+  margin-top: 10px;
+  min-height: 44px;
+}
+
+.furniture {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  min-width: 150px;
+  color: var(--paper-muted);
+}
+
+.north {
+  display: block;
+  width: 14px;
+  height: 30px;
+  font-family: var(--font-body);
+}
+
+.scale {
+  display: grid;
+  gap: 3px;
+  font-size: 0.75rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.scale i {
+  display: block;
+  min-width: 8px;
+  height: 5px;
+  border: 1.5px solid currentColor;
+  border-top: 0;
+}
+
+.key {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8125rem;
+  color: var(--paper-muted);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.keyOn {
+  opacity: 1;
+}
+
+.key li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.keySpade,
+.keyPlain {
+  width: 12px;
+  height: 12px;
+  border: 1px solid;
+}
+
+.keySpade {
+  background: rgba(212, 168, 75, 0.5);
+  border-color: var(--color-gold-light);
+}
+
+.keyPlain {
+  background: rgba(184, 171, 151, 0.14);
+  border-color: rgba(184, 171, 151, 0.7);
+}
+
+.replay {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  margin: -6px -12px -6px 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--paper-dim);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.replay:hover {
+  color: var(--color-gold-light);
+}
+
+.replay svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- map ink (classes set from the component) ---------- */
+
+.land {
+  fill: none;
+  stroke: var(--color-gold);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.river {
+  fill: none;
+  stroke: rgba(184, 171, 151, 0.45);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lbl,
+.townLbl,
+.riverLbl,
+.pinLbl,
+.num {
+  font-family: var(--font-body);
+}
+
+.lbl {
+  fill: var(--paper-muted);
+}
+
+.dot {
+  fill: var(--paper-muted);
+}
+
+.town {
+  fill: var(--paper-dim);
+}
+
+.townLbl {
+  fill: var(--paper-dim);
+}
+
+.riverLbl {
+  font-family: var(--font-display);
+  font-style: italic;
+  fill: var(--color-gold);
+}
+
+.zoomFrame {
+  fill: none;
+  stroke: var(--color-gold-light);
+  stroke-opacity: 0.7;
+  stroke-width: 1.2;
+}
+
+.siteDim {
+  fill: var(--paper);
+  stroke: var(--paper-dim);
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+}
+
+/* one label layer per zoom step; the svg carries s0 / s1 / s2 */
+/* hidden layers are also visibility: hidden once faded, so nothing off-frame counts as visible text */
+.lay {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+}
+
+.s0 .l0,
+.s1 .l1,
+.s2 .l2 {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.35s ease, visibility 0s;
+}
+
+/* pin: the dot pops, the label only fades (scaling text renders it blurry) */
+.pinCore {
+  fill: var(--color-gold-light);
+  stroke: var(--paper);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.pinRing {
+  fill: none;
+  stroke: var(--color-gold-light);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.pinLbl {
+  fill: var(--color-cream);
+  font-weight: 600;
+}
+
+.pin:not(.drop) .pinCore,
+.pin:not(.drop) .pinRing,
+.pin:not(.drop) .pinLbl {
+  opacity: 0;
+}
+
+.drop .pinCore {
+  animation: pinIn 0.45s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+
+.drop .pinLbl {
+  animation: fadeIn 0.35s 0.15s ease-out both;
+}
+
+.drop .pinRing {
+  animation: pulse 2s 0.3s ease-out infinite backwards;
+}
+
+@keyframes pinIn {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(3); }
+}
+
+.strip {
+  stroke-width: 1.2;
+  opacity: 0;
+}
+
+.spade {
+  fill: rgba(212, 168, 75, 0.5);
+  stroke: var(--color-gold-light);
+}
+
+.plain {
+  fill: rgba(184, 171, 151, 0.14);
+  stroke: rgba(184, 171, 151, 0.7);
+}
+
+/* an outlined field (no parcel layout known): gold edge, light fill */
+.field {
+  fill: rgba(212, 168, 75, 0.28);
+  stroke: var(--color-gold-light);
+  stroke-linejoin: round;
+}
+
+/* not used in the selected season: dashed and dim */
+.field.fieldOff {
+  fill: rgba(184, 171, 151, 0.06);
+  stroke: var(--paper-dim);
+  stroke-dasharray: 4 3;
+}
+
+g.fieldOff {
+  opacity: 0.55;
+}
+
+.field,
+.l2 g {
+  transition: fill 0.3s ease, stroke 0.3s ease, opacity 0.3s ease;
+}
+
+/* the dashed link between two fields and its distance, haloed in the paper colour */
+.link {
+  stroke: var(--paper-dim);
+  stroke-width: 1.2;
+}
+
+.linkLbl {
+  font-family: var(--font-body);
+  fill: var(--paper-muted);
+  stroke: var(--paper);
+  paint-order: stroke;
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+/* the distance arrives after its line has drawn (the component draws the line) */
+.linkLblOn {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .linkLbl {
+    transition: none;
+  }
+}
+
+.fieldLbl {
+  font-family: var(--font-body);
+  font-weight: 600;
+  fill: var(--paper-ink);
+}
+
+/* parcels appear one after another, I. to VII. */
+.stripsOn .strip {
+  animation: fadeIn 0.45s ease-out both;
+  animation-delay: calc(var(--i) * 70ms);
+}
+
+.num {
+  fill: var(--color-gold-light);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop .pinCore,
+  .drop .pinLbl,
+  .drop .pinRing,
+  .stripsOn .strip {
+    animation: none;
+  }
+
+  .stripsOn .strip {
+    opacity: 1;
+  }
+
+  .lay,
+  .key {
+    transition: none;
+  }
+}
+
+/* Phones and tablets: a smaller tilt, so the rotated corners stay inside the 20px gutter */
+@media (max-width: 1024px) {
+  .wrap {
+    transform: rotate(-0.6deg);
+  }
+
+  .paper {
+    padding: 26px 16px 16px;
+  }
+}

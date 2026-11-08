@@ -1,91 +1,28 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MapPin, Layers, Ruler, Leaf, Droplets, Calendar } from 'lucide-react'
 import { locations } from '@/lib/data'
+import { kecskemetBorbasField } from '@/lib/field-maps'
 import SeasonOnly from '../season/SeasonOnly'
+import FieldMapCard from '../fieldmap/FieldMapCard'
+import SiteInfoLayout, { siteFacts } from '../fieldmap/SiteInfoLayout'
 import styles from './KecskemétInfoPage.module.css'
 
 const data = locations.kecskemet
-
-const infoItems = [
-  { icon: Layers, label: 'Talaj', value: data.soil },
-  { icon: Ruler, label: 'KA érték', value: data.ka },
-  { icon: Leaf, label: 'Kultúra', value: data.crop },
-  { icon: Droplets, label: 'Öntözés', value: data.irrigation },
-  { icon: Calendar, label: 'Vizsgált időszak', value: data.period },
-  { icon: MapPin, label: data.measurementLabel || 'Mérések', value: data.measurements },
-]
-
-// The site facts arrive together as one block (no stagger): they are a table, not a sequence
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 }
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 8 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
-  }
-}
+const FIELDS = [kecskemetBorbasField]
+const facts = siteFacts(data)
 
 export default function KecskemétInfoPage() {
   return (
-    <div className={styles.infoPage}>
-      {/* Header */}
-      <motion.div
-        className={styles.header}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className={styles.headerBadge}>
-          <MapPin size={12} />
-          <span>02. helyszín</span>
-        </div>
-        <h2 className={styles.headerTitle}>{data.name}</h2>
-        <div className={styles.seasonRow}>
-          <SeasonOnly years={[2025]} />
-        </div>
-        <div className={styles.headerLine} />
-      </motion.div>
-
-      {/* Info Grid */}
-      <motion.div
-        className={styles.infoGrid}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {infoItems.map((item, idx) => {
-          const IconComponent = item.icon
-          const isMeasurement = item.label.includes('mérések') || item.label.includes('Mérések')
-          const isKA = item.label === 'KA érték'
-
-          return (
-            <motion.div
-              key={idx}
-              className={`${styles.infoCard} ${isMeasurement ? styles.measurement : ''}`}
-              variants={itemVariants}
-            >
-              <div className={styles.infoIcon}>
-                <IconComponent size={16} strokeWidth={1.5} />
-              </div>
-              <div className={styles.infoContent}>
-                <span className={styles.infoLabel}>
-                  {isKA ? <>Arany-féle kötöttség (K<sub>A</sub>)</> : item.label}
-                </span>
-                <span className={styles.infoValue}>{item.value}</span>
-              </div>
-            </motion.div>
-          )
-        })}
-      </motion.div>
-
-      {/* Treatment Comparison */}
+    <SiteInfoLayout
+      badge="02. helyszín"
+      season={<SeasonOnly years={[2025]} />}
+      title={data.name}
+      lead="Ipari paradicsom alatt kontroll és ásógépes parcella egymás mellett, azonos körülmények között."
+      facts={facts}
+      factsKey={2025}
+      map={<FieldMapCard site="kecskemetBorbas" title="Kecskemét-Borbás · kísérleti tábla" fields={FIELDS} />}
+    >
       <motion.div
         className={styles.treatmentComparison}
         initial={{ opacity: 0, y: 25 }}
@@ -94,7 +31,6 @@ export default function KecskemétInfoPage() {
       >
         <h3 className={styles.treatmentMainHeader}>MŰVELÉSI LÉPÉSEK</h3>
 
-        {/* Control Treatment */}
         <div className={`${styles.treatment} ${styles.treatmentControl}`}>
           <div className={styles.treatmentHeader}>
             <span className={styles.treatmentBadge}>Kontroll</span>
@@ -106,12 +42,10 @@ export default function KecskemétInfoPage() {
           </ul>
         </div>
 
-        {/* VS Divider */}
         <div className={styles.treatmentVs}>
           <span>VS</span>
         </div>
 
-        {/* Spade Treatment */}
         <div className={`${styles.treatment} ${styles.treatmentSpade}`}>
           <div className={styles.treatmentHeader}>
             <span className={styles.treatmentBadge}>Ásógépezett</span>
@@ -119,14 +53,12 @@ export default function KecskemétInfoPage() {
           <ul className={styles.treatmentList}>
             {data.spade?.treatments.map((t, i) => (
               <li key={i}>
-                {t.toLowerCase().includes('ásógép') || t.toLowerCase().includes('mélyásógép')
-                  ? <strong>{t}</strong>
-                  : t}
+                {/ásógép/i.test(t) ? <strong>{t}</strong> : t}
               </li>
             ))}
           </ul>
         </div>
       </motion.div>
-    </div>
+    </SiteInfoLayout>
   )
 }

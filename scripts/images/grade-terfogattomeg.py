@@ -84,8 +84,7 @@ def crop(img, w, h):
     return img[y0:y0 + h, x0:x0 + w]
 
 CROPS = {
-    'wide': (2460, 1640, 1800),   # 3:2, desktop
-    'square': (1500, 1500, 1080),  # 1:1, phones
+    'wide': (2460, 1640, 1800),   # 3:2, every screen size
 }
 names = ['1-asas', '2-beveres', '3-kiemeles', '4-lezaras']
 for name, g, orig in zip(names, graded, aligned):

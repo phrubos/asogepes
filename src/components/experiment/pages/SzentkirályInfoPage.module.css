@@ -1,131 +1,3 @@
-/* ============================================
-   SZENTKIRÁLY INFO PAGE - Compact Book Version
-   ============================================ */
-
-.infoPage {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
-  height: 100%;
-  justify-content: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  padding: var(--space-lg) var(--space-xl);
-  box-sizing: border-box;
-}
-
-/* Header */
-.header {
-  text-align: center;
-}
-
-.headerBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px var(--space-md);
-  background: rgba(212, 168, 75, 0.1);
-  border: 1px solid rgba(212, 168, 75, 0.2);
-  border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-gold);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: var(--space-sm);
-}
-
-.headerTitle {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-  font-weight: 800;
-  color: var(--color-white);
-  margin: 0 0 var(--space-sm);
-  letter-spacing: -0.02em;
-}
-
-.headerLine {
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
-  margin: 0 auto;
-  border-radius: 1px;
-}
-
-/* Info Grid */
-.infoGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-md);
-}
-
-.infoCard {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-md);
-  background: linear-gradient(135deg, rgba(26, 23, 20, 0.7) 0%, rgba(35, 30, 25, 0.8) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 10px;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.infoCard:hover {
-  /* no lift: the card is not a control, and Framer owns its transform (entrance) */
-  border-color: rgba(212, 168, 75, 0.2);
-}
-
-.infoCard.measurement {
-  background: linear-gradient(135deg, rgba(212, 168, 75, 0.12) 0%, rgba(212, 168, 75, 0.06) 100%);
-  border-color: rgba(212, 168, 75, 0.25);
-}
-
-.infoCard.measurement .infoIcon {
-  background: rgba(212, 168, 75, 0.2);
-  border-color: rgba(212, 168, 75, 0.35);
-}
-
-.infoCard.measurement .infoLabel,
-.infoCard.measurement .infoValue {
-  color: var(--color-gold);
-}
-
-.infoIcon {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(212, 168, 75, 0.08);
-  border: 1px solid rgba(212, 168, 75, 0.15);
-  border-radius: 8px;
-  color: var(--color-gold);
-  flex-shrink: 0;
-}
-
-.infoContent {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.infoLabel {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.infoValue {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-white);
-  line-height: 1.3;
-}
-
 /* Treatment Comparison */
 .treatmentComparison {
   display: grid;
@@ -268,9 +140,6 @@
    ============================================ */
 
 @media (max-width: 900px) {
-  .infoGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   .treatmentComparison {
     grid-template-columns: 1fr;
@@ -289,31 +158,6 @@
 }
 
 @media (max-width: 600px) {
-  .infoPage {
-    padding-inline: 0;
-    gap: var(--space-lg);
-  }
-
-  .headerTitle {
-    font-size: 1.5rem;
-  }
-
-  .infoGrid {
-    gap: var(--space-sm);
-  }
-
-  .infoCard {
-    padding: var(--space-sm);
-  }
-
-  .infoIcon {
-    width: 28px;
-    height: 28px;
-  }
-
-  .infoValue {
-    font-size: 0.8125rem;
-  }
 
   .treatment {
     padding: var(--space-md);
@@ -321,17 +165,6 @@
 
   .treatmentList li {
     font-size: 0.8125rem;
-  }
-}
-
-/* Phones and tablets: the page margin comes from the layout; the block grows with its content */
-@media (max-width: 1024px) {
-  .infoPage {
-    height: auto;
-    max-height: none;
-    min-height: 0;
-    overflow: visible;
-    padding: 0;
   }
 }
 
@@ -357,54 +190,10 @@
   }
 }
 
-/* Phones and tablets: site facts as a compact two-column fact sheet (no icon tiles) */
-@media (max-width: 1024px) {
-  .infoGrid {
-    gap: 6px;
-  }
-
-  .infoCard {
-    padding: 10px 12px;
-  }
-
-  .infoIcon {
-    display: none;
-  }
-}
-
 /* Phones and tablets: titles and labels align left, like the text under them */
 @media (max-width: 1024px) {
-  .header,
   .treatmentMainHeader {
     text-align: left;
-  }
-
-  .headerLine {
-    display: none;
-  }
-}
-
-/* Phones and tablets: 16px between a title and its content, the same on every /kutatas page */
-@media (max-width: 1024px) {
-  .infoPage {
-    gap: 16px;
-  }
-
-  .headerTitle {
-    margin-bottom: 0;
-  }
-}
-
-/* ÉVAD control under the title: centred on desktop, full width on phones and tablets */
-.seasonRow {
-  display: flex;
-  justify-content: center;
-  margin-top: 12px;
-}
-
-@media (max-width: 1024px) {
-  .seasonRow {
-    justify-content: flex-start;
   }
 }
 
@@ -478,47 +267,8 @@
   }
 }
 
-/* Desktop: the ÉVAD control sits next to the badge (where + when in one row), above the title */
-@media (min-width: 1025px) {
-  .header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    column-gap: 10px;
-  }
-
-  .headerBadge {
-    order: 0;
-    margin-bottom: 0;
-  }
-
-  .seasonRow {
-    order: 1;
-    margin-top: 0;
-  }
-
-  .headerTitle {
-    order: 2;
-    flex-basis: 100%;
-    margin-top: var(--space-sm);
-  }
-
-  .headerLine {
-    order: 3;
-    flex-basis: 60px;
-  }
-}
-
 /* Desktop: titles and badges align left, like on /problema and /technologia (phones already do) */
 @media (min-width: 1025px) {
-  .header {
-    justify-content: flex-start;
-    text-align: left;
-  }
-  .headerLine {
-    display: none;
-  }
   .treatmentMainHeader {
     text-align: left;
   }

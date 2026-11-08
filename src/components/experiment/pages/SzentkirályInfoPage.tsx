@@ -1,31 +1,23 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MapPin, Layers, Ruler, Leaf, Droplets, Calendar } from 'lucide-react'
 import { locations } from '@/lib/data'
-import { szentkiralySeasons, findSeason, type Treatment } from '@/lib/seasons'
+import { szentkiralySeasons, szentkiralyTomato, findSeason, type Treatment } from '@/lib/seasons'
+import { szentkiralyOnionField, szentkiralyTomatoField } from '@/lib/field-maps'
 import { useSeason } from '../season/SeasonContext'
 import SeasonSwitch from '../season/SeasonSwitch'
+import FieldMapCard from '../fieldmap/FieldMapCard'
+import SiteInfoLayout, { siteFacts } from '../fieldmap/SiteInfoLayout'
 import styles from './SzentkirályInfoPage.module.css'
 
 const data = locations.szentkiraly
 const site = szentkiralySeasons
 const siteYears = site.seasons.map((s) => s.year)
-
-// The site facts arrive together as one block (no stagger): they are a table, not a sequence
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 }
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 8 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
-  }
-}
+// both fields on one map: the last view is fitted to them (≈ 2.3 km apart, scale ~500 m)
+const FIELDS = [szentkiralyOnionField, szentkiralyTomatoField]
+const TOMATO_YEARS = szentkiralyTomato.seasons.map((s) => s.year)
+/** Between the centres of the two fields, measured on the surveyed corners */
+const FIELD_DISTANCE = '2,3 km'
 
 function TreatmentCard({ t }: { t: Treatment }) {
   const spade = t.role === 'spade'
@@ -52,69 +44,35 @@ export default function SzentkirályInfoPage() {
   const control = season.treatments.find((t) => t.role === 'control' && !t.deep)
   const spade = season.treatments.find((t) => t.role === 'spade' && !t.deep)
   const twoWay = season.treatments.length === 2 && control && spade
+  const tomato = szentkiralyTomato.seasons.find((s) => s.year === season.year)
 
-  const infoItems = [
-    { icon: Layers, label: 'Talaj', value: info.soil },
-    { icon: Ruler, label: 'KA érték', value: info.ka },
-    { icon: Leaf, label: 'Kultúra', value: info.crop },
-    { icon: Droplets, label: 'Öntözés', value: info.irrigation },
-    { icon: Calendar, label: 'Vizsgált időszak', value: info.period },
-    { icon: MapPin, label: data.measurementLabel || 'Mérések', value: info.measurements },
-  ]
+  const facts = siteFacts(info)
+  if (tomato) facts[1] = { ...facts[1], sub: `+ ipari paradicsom, külön táblán` }
+
+  const lead = [
+    twoWay
+      ? 'Vöröshagyma alatt kontroll és ásógépes parcella egymás mellett, azonos körülmények között.'
+      : `Vöröshagyma alatt ${season.treatments.length} kezelés egymás mellett, azonos körülmények között.`,
+    tomato && `Mellette, ${FIELD_DISTANCE}-re, egy ipari paradicsomos tábla: ${tomato.treatments.map((t) => t.short.toLowerCase()).join(' és ')}.`,
+  ].filter(Boolean).join(' ')
 
   return (
-    <div className={styles.infoPage}>
-      {/* Header */}
-      <motion.div
-        className={styles.header}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className={styles.headerBadge}>
-          <MapPin size={12} />
-          <span>01. helyszín</span>
-        </div>
-        <h2 className={styles.headerTitle}>{data.name}</h2>
-        <div className={styles.headerLine} />
-        <div className={styles.seasonRow}>
-          <SeasonSwitch years={siteYears} small />
-        </div>
-      </motion.div>
-
-      {/* Info Grid */}
-      <motion.div
-        key={`grid-${season.year}`}
-        className={styles.infoGrid}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {infoItems.map((item, idx) => {
-          const IconComponent = item.icon
-          const isMeasurement = item.label.includes('mérések') || item.label.includes('Mérések')
-          const isKA = item.label === 'KA érték'
-
-          return (
-            <motion.div
-              key={idx}
-              className={`${styles.infoCard} ${isMeasurement ? styles.measurement : ''}`}
-              variants={itemVariants}
-            >
-              <div className={styles.infoIcon}>
-                <IconComponent size={16} strokeWidth={1.5} />
-              </div>
-              <div className={styles.infoContent}>
-                <span className={styles.infoLabel}>
-                  {isKA ? <>Arany-féle kötöttség (K<sub>A</sub>)</> : item.label}
-                </span>
-                <span className={styles.infoValue}>{item.value}</span>
-              </div>
-            </motion.div>
-          )
-        })}
-      </motion.div>
-
+    <SiteInfoLayout
+      badge="01. helyszín"
+      season={<SeasonSwitch years={siteYears} small />}
+      title={data.name}
+      lead={lead}
+      facts={facts}
+      factsKey={season.year}
+      map={
+        <FieldMapCard
+          site="szentkiraly"
+          title="Szentkirály · két kísérleti tábla"
+          fields={FIELDS}
+          inactive={TOMATO_YEARS.includes(season.year) ? [] : [szentkiralyTomatoField.id]}
+        />
+      }
+    >
       {/* Treatments: kontroll vs ásógép (two), or a shared base plus every treatment (more) */}
       <motion.div
         key={`treat-${season.year}`}
@@ -123,7 +81,7 @@ export default function SzentkirályInfoPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
       >
-        <h3 className={styles.treatmentMainHeader}>MŰVELÉSI LÉPÉSEK</h3>
+        <h3 className={styles.treatmentMainHeader}>MŰVELÉSI LÉPÉSEK · VÖRÖSHAGYMA</h3>
 
         {twoWay ? (
           <>
@@ -146,6 +104,6 @@ export default function SzentkirályInfoPage() {
           </>
         )}
       </motion.div>
-    </div>
+    </SiteInfoLayout>
   )
 }

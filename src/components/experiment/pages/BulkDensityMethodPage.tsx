@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, Cylinder, Expand, Scale, Thermometer } from 
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import SoilPlayButton from '@/components/problem/visualizations/SoilPlayButton'
 import { useLoopActive } from '@/hooks/useLoopActive'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { BULK_DENSITY_EXAMPLE as EX, BULK_DENSITY_IMAGE_DIR as DIR, BULK_DENSITY_STEPS as STEPS } from '@/lib/methodology'
 import BulkDensityDiagram from './BulkDensityDiagram'
@@ -18,7 +19,7 @@ const hu = (v: number, d = 2) => v.toFixed(d).replace('.', ',')
 const STEP_MS = 5000
 const LAST = STEPS.length - 1
 
-/* Art direction: 3:2 crop on desktop, 1:1 on phones and tablets (same framing on every step) */
+/* 3:2 crop everywhere (same framing on every step); on phones the section diagram sits right under it */
 const PHOTOS = STEPS.map((s) => {
   if (!s.image) return null
   const wide = getImageProps({
@@ -29,15 +30,7 @@ const PHOTOS = STEPS.map((s) => {
     sizes: '(min-width: 1025px) 56vw, 100vw',
     loading: 'lazy',
   }).props
-  const square = getImageProps({
-    src: `${DIR}/${s.image}-square.jpg`,
-    alt: s.alt,
-    width: 1080,
-    height: 1080,
-    sizes: '100vw',
-    loading: 'lazy',
-  }).props
-  return { wide, square, full: `${DIR}/${s.image}-wide.jpg` }
+  return { wide, full: `${DIR}/${s.image}-wide.jpg` }
 })
 const LIGHTBOX = PHOTOS.flatMap((p, i) => (p ? [{ src: p.full, alt: STEPS[i].alt }] : []))
 
@@ -47,6 +40,7 @@ export default function BulkDensityMethodPage() {
   const tabs = useRef<(HTMLButtonElement | null)[]>([])
   const reduced = useReducedMotion()
   const visible = useLoopActive(ref)
+  const mobile = useMediaQuery('(max-width: 1024px)')
   const [step, setStep] = useState(0)
   // plays through the steps once while in view; any interaction stops it for good
   const [auto, setAuto] = useState(true)
@@ -88,6 +82,13 @@ export default function BulkDensityMethodPage() {
     if (info.offset.x < -40 || info.velocity.x < -400) go(step + 1)
     else if (info.offset.x > 40 || info.velocity.x > 400) go(step - 1)
   }
+  const swipe = {
+    drag: 'x' as const,
+    dragConstraints: { left: 0, right: 0 },
+    dragElastic: 0.18,
+    dragMomentum: false,
+    onDragEnd,
+  }
 
   const fade = reduced ? { duration: 0 } : { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const }
   const photoIndex = PHOTOS.slice(0, step + 1).filter(Boolean).length - 1
@@ -113,14 +114,7 @@ export default function BulkDensityMethodPage() {
       </motion.div>
 
       <div className={bd.layout}>
-        <motion.div
-            className={bd.frame}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.18}
-            dragMomentum={false}
-            onDragEnd={onDragEnd}
-          >
+        <motion.div className={bd.frame} {...swipe}>
             {PHOTOS.map((p, i) =>
               p ? (
                 <motion.div
@@ -131,11 +125,8 @@ export default function BulkDensityMethodPage() {
                   transition={i === step ? fade : { duration: reduced ? 0 : 0.45 }}
                   aria-hidden={i !== step}
                 >
-                  <picture>
-                    <source media="(max-width: 1024px)" srcSet={p.square.srcSet} sizes={p.square.sizes} />
-                    {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- getImageProps for art direction; alt is in the props */}
-                    <img {...p.wide} className={bd.photo} draggable={false} />
-                  </picture>
+                  {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- getImageProps output; alt is in the props */}
+                  <img {...p.wide} className={bd.photo} draggable={false} />
                 </motion.div>
               ) : null,
             )}
@@ -216,7 +207,9 @@ export default function BulkDensityMethodPage() {
             ))}
         </div>
 
-        {/* the explanation card: the step's text on top, the section diagram under it */}
+        {/* the explanation card: the step's text on top, the section diagram under it.
+            Phones/tablets: the card dissolves (display: contents), the diagram joins the photo in one frame
+            and the text follows under the step rail */}
         <div className={bd.card}>
           {!reduced && (
             <motion.span
@@ -228,7 +221,7 @@ export default function BulkDensityMethodPage() {
               transition={{ duration: 0.9, ease: 'easeOut' }}
             />
           )}
-          {/* phones/tablets: the card sits below the photo, so it gets its own prev/next (desktop: hidden by CSS) */}
+          {/* phones/tablets: prev/next next to the step text (desktop: hidden by CSS) */}
           <div className={bd.cardNav}>
             <button type="button" className={bd.navBtn} onClick={() => go(step - 1)} disabled={step === 0} aria-label="Előző lépés">
               <ChevronLeft size={20} aria-hidden />
@@ -261,9 +254,10 @@ export default function BulkDensityMethodPage() {
             </AnimatePresence>
           </div>
 
-          <div className={bd.diagram}>
+          {/* swipeable on phones too, as part of the photo frame */}
+          <motion.div className={bd.diagram} {...(mobile ? swipe : {})}>
             <BulkDensityDiagram step={step} reduced={reduced} />
-          </div>
+          </motion.div>
         </div>
 
         <p className={bd.foot}>

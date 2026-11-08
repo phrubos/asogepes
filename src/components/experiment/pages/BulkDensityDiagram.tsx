@@ -3,8 +3,8 @@
 import { motion } from 'framer-motion'
 
 /*
- * Side view of the soil for the bulk-density steps. 8 px = 1 cm; the surface is at y = 40,
- * so 10 cm is y = 120 and 15 cm is y = 160. The cylinder (5 × 5 cm) samples the 10–15 cm band.
+ * Side view of the soil for the bulk-density steps. 8 px = 1 cm; the surface is at y = 60,
+ * so 10 cm is y = 140 and 15 cm is y = 180; the view ends just under 20 cm (y = 228). The cylinder (5 × 5 cm) samples the 10–15 cm band.
  */
 const CM = 8
 const SURFACE = 60
@@ -37,7 +37,7 @@ export default function BulkDensityDiagram({ step, reduced }: { step: number; re
 
   return (
     <svg
-      viewBox="0 0 360 236"
+      viewBox="0 0 360 228"
       role="img"
       aria-label={`Metszet: ${LABEL[step]}`}
       style={{ display: 'block', width: '100%', height: 'auto', overflow: 'visible' }}
@@ -62,7 +62,7 @@ export default function BulkDensityDiagram({ step, reduced }: { step: number; re
 
       {/* soil: loose top layer, denser layer from 10 cm */}
       <rect x="0" y={SURFACE} width="300" height={y(10) - SURFACE} fill="url(#bd-loose)" />
-      <rect x="0" y={y(10)} width="300" height={y(22) - y(10)} fill="url(#bd-dense)" />
+      <rect x="0" y={y(10)} width="300" height={228 - y(10)} fill="url(#bd-dense)" />
       <line x1="0" x2="300" y1={SURFACE} y2={SURFACE} stroke="#8a7257" strokeWidth="1.5" />
 
       {/* grass on the surface */}

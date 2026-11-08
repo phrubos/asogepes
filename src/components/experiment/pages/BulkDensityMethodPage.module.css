@@ -391,67 +391,83 @@
   }
 }
 
-/* Phones and tablets: one column, square photo */
+/* Phones and tablets: one column. The photo and the section diagram form one frame (both visible on one
+   screen), then the step rail, then the step text; the card itself dissolves (display: contents) */
 @media (max-width: 1024px) {
   .layout {
     grid-template-columns: 1fr;
     grid-template-areas:
       'photo'
+      'diagram'
       'steps'
-      'card'
+      'text'
       'foot';
     gap: 16px;
   }
 
   .frame {
-    aspect-ratio: 1 / 1;
-    border-radius: 16px;
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    box-shadow: none;
   }
 
+  /* the lab step has a 3:2 frame here too: flow wraps into two short lines, the formula stays big */
   .lab {
-    padding: 24px 20px 52px;
-    gap: 18px;
+    padding: 48px 20px 16px; /* top: room for the Újra button */
+    gap: 12px;
   }
 
   .labFlow {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+
+  .labFlow li {
+    gap: 6px;
   }
 
   .labFlow li + li::before {
-    display: none;
+    width: 12px;
   }
 
   .formula {
-    font-size: 1.375rem;
+    gap: 4px 10px;
+    font-size: 1.25rem;
   }
 
   .formula strong {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
   }
 
   .stepText {
-    --bd-text-h: 162px;
+    --bd-text-h: 0px; /* nothing below it jumps but the note */
   }
 
   .foot {
     margin-top: 0;
   }
 
+  .card {
+    display: contents;
+  }
+
+  .cardFlash {
+    display: none;
+  }
+
+  /* text and arrows share the 'text' cell: arrows top right, next to the eyebrow */
+  .stepText {
+    grid-area: text;
+  }
+
   .cardNav {
-    position: absolute;
-    top: 12px;
-    right: 12px;
+    grid-area: text;
+    justify-self: end;
+    align-self: start;
+    position: relative;
     z-index: 1;
     display: flex;
     gap: 8px;
-  }
-
-  .card {
-    padding: 18px 16px 8px;
-    gap: 12px;
-    border-radius: 16px;
   }
 
   .stepTitle {
@@ -462,13 +478,57 @@
     font-size: 1rem;
   }
 
+  /* the lower half of the photo frame */
   .diagram {
-    padding-top: 10px;
+    grid-area: diagram;
+    margin-top: -16px;
+    padding: 12px 12px 10px;
+    border: 1px solid rgba(212, 168, 75, 0.3);
+    border-top: 1px dashed rgba(212, 168, 75, 0.25);
+    border-radius: 0 0 16px 16px;
+    background:
+      radial-gradient(120% 90% at 0% 0%, rgba(212, 168, 75, 0.08), transparent 60%),
+      #1a1612;
+    touch-action: pan-y;
+    user-select: none;
   }
 }
 
+/* Tablets: photo and diagram side by side in the one frame (stacked they would be ~950px tall) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    grid-template-areas:
+      'photo diagram'
+      'steps steps'
+      'text text'
+      'foot foot';
+    column-gap: 0;
+  }
+
+  .frame {
+    border-bottom: 1px solid rgba(212, 168, 75, 0.3);
+    border-right: 0;
+    border-radius: 16px 0 0 16px;
+  }
+
+  .diagram {
+    margin-top: 0;
+    align-self: stretch;
+    align-items: center;
+    border-top: 1px solid rgba(212, 168, 75, 0.3);
+    border-left: 1px dashed rgba(212, 168, 75, 0.25);
+    border-radius: 0 16px 16px 0;
+  }
+}
+
+/* Phones: the lab step drops the icon row (the step text says it), the formula carries the frame */
 @media (max-width: 600px) {
   .stepName {
     font-size: 0.75rem;
+  }
+
+  .labFlow {
+    display: none;
   }
 }

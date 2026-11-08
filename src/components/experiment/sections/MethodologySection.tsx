@@ -13,7 +13,7 @@ import styles from './sections.module.css'
 const blocks: { id: string; component: JSX.Element; phoneHeight?: number }[] = [
     { id: 'methodology-penetrometer', component: <MethodologyPage /> },
     { id: 'methodology-meresek', component: <MeasuredPropertiesPage />, phoneHeight: 1240 },
-    { id: 'methodology-terfogattomeg', component: <BulkDensityMethodPage />, phoneHeight: 1130 },
+    { id: 'methodology-terfogattomeg', component: <BulkDensityMethodPage />, phoneHeight: 940 },
     { id: 'methodology-talajelet', component: <SoilLifeMethodPage />, phoneHeight: 930 },
 ]
 
