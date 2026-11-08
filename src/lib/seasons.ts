@@ -358,8 +358,9 @@ export const lakitelekSeasons: { seasons: FieldSeason[] } = {
         { num: 'VI.', treatment: 'Lazítás + Szántás + Ásógép', shortName: 'laz+sz+ág', detail: 'lazítás 50 + szántás 30 + ásógép 25 cm', values: [35.0, 22.9, 7.6] },
         { num: 'VII.', treatment: 'Szántás + Ásógép', shortName: 'sz+ág', detail: 'szántás 30 + ásógép 25 cm', values: [32.4, 20.9, 7.1] },
       ],
-      bestResults: [],
-      summary: 'A mélyásógép (I.) indult a legmélyebbről: áprilisban 41 cm. Májusra minden parcella 20–23 cm-re tömörödött, a július végi, tarlón mért értékek 7–10 cm között vannak.',
+      // client decision 2026-11-08: III. gets the star in 2026 (highest value at the July stubble measurement)
+      bestResults: ['III.'],
+      summary: 'A mélyásógép (I.) indult a legmélyebbről: áprilisban 41 cm. Májusra minden parcella 20–23 cm-re tömörödött, a júliusi, tarlón mért értékek 7–10 cm között vannak.',
       flagNote: 'Júliusban, a rozs betakarítása után, tarlón mértünk; ez nem azonos a 2025-ös, tenyészidő végi méréssel.',
     },
   ],

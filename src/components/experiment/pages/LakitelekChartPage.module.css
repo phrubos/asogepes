@@ -490,6 +490,49 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  cursor: default;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.resultDescActive {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* the whole description of a clamped row, on hover / tap / Enter (rendered into <body>) */
+.descTooltip {
+  position: fixed;
+  z-index: 10000; /* above the fullscreen chart (9999) */
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(26, 23, 20, 0.97);
+  border: 1px solid rgba(212, 168, 75, 0.35);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  color: #f3ece2;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  pointer-events: none;
+  animation: descTooltipIn 0.15s ease-out;
+}
+
+.descTooltipAbove {
+  transform: translateY(-100%);
+}
+
+@keyframes descTooltipIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .descTooltip {
+    animation: none;
+  }
+}
+
+.resultDesc:focus-visible {
+  outline: 2px solid var(--color-gold, #d4a84b);
+  outline-offset: 2px;
 }
 
 .resultRight {

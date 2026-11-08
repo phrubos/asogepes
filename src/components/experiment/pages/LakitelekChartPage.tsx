@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Maximize2, X, TrendingUp, Layers, Play } from 'lucide-react'
 import { lakitelekSeasons, LAKITELEK_YEARS, formatCm } from '@/lib/seasons'
+import { useDisclosureTrigger } from '@/hooks/useDisclosureTrigger'
 import { useSeason } from '../season/SeasonContext'
 import SeasonSwitch from '../season/SeasonSwitch'
 import { monthName } from '@/lib/months'
@@ -13,16 +14,70 @@ import styles from './LakitelekChartPage.module.css'
 
 const FieldChart3DCanvas = dynamic(() => import('../FieldChart3DCanvas'), { ssr: false })
 
+/**
+ * Parcel description in the results table: clamped to two lines on desktop; when it is cut off,
+ * the whole text appears in a tooltip on hover, tap or Enter (phones show it in full, no tooltip).
+ * The tooltip goes to <body> with fixed coordinates, so the scrolling side panel cannot clip it.
+ */
+function ResultDesc({ id, text, isOpen, onOpen, onClose }: { id: string; text?: string; isOpen: boolean; onOpen: () => void; onClose: () => void }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const [pos, setPos] = useState<{ left: number; top: number; width: number; above: boolean } | null>(null)
+  const { hover, trigger } = useDisclosureTrigger({ isOpen, onOpen, onClose })
+
+  useEffect(() => {
+    const el = ref.current
+    if (!isOpen || !el || el.scrollHeight <= el.clientHeight + 1) { setPos(null); return }
+    const r = el.getBoundingClientRect()
+    const width = Math.min(320, Math.max(r.width + 24, 240), window.innerWidth - 32)
+    const left = Math.max(16, Math.min(r.left - 12, window.innerWidth - width - 16))
+    const above = r.bottom + 120 > window.innerHeight
+    setPos({ left, top: above ? r.top - 8 : r.bottom + 8, width, above })
+    // the panel or the page scrolled: the fixed tooltip would drift away from its row
+    const close = () => onClose()
+    window.addEventListener('scroll', close, { capture: true, passive: true, once: true })
+    return () => window.removeEventListener('scroll', close, { capture: true })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen])
+
+  return (
+    <>
+      <span
+        ref={ref}
+        {...hover}
+        {...trigger}
+        aria-describedby={pos ? id : undefined}
+        className={`${styles.resultDesc} ${isOpen ? styles.resultDescActive : ''}`}
+      >
+        {text}
+      </span>
+      {pos && createPortal(
+        <span
+          id={id}
+          role="tooltip"
+          className={`${styles.descTooltip} ${pos.above ? styles.descTooltipAbove : ''}`}
+          style={{ left: pos.left, top: pos.top, width: pos.width }}
+        >
+          {text}
+        </span>,
+        document.body,
+      )}
+    </>
+  )
+}
+
 export default function LakitelekChartPage() {
   const { year } = useSeason()
   const season = lakitelekSeasons.seasons.find((s) => s.year === year) ?? lakitelekSeasons.seasons[lakitelekSeasons.seasons.length - 1]
   const parcels = season.parcels
-  const conclusions = { summary: season.summary, bestResults: season.bestResults }
+  // memoised: a new object on every render (e.g. a tooltip opening) rebuilt the 3D scene and restarted its intro
+  const conclusions = useMemo(() => ({ summary: season.summary, bestResults: season.bestResults }), [season])
   // 2025 has the researchers' rating per parcel; later seasons show the measured values
   const rated = parcels.every((p) => p.rating !== undefined)
   const [isChartFullscreen, setIsChartFullscreen] = useState(false)
   const [isChartLoaded, setIsChartLoaded] = useState(false)
   const [showResults, setShowResults] = useState(false)
+  // the results table lives in an inline component, so the open description is kept here
+  const [openDesc, setOpenDesc] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const isBestResult = (num: string) => conclusions?.bestResults.includes(num)
@@ -113,7 +168,13 @@ export default function LakitelekChartPage() {
                     {rated ? (
                       <>
                         <span className={styles.resultTreatment}>{parcel.treatment}</span>
-                        <span className={styles.resultDesc}>{parcel.description}</span>
+                        <ResultDesc
+                          id={`lk-desc-${parcel.num}`}
+                          text={parcel.description}
+                          isOpen={openDesc === parcel.num}
+                          onOpen={() => setOpenDesc(parcel.num)}
+                          onClose={() => setOpenDesc((o) => (o === parcel.num ? null : o))}
+                        />
                       </>
                     ) : (
                       <span className={`${styles.resultTreatment} ${styles.resultTreatmentWrap}`}>{parcel.detail}</span>
@@ -245,7 +306,8 @@ export default function LakitelekChartPage() {
             <div className={styles.sidePanel}>
               {/* Keyed wrapper: the values fade in when the season changes, not on every re-render */}
               <div key={season.year} className={styles.seasonFade}>
-                <ResultsContent />
+                {/* called, not <ResultsContent />: an inline component type remounts on every render and drops focus */}
+                {ResultsContent()}
               </div>
               {/* Conclusion hidden in embedded view per user request */}
             </div>
@@ -339,7 +401,8 @@ export default function LakitelekChartPage() {
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   >
                     <div key={season.year} className={styles.seasonFade}>
-                      <ResultsContent />
+                      {/* called, not <ResultsContent />: an inline component type remounts on every render and drops focus */}
+                      {ResultsContent()}
                     </div>
                   </motion.div>
                 )}

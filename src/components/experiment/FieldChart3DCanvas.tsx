@@ -296,6 +296,9 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
     const [sel, setSel] = useState<Selection | null>(null)
     const selectRef = useRef<(s: Selection | null) => void>(() => {})
 
+    // the scene depends on which parcels are starred, not on the identity of the conclusions object
+    const bestKey = conclusions?.bestResults.join('|') ?? ''
+
     const valuesOf = (p: ParcelData) => (p.values ?? [p.may ?? 0, p.jun ?? 0, p.aug ?? 0]).slice(0, 3)
 
     useEffect(() => {
@@ -647,7 +650,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [parcels, conclusions, isFullscreen, monthLabels, showMachines])
+    }, [parcels, bestKey, isFullscreen, monthLabels, showMachines])
 
     // Prevent page scroll when the wheel is used over the 3D canvas
     useEffect(() => {
