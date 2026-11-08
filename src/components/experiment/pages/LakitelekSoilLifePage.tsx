@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
 import { lakitelekSoilLife as site } from '@/lib/seasons'
+import { monthLower, monthName } from '@/lib/months'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import Story from '../story/Story'
 import Callout from '../story/Callout'
@@ -38,7 +39,7 @@ const sample = Math.max(0, P.findIndex((p) => p.name === 'Ásógép'))
 const fbAvgs = site.samples.map((_, j) => P.reduce((a, p) => a + p.fb[j], 0) / P.length)
 const fbFell = P.filter((p) => p.fb[n - 1] < p.fb[n - 2]).length
 const fbEarly = fbAvgs.slice(0, n - 1)
-const lowerDate = (j: number) => `${site.samples[j].date.month} ${site.samples[j].date.third ?? ''}`.trim().toLowerCase()
+const lowerDate = (j: number) => monthLower(site.samples[j].date)
 
 const CHAPTERS = [
   {
@@ -95,11 +96,13 @@ export default function LakitelekSoilLifePage() {
   // Phones get a narrower drawing so the type stays at least 12px
   const W = phone ? 430 : 680
   const FS = phone ? 17 : 15
+  // month ticks: full names ("Szeptember") need a size less on the narrow phone chart
+  const TFS = phone ? FS - 2 : FS - 1
   const PH = phone ? 300 : 320
   const yTop = FS * 3.2
   const yBot = yTop + PH
   const tickY = yBot + FS + 10
-  const H = tickY + (FS + 3) * 2 + 8
+  const H = tickY + (FS + 3) + 8 // month, then the optional 'tarló' flag
   const X0 = phone ? 56 : 64
   const X1 = W - (phone ? 30 : 44)
   const t0 = Date.parse('2025-03-01')
@@ -295,10 +298,9 @@ export default function LakitelekSoilLifePage() {
       {site.samples.map((s, j) => (
         <g key={s.iso}>
           <line x1={xs[j]} x2={xs[j]} y1={yBot + 2} y2={yBot + 9} className={own.tickMark} />
-          <text x={xs[j]} y={tickY} fontSize={FS - 1} textAnchor="middle" className={own.tickDate}>{s.date.month}</text>
-          <text x={xs[j]} y={tickY + FS + 3} fontSize={FS - 1} textAnchor="middle" className={own.tickThird}>{s.date.third}</text>
+          <text x={xs[j]} y={tickY} fontSize={TFS} textAnchor="middle" className={own.tickDate}>{monthName(s.date)}</text>
           {s.flag && (
-            <text x={xs[j]} y={tickY + (FS + 3) * 2} fontSize={FS - 1} textAnchor="middle" className={own.tickFlag}>{s.flag}</text>
+            <text x={xs[j]} y={tickY + FS + 3} fontSize={FS - 1} textAnchor="middle" className={own.tickFlag}>{s.flag}</text>
           )}
         </g>
       ))}

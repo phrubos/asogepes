@@ -6,7 +6,7 @@ import hl from './SoilHighlight.module.css'
 
 /*
  * Heavy-cultivated soil profile, seen from the front: the three U shapes are three tine tracks side by side.
- * On request (small play button) the cultivator comes towards us through the section plane once (ticket 001):
+ * Once by itself when it scrolls into view, then on request (small play button), the cultivator comes towards us through the section plane once (ticket 001):
  * the compact soil in the tracks breaks and the crumbs rise, the ridges between them stay, and the yellow
  * edge of the tracks is drawn in at the end. The finished picture is the server render and the reduced-motion view.
  * Played by SoilLayers (clods move in groups).

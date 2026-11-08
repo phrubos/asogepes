@@ -1,7 +1,7 @@
 'use client'
 
 /*
- * Plays a soil-profile scene on request (ticket 001). The finished picture is one crisp svg (also the server render
+ * Plays a soil-profile scene once by itself when it first scrolls into view, then again by the button (ticket 001). The finished picture is one crisp svg (also the server render
  * and the reduced-motion view). While playing, the moving clods move in small groups, each group its own small svg
  * layer that the GPU moves and fades: the ~1000-path picture is not repainted every frame, which made the
  * per-clod version stutter on phones. The machine, the yellow lines and the depth scale sit in an svg on top.
@@ -121,7 +121,7 @@ export default function SoilLayers({ scene: makeScene }: { scene: () => Scene })
         return (t: number) => { overlay(t); layers(t) }
     }, [scene, cells])
 
-    const { state, toggle, showButton } = useSoilPlayback(stageRef, scene.duration, setup)
+    const { state, toggle, showButton } = useSoilPlayback(stageRef, scene.duration, setup, true)
 
     return (
         <div ref={stageRef} className={`${ui.frame} ${styles.stage}`}>

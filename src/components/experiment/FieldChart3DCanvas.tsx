@@ -34,10 +34,11 @@ interface FieldChart3DCanvasProps {
 
 /*
  * "Rizotron" view (ticket 004): the field is a cut-out soil block with a glass front. The surface
- * carries plants and parcel signs, the cylinders hang from the surface into the soil, and their
+ * carries plants, the parcel signs stand under the block, the cylinders hang from the surface into the soil, and their
  * colour says where the loose layer ends (<= 10 cm red, 10-25 cm yellow, > 25 cm green). A fixed,
  * schematic penetrometer at the left edge explains what the length means: the depth where the
- * probe reaches 20 bar. It is pushed in once when the chart opens.
+ * probe meets the compact layer. It is pushed in once (tip to 41 cm, needle to 200 psi) when the
+ * chart opens.
  */
 
 const DEFAULT_MONTHS = ['Május', 'Június', 'Augusztus']
@@ -60,8 +61,9 @@ const MONTH_Z = [1.1, -0.6, -2.3]
 const Z_FRONT = 2.2
 const Z_BACK = -3.4
 const CYL_R = 0.4
-const PEN_CM = 30      // where the schematic probe rests
-const GAUGE_MAX = 20   // bar
+const PEN_CM = 41      // where the schematic probe tip rests
+const GAUGE_PSI = 1500 // full scale of the Imants dial
+const NEEDLE_PSI = 200 // where the needle stops when the probe is in
 const PSI_PER_BAR = 14.5038
 
 interface Selection { p: number; m: number }
@@ -148,57 +150,92 @@ function soilTexture(w: number, h: number, vertical: boolean) {
     return t
 }
 
-/** Dial after the Imants penetrometer gauge: chrome bezel, colour band, psi outside, bar inside */
+/**
+ * Dial after the Imants penetrometer gauge (photo from the user): 0-1500 psi outside with dotted
+ * major ticks, red 0-100 bar ring inside, green/yellow/red band on the rim, "DO NOT EXCEED" at 100 bar.
+ * Drawn in a 512 px space onto a 1024 px canvas so the small numbers stay sharp.
+ */
 function makeGauge(R: number) {
-    const N = 512
+    const N = 512, K = 2
     const c = document.createElement('canvas')
-    c.width = N
-    c.height = N
+    c.width = N * K
+    c.height = N * K
     const tex = canvasTexture(c)
     tex.anisotropy = 8
     const face = new THREE.Mesh(new THREE.CircleGeometry(R * 0.93, 64), new THREE.MeshBasicMaterial({ map: tex }))
-    const draw = (bar: number) => {
+    const RED = '#c4262e'
+    const draw = (psi: number) => {
         const x = c.getContext('2d')!
+        x.setTransform(K, 0, 0, K, 0, 0)
         const cx = N / 2, cy = N / 2
         const a0 = Math.PI * 0.75, sweep = Math.PI * 1.5
-        const ang = (b: number) => a0 + sweep * (b / GAUGE_MAX)
+        const ang = (p: number) => a0 + sweep * (p / GAUGE_PSI)
         const at = (a: number, r: number): [number, number] => [cx + Math.cos(a) * r, cy + Math.sin(a) * r]
+        const line = (a: number, r1: number, r2: number, w: number) => {
+            const [x1, y1] = at(a, r1), [x2, y2] = at(a, r2)
+            x.lineWidth = w; x.beginPath(); x.moveTo(x1, y1); x.lineTo(x2, y2); x.stroke()
+        }
         x.clearRect(0, 0, N, N)
-        x.beginPath(); x.arc(cx, cy, N / 2, 0, Math.PI * 2); x.fillStyle = '#f7f5f0'; x.fill()
-        x.lineWidth = 20
-        ;([[0, 14, '#3f8f3a'], [14, 18, '#e3c12b'], [18, 20, '#c62828']] as const).forEach(([a, b, col]) => {
-            x.strokeStyle = col; x.beginPath(); x.arc(cx, cy, 232, ang(a), ang(b)); x.stroke()
-        })
-        const psiMax = GAUGE_MAX * PSI_PER_BAR
+        x.beginPath(); x.arc(cx, cy, N / 2, 0, Math.PI * 2); x.fillStyle = '#fbfaf7'; x.fill()
+
+        // rim band: wide green and yellow on the low end, a thinner red arc round to 1500
+        x.lineCap = 'butt'
+        x.lineWidth = 22
+        x.strokeStyle = '#2f8a3a'; x.beginPath(); x.arc(cx, cy, 236, ang(-60), ang(200)); x.stroke()
+        x.strokeStyle = '#f0cf1c'; x.beginPath(); x.arc(cx, cy, 236, ang(200), ang(300)); x.stroke()
+        x.lineWidth = 10
+        x.strokeStyle = RED; x.beginPath(); x.arc(cx, cy, 242, ang(300), ang(1520)); x.stroke()
+        { const [px, py] = at(ang(270), 236); x.beginPath(); x.arc(px, py, 6, 0, Math.PI * 2); x.fillStyle = '#111'; x.fill() }
+
+        // psi: ticks every 10, dotted major ticks every 100, numbers outside
         x.strokeStyle = '#111'; x.fillStyle = '#111'; x.textAlign = 'center'; x.textBaseline = 'middle'
-        for (let p = 0; p <= psiMax; p += 5) {
-            const a = ang(p / PSI_PER_BAR), major = p % 50 === 0, mid = p % 10 === 0
-            const [x1, y1] = at(a, 214), [x2, y2] = at(a, major ? 190 : mid ? 199 : 205)
-            x.lineWidth = major ? 4 : mid ? 2.2 : 1.4
-            x.beginPath(); x.moveTo(x1, y1); x.lineTo(x2, y2); x.stroke()
-            if (major) { x.font = '500 24px Inter, Arial, sans-serif'; const [tx, ty] = at(a, 166); x.fillText(String(p), tx, ty) }
+        x.lineWidth = 1.6; x.beginPath(); x.arc(cx, cy, 166, ang(0), ang(GAUGE_PSI)); x.stroke()
+        for (let p = 0; p <= GAUGE_PSI; p += 10) {
+            const a = ang(p), major = p % 100 === 0, mid = p % 50 === 0
+            line(a, 166, major ? 184 : mid ? 179 : 175, major ? 2.6 : mid ? 1.8 : 1.2)
+            if (major) {
+                const [dx, dy] = at(a, 185); x.beginPath(); x.arc(dx, dy, 3, 0, Math.PI * 2); x.fill()
+                x.font = '500 19px Inter, Arial, sans-serif'
+                const [tx, ty] = at(a, 210); x.fillText(String(p), tx, ty)
+            }
         }
-        x.strokeStyle = '#b3261e'; x.fillStyle = '#b3261e'
-        x.lineWidth = 3; x.beginPath(); x.arc(cx, cy, 140, ang(0), ang(GAUGE_MAX)); x.stroke()
-        for (let b = 0; b <= GAUGE_MAX; b++) {
-            const a = ang(b), major = b % 5 === 0
-            const [x1, y1] = at(a, 140), [x2, y2] = at(a, major ? 120 : 129)
-            x.lineWidth = major ? 4 : 2
-            x.beginPath(); x.moveTo(x1, y1); x.lineTo(x2, y2); x.stroke()
-            if (major) { x.font = '600 28px Inter, Arial, sans-serif'; const [tx, ty] = at(a, 96); x.fillText(String(b), tx, ty) }
+
+        // bar: red ring inside, ticks every bar, numbers every 10
+        x.strokeStyle = RED; x.fillStyle = RED
+        x.lineWidth = 2.2; x.beginPath(); x.arc(cx, cy, 156, ang(0), ang(100 * PSI_PER_BAR)); x.stroke()
+        for (let b = 0; b <= 100; b++) {
+            const a = ang(b * PSI_PER_BAR), major = b % 10 === 0, mid = b % 5 === 0
+            line(a, 156, major ? 138 : mid ? 143 : 148, major ? 2.4 : 1.2)
+            if (major) { x.font = '500 21px Inter, Arial, sans-serif'; const [tx, ty] = at(a, 118); x.fillText(String(b), tx, ty) }
         }
-        x.font = '500 30px Inter, Arial, sans-serif'; x.fillStyle = '#111'; x.fillText('psi', cx, cy - 72)
-        x.fillStyle = '#b3261e'; x.fillText('bar', cx, cy - 40)
-        x.fillStyle = '#1f6fb2'; x.font = '700 50px Inter, Arial, sans-serif'; x.fillText('imants', cx, cy + 116)
-        x.fillStyle = '#111'; x.font = '700 19px Inter, Arial, sans-serif'; x.fillText('PENETROMETER', cx, cy + 150)
-        x.font = '700 15px Inter, Arial, sans-serif'; x.fillText('WWW.IMANTS.COM', cx, cy + 178)
-        const a = ang(Math.max(0, Math.min(bar, GAUGE_MAX)))
+
+        x.font = '500 32px Inter, Arial, sans-serif'; x.fillStyle = '#111'; x.fillText('psi', cx, cy - 84)
+        x.fillStyle = RED; x.fillText('bar', cx, cy - 54)
+        x.fillStyle = '#111'; x.font = '500 16px Inter, Arial, sans-serif'
+        x.fillText('DO NOT', cx + 18, cy + 50); x.fillText('EXCEED', cx + 18, cy + 69)
+        { const [ex, ey] = at(ang(100 * PSI_PER_BAR), 154)
+          x.strokeStyle = RED; x.lineWidth = 2.4; x.beginPath(); x.moveTo(cx - 20, cy + 82); x.lineTo(cx + 92, cy + 82); x.lineTo(ex, ey); x.stroke() }
+        x.fillStyle = '#1f6fb2'; x.font = '700 46px Inter, Arial, sans-serif'; x.fillText('imants', cx, cy + 168)
+        x.fillStyle = '#111'; x.font = '700 17px Inter, Arial, sans-serif'; x.fillText('PENETROMETER', cx, cy + 197)
+        x.font = '700 16px Inter, Arial, sans-serif'; x.fillText('WWW.IMANTS.COM', cx, cy + 224)
+
+        // chrome screws and the zero stop pin
+        const screw = (sx: number, sy: number, r: number) => {
+            const g = x.createRadialGradient(sx - r * 0.3, sy - r * 0.3, 1, sx, sy, r)
+            g.addColorStop(0, '#ffffff'); g.addColorStop(0.6, '#b9b9b9'); g.addColorStop(1, '#6f6f6f')
+            x.beginPath(); x.arc(sx, sy, r, 0, Math.PI * 2); x.fillStyle = g; x.fill()
+        }
+        screw(cx - 38, cy + 128, 10); screw(cx + 38, cy + 128, 10)
+        { const [sx, sy] = at(ang(-25), 160); screw(sx, sy, 7) }
+
+        // needle: long thin tip, broad rounded tail
+        const a = ang(Math.max(0, Math.min(psi, GAUGE_PSI)))
         x.save(); x.translate(cx, cy); x.rotate(a)
         x.fillStyle = '#111'
-        x.beginPath(); x.moveTo(205, 0); x.lineTo(0, -6); x.lineTo(-50, -14); x.quadraticCurveTo(-78, 0, -50, 14); x.lineTo(0, 6); x.closePath(); x.fill()
+        x.beginPath(); x.moveTo(176, 0); x.lineTo(0, -5); x.lineTo(-56, -17); x.quadraticCurveTo(-92, 0, -56, 17); x.lineTo(0, 5); x.closePath(); x.fill()
         x.restore()
-        x.beginPath(); x.arc(cx, cy, 18, 0, Math.PI * 2); x.fillStyle = '#111'; x.fill()
-        x.beginPath(); x.arc(cx - 4, cy - 4, 5, 0, Math.PI * 2); x.fillStyle = '#555'; x.fill()
+        x.beginPath(); x.arc(cx, cy, 20, 0, Math.PI * 2); x.fillStyle = '#111'; x.fill()
+        x.beginPath(); x.arc(cx - 5, cy - 5, 6, 0, Math.PI * 2); x.fillStyle = '#4a4a4a'; x.fill()
         tex.needsUpdate = true
     }
     draw(0)
@@ -439,25 +476,23 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
                 ridge.position.set(x + SPACING / 2, 0.03, zMid)
                 scene.add(ridge)
             }
-            // parcel sign on a stake at the back
-            const sz = Z_BACK + 0.25
-            const stake = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.3, 0.08), new THREE.MeshStandardMaterial({ color: 0x8a6a45 }))
-            stake.position.set(x, 0.65, sz)
-            scene.add(stake)
             const words = (parcel.treatment + machineOf(parcel.num, parcel.treatment)).split(' + ')
             const lines = [
                 parcel.num + (best ? ' ★' : ''),
                 words.length > 2 ? words.slice(0, 2).join(' + ') + ' +' : words.join(' + '),
                 ...(words.length > 2 ? [words.slice(2).join(' + ')] : []),
             ]
+            // parcel sign under the soil block, read like the label of a bar chart's axis: the surface
+            // and the cylinders stay free (client chose this over stakes at the back, 2026-11-08)
+            const signW = 300, signHpx = words.length > 2 ? 150 : 120, signScale = 3.4
             const sign = makeLabel(lines, {
-                w: 300, h: words.length > 2 ? 150 : 120, size: 40, sub: 21, scale: 3.4,
+                w: signW, h: signHpx, size: 40, sub: 21, scale: signScale,
                 color: best ? '#d4a84b' : '#f3ece2',
                 border: best ? 'rgba(212,168,75,0.7)' : 'rgba(255,255,255,0.2)',
-                bg: 'rgba(30,25,20,0.95)',
+                bg: 'rgba(30,25,20,0.8)',
                 font: 'Fraunces, Georgia, serif',
             })
-            sign.position.set(x, 1.3 + (words.length > 2 ? 0.85 : 0.68), sz)
+            sign.position.set(x, yB - 0.35 - (signScale * signHpx) / signW / 2, Z_FRONT)
             scene.add(sign)
 
             valuesOf(parcel).forEach((cm, m) => {
@@ -499,7 +534,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
         const pen = makePenetrometer()
         const penRestY = -PEN_CM * S
         pen.group.position.set(xL + 0.85, reduced ? penRestY : 0, Z_FRONT - 0.3)
-        pen.draw(reduced ? GAUGE_MAX : 0)
+        pen.draw(reduced ? NEEDLE_PSI : 0)
         scene.add(pen.group)
         let intro: { t0: number; dur: number } | null = reduced ? null : { t0: performance.now() + 600, dur: 2200 }
 
@@ -572,7 +607,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
                 const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
                 pen.group.position.y = penRestY * ease
                 // resistance stays low in the loose layer and climbs steeply at the end
-                pen.draw(GAUGE_MAX * Math.pow(ease, 3))
+                pen.draw(NEEDLE_PSI * Math.pow(ease, 3))
                 if (t >= 1) intro = null
             }
             controls.update()

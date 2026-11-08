@@ -1,25 +1,10 @@
 import type { MeasureDate } from '@/lib/seasons'
+import { monthIn, monthLower, monthName } from '@/lib/months'
 
-const MONTHS: Record<string, string> = {
-  'JAN.': 'január',
-  'FEBR.': 'február',
-  'MÁRC.': 'március',
-  'ÁPR.': 'április',
-  'MÁJ.': 'május',
-  'JÚN.': 'június',
-  'JÚL.': 'július',
-  'AUG.': 'augusztus',
-  'SZEPT.': 'szeptember',
-  'OKT.': 'október',
-  'NOV.': 'november',
-  'DEC.': 'december',
-}
-const IN_THIRD: Record<string, string> = { eleje: 'elején', közepe: 'közepén', vége: 'végén' }
-
-/** Short, as on the axes: "JÚN. vége" */
-export const short = (d: MeasureDate) => `${d.month} ${d.third ?? ''}`.trim()
-/** In a sentence: "június vége" */
-export const named = (d: MeasureDate) => `${MONTHS[d.month] ?? d.month} ${d.third ?? ''}`.trim()
-/** In a sentence, "when": "június végén" */
-export const namedIn = (d: MeasureDate) => `${MONTHS[d.month] ?? d.month} ${d.third ? IN_THIRD[d.third] ?? d.third : ''}`.trim()
+/** Short, as on the axes: "Június" */
+export const short = (d: MeasureDate) => monthName(d)
+/** In a sentence: "június" */
+export const named = (d: MeasureDate) => monthLower(d)
+/** In a sentence, "when": "júniusban" */
+export const namedIn = (d: MeasureDate) => monthIn(d)
 export const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)

@@ -20,7 +20,7 @@ export interface TimelineSeries {
   short: string
   role: TreatmentRole
   deep?: boolean
-  /** Marker under the value, e.g. 'n=1' */
+  /** Marker under the value, e.g. '1 mérés' */
   flag?: string
   values: number[]
 }
@@ -192,7 +192,7 @@ export default function Timeline({
                 } : {}}
                 transition={{ duration: 0.2 }}
               >
-                {dates ? <DateLabel date={point} stack={compact} /> : point.month}
+                {dates ? <DateLabel date={point} /> : point.month}
               </motion.div>
 
               {/* Bars: kontroll first (left), then ásógép */}

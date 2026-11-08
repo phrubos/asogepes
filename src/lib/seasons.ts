@@ -25,7 +25,7 @@ export interface Treatment {
   role: TreatmentRole
   /** + mélyásógép: drawn with stripes */
   deep?: boolean
-  /** Small marker shown next to the value, e.g. 'n=1' */
+  /** Small marker shown next to the value, e.g. '1 mérés' */
   flag?: string
   /** Tillage steps; the ones with ásógép are emphasised */
   steps: string[]
@@ -142,7 +142,7 @@ export const szentkiralySeasons: SiteSeasons = {
       treatments: [
         { id: 'K', label: 'Kontroll', short: 'Kontroll', role: 'control', steps: ['Kultivátor'] },
         { id: 'A', label: 'Ásógép', short: 'Ásógép', role: 'spade', steps: ['Ásógép'] },
-        { id: 'Km', label: 'Kontroll + mélyásógép', short: 'K + mély', role: 'control', deep: true, flag: 'n=1', steps: ['Kultivátor', 'Mélyásógép'] },
+        { id: 'Km', label: 'Kontroll + mélyásógép', short: 'K + mély', role: 'control', deep: true, flag: '1 mérés', steps: ['Kultivátor', 'Mélyásógép'] },
         { id: 'Am', label: 'Ásógép + mélyásógép', short: 'Á + mély', role: 'spade', deep: true, steps: ['Ásógép', 'Mélyásógép'] },
       ],
       looseLayer: {
@@ -160,9 +160,9 @@ export const szentkiralySeasons: SiteSeasons = {
           Am: [43.0, 44.3, 43.7, 26.0],
         },
         cards: [
-          { treatmentId: 'K', title: 'Kontroll (februári kultivátor)', text: 'Tavasszal 28–37 cm-ig laza, június végére már 7 cm-től tömör.' },
-          { treatmentId: 'A', title: 'Ásógép (február)', text: 'Június végén is 17,6 cm-ig laza: két és félszer mélyebben, mint a kontroll.' },
-          { treatmentId: 'Am', title: '+ Mélyásógép', text: 'A mélyásógép tartott a legtovább: június végén 26–32 cm. A kontroll + mélyásógép egyetlen mérési pont.' },
+          { treatmentId: 'K', title: 'Kontroll (februári kultivátor)', text: 'Tavasszal 28–37 cm-ig laza, júniusra már 7 cm-től tömör.' },
+          { treatmentId: 'A', title: 'Ásógép (február)', text: 'Júniusban is 17,6 cm-ig laza: két és félszer mélyebben, mint a kontroll.' },
+          { treatmentId: 'Am', title: '+ Mélyásógép', text: 'A mélyásógép tartott a legtovább: júniusban 26–32 cm. A kontroll + mélyásógép egyetlen mérési pont.' },
         ],
         summary: 'Mindkét évben az ásógépes parcella maradt mélyebben laza a tenyészidő végén.',
       },
@@ -190,7 +190,7 @@ export const szentkiralySeasons: SiteSeasons = {
           },
         ],
         explanation:
-          'Tavasszal az ásógépezett talaj melegszik gyorsabban: április közepén [[+1,6 °C]] 3 cm-en. A június végi, 30 °C-os hőségben viszont [[4 °C-kal hűvösebb]] maradt, és nedvesebb is volt (10 cm-en 30–40 V/V% a kontroll 22–28%-ával szemben).',
+          'Tavasszal az ásógépezett talaj melegszik gyorsabban: áprilisban [[+1,6 °C]] 3 cm-en. A júniusi, 30 °C-os hőségben viszont [[4 °C-kal hűvösebb]] maradt, és nedvesebb is volt (10 cm-en 30–40 V/V% a kontroll 22–28%-ával szemben).',
       },
     },
   ],
@@ -253,10 +253,10 @@ export const szentkiralyTomato: { looseLayerMax: number; seasons: TomatoSeason[]
         A: [33.4, 36.7, 35.2],
       },
       cards: [
-        { treatmentId: 'K', title: 'Kombinátor (április)', text: 'Áprilisban 37,8 cm-ig laza, június elejére 22,7 cm-re tömörödött.' },
-        { treatmentId: 'A', title: 'Ásógép (április)', text: 'Június elején is 36,7 cm-ig laza: 14 cm-rel mélyebben, mint a kombinátoros parcella.' },
+        { treatmentId: 'K', title: 'Kombinátor (április)', text: 'Áprilisban 37,8 cm-ig laza, júniusra 22,7 cm-re tömörödött.' },
+        { treatmentId: 'A', title: 'Ásógép (április)', text: 'Júniusban is 36,7 cm-ig laza: 14 cm-rel mélyebben, mint a kombinátoros parcella.' },
       ],
-      summary: 'Áprilisban még a kombinátoros parcella volt lazább; júniusra megfordult, és július végén is az ásógépes maradt lazább.',
+      summary: 'Áprilisban még a kombinátoros parcella volt lazább; júniusra megfordult, és júliusban is az ásógépes maradt lazább.',
       facts: [
         { label: 'Hajtáshossz', when: { month: 'JÚL.', third: 'eleje' }, control: '65', spade: '90', unit: 'cm' },
         { label: 'Térfogattömeg', when: { month: 'JÚL.', third: 'vége' }, control: '1,53', spade: '1,41', unit: 'g/cm³', note: 'kisebb = lazább talaj' },
@@ -348,7 +348,7 @@ export const lakitelekSeasons: { seasons: FieldSeason[] } = {
         { month: 'JÚL.', third: 'vége' },
       ],
       dateFlags: [undefined, undefined, 'tarló'],
-      chartLabels: ['Ápr. eleje', 'Máj. közepe', 'Júl. vége'],
+      chartLabels: ['Április', 'Május', 'Július'],
       parcels: [
         { num: 'I.', treatment: 'Mélyásógép', shortName: 'mély.ág', detail: 'mélyásógép 45 cm', values: [41.0, 22.7, 7.6] },
         { num: 'II.', treatment: 'Lazítás + Ásógép', shortName: 'laz+ág', detail: 'lazítás 50 + ásógép 30 cm', values: [27.6, 20.6, 8.1] },
@@ -360,7 +360,7 @@ export const lakitelekSeasons: { seasons: FieldSeason[] } = {
       ],
       bestResults: [],
       summary: 'A mélyásógép (I.) indult a legmélyebbről: áprilisban 41 cm. Májusra minden parcella 20–23 cm-re tömörödött, a július végi, tarlón mért értékek 7–10 cm között vannak.',
-      flagNote: 'Július végén a rozs betakarítása után, tarlón mértünk; ez nem azonos a 2025-ös, tenyészidő végi méréssel.',
+      flagNote: 'Júliusban, a rozs betakarítása után, tarlón mértünk; ez nem azonos a 2025-ös, tenyészidő végi méréssel.',
     },
   ],
 }

@@ -6,7 +6,7 @@ import styles from './SeasonOnly.module.css'
 
 /**
  * For a site measured in fewer seasons than the page offers: shows which season the block is
- * from (same look as the ÉVAD switch, but not a control), and says so when the page-wide
+ * from (same look as the ÉV switch, but not a control), and says so when the page-wide
  * season has no data here, instead of showing an empty chart.
  */
 /** Hungarian inessive suffix for a year: 2026-ban, 2027-ben, 2030-ban. */
@@ -33,7 +33,7 @@ export default function SeasonOnly({ years, missingNote }: { years: number[]; mi
   const missing = !years.includes(year)
   return (
     <div className={styles.only}>
-      <span className={`${switchStyles.label} ${styles.label}`}>Évad</span>
+      <span className={`${switchStyles.label} ${styles.label}`}>Év</span>
       {years.map((y) => (
         <span key={y} className={styles.year}>{y}</span>
       ))}

@@ -5,7 +5,7 @@ import SoilLayers, { DepthScale, GONE, REST, type Scene } from './SoilLayers'
 import hl from './SoilHighlight.module.css'
 
 /*
- * Spaded soil profile. On request (small play button) an Imants spading machine passes once (ticket 001):
+ * Spaded soil profile. Once by itself when it scrolls into view, then on request (small play button), an Imants spading machine passes (ticket 001):
  * drawn after the OperationPrinciple video (public/videos/Andornak.mp4), mirrored because it travels to the
  * right here, the spade rotor in front and the driven tine roller behind it. Every pass ends on the static
  * picture, which is also the server render and the reduced-motion view. Played by SoilLayers (clods move in groups).

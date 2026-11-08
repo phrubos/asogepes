@@ -119,8 +119,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 100px;
   margin-bottom: var(--space-lg);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
   transition: border-color 0.3s ease, color 0.3s ease;
 }
 
@@ -260,7 +259,7 @@
   padding-bottom: 32px;
 }
 
-/* Small caveat marker (e.g. n=1) under a value; out of flow so the bar stays level with its
+/* Small caveat marker (e.g. 1 mérés) under a value; out of flow so the bar stays level with its
    neighbours */
 .flag {
   position: absolute;

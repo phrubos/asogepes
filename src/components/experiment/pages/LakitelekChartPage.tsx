@@ -8,6 +8,7 @@ import { MapPin, Maximize2, X, TrendingUp, Layers, Play } from 'lucide-react'
 import { lakitelekSeasons, LAKITELEK_YEARS, formatCm } from '@/lib/seasons'
 import { useSeason } from '../season/SeasonContext'
 import SeasonSwitch from '../season/SeasonSwitch'
+import { monthName } from '@/lib/months'
 import styles from './LakitelekChartPage.module.css'
 
 const FieldChart3DCanvas = dynamic(() => import('../FieldChart3DCanvas'), { ssr: false })
@@ -85,8 +86,7 @@ export default function LakitelekChartPage() {
             <div className={styles.resultValues}>
               {season.dates.map((d, i) => (
                 <span key={i} className={styles.valuesHeadCell}>
-                  {d.month}
-                  {d.third && <span className={styles.valuesHeadThird}>{d.third}</span>}
+                  {monthName(d)}
                 </span>
               ))}
             </div>
