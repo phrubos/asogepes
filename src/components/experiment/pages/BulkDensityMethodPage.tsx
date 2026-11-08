@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion'
 import { getImageProps } from 'next/image'
-import { Cylinder, Expand, Scale, Thermometer } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Cylinder, Expand, Scale, Thermometer } from 'lucide-react'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import SoilPlayButton from '@/components/problem/visualizations/SoilPlayButton'
 import { useLoopActive } from '@/hooks/useLoopActive'
@@ -228,6 +228,15 @@ export default function BulkDensityMethodPage() {
               transition={{ duration: 0.9, ease: 'easeOut' }}
             />
           )}
+          {/* phones/tablets: the card sits below the photo, so it gets its own prev/next (desktop: hidden by CSS) */}
+          <div className={bd.cardNav}>
+            <button type="button" className={bd.navBtn} onClick={() => go(step - 1)} disabled={step === 0} aria-label="Előző lépés">
+              <ChevronLeft size={20} aria-hidden />
+            </button>
+            <button type="button" className={bd.navBtn} onClick={() => go(step + 1)} disabled={step === LAST} aria-label="Következő lépés">
+              <ChevronRight size={20} aria-hidden />
+            </button>
+          </div>
           <div
             id="bd-panel"
             role="tabpanel"

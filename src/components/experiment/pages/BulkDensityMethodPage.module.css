@@ -280,6 +280,40 @@
   pointer-events: none;
 }
 
+.cardNav {
+  display: none;
+}
+
+.navBtn {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(212, 168, 75, 0.35);
+  border-radius: 12px;
+  background: rgba(212, 168, 75, 0.1);
+  color: #e8c87a;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 150ms ease, border-color 150ms ease, opacity 150ms ease;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: rgba(212, 168, 75, 0.2);
+  border-color: rgba(212, 168, 75, 0.6);
+}
+
+.navBtn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.navBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 .stepText {
   /* fits the longest step, so the diagram does not jump between steps */
   min-height: var(--bd-text-h, 136px);
@@ -403,6 +437,15 @@
 
   .foot {
     margin-top: 0;
+  }
+
+  .cardNav {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    display: flex;
+    gap: 8px;
   }
 
   .card {
