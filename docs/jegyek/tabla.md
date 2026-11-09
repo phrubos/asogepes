@@ -10,9 +10,9 @@ Utoljára frissítve: 2026-11-09. Folyamat és státuszok: [README](README.md).
 | — | 2026-os géptípusok (38SX / 38WX / 40SX) helyszínenként | vár (kutatókra) | `src/lib/data.ts`, `experiment/pages/*` | igen | adatdok. 11-02 §7 |
 | — | Sötét háttér a tartalmi oldalakon (krém villanás ugráskor) | ötlet | `globals.css`, `ScrollLayout` | nem (közös fájl) | audit P2; checker 11-05: villanás nem látszott, de a `body` még krém (rgb 245,240,232), csak a `.scrollContainer` sötét |
 | — | Halott `BookLayout` + `HeroPage` törlése | ötlet | `experiment/BookLayout`, `experiment/pages/HeroPage.tsx`, `pages/index.ts` | igen | audit P2; checker 11-05: nem használja semmi, törölhető; az `experiment/pages/HeroPage.module.css` marad (`ResearchHeroSection` használja), a `pages/index.ts` 1. sora törlendő |
-| [007](007-fo-eredmenyek-elore.md) | Fő eredmények a `/kutatas` elejére, lenyitható módszertan telefonon | folyamatban | `experiment/ResearchScrollLayout.tsx`, `experiment/sections/SummarySection.*`, `experiment/sections/MethodologySection.tsx`, `experiment/sections/sections.module.css` | igen | mobil UX 11-09 K1–K2 (P1); UX-pontozás 11-06 U3 |
 | — | Kapcsolat sor az oldalvégeken | vár (megrendelőre: mely adatok) | `shared/PageEnd`, `lib/partners.ts` | igen | UX-pontozás 11-06 U4 |
 | — | Megszólítás: tegező vagy személytelen UI-szövegek | vár (döntésre) | gombszövegek, `asogepes-brand` skill | igen | UX-pontozás 11-06 C1 |
+| — | `clip-check`: a helyszíntérképek (006) SVG-feliratai vágódnak a tábla-zoomnál (városnevek) | ötlet | `experiment/fieldmap/*`, `scripts/qa/clip-check.js` | igen | checker 11-09 (007); szándékos levágás-e, vagy a szkript zárja ki |
 | — | `nav-check` Suspense-szabály álriasztás | ötlet | `scripts/qa/nav-check.js` | igen | UX-pontozás 11-06 Q1 |
 | — | Alszakasz deep link teszt a `nav-check`-be; „keskeny szövegoszlop” szabály a `layout-check`-be | ötlet | `scripts/qa/` | igen | audit P3 |
 | — | `perf.js` a QA-buildön; az e2e (Playwright) tesztek sorsa | ötlet | `scripts/qa/`, `tests/` | igen | audit P3 |
@@ -21,6 +21,7 @@ Utoljára frissítve: 2026-11-09. Folyamat és státuszok: [README](README.md).
 
 | Feladat | Mikor | Hol |
 |---|---|---|
+| [007](007-fo-eredmenyek-elore.md) Fő eredmények a hero után, lenyitható módszertan telefonon; 390 px: eredmények 1121 px-en, oldal −2,7 képernyő; checker: 1–7, 9 rendben, a piros `clip-check`/`nav-check` a 007-től független | 2026-11-09 | `ResearchScrollLayout`, `sections/SummarySection`, `sections/MethodologySection`, commit e730938 |
 | [006](006-helyszin-terkep.md) Helyszín adatok térképpel mindhárom helyszínen (papírfecni, zoom a Duna–Tisza közéről a táblá(k)ra, Szentkirályon két tábla + animált 2,3 km, ugráskor újraindul); checker: minden pont rendben. Nyitott: Lakitelek parcellasorrend, Szentkirály paradicsom sarkai | 2026-11-08 | `experiment/pages/*InfoPage.*`, `experiment/fieldmap/*`, `lib/field-maps.ts` |
 | [005](005-terfogattomeg-modszertan.md) Módszertan: a térfogattömeg mérése (fotóváltó 4 egységesített képpel, laborkártya, magyarázó kártya metszetrajzzal, Újra gomb); checker: minden pont rendben | 2026-11-08 | `experiment/pages/BulkDensity*`, `sections/MethodologySection.tsx`, `lib/methodology.ts`, `public/images/kutatás_pics/Lakitelek/terfogattomeg/` |
 | [001](001-asogep-animacio.md) Szelvény-animációk play gombbal (ásógép + nehézkultivátor A változat, sárga vonal mindkettőn); checker: minden pont rendben, mobil TBT a dev szerveren 1897 ms | 2026-11-07 | `problem/visualizations/*`, `CultivatorComparisonPage.tsx`, commit 84da2a1 |
