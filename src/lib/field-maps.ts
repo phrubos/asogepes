@@ -118,13 +118,28 @@ export const kecskemetBorbasField: MapField = {
   outline: rectFromDiagonal(SITE_POINTS.kecskemetBorbas[1], SITE_POINTS.kecskemetBorbas[0], 19.6),
 }
 
-/** Lakitelek: 7 parcels side by side, I. on the north-east edge (to be confirmed); ~260 × 12 m each (estimate) */
+/** Lakitelek, the four surveyed corners (My Maps), clockwise from the west corner; the north one is SITE_POINTS.lakitelek */
+const LAKITELEK_CORNERS: LonLat[] = [[20.0051, 46.91345], [20.00579, 46.91406], [20.00968, 46.91198], [20.00899, 46.91137]]
+
+/** the field from its corners: long side north → east corner, parcels stacked from there to the west corner */
+function lakitelekFrame() {
+  const [w, n, e] = LAKITELEK_CORNERS
+  const em = (p: LonLat) => [(p[0] - n[0]) * mLon(n[1]), (p[1] - n[1]) * M_LAT]
+  const [ex, ey] = em(e), [wx, wy] = em(w)
+  // angle on the map (y down), clockwise from east, as StripField expects
+  return { angleDeg: (Math.atan2(-ey, ex) * 180) / Math.PI, length: Math.hypot(ex, ey), width: Math.hypot(wx, wy) }
+}
+const LK = lakitelekFrame() // ≈ 38° · 376 × 86 m
+
+const LK_PARCELS = lakitelekSeasons.seasons[lakitelekSeasons.seasons.length - 1].parcels
+
+/** Lakitelek: 7 parcels side by side (≈ 376 × 12.3 m each), I. on the north-east edge (to be confirmed) */
 export const lakitelekField: StripField = {
   start: SITE_POINTS.lakitelek,
-  angleDeg: 37,
-  length: 260,
-  stripWidth: 12,
-  strips: lakitelekSeasons.seasons[lakitelekSeasons.seasons.length - 1].parcels.map((p) => ({
+  angleDeg: LK.angleDeg,
+  length: LK.length,
+  stripWidth: LK.width / LK_PARCELS.length,
+  strips: LK_PARCELS.map((p) => ({
     label: p.num,
     spade: /ásógép/i.test(p.treatment),
   })),

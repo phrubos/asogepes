@@ -28,17 +28,20 @@ A Kutatás oldal „Helyszín adatok” blokkjai hat egyforma kártya helyett: b
 - 2026-11-08 (felhasználó): az utolsó kép léptéke nem kötött (nem kell 50 m): a kivágás a tábla/táblák befoglaló téglalapjához igazodik. Szentkirály: mindkét tábla egy képen (kb. 500 m-es lépték), szaggatott összekötő a távolsággal („2,3 km”), előbb a vonal húzódik ki, utána jön a felirat. Évváltó 2025: a paradicsomos tábla szaggatott és halvány (csak 2026-tól van).
 - 2026-11-08 (felhasználó): a helyszín felirata a nagy nézetben a pont fölött, a régiós nézetben (ahol kell) mellette áll; a kettő között a zoommal együtt csúszik, nem ugrik. Szűk térképen, ha oldalt nincs hely, fölötte marad.
 - 2026-11-08 (felhasználó): az animáció lejátszódik, amikor a látogató először odagörget, és mindig elölről, amikor odaugrik (oldalsó navigáció, mobil tartalomjegyzék, Bevezető térkép, `?section=` link). Kézi visszagörgetéskor a munkamenetben egyszer játszik, utána a kész térkép áll.
-- 2026-11-08: Koordináták (kutatói My Maps): Lakitelek kezdőpont É 46,91406°, K 20,00579° (a tábla ÉNy-i sarka), sávok kb. 37°-kal DK felé, kb. 260 × 12 m sávonként (becslés). Szentkirály hagyma: két átellenes sarok + a hosszoldal iránya a műholdképről (≈ 336 × 220 m). Borbás: két átellenes sarok (≈ 480 × 128 m). Szentkirály paradicsom: a két pont a hossztengely két vége (≈ 410 m), a szélesség a 2 × 1,4 ha-ból (68 m).
+- 2026-11-08: Koordináták (kutatói My Maps): Szentkirály hagyma: két átellenes sarok + a hosszoldal iránya a műholdképről (≈ 336 × 220 m). Borbás: két átellenes sarok (≈ 480 × 128 m). Szentkirály paradicsom: a két pont a hossztengely két vége (≈ 410 m), a szélesség a 2 × 1,4 ha-ból (68 m).
+
+- 2026-11-09 (felhasználó): Lakitelek négy sarka (É 46,91345° K 20,0051°; É 46,91406° K 20,00579°; É 46,91198° K 20,00968°; É 46,91137° K 20,00899°): a tábla 376 × 86 m, a hosszoldal 38°-kal DK felé fut; 7 parcella, egyenként kb. 12,3 m. A hosszabb tábla miatt a sávok keskenyebbek, ezért minden szélességen I., IV., VII. a felirat. Lépték: 100 m.
+- 2026-11-09: mobilon az utolsó Lakitelek-kép GPU-memória hiányában félig rajzolódott ki és a lap más részei eltűntek: az országos rétegek (határ, folyók, nagy és régiós feliratok) mezőléptéken kikerülnek a kirajzolásból (`cull()`).
 
 ## Nyitott kérdések
 
-- [ ] Lakitelek: a parcellák sorrendje (az I. az ÉK-i szélen van-e) és a tábla pontos mérete (most 260 × 84 m becslés).
+- [ ] Lakitelek: a parcellák sorrendje (az I. az ÉK-i szélen van-e). A méret a négy sarokból megvan (376 × 86 m).
 - [ ] Szentkirály paradicsom: a két pont iránya (≈ 49° DK) nem egyezik a műholdkép táblairányával (≈ 31°); pontosítani kell a sarkokat.
 
 ## Kész, ha
 
 - [x] Mindhárom helyszínen 1440 px-en két oszlop (balra fejléc + 5 adatsor, jobbra a papír, Szentkirály/Borbás: alatta a művelési kártyák); 390 px-en egymás alatt: fejléc, papír, adatok, (kártyák)
-- [x] Az animáció három lépésben ér a táblához; a végén Lakitelek 7 sáv + I.–VII. (szűk szélességen I., IV., VII.), Szentkirály két tábla + „2,3 km” vonal (előbb a vonal, aztán a felirat), Borbás egy tábla; `prefers-reduced-motion` mellett rögtön a kész állapot (`motion-check.js` zöld)
+- [x] Az animáció három lépésben ér a táblához; a végén Lakitelek 7 sáv + I., IV., VII., Szentkirály két tábla + „2,3 km” vonal (előbb a vonal, aztán a felirat), Borbás egy tábla; `prefers-reduced-motion` mellett rögtön a kész állapot (`motion-check.js` zöld)
 - [x] A helyszín felirata zoom közben folyamatosan mozog (nincs ugrás); a három álló állapotban egyetlen látható térképfelirat sem lóg ki a keretből és nem fedi a másikat 360, 390, 1366, 1440 és 1536 px-en
 - [x] Indítás: első odagörgetéskor játszik; oldalsó navigáció / mobil tartalomjegyzék / Bevezető térkép ugrásakor már lejátszott állapotból is elölről indul; másik alszakaszra (pl. Fotók) ugrás nem indítja újra
 - [x] Évváltó: Lakitelek és Szentkirály 2025 ↔ 2026: az adatok és a bevezető mondat cserélődnek; Szentkirály 2025-ben a paradicsomos tábla halvány, a térkép nem játszik újra
