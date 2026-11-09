@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowUp } from 'lucide-react'
+import { ArrowDown } from 'lucide-react'
 import { useScrollNav } from '@/components/shared/ScrollLayout'
 import {
   szentkiralySeasons,
@@ -138,7 +138,7 @@ function buildFindings(): Finding[] {
 
 const findings = buildFindings()
 
-/** Összegzés: the main results of all seasons on one screen, each with a jump to its details */
+/** Fő eredmények (right after the hero): the main results of all seasons, each with a jump down to its details */
 export default function SummarySection() {
   const { scrollToSection } = useScrollNav()
 
@@ -146,7 +146,7 @@ export default function SummarySection() {
     <div className={`${frame.timelinePage} ${styles.page}`}>
       <div className={frame.header}>
         <div className={frame.headerBadge}>
-          <span>Összegzés · {RESEARCH_YEARS.join('–')}</span>
+          <span>Fő eredmények · {RESEARCH_YEARS.join('–')}</span>
         </div>
         <h2 className={`${frame.headerTitle} ${styles.title}`}>Mit mutat {RESEARCH_YEARS.length} év mérése?</h2>
       </div>
@@ -167,7 +167,7 @@ export default function SummarySection() {
             <p className={styles.text}>{f.text}</p>
             <button type="button" className={styles.more} onClick={() => scrollToSection(f.target)}>
               Részletek
-              <ArrowUp size={16} aria-hidden="true" />
+              <ArrowDown size={16} aria-hidden="true" />
             </button>
           </li>
         ))}

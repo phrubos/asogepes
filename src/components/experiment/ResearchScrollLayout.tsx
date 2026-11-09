@@ -19,6 +19,13 @@ export default function ResearchScrollLayout() {
             label: 'Bevezető',
             component: <ResearchHeroSection />,
         },
+        // Main results right after the hero (mobile UX review 11-09, K1): on a phone the summary used to
+        // start on screen 24. The id stays 'osszegzes' so old ?section= links still land here.
+        {
+            id: 'osszegzes',
+            label: 'Fő eredmények',
+            component: <SummarySection />,
+        },
         {
             id: 'methodology',
             label: 'Módszertan',
@@ -65,11 +72,6 @@ export default function ResearchScrollLayout() {
                 { id: 'lakitelek-meresek', label: 'További mérések (2026)' },
                 { id: 'lakitelek-photos', label: 'Fotók' },
             ],
-        },
-        {
-            id: 'osszegzes',
-            label: 'Összegzés',
-            component: <SummarySection />,
         },
     ], [])
 

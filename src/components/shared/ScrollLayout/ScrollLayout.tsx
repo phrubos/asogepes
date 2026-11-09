@@ -58,7 +58,7 @@ const sectionOffsets: Record<string, number> = {
   'application-guide': -10,
   // Kutatás page
   'methodology': -60,           // Módszertan - feljebb (1 scroll)
-  'osszegzes': -40,             // Összegzés: past the 100px section padding, the badge just under the top menu
+  'osszegzes': -40,             // Fő eredmények (kutatás): past the 100px section padding, the badge just under the top menu
 }
 
 // Sections below the first one skip rendering until they near the viewport (content-visibility in the CSS),

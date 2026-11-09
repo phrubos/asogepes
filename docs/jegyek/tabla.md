@@ -1,6 +1,6 @@
 # Tábla
 
-Utoljára frissítve: 2026-11-08. Folyamat és státuszok: [README](README.md).
+Utoljára frissítve: 2026-11-09. Folyamat és státuszok: [README](README.md).
 
 | # | Feladat | Státusz | Fájlok | Párhuzamosan? | Forrás / megjegyzés |
 |---|---|---|---|---|---|
@@ -10,7 +10,7 @@ Utoljára frissítve: 2026-11-08. Folyamat és státuszok: [README](README.md).
 | — | 2026-os géptípusok (38SX / 38WX / 40SX) helyszínenként | vár (kutatókra) | `src/lib/data.ts`, `experiment/pages/*` | igen | adatdok. 11-02 §7 |
 | — | Sötét háttér a tartalmi oldalakon (krém villanás ugráskor) | ötlet | `globals.css`, `ScrollLayout` | nem (közös fájl) | audit P2; checker 11-05: villanás nem látszott, de a `body` még krém (rgb 245,240,232), csak a `.scrollContainer` sötét |
 | — | Halott `BookLayout` + `HeroPage` törlése | ötlet | `experiment/BookLayout`, `experiment/pages/HeroPage.tsx`, `pages/index.ts` | igen | audit P2; checker 11-05: nem használja semmi, törölhető; az `experiment/pages/HeroPage.module.css` marad (`ResearchHeroSection` használja), a `pages/index.ts` 1. sora törlendő |
-| — | „Fő eredmények” a `/kutatas` elején | ötlet | `experiment/sections/ResearchHeroSection`, `ResearchScrollLayout` | igen | UX-pontozás 11-06 U3 |
+| [007](007-fo-eredmenyek-elore.md) | Fő eredmények a `/kutatas` elejére, lenyitható módszertan telefonon | folyamatban | `experiment/ResearchScrollLayout.tsx`, `experiment/sections/SummarySection.*`, `experiment/sections/MethodologySection.tsx`, `experiment/sections/sections.module.css` | igen | mobil UX 11-09 K1–K2 (P1); UX-pontozás 11-06 U3 |
 | — | Kapcsolat sor az oldalvégeken | vár (megrendelőre: mely adatok) | `shared/PageEnd`, `lib/partners.ts` | igen | UX-pontozás 11-06 U4 |
 | — | Megszólítás: tegező vagy személytelen UI-szövegek | vár (döntésre) | gombszövegek, `asogepes-brand` skill | igen | UX-pontozás 11-06 C1 |
 | — | `nav-check` Suspense-szabály álriasztás | ötlet | `scripts/qa/nav-check.js` | igen | UX-pontozás 11-06 Q1 |

@@ -19,3 +19,63 @@
     padding: 0;
   }
 }
+
+/* ========================================
+   Collapsible Módszertan blocks (phones/tablets only)
+   Closed: only the block's header (badge, title, lead) shows, then a "Részletek" button.
+   Desktop: the button is hidden and every block is open, as before.
+   ======================================== */
+
+.collapseToggle {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  /* the component's root is the only child of the body; its first child is the header */
+  .collapsible:not([data-open]) .collapseBody > * > :not(:first-child) {
+    display: none;
+  }
+
+  .collapseToggle {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    margin-top: 12px;
+    padding: 0 var(--space-md);
+    border-radius: 100px;
+    border: 1px solid rgba(212, 168, 75, 0.35);
+    background: transparent;
+    color: var(--color-gold);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .collapseToggle:hover {
+    background-color: rgba(212, 168, 75, 0.1);
+    border-color: var(--color-gold);
+  }
+
+  .collapseToggle:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+
+  .collapseIcon {
+    transition: transform 0.2s ease;
+  }
+
+  .collapsible[data-open] .collapseIcon {
+    transform: rotate(180deg);
+  }
+}
+
+@media (max-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .collapseIcon {
+    transition: none;
+  }
+}
