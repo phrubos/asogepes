@@ -31,6 +31,12 @@
 }
 
 @media (max-width: 1024px) {
+  /* the block (content-visibility: auto) clips its paint at its own edge; the toggle is its last
+     line, so without this the button's bottom border was cut off at fractional pixel positions */
+  .collapsible {
+    padding-bottom: 4px;
+  }
+
   /* the component's root is the only child of the body; its first child is the header */
   .collapsible:not([data-open]) .collapseBody > * > :not(:first-child) {
     display: none;
