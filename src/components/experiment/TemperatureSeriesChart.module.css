@@ -291,3 +291,62 @@
     padding: 12px 14px;
   }
 }
+
+/* ============================================
+   Depth picker, phones/tablets only (mobile UX review 11-09, K4): one band at a time.
+   ============================================ */
+
+.depthPicker {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .band[data-off] {
+    display: none;
+  }
+
+  .depthPicker {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .depthPickerLabel {
+    padding: 0 8px 0 10px;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .depthOption {
+    min-height: 44px;
+    min-width: 72px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.75);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .depthOptionOn {
+    background: var(--color-gold);
+    color: #1a1612;
+  }
+
+  .depthOption:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+}

@@ -291,16 +291,15 @@
   }
 
   /* phones/tablets: a full-width gold button with a 44px tap target */
+  /* secondary, outlined pill like the "Részletek" buttons: four solid gold bars one under the
+     other shouted louder than the page's main call to action (mobile UX review 11-09, K5) */
   .cta {
-    align-self: stretch;
-    justify-content: center;
-    gap: var(--space-sm);
     min-height: 44px;
-    padding: var(--space-sm);
-    border: 0;
-    border-radius: var(--radius-sm);
-    background: var(--color-gold);
-    color: var(--color-earth-900);
+    padding: 0 var(--space-md);
+    border: 1px solid rgba(212, 168, 75, 0.35);
+    border-radius: 100px;
+    background: transparent;
+    color: var(--color-gold);
   }
 
   .cta:active {

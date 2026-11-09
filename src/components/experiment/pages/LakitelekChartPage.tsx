@@ -5,10 +5,10 @@ import { createPortal } from 'react-dom'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Maximize2, X, TrendingUp, Layers, Play } from 'lucide-react'
-import { lakitelekSeasons, LAKITELEK_YEARS, formatCm } from '@/lib/seasons'
+import { lakitelekSeasons, formatCm } from '@/lib/seasons'
 import { useDisclosureTrigger } from '@/hooks/useDisclosureTrigger'
 import { useSeason } from '../season/SeasonContext'
-import SeasonSwitch from '../season/SeasonSwitch'
+import { SeasonLabel } from '../season/SeasonOnly'
 import { monthName } from '@/lib/months'
 import styles from './LakitelekChartPage.module.css'
 
@@ -234,7 +234,7 @@ export default function LakitelekChartPage() {
                 <MapPin size={10} />
                 <span>Lakitelek</span>
               </div>
-              <SeasonSwitch years={LAKITELEK_YEARS} small />
+              <SeasonLabel switchAt="lakitelek-info" />
             </div>
             <div className={styles.titleGroup}>
               <h3 className={styles.headerTitle}>{season.title} · {season.info.crop.toLowerCase()}</h3>

@@ -79,6 +79,11 @@ export default function Timeline({
   ] : [])
   const summary = summaryProp ?? evaluations?.summary
   const compact = series.length > 2
+  // Phones/tablets: the deep-spading series (Szentkirály: 4 × 4 bars) wait behind a switch, so the
+  // first view is the plain kontroll / ásógép pair (mobile UX review 11-09, K4). Desktop shows all.
+  const hasDeep = compact && series.some(s => s.deep) && series.some(s => !s.deep)
+  const [showDeep, setShowDeep] = useState(false)
+  const deepCount = series.filter(s => s.deep).length
   const seriesByKey = Object.fromEntries(series.map(s => [s.key, s]))
 
   const maxValue = scaleMax ?? Math.max(...series.flatMap(s => s.values)) * 1.15
@@ -124,7 +129,11 @@ export default function Timeline({
   }
 
   return (
-    <div ref={containerRef} className={`${styles.container} ${compact ? styles.compact : ''}`}>
+    <div
+      ref={containerRef}
+      className={`${styles.container} ${compact ? styles.compact : ''}`}
+      data-hide-deep={hasDeep && !showDeep ? '' : undefined}
+    >
       {/* Header with animated line */}
       <motion.div
         className={styles.header}
@@ -142,12 +151,23 @@ export default function Timeline({
         {compact && (
           <ul className={styles.legend}>
             {series.map(s => (
-              <li key={s.key}>
+              <li key={s.key} data-deep={s.deep ? '' : undefined}>
                 <span className={`${styles.legendSwatch} ${fillClass(s)}`} />
                 {s.label}
               </li>
             ))}
           </ul>
+        )}
+        {hasDeep && (
+          <button
+            type="button"
+            className={styles.deepToggle}
+            aria-pressed={showDeep}
+            onClick={() => setShowDeep(v => !v)}
+          >
+            <span className={styles.deepBox} aria-hidden="true" />
+            Mélyásógépes parcellák is ({deepCount})
+          </button>
         )}
       </motion.div>
 
@@ -204,6 +224,7 @@ export default function Timeline({
                     <motion.div
                       key={s.key}
                       className={styles.barWrapper}
+                      data-deep={s.deep ? '' : undefined}
                       onHoverStart={() => setHoveredBar(s.key)}
                       onHoverEnd={() => setHoveredBar(null)}
                     >
@@ -288,6 +309,7 @@ export default function Timeline({
               <div
                 key={card.key}
                 className={`${styles.summaryItem} ${s?.role === 'spade' ? styles.summarySpade : styles.summaryControl}`}
+                data-deep={s?.deep ? '' : undefined}
               >
                 <div className={styles.summaryHeader}>
                   <span className={`${styles.summaryDot} ${s?.deep ? styles.barDeep : ''}`} />

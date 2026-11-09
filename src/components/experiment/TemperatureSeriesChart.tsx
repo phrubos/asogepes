@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useRef } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Thermometer } from 'lucide-react'
 import type { Season } from '@/lib/seasons'
@@ -32,6 +32,10 @@ export default function TemperatureSeriesChart({ data }: { data: Temperature }) 
   const isInView = useInView(containerRef, { once: true, margin: '-50px' })
   // one scale for both depths
   const max = Math.max(...data.depths.flatMap((d) => d.points.flatMap((p) => [p.control, p.spade]))) * 1.08
+  // Phones/tablets: one depth at a time behind a 3 cm | 10 cm picker; the card was two screens long
+  // (mobile UX review 11-09, K4). Desktop shows both bands, the picker is hidden.
+  const [shown, setShown] = useState(0)
+  const multi = data.depths.length > 1
 
   return (
     <div ref={containerRef} className={styles.container}>
@@ -41,8 +45,30 @@ export default function TemperatureSeriesChart({ data }: { data: Temperature }) 
           <h4 className={styles.title}>{data.title}</h4>
         </div>
 
+        {multi && (
+          <div className={styles.depthPicker} role="group" aria-label="Mélység">
+            <span className={styles.depthPickerLabel} aria-hidden="true">Mélység</span>
+            {data.depths.map((depth, di) => (
+              <button
+                key={depth.label}
+                type="button"
+                className={`${styles.depthOption} ${di === shown ? styles.depthOptionOn : ''}`}
+                aria-pressed={di === shown}
+                onClick={() => setShown(di)}
+              >
+                {depth.label}
+              </button>
+            ))}
+          </div>
+        )}
+
         {data.depths.map((depth, di) => (
-          <section key={depth.label} className={styles.band} aria-label={`${depth.label} mélyen`}>
+          <section
+            key={depth.label}
+            className={styles.band}
+            aria-label={`${depth.label} mélyen`}
+            data-off={multi && di !== shown ? '' : undefined}
+          >
             <span className={styles.depthLabel}>{depth.label} mélyen</span>
             <div className={styles.days}>
               {depth.points.map((p, pi) => {

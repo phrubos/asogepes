@@ -5,6 +5,8 @@ import LakitelekChartPage from './LakitelekChartPage'
 import LakitelekPhotosPage from './LakitelekPhotosPage'
 import LakitelekSoilLifePage from './LakitelekSoilLifePage'
 import FurtherMeasuresPage from './FurtherMeasuresPage'
+import { LAKITELEK_YEARS } from '@/lib/seasons'
+import { SeasonProvider } from '../season/SeasonContext'
 import styles from './CombinedPage.module.css'
 
 /** `phoneHeight`: the block's height on phones, the placeholder size while it is not rendered yet */
@@ -18,6 +20,8 @@ const sections: { id: string; component: JSX.Element; phoneHeight?: number }[] =
 
 export default function LakitelekCombinedPage() {
     return (
+        // the site's own season: the ÉV switch in Helyszín adatok sets only Lakitelek
+        <SeasonProvider years={LAKITELEK_YEARS} param="evad-lk">
         <div className={styles.combinedWrapper}>
             {sections.map((section) => (
                 <div
@@ -30,5 +34,6 @@ export default function LakitelekCombinedPage() {
                 </div>
             ))}
         </div>
+        </SeasonProvider>
     )
 }

@@ -309,6 +309,14 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
+/* the comparison under the 2025 results (what the falling figures are measured against) */
+.resultNote {
+  margin: 12px 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .resultPlace {
   align-self: flex-start;
   font-weight: 600;

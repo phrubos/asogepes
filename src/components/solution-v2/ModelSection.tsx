@@ -13,6 +13,7 @@ import {
   MapPin
 } from 'lucide-react'
 import { modelDetails } from '@/lib/data'
+import { lakitelekSeasons } from '@/lib/seasons'
 import ImageLightbox from '@/components/ui/ImageLightbox'
 import styles from './ModelSection.module.css'
 
@@ -55,6 +56,18 @@ const RESULTS: Record<ModelId, { place: string; section: string; fact: string }[
       fact: `${lakI.treatment}: ${loose(lakI.initial ?? 0, lakI.final ?? 0)}`,
     },
   ],
+}
+
+/** What the 2025 figures compare to: a falling "22 → 20 cm" alone reads as a loss (mobile UX review 11-09, K7).
+ *  Lakitelek: the parcel without a spading machine (szántás + kombinátor, V.), same months, from seasons.ts. */
+const lk2025 = lakitelekSeasons.seasons.find((s) => s.year === 2025)
+const lkPlain = lk2025?.parcels.find((p) => p.num === 'V.')
+const lkLast = (lk2025?.chartLabels.length ?? 1) - 1
+const plainNote = lkPlain?.values
+  ? `Összehasonlításul az ásógép nélküli szántás + kombinátor (V.) parcellán ${lkPlain.values[0]} → ${lkPlain.values[lkLast]} cm: ott jóval többet tömörödött vissza a talaj.`
+  : undefined
+const RESULT_NOTE: Partial<Record<ModelId, string>> = {
+  '38sx': plainNote,
 }
 
 /** Where the work went on in 2026 (Kecskemét-Borbás was not measured again) */
@@ -174,6 +187,7 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
                 </li>
               ))}
             </ul>
+            {RESULT_NOTE[modelId] && <p className={styles.resultNote}>{RESULT_NOTE[modelId]}</p>}
           </div>
 
           <div className={styles.nextSeason}>
@@ -181,8 +195,7 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
               <span className={styles.yearChipOff}>2026</span> A második év
             </div>
             <p className={styles.resultsDesc}>
-              {NEXT_SEASON[modelId]} A 2026-os adatokban az ásógép típusa nincs megnevezve, ezért ezeket az eredményeket nem
-              soroljuk ehhez a modellhez.
+              {NEXT_SEASON[modelId]}
             </p>
             <Link href={`/kutatas?section=${NEXT_SECTION[modelId]}`} className={styles.detailsLink}>
               A 2026-os mérések a Kutatás oldalon <ArrowRight size={16} />

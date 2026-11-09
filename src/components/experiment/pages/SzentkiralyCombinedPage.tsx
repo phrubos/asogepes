@@ -7,7 +7,11 @@ import SzentkirályPhotosPage from './SzentkirályPhotosPage'
 import SzentkiralyTomatoPage from './SzentkiralyTomatoPage'
 import SzentkiralyGrowthPage from './SzentkiralyGrowthPage'
 import FurtherMeasuresPage from './FurtherMeasuresPage'
+import { szentkiralySeasons } from '@/lib/seasons'
+import { SeasonProvider } from '../season/SeasonContext'
 import styles from './CombinedPage.module.css'
+
+const SZK_YEARS = szentkiralySeasons.seasons.map((s) => s.year)
 
 /** `phoneHeight`: the block's height on phones, the placeholder size while it is not rendered yet */
 const sections: { id: string; component: JSX.Element; phoneHeight?: number }[] = [
@@ -22,6 +26,8 @@ const sections: { id: string; component: JSX.Element; phoneHeight?: number }[] =
 
 export default function SzentkiralyCombinedPage() {
     return (
+        // the site's own season: the ÉV switch in Helyszín adatok sets only Szentkirály
+        <SeasonProvider years={SZK_YEARS} param="evad-szk">
         <div className={styles.combinedWrapper}>
             {sections.map((section) => (
                 <div
@@ -34,5 +40,6 @@ export default function SzentkiralyCombinedPage() {
                 </div>
             ))}
         </div>
+        </SeasonProvider>
     )
 }

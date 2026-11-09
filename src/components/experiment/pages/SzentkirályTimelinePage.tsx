@@ -5,12 +5,11 @@ import { MapPin } from 'lucide-react'
 import Timeline from '../Timeline'
 import { szentkiralySeasons, findSeason } from '@/lib/seasons'
 import { useSeason } from '../season/SeasonContext'
-import SeasonSwitch from '../season/SeasonSwitch'
+import { SeasonLabel } from '../season/SeasonOnly'
 import YearBridge from '../season/YearBridge'
 import styles from './SzentkirályTimelinePage.module.css'
 
 const site = szentkiralySeasons
-const siteYears = site.seasons.map((s) => s.year)
 
 export default function SzentkirályTimelinePage() {
   const { year } = useSeason()
@@ -32,7 +31,7 @@ export default function SzentkirályTimelinePage() {
         </div>
         <h3 className={styles.headerTitle}>A talajszerkezet változása</h3>
         <div className={styles.seasonRow}>
-          <SeasonSwitch years={siteYears} small />
+          <SeasonLabel switchAt="szentkiraly-info" />
         </div>
       </motion.div>
 

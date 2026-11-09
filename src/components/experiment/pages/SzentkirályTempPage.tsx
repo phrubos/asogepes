@@ -7,12 +7,11 @@ import TemperatureSeriesChart from '../TemperatureSeriesChart'
 import { locations } from '@/lib/data'
 import { szentkiralySeasons, findSeason } from '@/lib/seasons'
 import { useSeason } from '../season/SeasonContext'
-import SeasonSwitch from '../season/SeasonSwitch'
+import { SeasonLabel } from '../season/SeasonOnly'
 import styles from './SzentkirályTempPage.module.css'
 
 const data = locations.szentkiraly
 const site = szentkiralySeasons
-const siteYears = site.seasons.map((s) => s.year)
 
 export default function SzentkirályTempPage() {
     const { year } = useSeason()
@@ -35,7 +34,7 @@ export default function SzentkirályTempPage() {
                 </div>
                 <h3 className={styles.headerTitle}>Talajhőmérséklet</h3>
                 <div className={styles.seasonRow}>
-                    <SeasonSwitch years={siteYears} small />
+                    <SeasonLabel switchAt="szentkiraly-info" />
                 </div>
             </motion.div>
 
