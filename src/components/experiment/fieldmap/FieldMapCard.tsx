@@ -131,9 +131,11 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
       parent.appendChild(e)
       return e
     }
-    el('path', { d: pathOf(HU_BORDER, true), class: styles.land, 'vector-effect': 'non-scaling-stroke' }, svg)
-    el('path', { d: pathOf(DUNA), class: styles.river, 'vector-effect': 'non-scaling-stroke' }, svg)
-    el('path', { d: pathOf(TISZA), class: styles.river, 'vector-effect': 'non-scaling-stroke' }, svg)
+    // country outline and rivers: country-scale geometry, culled at field scale (see cull())
+    const base = el('g', {}, svg) as SVGGElement
+    el('path', { d: pathOf(HU_BORDER, true), class: styles.land, 'vector-effect': 'non-scaling-stroke' }, base)
+    el('path', { d: pathOf(DUNA), class: styles.river, 'vector-effect': 'non-scaling-stroke' }, base)
+    el('path', { d: pathOf(TISZA), class: styles.river, 'vector-effect': 'non-scaling-stroke' }, base)
     const L0 = el('g', { class: `${styles.lay} ${styles.l0}` }, svg)
     const L1 = el('g', { class: `${styles.lay} ${styles.l1}` }, svg)
     const pin = el('g', { class: styles.pin }, svg)
@@ -241,7 +243,19 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
       }
     }
 
+    // At field scale the country outline, the rivers and the wide-view labels are ~1000× the frame in px
+    // (the labels' font sizes too). Phones rasterise them anyway and run out of GPU memory: the map stays
+    // half drawn and other blocks of the page go blank. Take whatever is out of sight out of the render tree.
+    const cull = (box: number[]) => {
+      const w = box[2] // map units across the frame (stage widths: 176, 44, then ≈ 0.4–4)
+      base.style.display = w < 6 ? 'none' : ''
+      base.style.opacity = w < 12 ? String(Math.max(0, (w - 6) / 6)) : ''
+      ;(L0 as SVGGElement).style.display = w < 30 ? 'none' : ''
+      ;(L1 as SVGGElement).style.display = w < 6 ? 'none' : ''
+    }
+
     function sizePin(box: number[]) {
+      cull(box)
       const u = upp(box)
       // scale bar
       const mPerPx = u / M
