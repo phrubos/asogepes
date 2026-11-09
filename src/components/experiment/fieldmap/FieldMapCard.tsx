@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import {
-  project, UNITS_PER_METRE as M, HU_BORDER, DUNA, TISZA, TOWNS, SITE_DOTS, coordLabel,
+  project, UNITS_PER_METRE as M, GRID, gridToMap, HU_BORDER, DUNA, TISZA, TOWNS, SITE_DOTS, coordLabel,
   type LonLat, type MapField,
 } from '@/lib/field-maps'
 import { SCROLL_TARGET_EVENT } from '@/components/shared/ScrollLayout/ScrollLayout'
@@ -116,8 +116,8 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
       fw = Math.max(x1 - x0r, (y1 - y0) * aspect) * pad
       const x0c = x0r
       STAGES = [
-        { c: [262, 174], w: 176, tag: 'Duna–Tisza köze' },
-        { c: [265.5, 168], w: 44, tag: 'Kecskemét környéke' },
+        { c: gridToMap(262, 174), w: 176 * GRID, tag: 'Duna–Tisza köze' },
+        { c: gridToMap(265.5, 168), w: 44 * GRID, tag: 'Kecskemét környéke' },
         { c: [(x0c + x1) / 2, (y0 + y1) / 2], w: fw, tag: fieldTag },
       ]
     }
@@ -247,7 +247,7 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
     // (the labels' font sizes too). Phones rasterise them anyway and run out of GPU memory: the map stays
     // half drawn and other blocks of the page go blank. Take whatever is out of sight out of the render tree.
     const cull = (box: number[]) => {
-      const w = box[2] // map units across the frame (stage widths: 176, 44, then ≈ 0.4–4)
+      const w = box[2] / GRID // grid units across the frame (stage widths: 176, 44, then ≈ 0.3–3)
       base.style.display = w < 6 ? 'none' : ''
       base.style.opacity = w < 12 ? String(Math.max(0, (w - 6) / 6)) : ''
       ;(L0 as SVGGElement).style.display = w < 30 ? 'none' : ''

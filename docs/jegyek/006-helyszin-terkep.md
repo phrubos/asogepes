@@ -32,6 +32,7 @@ A Kutatás oldal „Helyszín adatok” blokkjai hat egyforma kártya helyett: b
 
 - 2026-11-09 (felhasználó): Lakitelek négy sarka (É 46,91345° K 20,0051°; É 46,91406° K 20,00579°; É 46,91198° K 20,00968°; É 46,91137° K 20,00899°): a tábla 376 × 86 m, a hosszoldal 38°-kal DK felé fut; 7 parcella, egyenként kb. 12,3 m. A hosszabb tábla miatt a sávok keskenyebbek, ezért minden szélességen I., IV., VII. a felirat. Lépték: 100 m.
 - 2026-11-09: mobilon az utolsó Lakitelek-kép GPU-memória hiányában félig rajzolódott ki és a lap más részei eltűntek: az országos rétegek (határ, folyók, nagy és régiós feliratok) mezőléptéken kikerülnek a kirajzolásból (`cull()`).
+- 2026-11-09: görgetéskor továbbra is eltűntek részek (Lakitelek): a térkép méterben, Kecskemét körüli origóval rajzolódik, így a nyugalmi, utolsó kép kb. 1 px/egység léptékű (eddig kb. 1300×-os nagyítás); a nagy szorzó csak a kicsinyített országos nézetben van.
 
 ## Nyitott kérdések
 

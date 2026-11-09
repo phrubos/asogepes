@@ -4,12 +4,21 @@ import { lakitelekSeasons } from './seasons'
 
 export type LonLat = [number, number]
 
-/** Equirectangular projection: 1 map unit = 1/100 degree of latitude ≈ 1.113 km; x is corrected with cos(47°). */
+/**
+ * Equirectangular projection, x corrected with cos(47°). The map is drawn in metres around Kecskemét, so the
+ * resting field view sits near 1 px per unit: phone browsers (iOS Safari) misbehave when an svg rests at a
+ * ~1000× zoom, losing tiles of the page while scrolling. Only the wide, zoomed-out view has a big factor.
+ * Stage centres and widths are written in "grid units" (1/100 degree of latitude ≈ 1.113 km): gridToMap.
+ */
 const K = 100
 const COS = Math.cos((47 * Math.PI) / 180)
-export const project = ([lon, lat]: LonLat): [number, number] => [(lon - 16) * COS * K, (48.65 - lat) * K]
+/** metres per grid unit */
+export const GRID = 1113.2
+const ORIGIN = [265, 170] // grid units, near Kecskemét
+export const gridToMap = (x: number, y: number): [number, number] => [(x - ORIGIN[0]) * GRID, (y - ORIGIN[1]) * GRID]
+export const project = ([lon, lat]: LonLat): [number, number] => gridToMap((lon - 16) * COS * K, (48.65 - lat) * K)
 /** Map units per metre */
-export const UNITS_PER_METRE = 1 / 1113.2
+export const UNITS_PER_METRE = 1
 
 // Simplified border (≈ 50 points), rivers as polylines: a locator map, not a survey
 export const HU_BORDER: LonLat[] = [[16.11,46.87],[16.37,46.84],[16.52,46.50],[16.88,46.38],[17.18,46.20],[17.33,45.99],[17.63,45.93],[18.12,45.79],[18.45,45.75],[18.82,45.91],[19.29,45.99],[19.70,46.17],[20.10,46.17],[20.26,46.11],[20.76,46.27],[21.18,46.40],[21.30,46.62],[21.50,46.87],[21.68,47.05],[21.99,47.39],[22.13,47.62],[22.43,47.75],[22.68,47.79],[22.89,47.95],[22.60,48.10],[22.27,48.40],[21.73,48.35],[21.43,48.56],[20.95,48.52],[20.48,48.53],[20.25,48.28],[20.05,48.17],[19.75,48.20],[19.47,48.08],[19.03,48.07],[18.82,47.83],[18.40,47.75],[17.85,47.75],[17.48,47.87],[17.16,48.01],[17.09,47.71],[16.72,47.60],[16.43,47.69],[16.66,47.45],[16.45,47.40],[16.48,47.15],[16.43,47.00]]
