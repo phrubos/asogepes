@@ -1091,3 +1091,143 @@
     animation: none;
   }
 }
+
+/* ============================================
+   FULLSCREEN HEADER + RESULTS PANEL AT EVERY WIDTH
+   The legend used to be an unwrappable inline row and the results
+   panel a fixed 400px column, so a narrow window or a phone pushed
+   both off the screen.
+   ============================================ */
+
+.fullscreenHeader {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-md) var(--space-lg);
+}
+
+.fullscreenLegend {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  min-width: 0;
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 100px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.fullscreenLegendLabel {
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
+
+.fullscreenLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.fullscreenLegendSwatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex: none;
+}
+
+.fullscreenLegendBest {
+  padding-left: 16px;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.fullscreenLegendStar {
+  color: #d4a84b;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.fullscreenActions {
+  display: flex;
+  gap: 16px;
+  justify-self: end;
+}
+
+/* Narrower desktop window: the legend gets its own row under the title instead of squeezing */
+@media (max-width: 1279px) {
+  .fullscreenHeader {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .fullscreenLegend {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: start;
+  }
+}
+
+/* Phones/tablets: the 3D view fills the height, the results open as a sheet over its lower part */
+@media (max-width: 1024px) {
+  .fullscreenVisualization {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .fullscreenSidePanel {
+    top: auto;
+    /* same inset as the content padding, so the sheet lines up with the 3D frame */
+    left: var(--space-lg);
+    right: var(--space-lg);
+    bottom: var(--space-lg);
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    max-height: 60%;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .fullscreenHeader {
+    gap: 12px;
+  }
+
+  .fullscreenLegend {
+    border-radius: 12px;
+    padding: 8px 12px;
+    gap: 6px 12px;
+  }
+
+  .fullscreenLegendBest {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .fullscreenSidePanel {
+    left: var(--space-md);
+    right: var(--space-md);
+    bottom: var(--space-md);
+  }
+
+  .fullscreenActions {
+    gap: 8px;
+  }
+
+  .fullscreenActions .closeButton {
+    width: 44px;
+    height: 44px;
+  }
+
+  .fullscreenActions .actionButton {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+
+  /* the subtitle broke into three lines beside the buttons; the title says enough here */
+  .fullscreenSubtitle {
+    display: none;
+  }
+}

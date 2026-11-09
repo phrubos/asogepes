@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, type CSSProperties } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { Info, X } from 'lucide-react'
+import { Info, X, Rotate3d } from 'lucide-react'
 
 interface ParcelData {
     num: string
@@ -327,9 +327,14 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             const aspect = container.clientWidth / Math.max(1, container.clientHeight)
             // fit the width: the block and the depth scale (~34 units) just fill the view; the embedded
             // box is narrow (~1.1 : 1) beside the results panel, so a looser fit leaves it tiny (user, 2026-11-07)
-            const halfW = 18.2 // the near-left corner (scale, probe) is larger in perspective
+            // the near-left corner (scale, probe) is larger in perspective; fullscreen keeps the scale labels in
+            const halfW = isFullscreen ? 19.8 : 18.2
             const fit = halfW / (Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * aspect) / 0.97
-            const dist = Math.min(68, Math.max(24, fit)) * (isFullscreen ? 0.92 : 1)
+            // a portrait phone screen (fullscreen, aspect ~0.6) needs ~90 units to show the whole block:
+            // the old 68 cap cut the parcel signs off at the sides, and the old fullscreen zoom-in (x0.92)
+            // cut the penetrometer off at the left in a narrower desktop window
+            const dist = Math.min(110, Math.max(24, fit))
+            controls.maxDistance = Math.max(70, dist + 10)
             const t = new THREE.Vector3(-1.4, -1.8, -0.6)
             // in a tall-ish box look from higher up, so the field fills more of the height
             const lift = Math.max(0, 1.5 - aspect) * 14
@@ -679,7 +684,19 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             {/* absolute: a % height resolves to 0 when the embedding parent has no fixed height */}
             <div ref={containerRef} style={{ position: 'absolute', inset: 0 }} />
 
-            {/* Selected cylinder */}
+            {/* Rotation hint (top right): tells that the block can be turned; not a control */}
+            <div
+                aria-hidden="true"
+                style={{
+                    position: 'absolute', top: '16px', right: '16px', zIndex: 10, pointerEvents: 'none',
+                    background: 'rgba(26, 23, 20, 0.8)', border: '1px solid rgba(212, 168, 75, 0.2)', borderRadius: '50%',
+                    width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                }}
+            >
+                <Rotate3d size={22} color="#d4a84b" style={{ opacity: 0.9 }} />
+            </div>
+
             {/* Tapped cylinder: a slim strip at the bottom, hidden while the legend is open */}
             {sel && selParcel && selValue !== undefined && !showInfo && (
                 <div

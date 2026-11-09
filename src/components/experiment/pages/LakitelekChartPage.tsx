@@ -333,36 +333,24 @@ export default function LakitelekChartPage() {
                 </div>
               </div>
 
-              {/* Fullscreen Legend - Centered */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '24px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                padding: '6px 16px',
-                borderRadius: '100px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                margin: '0 32px'
-              }}>
-                <span style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.6)' }}>Laza réteg:</span>
+              {/* Legend: centred on wide screens, its own row under the title when the window is narrower */}
+              <div className={styles.fullscreenLegend}>
+                <span className={styles.fullscreenLegendLabel}>Laza réteg:</span>
                 {/* same colours as the cylinders in FieldChart3DCanvas */}
                 {([['#d0563f', '≤ 10 cm'], ['#e2b93b', '10–25 cm'], ['#74ad5c', '> 25 cm']] as const).map(([color, text]) => (
-                  <div key={text} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)', marginLeft: '-12px' }}>
-                    <span style={{ width: '12px', height: '12px', background: color, borderRadius: '3px' }}></span>
-                    <span>{text}</span>
-                  </div>
+                  <span key={text} className={styles.fullscreenLegendItem}>
+                    <span className={styles.fullscreenLegendSwatch} style={{ background: color }} />
+                    {text}
+                  </span>
                 ))}
-{season.bestResults.length > 0 && (
-                  <>
-                <div style={{ width: '1px', height: '14px', background: 'rgba(255, 255, 255, 0.15)' }}></div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)' }}>
-                  <span style={{ color: '#d4a84b', fontSize: '14px', lineHeight: 1 }}>★</span>
-                  <span>Legnagyobb hatékonyság</span>
-                </div>
-                  </>
+                {season.bestResults.length > 0 && (
+                  <span className={`${styles.fullscreenLegendItem} ${styles.fullscreenLegendBest}`}>
+                    <span className={styles.fullscreenLegendStar}>★</span>
+                    Legnagyobb hatékonyság
+                  </span>
                 )}
               </div>
-              <div style={{ display: 'flex', gap: '16px' }}>
+              <div className={styles.fullscreenActions}>
                 <motion.button
                   className={styles.actionButton}
                   onClick={() => setShowResults(!showResults)}
@@ -371,7 +359,7 @@ export default function LakitelekChartPage() {
                   <Layers size={18} />
                   <span>{showResults ? 'Eredmények elrejtése' : 'Eredmények mutatása'}</span>
                 </motion.button>
-                <button className={styles.closeButton} onClick={toggleFullscreen}>
+                <button className={styles.closeButton} onClick={toggleFullscreen} aria-label="Bezárás">
                   <X size={24} />
                 </button>
               </div>
