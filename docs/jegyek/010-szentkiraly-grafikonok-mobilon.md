@@ -1,6 +1,6 @@
 # 010 · Szentkirály: könnyebb talajszerkezet- és hőmérséklet-grafikon telefonon
 
-**Státusz:** kész (checker hátra) · **Létrehozva:** 2026-11-09 · **Méret:** M
+**Státusz:** kész · **Létrehozva:** 2026-11-09 · **Méret:** M
 
 ## Cél
 
@@ -24,7 +24,7 @@ A két legsűrűbb grafikon telefonon egyszerre csak a lényeget mutassa. Forrá
 - [x] 390 és 1440 px képernyőkép megnézve
 - [x] `npx tsc --noEmit` hibamentes (`src/`), ESLint 0 hiba
 - [x] `layout-check`, `mobile-check` zöld; `clip-check`: csak a 006-os térképfeliratok (ismert, a táblán)
-- [ ] `checker` ellenőrzés
+- [x] `checker` ellenőrzés (11-09): minden pont rendben; `touch-check`, `motion-check` is zöld
 
 ## Eredmény
 

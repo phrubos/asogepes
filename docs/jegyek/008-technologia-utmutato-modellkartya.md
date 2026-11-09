@@ -1,6 +1,6 @@
 # 008 · /technologia: másodlagos gombok az útmutatóban, összehasonlítás a modellkártyán
 
-**Státusz:** kész (checker hátra) · **Létrehozva:** 2026-11-09 · **Méret:** S
+**Státusz:** kész · **Létrehozva:** 2026-11-09 · **Méret:** S
 
 ## Cél
 
@@ -25,7 +25,7 @@ A /technologia telefonon ne kiabáljon négy egyforma arany gombbal, és a 38SX 
 - [x] 390 és 1440 px képernyőkép megnézve
 - [x] `npx tsc --noEmit` hibamentes (`src/`), ESLint 0 hiba
 - [x] `layout-check`, `mobile-check` zöld; `clip-check`: csak a 006-os térképfeliratok (ismert, a táblán)
-- [ ] `checker` ellenőrzés
+- [x] `checker` ellenőrzés (11-09): minden pont rendben; `touch-check`, `motion-check` is zöld
 
 ## Eredmény
 

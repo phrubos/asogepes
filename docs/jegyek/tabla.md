@@ -5,9 +5,7 @@ Utoljára frissítve: 2026-11-09. Folyamat és státuszok: [README](README.md).
 | # | Feladat | Státusz | Fájlok | Párhuzamosan? | Forrás / megjegyzés |
 |---|---|---|---|---|---|
 | [004](004-lakitelek-3d-fold-alatt.md) | Lakitelek 3D: hengerek a föld alatt (rizotron), színkód, penetrométer | folyamatban (dev szerveres ellenőrzés hátra) | `experiment/FieldChart3DCanvas.tsx`, `experiment/pages/LakitelekChartPage.tsx` | igen | Attila üzenete 11-07; nyitott kérdések a jegyben |
-| [008](008-technologia-utmutato-modellkartya.md) | `/technologia`: másodlagos „Lásd a kísérletben” gombok telefonon, összehasonlítás a 38SX kártyán | kész (checker hátra); nyitott: csillagok forrása (megrendelő), 38SX számok eltérése (kutatók) | `solution-v2/ApplicationGuide.module.css`, `solution-v2/ModelSection.*` | igen | mobil UX 11-09 K5–K7 |
-| [009](009-evkapcsolo-helyszinenkent.md) | Egy évkapcsoló helyszínenként, az évszám sima szöveg | kész (checker hátra) | `experiment/season/*`, `experiment/pages/*CombinedPage.tsx`, `SzentkirályTempPage`, `SzentkirályTimelinePage`, `LakitelekChartPage` | nem (010-zel közös oldalak) | mobil UX 11-09 K3 |
-| [010](010-szentkiraly-grafikonok-mobilon.md) | Szentkirály: mélyásógép-kapcsoló és mélységválasztó telefonon | kész (checker hátra) | `experiment/Timeline.*`, `experiment/TemperatureSeriesChart.*` | igen | mobil UX 11-09 K4 |
+| [008](008-technologia-utmutato-modellkartya.md) | `/technologia`: másodlagos „Lásd a kísérletben” gombok telefonon, összehasonlítás a 38SX kártyán | vár (megrendelőre: csillagok forrása; kutatókra: 38SX számok eltérése) — a kód kész, checker rendben | `solution-v2/ApplicationGuide.module.css`, `solution-v2/ModelSection.*` | igen | mobil UX 11-09 K5–K7 |
 | — | 2026-os fotók feltöltése a kutatás oldalra | vár (fotókra) | `public/images/kutatás_pics`, `src/lib/data.ts` | igen | audit 11-03 §10 |
 | — | Lakitelek: melyik mérés az évek közötti híd (2026 júl. vége tarlón készült) | vár (kutatókra) | `experiment/pages/Lakitelek*`, `seasons.ts` | igen | adatdok. 11-02 §7–8 |
 | — | 2026-os géptípusok (38SX / 38WX / 40SX) helyszínenként | vár (kutatókra) | `src/lib/data.ts`, `experiment/pages/*` | igen | adatdok. 11-02 §7 |
@@ -24,6 +22,8 @@ Utoljára frissítve: 2026-11-09. Folyamat és státuszok: [README](README.md).
 
 | Feladat | Mikor | Hol |
 |---|---|---|
+| [010](010-szentkiraly-grafikonok-mobilon.md) Szentkirály telefonon: mélyásógép-kapcsoló (8 oszlop 16 helyett), mélységválasztó a hőmérsékletnél; checker: minden pont rendben | 2026-11-09 | `experiment/Timeline.*`, `experiment/TemperatureSeriesChart.*`, commit 3f02bfb |
+| [009](009-evkapcsolo-helyszinenkent.md) Egy évkapcsoló helyszínenként (saját évállapot, `?evad-szk/-lk/-kb`), az év sima szöveg „másik év ↑” linkkel; Kecskemét mindig 2025; checker: minden pont rendben | 2026-11-09 | `experiment/season/*`, `*CombinedPage.tsx`, commit 3f02bfb |
 | [007](007-fo-eredmenyek-elore.md) Fő eredmények a hero után, lenyitható módszertan telefonon; 390 px: eredmények 1121 px-en, oldal −2,7 képernyő; checker: 1–7, 9 rendben, a piros `clip-check`/`nav-check` a 007-től független | 2026-11-09 | `ResearchScrollLayout`, `sections/SummarySection`, `sections/MethodologySection`, commit e730938 |
 | [006](006-helyszin-terkep.md) Helyszín adatok térképpel mindhárom helyszínen (papírfecni, zoom a Duna–Tisza közéről a táblá(k)ra, Szentkirályon két tábla + animált 2,3 km, ugráskor újraindul); checker: minden pont rendben. Nyitott: Lakitelek parcellasorrend, Szentkirály paradicsom sarkai | 2026-11-08 | `experiment/pages/*InfoPage.*`, `experiment/fieldmap/*`, `lib/field-maps.ts` |
 | [005](005-terfogattomeg-modszertan.md) Módszertan: a térfogattömeg mérése (fotóváltó 4 egységesített képpel, laborkártya, magyarázó kártya metszetrajzzal, Újra gomb); checker: minden pont rendben | 2026-11-08 | `experiment/pages/BulkDensity*`, `sections/MethodologySection.tsx`, `lib/methodology.ts`, `public/images/kutatás_pics/Lakitelek/terfogattomeg/` |
