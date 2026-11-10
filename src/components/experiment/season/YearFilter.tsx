@@ -77,7 +77,11 @@ export function useYearFilter(): YearFilterState {
 
 /** A block pinned to one season; its own year controls (e.g. YearBridge) narrow the site to that year */
 export function FixedSeason({ site, year, divided, children }: { site: SiteId; year: number; divided?: boolean; children: ReactNode }) {
-  const { only } = useYearFilter()
-  const value = useMemo(() => ({ year, years: [year], setYear: (y: number) => only(site, y), divided }), [site, year, only, divided])
+  const { only, all } = useYearFilter()
+  const siteYears = all[site]
+  const value = useMemo(
+    () => ({ year, years: [year], setYear: (y: number) => only(site, y), divided, siteYears }),
+    [site, year, only, divided, siteYears],
+  )
   return <SeasonContext.Provider value={value}>{children}</SeasonContext.Provider>
 }

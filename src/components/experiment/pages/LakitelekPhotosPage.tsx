@@ -28,6 +28,7 @@ export default function LakitelekPhotosPage() {
           <span>Lakitelek</span>
         </div>
         <SeasonLabel switchAt="lakitelek-info" />
+        <h3 className={styles.headerTitle}>Egyéb fotók</h3>
       </motion.div>
 
       {/* Content */}

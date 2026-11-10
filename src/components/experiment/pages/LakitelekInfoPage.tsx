@@ -21,7 +21,7 @@ export default function LakitelekInfoPage() {
 
   const lead = [
     'Hét művelési kombináció egymás mellett, azonos körülmények között.',
-    info.base && `${info.base}; ${inYear(season.year)} ${info.crop.toLowerCase()} a kultúra.`,
+    info.base && `${info.base}; ${inYear(season.year)} ${info.crop.toLowerCase()} van a táblán.`,
   ].filter(Boolean).join(' ')
 
   return (

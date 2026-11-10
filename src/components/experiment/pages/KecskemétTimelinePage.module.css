@@ -124,10 +124,12 @@
   }
 }
 
-/* Season marker under the title (phones) / next to the badge (desktop) */
+/* Year eyebrow ("hol + mikor"), always above the title (ticket 015): beside the badge on desktop,
+   alone on phones and tablets (the section bar names the site), 8px above the title */
 .seasonRow {
   display: flex;
-  margin-top: 12px;
+  justify-content: flex-start;
+  margin: 0 0 8px;
 }
 
 @media (min-width: 1025px) {
@@ -146,7 +148,7 @@
 
   .seasonRow {
     order: 1;
-    margin-top: 0;
+    margin: 0;
   }
 
   .headerTitle {

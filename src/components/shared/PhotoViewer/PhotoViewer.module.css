@@ -743,3 +743,21 @@
         display: none;
     }
 }
+
+/* Phones and tablets: the caption keeps its gold, sized like the 2026 rye board title of the same
+   block (1.375rem, 16px under "Egyéb fotók"; user, ticket 015) */
+@media (max-width: 1024px) {
+    .title {
+        font-size: 1.375rem;
+        line-height: 1.2;
+    }
+}
+
+/* Phones and tablets: the ::before/::after spacers centre the text in the desktop side card; in the
+   stacked layout they only add the 1.2rem gap above the caption (19px band under the block title) */
+@media (max-width: 1024px) {
+    .descriptionArea::before,
+    .descriptionArea::after {
+        display: none;
+    }
+}

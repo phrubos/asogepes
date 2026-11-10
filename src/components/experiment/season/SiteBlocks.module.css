@@ -1,37 +1,17 @@
-/* Year divider between the two seasons of one block, when both years are chosen (ticket 015) */
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 8px 0 16px;
-}
-
-.divider::after {
-  content: '';
-  flex: 1;
+/* Seam between the two seasons of one block, when both years are chosen (ticket 015).
+   No label: each copy states its year beside the badge. Fades out at both ends, so it needs no
+   left edge to align with (the page frames have different paddings). */
+hr.divider {
+  /* beats CombinedPage's `.section > * { flex: 1; min-height: 0 }` (flex-basis 0 left the line 0px tall) */
+  flex: none;
   height: 1px;
-  background: linear-gradient(90deg, rgba(212, 168, 75, 0.5), rgba(212, 168, 75, 0));
-}
-
-.year {
-  padding: 4px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(212, 168, 75, 0.5);
-  background: rgba(212, 168, 75, 0.1);
-  font-family: var(--font-mono, monospace);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--color-gold-light);
-}
-
-/* the second season of a block starts with some air after the first */
-.divider:not(:first-child) {
-  margin-top: 48px;
+  margin: 48px 0;
+  border: 0;
+  background: linear-gradient(90deg, rgba(212, 168, 75, 0), rgba(212, 168, 75, 0.35) 20%, rgba(212, 168, 75, 0.35) 80%, rgba(212, 168, 75, 0));
 }
 
 @media (max-width: 1024px) {
-  .divider:not(:first-child) {
-    margin-top: 32px;
+  hr.divider {
+    margin: 32px 0;
   }
 }

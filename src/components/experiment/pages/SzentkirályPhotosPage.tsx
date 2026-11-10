@@ -24,6 +24,7 @@ export default function SzentkirályPhotosPage() {
                     <span>Szentkirály</span>
                 </div>
                 <SeasonOnly years={[2025]} missingNote={(y) => `a ${yearAdj(y)} fotók még nincsenek fent`} />
+                <h3 className={styles.headerTitle}>Egyéb fotók</h3>
             </motion.div>
 
             {/* Content */}

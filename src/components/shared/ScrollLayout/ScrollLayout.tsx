@@ -508,7 +508,7 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
                         <span className={styles.sectionLabel}>{section.label}</span>
                       </span>
                     </button>
-                    {/* small 25 / 26 on the name's (last) line, right after it (ticket 015) */}
+                    {/* small 25 / 26 on the name's (first) line, not the number's, right after it (ticket 015) */}
                     <YearChips section={section} className={styles.yearChips} chipClass={styles.yearChip} onClass={styles.yearChipOn} />
                     </div>
 

@@ -43,7 +43,7 @@ function Photo({ spinner = 'sm', ...props }: ImageProps & { spinner?: 'sm' | 'md
 }
 
 /**
- * Lakitelek › Fotók, 2026: the seven rye bundles of May side by side on one scale, the soil line at
+ * Lakitelek › Egyéb fotók, 2026: the seven rye bundles of May side by side on one scale, the soil line at
  * the root crown, the measured shoot/root under each, and a card for the chosen parcel.
  * A filter dims the parcels that don't fit; the choice jumps to the first one that does.
  */
@@ -79,7 +79,7 @@ export default function LakitelekRyeBoard() {
     <div className={s.board}>
       <div className={s.top}>
         <div className={s.titles}>
-          <h3 className={s.title}>Hét parcella rozsa, májusban</h3>
+          <h3 className={s.title}>Rozs a hét parcellában, májusban</h3>
           <p className={s.lead}>
             Parcellánként egy kiásott mintacsomó, a májusi talajmérés napján. A kalászolás mind a hét parcellán a végén jár
             (BBCH 59 körül). A talajszint fölött a hajtás, alatta a gyökércsomó.
@@ -255,9 +255,9 @@ export default function LakitelekRyeBoard() {
       )}
 
       <p className={s.foot}>
-        A hét közeli fotó a zsák szélessége alapján egy léptékre igazítva, a gyökérnyak egy vonalban. A fotók ferde szögből
-        készültek, ezért a hajtás hossza a képen csak közelítő: a pontos érték a mért szám. Egy mintacsomó parcellánként; a
-        bokor sűrűsége szemrevételezés.
+        A hét közeli fotót a zsák szélessége alapján egy léptékre igazítottuk, a gyökérnyakak egy vonalba kerültek. A fotók
+        ferde szögből készültek, ezért a hajtás hossza a képen csak közelítő: a pontos érték a mért szám. Parcellánként egy
+        mintacsomót ástunk ki; a bokor sűrűségét szemrevételezéssel becsültük.
       </p>
 
       {overview && (

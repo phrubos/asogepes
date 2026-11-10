@@ -71,7 +71,7 @@ function ResearchSections() {
                 { id: 'szentkiraly-fejlodes', label: 'Fejlődés (2026)', years: [2026] },
                 { id: 'szentkiraly-paradicsom', label: 'Paradicsomtábla (2026)', years: [2026] },
                 { id: 'szentkiraly-meresek', label: 'További mérések (2026)', years: [2026] },
-                { id: 'szentkiraly-photos', label: 'Fotók', years: [2025] },
+                { id: 'szentkiraly-photos', label: 'Egyéb fotók', years: [2025] },
             ]),
         },
         {
@@ -81,7 +81,7 @@ function ResearchSections() {
             ...site('kecskemet', [
                 { id: 'kecskemet-info', label: 'Helyszín adatok' },
                 { id: 'kecskemet-timeline', label: 'A talajszerkezet változása' },
-                { id: 'kecskemet-photos', label: 'Fotók' },
+                { id: 'kecskemet-photos', label: 'Egyéb fotók' },
             ]),
         },
         {
@@ -93,7 +93,7 @@ function ResearchSections() {
                 { id: 'lakitelek-chart', label: '7 művelési kombináció eredménye' },
                 { id: 'lakitelek-talajelet', label: 'Talajélet (2025–2026)' },
                 { id: 'lakitelek-meresek', label: 'További mérések (2026)', years: [2026] },
-                { id: 'lakitelek-photos', label: 'Fotók' },
+                { id: 'lakitelek-photos', label: 'Egyéb fotók' },
             ]),
         },
         ]

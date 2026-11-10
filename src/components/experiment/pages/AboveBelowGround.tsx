@@ -185,7 +185,7 @@ export default function AboveBelowGround() {
       </div>
 
       <p className={s.note}>
-        Sematikus rajz. Hajtáshossz: mért adat, {namedIn(tom.shoot.date)}. Gyökér: szemrevételezés, egy kiásott növénypár; gyökértömeget nem mértünk.
+        Sematikus rajz. Hajtáshossz: mért adat, {namedIn(tom.shoot.date)}. Gyökér: szemrevételezéssel, egy kiásott növénypáron; gyökértömeget nem mértünk.
       </p>
       <span className="sr-only">{cap(namedIn(tom.shoot.date))} az ásógépes parcellán {tom.shoot.spade} cm, a kombinátoroson {tom.shoot.control} cm volt a paradicsom hajtása.</span>
     </section>

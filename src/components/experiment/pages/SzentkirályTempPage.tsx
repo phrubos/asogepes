@@ -32,10 +32,10 @@ export default function SzentkirályTempPage() {
                     <MapPin size={12} />
                     <span>Szentkirály</span>
                 </div>
-                <h3 className={styles.headerTitle}>Talajhőmérséklet</h3>
                 <div className={styles.seasonRow}>
                     <SeasonLabel switchAt="szentkiraly-info" />
                 </div>
+                <h3 className={styles.headerTitle}>Talajhőmérséklet</h3>
             </motion.div>
 
             {/* Content */}

@@ -9,6 +9,8 @@ interface SeasonState {
   setYear: (year: number) => void
   /** the block sits under a year divider (both years shown, ticket 015): no own year label */
   divided?: boolean
+  /** every year measured at the site (a FixedSeason block has `years: [year]`): decides "másik év" */
+  siteYears?: number[]
 }
 
 export const SeasonContext = createContext<SeasonState | null>(null)

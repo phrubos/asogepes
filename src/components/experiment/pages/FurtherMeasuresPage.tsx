@@ -117,7 +117,7 @@ const LAKI_CHAPTERS: Chapter[] = [
       `10 cm mélyen, a ${laki.water.parcels.length} parcella átlagai: ${laki.water.dates.map((d, j) => `${named(d)} ${hu(lakiWater[j].lo, 1)}–${hu(lakiWater[j].hi, 1)} %`).join(', ')}.` +
       (wetAboveAll ? ` ${cap(namedIn(laki.water.dates[wetIdx]))} mind a ${laki.water.parcels.length} parcellán nedvesebb volt, mint a másik két mérésnél.` : ''),
   },
-  // Hajtás és gyökér lives in the Fotók block (LakitelekRyeBoard: the seven bundles with the measured lengths)
+  // Hajtás és gyökér lives in the Egyéb fotók block (LakitelekRyeBoard: the seven bundles with the measured lengths)
   {
     title: 'Humusz',
     body:
@@ -508,30 +508,28 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
           <MapPin size={12} />
           <span>{isLaki ? 'Lakitelek' : 'Szentkirály'}</span>
         </div>
+        <div className={styles.seasonRow}>
+          <SeasonOnly years={[2026]} />
+        </div>
         <h3 className={styles.headerTitle}>
           {isLaki ? 'További mérések: a talaj a rozs alatt' : isTom ? 'További mérések: a paradicsomtábla' : 'További mérések: a talaj a hagyma alatt'}
         </h3>
-        <div className={styles.seasonRow}>
-          <div className={own.metaRow}>
-            <SeasonOnly years={[2026]} />
-            {!isLaki && (
-              <div className={`${switchStyles.switch} ${switchStyles.small}`} role="group" aria-label="Tábla">
-                <span className={switchStyles.label} aria-hidden="true">Tábla</span>
-                {FIELDS.map((f) => (
-                  <button
-                    key={f.id}
-                    type="button"
-                    className={`${switchStyles.option} ${field === f.id ? switchStyles.active : ''}`}
-                    aria-pressed={field === f.id}
-                    onClick={() => pickField(f.id)}
-                  >
-                    {f.label}
-                  </button>
-                ))}
-              </div>
-            )}
+        {!isLaki && (
+          <div className={`${switchStyles.switch} ${switchStyles.small} ${own.fieldSwitch}`} role="group" aria-label="Tábla">
+            <span className={switchStyles.label} aria-hidden="true">Tábla</span>
+            {FIELDS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                className={`${switchStyles.option} ${field === f.id ? switchStyles.active : ''}`}
+                aria-pressed={field === f.id}
+                onClick={() => pickField(f.id)}
+              >
+                {f.label}
+              </button>
+            ))}
           </div>
-        </div>
+        )}
       </motion.div>
 
       <Story

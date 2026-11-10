@@ -29,10 +29,10 @@ export default function SzentkirályTimelinePage() {
           <MapPin size={12} />
           <span>Szentkirály</span>
         </div>
-        <h3 className={styles.headerTitle}>A talajszerkezet változása</h3>
         <div className={styles.seasonRow}>
           <SeasonLabel switchAt="szentkiraly-info" />
         </div>
+        <h3 className={styles.headerTitle}>A talajszerkezet változása</h3>
       </motion.div>
 
       {/* Timeline Chart: remounted per season so the bars grow again */}

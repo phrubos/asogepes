@@ -27,10 +27,10 @@ export default function SzentkiralyTomatoPage() {
           <MapPin size={12} />
           <span>Szentkirály</span>
         </div>
-        <h3 className={styles.headerTitle}>Új tábla: ipari paradicsom</h3>
         <div className={styles.seasonRow}>
           <SeasonOnly years={site.seasons.map((s) => s.year)} />
         </div>
+        <h3 className={styles.headerTitle}>Új tábla: ipari paradicsom</h3>
         <p className={own.about}>{season.about}</p>
       </motion.div>
 

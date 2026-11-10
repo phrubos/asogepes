@@ -12,30 +12,38 @@
   white-space: pre-wrap;
 }
 
+/* "Év:" for screen readers only: a year beside the location badge reads as a year on its own */
 .label {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
+/* The one year style of /kutatas (ticket 015): plain gold text, never a pill, since pills are
+   the controls (rail chips, ÉV switch) */
 .year {
   font-family: var(--font-mono, monospace);
-  font-weight: 600;
-  color: var(--color-gold);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-gold-light, var(--color-gold));
 }
 
 .note {
   color: rgba(255, 255, 255, 0.65);
 }
 
-/* a text link with a 44px tap row, no box */
+/* a text link with a 44px tap row, no box; the negative margins keep the 44px off the layout, so
+   the eyebrow sits 8px above the title with or without the link */
 .switchLink {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   min-height: 44px;
+  margin: -12px 0;
   padding: 0;
   border: 0;
   background: none;

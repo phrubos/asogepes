@@ -414,10 +414,10 @@ export default function SzentkiralyGrowthPage() {
           <MapPin size={12} />
           <span>Szentkirály</span>
         </div>
-        <h3 className={styles.headerTitle}>Az ásógépes hagyma egy hónappal előrébb jár</h3>
         <div className={styles.seasonRow}>
           <SeasonOnly years={site.seasons.map((s) => s.year)} />
         </div>
+        <h3 className={styles.headerTitle}>Az ásógépes hagyma egy hónappal előrébb jár</h3>
       </motion.div>
 
       <div ref={ref}>

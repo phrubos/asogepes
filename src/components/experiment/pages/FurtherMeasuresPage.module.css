@@ -1,18 +1,14 @@
 /* "További mérések": one small chart per chapter (frame: story/Story) */
 
-/* Évad tag and Tábla switch: one row on desktop, stacked on phones (the switch is full width there) */
-.metaRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
+/* Tábla switch: a control, so it sits under the title (the year eyebrow above the title is text
+   only, ticket 015); 16px from the title, full width on phones and tablets */
+.fieldSwitch {
+  order: 3;
+  margin-top: 16px;
 }
 
 @media (max-width: 1024px) {
-  .metaRow {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
+  .fieldSwitch {
     width: 100%;
   }
 }

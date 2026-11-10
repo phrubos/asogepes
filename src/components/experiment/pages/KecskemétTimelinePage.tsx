@@ -23,10 +23,10 @@ export default function KecskemétTimelinePage() {
           <MapPin size={12} />
           <span>Kecskemét-Borbás</span>
         </div>
-        <h3 className={styles.headerTitle}>A talajszerkezet változása</h3>
         <div className={styles.seasonRow}>
           <SeasonOnly years={[2025]} />
         </div>
+        <h3 className={styles.headerTitle}>A talajszerkezet változása</h3>
       </motion.div>
 
       {/* Timeline Chart */}

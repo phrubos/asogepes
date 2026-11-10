@@ -640,23 +640,23 @@
 }
 
 /* ---------- Year chips of a /kutatas site (ticket 015) ----------
-   Small 25 / 26 on the same line as the site name, right after it (on the last line of a
-   two-line name), so they read as part of the site. Always full strength, also when the section
-   is not the active one. */
+   Small 25 / 26 on the same line as the site name, right after it, so they read as part of the
+   site. Always full strength, also when the section is not the active one. */
 .headLine {
   display: flex;
   align-items: last baseline;
   gap: 6px;
 }
 
-/* a two-line name (Kecskemét-Borbás): the chips at the middle of the name, not on its last line
-   (bottom of the row, lifted by half the name's height minus half a chip) */
+/* a two-line name (Kecskemét- / Borbás): the chips on the name's first line, not the number's,
+   on the same baseline as on a one-line name (there the chip box ends 3px below the name's line
+   box; here: one 16px name line up, minus those 3px) */
 .headLine[data-two-line] {
   align-items: flex-end;
 }
 
 .headLine[data-two-line] .yearChips {
-  margin-bottom: 6px;
+  margin-bottom: 13px;
 }
 
 .headLine > .headRow {
@@ -712,6 +712,13 @@
   border-color: var(--color-gold);
   background: var(--color-gold);
   color: #1a1612;
+}
+
+/* a chosen chip that can still be switched off answers the pointer too (lighter gold);
+   a locked one (last chosen year, single-year site) stays still: a click does nothing there */
+.yearChipOn:not([aria-disabled='true']):hover {
+  border-color: var(--color-gold-light);
+  background: var(--color-gold-light);
 }
 
 .yearChip[aria-disabled='true'] {

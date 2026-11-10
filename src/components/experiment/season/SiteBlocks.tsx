@@ -17,7 +17,9 @@ export interface SiteBlock {
 
 /**
  * The blocks of one site, narrowed to the years chosen for it (ticket 015): a block without a chosen
- * year is left out; a season block with both years chosen is shown once per year, under a year divider.
+ * year is left out; a season block with both years chosen is shown once per year, the copies parted by
+ * a hairline. The year is never a pill here (pills are controls): each copy states it in its own
+ * "hol + mikor" row, like a single-year block does.
  */
 export default function SiteBlocks({ site, blocks, sectionClass }: { site: SiteId; blocks: SiteBlock[]; sectionClass: string }) {
   const { selected } = useYearFilter()
@@ -31,13 +33,10 @@ export default function SiteBlocks({ site, blocks, sectionClass }: { site: SiteI
         const each = b.once ? [ys[ys.length - 1]] : ys
         return (
           <div key={b.id} id={b.id} className={sectionClass} style={style}>
-            {each.map((y) => (
+            {each.map((y, i) => (
               <Fragment key={y}>
-                {each.length > 1 && (
-                  <div className={styles.divider} role="separator" aria-label={`${y}`}>
-                    <span className={styles.year}>{y}</span>
-                  </div>
-                )}
+                {/* a quiet seam between the two copies; each copy says its own year beside the badge */}
+                {i > 0 && <hr className={styles.divider} />}
                 <FixedSeason site={site} year={y} divided={each.length > 1}>
                   {b.component}
                 </FixedSeason>

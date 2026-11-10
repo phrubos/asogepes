@@ -43,6 +43,8 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
+  /* the "hol + mikor" row sits 8px above the title, as on every /kutatas block (the header gap is 12) */
+  margin-bottom: -4px;
 }
 
 .headerBadge {

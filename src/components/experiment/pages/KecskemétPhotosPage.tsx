@@ -24,6 +24,7 @@ export default function KecskemétPhotosPage() {
                     <span>Kecskemét-Borbás</span>
                 </div>
                 <SeasonOnly years={[2025]} />
+                <h3 className={styles.headerTitle}>Egyéb fotók</h3>
             </motion.div>
 
             {/* Content */}

@@ -69,9 +69,15 @@
   }
 }
 
-/* Phones and tablets: the header holds only the location badge, which the section bar already shows */
+/* Phones and tablets: the section bar already names the site, so the badge goes; the year stays
+   (every /kutatas block states its year, ticket 015), left-aligned, 12px above the photos */
 @media (max-width: 1024px) {
   .header {
+    justify-content: flex-start;
+    margin-bottom: 0;
+  }
+
+  .headerBadge {
     display: none;
   }
 }
@@ -80,5 +86,36 @@
 @media (min-width: 1025px) {
   .header {
     justify-content: flex-start;
+  }
+}
+
+/* Title "Egyéb fotók" (ticket 015): every /kutatas block is eyebrow (hol + mikor) → title → content.
+   The eyebrow row wraps, the title takes the next line, 8px under it */
+.header {
+  flex-wrap: wrap;
+  column-gap: 10px;
+  row-gap: 0;
+}
+
+.headerTitle {
+  flex-basis: 100%;
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-white);
+}
+
+@media (max-width: 768px) {
+  .headerTitle {
+    font-size: 1.125rem;
+  }
+}
+
+/* Desktop: 28px from the title to the photos (12 here + the container's 16), as on the other blocks */
+@media (min-width: 1025px) {
+  .header {
+    margin-bottom: 12px;
   }
 }

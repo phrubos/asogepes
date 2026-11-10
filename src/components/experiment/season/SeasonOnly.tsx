@@ -31,11 +31,14 @@ export function yearAdj(y: number): string {
  * `missingNote` replaces the default text, e.g. for photos: (year) => `a ${yearAdj(year)} fotók még nincsenek fent`
  */
 export default function SeasonOnly({ years, missingNote }: { years: number[]; missingNote?: (year: number) => string }) {
-  const { year } = useSeason()
+  const { year, divided } = useSeason()
   const missing = !years.includes(year)
+  // one copy of a block shown per year: this copy's year only
+  const shown = divided && !missing ? [year] : years
   return (
     <p className={styles.only}>
-      <span className={styles.label}>Év:</span> <span className={styles.year}>{years.join(', ')}</span>
+      <span className={styles.label}>Év: </span>
+      <span className={styles.year}>{shown.join(', ')}</span>
       {missing && <span className={styles.note}> · {missingNote ? missingNote(year) : `${inYear(year)} itt nem mértünk`}</span>}
     </p>
   )
@@ -46,14 +49,15 @@ export default function SeasonOnly({ years, missingNote }: { years: number[]; mi
  * ÉV switch (in Helyszín adatok, `switchAt`) instead of a second, third switch per site.
  */
 export function SeasonLabel({ switchAt }: { switchAt: string }) {
-  const { year, years, divided } = useSeason()
+  const { year, years, divided, siteYears = years } = useSeason()
   const { scrollToSection } = useScrollNav()
-  // under a year divider the year is already said (ticket 015)
-  if (divided) return null
+  // the year always sits here, also when both years are shown (one copy per year, ticket 015);
+  // "másik év" only when the other year is hidden
   return (
     <p className={styles.only}>
-      <span className={styles.label}>Év:</span> <span className={styles.year}>{year}</span>
-      {years.length > 1 && (
+      <span className={styles.label}>Év: </span>
+      <span className={styles.year}>{year}</span>
+      {!divided && siteYears.length > 1 && (
         <>
           {' · '}
           <button type="button" className={styles.switchLink} onClick={() => scrollToSection(switchAt)}>
