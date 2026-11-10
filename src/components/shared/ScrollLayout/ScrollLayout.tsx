@@ -16,6 +16,41 @@ export interface ScrollSection {
     id: string
     label: string
   }[]
+  /** Year chips beside the section number (/kutatas sites, ticket 015): every year measured there, */
+  years?: number[]
+  /** the chosen ones, */
+  chosenYears?: number[]
+  /** and what a chip does (the last chosen year stays on) */
+  onToggleYear?: (year: number) => void
+}
+
+/** 25 / 26 chips of a site: one year, the other or both; a single-year site shows one locked chip */
+export function YearChips({ section, className, chipClass, onClass }: { section: ScrollSection; className: string; chipClass: string; onClass: string }) {
+  const { years, chosenYears = [], onToggleYear } = section
+  if (!years?.length) return null
+  const name = section.label.replace(/-\s*\n\s*/g, '-').replace(/\s*\n\s*/g, ' ')
+  return (
+    <span className={className} role="group" aria-label={`${name}: évek`} onClick={(e) => e.stopPropagation()}>
+      {years.map((y) => {
+        const on = chosenYears.includes(y)
+        const locked = years.length === 1 || (on && chosenYears.length === 1)
+        return (
+          <button
+            key={y}
+            type="button"
+            className={`${chipClass} ${on ? onClass : ''}`}
+            aria-pressed={on}
+            aria-disabled={locked || undefined}
+            aria-label={`${y}`}
+            title={years.length === 1 ? `Csak ${y}-ben mértünk` : locked ? 'Legalább egy év mindig látszik' : undefined}
+            onClick={() => !locked && onToggleYear?.(y)}
+          >
+            {String(y).slice(2)}
+          </button>
+        )
+      })}
+    </span>
+  )
 }
 
 interface ScrollLayoutProps {
@@ -437,6 +472,7 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
                     {/* Marker beside the label, so it stays there when the subsections open.
                         The label row is the button (keyboard); a click anywhere in the group bubbles
                         up to the group's handler, so the subsection buttons are not nested in a button. */}
+                    <div className={section.years?.length ? styles.headLine : undefined} data-two-line={section.label.includes('\n') || undefined}>
                     <button
                       type="button"
                       className={styles.headRow}
@@ -452,6 +488,9 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
                         <span className={styles.sectionLabel}>{section.label}</span>
                       </span>
                     </button>
+                    {/* small 25 / 26 on the name's (last) line, right after it (ticket 015) */}
+                    <YearChips section={section} className={styles.yearChips} chipClass={styles.yearChip} onClass={styles.yearChipOn} />
+                    </div>
 
                     {/* Sub-sections List (Only for active section) */}
                     {isActive && section.subsections && section.subsections.length > 0 && (

@@ -171,3 +171,8 @@
     gap: 20px;
   }
 }
+
+/* no year label under a year divider (ticket 015): the empty row takes no space */
+.seasonRow:empty {
+  display: none;
+}

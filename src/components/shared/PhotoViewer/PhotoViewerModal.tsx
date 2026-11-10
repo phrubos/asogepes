@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
@@ -64,6 +64,8 @@ interface PhotoViewerModalProps {
             lines: string[]
         }
         initialSliderPosition?: number
+        /** drawn content in place of the photo (e.g. a photo with an SVG layer); calls onLoad when its image is in */
+        content?: (onLoad: () => void) => ReactNode
     }
     currentIndex: number
     totalItems: number
@@ -99,6 +101,12 @@ export function PhotoViewerModal({
         setMounted(true)
         return () => setMounted(false)
     }, [])
+
+    const closeRef = useRef<HTMLButtonElement>(null)
+    // keyboard users land on the close button (the opener gets the focus back on close)
+    useEffect(() => {
+        if (isOpen && mounted) closeRef.current?.focus()
+    }, [isOpen, mounted])
 
     const imageAreaRef = useRef<HTMLDivElement>(null)
     const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -220,6 +228,9 @@ export function PhotoViewerModal({
                 >
                     <motion.div
                         className={styles.modalContent}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={currentImage.title || currentImage.alt}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -289,7 +300,9 @@ export function PhotoViewerModal({
                                         )}
                                     </AnimatePresence>
 
-                                    {isComparison && currentImage.leftSrc && currentImage.rightSrc ? (
+                                    {currentImage.content ? (
+                                        currentImage.content(handleLoadComplete)
+                                    ) : isComparison && currentImage.leftSrc && currentImage.rightSrc ? (
                                         <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                                             <BeforeAfterSlider
                                                 leftImage={currentImage.leftSrc}
@@ -382,7 +395,7 @@ export function PhotoViewerModal({
 
                         {/* Info Panel (Right) */}
                         <div className={styles.modalInfoPanel}>
-                            <button className={styles.closeButton} onClick={onClose} aria-label="Bezárás">
+                            <button ref={closeRef} className={styles.closeButton} onClick={onClose} aria-label="Bezárás">
                                 <X size={24} />
                             </button>
 

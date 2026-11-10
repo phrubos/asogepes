@@ -46,8 +46,10 @@ export default function SeasonOnly({ years, missingNote }: { years: number[]; mi
  * ÉV switch (in Helyszín adatok, `switchAt`) instead of a second, third switch per site.
  */
 export function SeasonLabel({ switchAt }: { switchAt: string }) {
-  const { year, years } = useSeason()
+  const { year, years, divided } = useSeason()
   const { scrollToSection } = useScrollNav()
+  // under a year divider the year is already said (ticket 015)
+  if (divided) return null
   return (
     <p className={styles.only}>
       <span className={styles.label}>Év:</span> <span className={styles.year}>{year}</span>

@@ -7,9 +7,11 @@ interface SeasonState {
   year: number
   years: number[]
   setYear: (year: number) => void
+  /** the block sits under a year divider (both years shown, ticket 015): no own year label */
+  divided?: boolean
 }
 
-const SeasonContext = createContext<SeasonState | null>(null)
+export const SeasonContext = createContext<SeasonState | null>(null)
 
 const PARAM = 'evad'
 

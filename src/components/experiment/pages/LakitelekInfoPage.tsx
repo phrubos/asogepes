@@ -1,10 +1,10 @@
 'use client'
 
 import { locations } from '@/lib/data'
-import { lakitelekSeasons, LAKITELEK_YEARS } from '@/lib/seasons'
+import { lakitelekSeasons } from '@/lib/seasons'
 import { lakitelekMapField } from '@/lib/field-maps'
 import { useSeason } from '../season/SeasonContext'
-import SeasonSwitch from '../season/SeasonSwitch'
+import SiteYearSwitch from '../season/SiteYearSwitch'
 import { inYear } from '../season/SeasonOnly'
 import FieldMapCard from '../fieldmap/FieldMapCard'
 import SiteInfoLayout, { siteFacts } from '../fieldmap/SiteInfoLayout'
@@ -27,7 +27,7 @@ export default function LakitelekInfoPage() {
   return (
     <SiteInfoLayout
       badge="03. helyszín"
-      season={<SeasonSwitch years={LAKITELEK_YEARS} small />}
+      season={<SiteYearSwitch site="lakitelek" small />}
       title={data.name}
       lead={lead}
       facts={siteFacts(info, prev && { year: prev.year, crop: prev.info.crop })}

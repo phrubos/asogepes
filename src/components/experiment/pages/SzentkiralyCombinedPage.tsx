@@ -7,39 +7,24 @@ import SzentkirályPhotosPage from './SzentkirályPhotosPage'
 import SzentkiralyTomatoPage from './SzentkiralyTomatoPage'
 import SzentkiralyGrowthPage from './SzentkiralyGrowthPage'
 import FurtherMeasuresPage from './FurtherMeasuresPage'
-import { szentkiralySeasons } from '@/lib/seasons'
-import { SeasonProvider } from '../season/SeasonContext'
+import SiteBlocks, { type SiteBlock } from '../season/SiteBlocks'
 import styles from './CombinedPage.module.css'
 
-const SZK_YEARS = szentkiralySeasons.seasons.map((s) => s.year)
-
-/** `phoneHeight`: the block's height on phones, the placeholder size while it is not rendered yet */
-const sections: { id: string; component: JSX.Element; phoneHeight?: number }[] = [
-    { id: 'szentkiraly-info', component: <SzentkirályInfoPage /> },
-    { id: 'szentkiraly-timeline', component: <SzentkirályTimelinePage /> },
-    { id: 'szentkiraly-temp', component: <SzentkirályTempPage /> },
-    { id: 'szentkiraly-fejlodes', component: <SzentkiralyGrowthPage />, phoneHeight: 760 },
-    { id: 'szentkiraly-paradicsom', component: <SzentkiralyTomatoPage /> },
-    { id: 'szentkiraly-meresek', component: <FurtherMeasuresPage site="szentkiraly" />, phoneHeight: 790 },
-    { id: 'szentkiraly-photos', component: <SzentkirályPhotosPage /> }
+/** Each block with the seasons it has; the 25 / 26 chips of the site narrow them (ticket 015) */
+const blocks: SiteBlock[] = [
+    { id: 'szentkiraly-info', component: <SzentkirályInfoPage />, years: [2025, 2026], once: true },
+    { id: 'szentkiraly-timeline', component: <SzentkirályTimelinePage />, years: [2025, 2026] },
+    { id: 'szentkiraly-temp', component: <SzentkirályTempPage />, years: [2025, 2026] },
+    { id: 'szentkiraly-fejlodes', component: <SzentkiralyGrowthPage />, years: [2026], phoneHeight: 760 },
+    { id: 'szentkiraly-paradicsom', component: <SzentkiralyTomatoPage />, years: [2026] },
+    { id: 'szentkiraly-meresek', component: <FurtherMeasuresPage site="szentkiraly" />, years: [2026], phoneHeight: 790 },
+    { id: 'szentkiraly-photos', component: <SzentkirályPhotosPage />, years: [2025] },
 ]
 
 export default function SzentkiralyCombinedPage() {
     return (
-        // the site's own season: the ÉV switch in Helyszín adatok sets only Szentkirály
-        <SeasonProvider years={SZK_YEARS} param="evad-szk">
         <div className={styles.combinedWrapper}>
-            {sections.map((section) => (
-                <div
-                    key={section.id}
-                    id={section.id}
-                    className={styles.section}
-                    style={section.phoneHeight ? ({ '--phone-h': `${section.phoneHeight}px` } as React.CSSProperties) : undefined}
-                >
-                    {section.component}
-                </div>
-            ))}
+            <SiteBlocks site="szentkiraly" blocks={blocks} sectionClass={styles.section} />
         </div>
-        </SeasonProvider>
     )
 }

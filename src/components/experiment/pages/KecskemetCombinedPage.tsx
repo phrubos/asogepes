@@ -3,32 +3,20 @@
 import KecskemétInfoPage from './KecskemétInfoPage'
 import KecskemétTimelinePage from './KecskemétTimelinePage'
 import KecskemétPhotosPage from './KecskemétPhotosPage'
-import { SeasonProvider } from '../season/SeasonContext'
+import SiteBlocks, { type SiteBlock } from '../season/SiteBlocks'
 import styles from './CombinedPage.module.css'
 
-const KB_YEARS = [2025]
-
-const sections = [
-    { id: 'kecskemet-info', component: <KecskemétInfoPage /> },
-    { id: 'kecskemet-timeline', component: <KecskemétTimelinePage /> },
-    { id: 'kecskemet-photos', component: <KecskemétPhotosPage /> }
+/** Measured in 2025 only */
+const blocks: SiteBlock[] = [
+    { id: 'kecskemet-info', component: <KecskemétInfoPage />, years: [2025], once: true },
+    { id: 'kecskemet-timeline', component: <KecskemétTimelinePage />, years: [2025] },
+    { id: 'kecskemet-photos', component: <KecskemétPhotosPage />, years: [2025] },
 ]
 
 export default function KecskemetCombinedPage() {
     return (
-        // measured in 2025 only: its own provider keeps it on 2025 whatever the other sites show
-        <SeasonProvider years={KB_YEARS} param="evad-kb">
         <div className={styles.combinedWrapper}>
-            {sections.map((section) => (
-                <div
-                    key={section.id}
-                    id={section.id}
-                    className={styles.section}
-                >
-                    {section.component}
-                </div>
-            ))}
+            <SiteBlocks site="kecskemet" blocks={blocks} sectionClass={styles.section} />
         </div>
-        </SeasonProvider>
     )
 }

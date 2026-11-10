@@ -5,35 +5,22 @@ import LakitelekChartPage from './LakitelekChartPage'
 import LakitelekPhotosPage from './LakitelekPhotosPage'
 import LakitelekSoilLifePage from './LakitelekSoilLifePage'
 import FurtherMeasuresPage from './FurtherMeasuresPage'
-import { LAKITELEK_YEARS } from '@/lib/seasons'
-import { SeasonProvider } from '../season/SeasonContext'
+import SiteBlocks, { type SiteBlock } from '../season/SiteBlocks'
 import styles from './CombinedPage.module.css'
 
-/** `phoneHeight`: the block's height on phones, the placeholder size while it is not rendered yet */
-const sections: { id: string; component: JSX.Element; phoneHeight?: number }[] = [
-    { id: 'lakitelek-info', component: <LakitelekInfoPage /> },
-    { id: 'lakitelek-chart', component: <LakitelekChartPage /> },
-    { id: 'lakitelek-talajelet', component: <LakitelekSoilLifePage />, phoneHeight: 930 },
-    { id: 'lakitelek-meresek', component: <FurtherMeasuresPage site="lakitelek" />, phoneHeight: 730 },
-    { id: 'lakitelek-photos', component: <LakitelekPhotosPage /> }
+/** Each block with the seasons it has; the 25 / 26 chips of the site narrow them (ticket 015) */
+const blocks: SiteBlock[] = [
+    { id: 'lakitelek-info', component: <LakitelekInfoPage />, years: [2025, 2026], once: true },
+    { id: 'lakitelek-chart', component: <LakitelekChartPage />, years: [2025, 2026] },
+    { id: 'lakitelek-talajelet', component: <LakitelekSoilLifePage />, years: [2025, 2026], once: true, phoneHeight: 930 },
+    { id: 'lakitelek-meresek', component: <FurtherMeasuresPage site="lakitelek" />, years: [2026], phoneHeight: 730 },
+    { id: 'lakitelek-photos', component: <LakitelekPhotosPage />, years: [2025, 2026] },
 ]
 
 export default function LakitelekCombinedPage() {
     return (
-        // the site's own season: the ÉV switch in Helyszín adatok sets only Lakitelek
-        <SeasonProvider years={LAKITELEK_YEARS} param="evad-lk">
         <div className={styles.combinedWrapper}>
-            {sections.map((section) => (
-                <div
-                    key={section.id}
-                    id={section.id}
-                    className={styles.section}
-                    style={section.phoneHeight ? ({ '--phone-h': `${section.phoneHeight}px` } as React.CSSProperties) : undefined}
-                >
-                    {section.component}
-                </div>
-            ))}
+            <SiteBlocks site="lakitelek" blocks={blocks} sectionClass={styles.section} />
         </div>
-        </SeasonProvider>
     )
 }

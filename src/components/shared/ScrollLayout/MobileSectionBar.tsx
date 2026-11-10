@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, X } from 'lucide-react'
-import { useScrollNav } from './ScrollLayout'
+import { useScrollNav, YearChips } from './ScrollLayout'
 import styles from './MobileSectionBar.module.css'
 
 // "Kecskemét-\nBorbás" joins without a space after the hyphen; other line breaks become a space
@@ -108,15 +108,19 @@ export default function MobileSectionBar() {
               <ol className={styles.list}>
                 {sections.map(s => (
                   <li key={s.id}>
-                    <button
-                      type="button"
-                      className={styles.item}
-                      aria-current={s.id === activeSection && !activeSubsection ? 'true' : undefined}
-                      data-active={s.id === activeSection || undefined}
-                      onClick={() => go(s.id)}
-                    >
-                      {oneLine(s.label)}
-                    </button>
+                    <div className={styles.itemRow}>
+                      <button
+                        type="button"
+                        className={styles.item}
+                        aria-current={s.id === activeSection && !activeSubsection ? 'true' : undefined}
+                        data-active={s.id === activeSection || undefined}
+                        onClick={() => go(s.id)}
+                      >
+                        {oneLine(s.label)}
+                      </button>
+                      {/* the site's years (ticket 015), the same choice as in the desktop rail */}
+                      <YearChips section={s} className={styles.yearChips} chipClass={styles.yearChip} onClass={styles.yearChipOn} />
+                    </div>
                     {s.subsections && s.subsections.length > 0 && (
                       <ol className={styles.subList}>
                         {s.subsections.map(ss => (

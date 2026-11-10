@@ -185,3 +185,56 @@
 .subItem[aria-current='true'] {
   border-left-color: var(--color-gold);
 }
+
+/* A site's row in the sheet: its name, and its 25 / 26 chips on the right (ticket 015) */
+.itemRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.itemRow > .item {
+  flex: 1;
+  min-width: 0;
+}
+
+.yearChips {
+  flex: none;
+  display: flex;
+  gap: 6px;
+}
+
+.yearChip {
+  min-width: 48px;
+  height: 44px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(245, 240, 232, 0.2);
+  background: transparent;
+  color: rgba(245, 240, 232, 0.8);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.yearChip:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.yearChipOn {
+  border-color: var(--color-gold);
+  background: var(--color-gold);
+  color: #1a1612;
+}
+
+.yearChip[aria-disabled='true'] {
+  cursor: default;
+}
+
+.yearChips:has(> :only-child) .yearChipOn {
+  border-color: rgba(212, 168, 75, 0.5);
+  background: rgba(212, 168, 75, 0.18);
+  color: var(--color-gold-light);
+}

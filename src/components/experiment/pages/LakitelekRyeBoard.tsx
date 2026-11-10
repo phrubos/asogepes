@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
-import Image from 'next/image'
-import { ChevronLeft, ChevronRight, Expand, Maximize2, Minimize2, X } from 'lucide-react'
+import Image, { type ImageProps } from 'next/image'
+import { ChevronLeft, ChevronRight, Expand, Maximize2, Minimize2 } from 'lucide-react'
+import { PhotoViewerModal } from '@/components/shared/PhotoViewer/PhotoViewerModal'
 import { lakitelekRye2026 as rye, lakitelekSoil2026, lakitelekSeasons } from '@/lib/seasons'
+import SoilLoader from '@/components/ui/SoilLoader'
 import s from './LakitelekRyeBoard.module.css'
 
 type Filter = 'all' | 'spade' | 'other'
@@ -25,6 +26,21 @@ const cm = (v: number | undefined) => (v === undefined ? '–' : String(v).repla
 
 const fits = (p: Parcel, f: Filter) => f === 'all' || (f === 'spade' ? p.role !== 'other' : p.role === 'other')
 const spadeish = (p: Parcel) => p.role !== 'other'
+
+/** A photo with the site's soil loader over it until it has loaded, like the 2025 photo viewer */
+function Photo({ spinner = 'sm', ...props }: ImageProps & { spinner?: 'sm' | 'md' }) {
+  const [done, setDone] = useState(false)
+  return (
+    <>
+      {!done && (
+        <span className={s.loading} aria-hidden="true">
+          <SoilLoader size={spinner} />
+        </span>
+      )}
+      <Image {...props} alt={props.alt} onLoad={() => setDone(true)} />
+    </>
+  )
+}
 
 /**
  * Lakitelek › Fotók, 2026: the seven rye bundles of May side by side on one scale, the soil line at
@@ -108,7 +124,9 @@ export default function LakitelekRyeBoard() {
           /* Big view: the soil line runs from the photo across the text and splits it, above / below ground */
           <div className={s.zoom} aria-live="polite">
             <div className={s.zoomPhoto}>
-              <Image
+              <Photo
+                key={p.file}
+                spinner="md"
                 src={`${rye.dir}/${p.file}`}
                 alt={`A ${p.num} parcella mintacsomója közelről, a kalásztól a gyökérig`}
                 fill
@@ -188,7 +206,7 @@ export default function LakitelekRyeBoard() {
                     onClick={() => setSel(i)}
                   >
                     <span className={s.photo}>
-                      <Image src={`${rye.dir}/${q.file}`} alt="" fill sizes="(max-width: 1024px) 112px, 160px" />
+                      <Photo src={`${rye.dir}/${q.file}`} alt="" fill sizes="(max-width: 1024px) 112px, 160px" />
                     </span>
                     <span className={`${s.name} ${spadeish(q) ? s.gold : ''}`}>
                       {q.num}
@@ -243,11 +261,17 @@ export default function LakitelekRyeBoard() {
       </p>
 
       {overview && (
-        <Overview
+        <PhotoViewerModal
+          isOpen
           onClose={() => {
             setOverview(false)
             trigger.current?.focus()
           }}
+          currentImage={OVERVIEW_ITEM}
+          currentIndex={0}
+          totalItems={1}
+          onNext={() => {}}
+          onPrev={() => {}}
         />
       )}
     </div>
@@ -290,109 +314,94 @@ function Details({ i }: { i: number }) {
   )
 }
 
+/** The overview in the site's photo viewer (as the 2025 photos): title and legend in its side panel */
+const OVERVIEW_ITEM = {
+  src: `${rye.dir}/${rye.overview.file}`,
+  alt: 'Hét kiásott rozs-mintacsomó fehér zsákokon, balról jobbra az I–VII. parcella, középen mérőszalag',
+  title: 'Mind a hét egy képen · május',
+  description:
+    'Az eredeti fotó: egy kép, egy lépték, középen mérőszalag.\n\nArany vonal: talajszint (gyökérnyak); szaggatott: hajtás; fehér: gyökér. A számok mért hosszak; a fotó ferde szögű, ezért a vonalak hossza csak irány.',
+  content: (onLoad: () => void) => <OverviewFigure onLoad={onLoad} />,
+}
+
 /** The original overview photo with the soil line, shoot/root lines and the measured lengths drawn on it */
-function Overview({ onClose }: { onClose: () => void }) {
-  const close = useRef<HTMLButtonElement>(null)
-  const [mounted, setMounted] = useState(false)
-
+function OverviewFigure({ onLoad }: { onLoad: () => void }) {
+  const box = useRef<HTMLDivElement>(null)
+  // labels never below 12 px: when the picture is drawn narrower, the labels grow in picture units
+  const [k, setK] = useState(1)
   useEffect(() => {
-    setMounted(true)
-    const html = document.documentElement
-    const prev = html.style.overflow
-    html.style.overflow = 'hidden'
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
-    window.addEventListener('keydown', onKey)
-    return () => {
-      html.style.overflow = prev
-      window.removeEventListener('keydown', onKey)
-    }
-  }, [onClose])
-  useEffect(() => {
-    if (mounted) close.current?.focus()
-  }, [mounted])
+    const el = box.current
+    if (!el) return
+    const ro = new ResizeObserver(([e]) => {
+      const wpx = e.contentRect.width
+      if (wpx > 0) setK(Math.max(1, (12.4 * rye.overview.w) / (19 * wpx)))
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
-  if (!mounted) return null
   const { w, h } = rye.overview
   const soilPts = [rye.soilEdge[0], ...rye.parcels.map((q) => q.crown), rye.soilEdge[1]].map((q) => q.join(',')).join(' ')
   const end = rye.soilEdge[1]
+  const fs = 19 * k
+  const th = 30 * k
 
-  return createPortal(
-    <div className={s.overlay} onClick={onClose}>
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="rye-overview-title"
-        className={s.dialog}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className={s.dialogHead}>
-          <h4 id="rye-overview-title" className={s.dialogTitle}>
-            Mind a hét egy képen · május
-          </h4>
-          <button ref={close} type="button" className={s.close} onClick={onClose} aria-label="Bezárás">
-            <X size={20} aria-hidden="true" />
-          </button>
-        </div>
-        <div className={s.scroller} tabIndex={0} aria-label="Az összkép, oldalra görgethető">
-          <div className={s.ovBox}>
-            <Image
-              src={`${rye.dir}/${rye.overview.file}`}
-              alt="Hét kiásott rozs-mintacsomó fehér zsákokon, balról jobbra az I–VII. parcella, középen mérőszalag"
-              fill
-              loading="eager"
-              sizes="(max-width: 1100px) 1100px, 1400px"
-            />
-            <svg
-              viewBox={`0 0 ${w} ${h}`}
-              className={s.ovSvg}
-              role="img"
-              aria-label={`Jelölések: talajszint a gyökérnyakaknál, hajtás felfelé, gyökér lefelé, mért hosszal. ${rye.parcels
-                .map((q, i) => `${q.num} ${shoot[i]}/${root[i]} cm`)
-                .join(', ')}`}
-            >
-              <polyline points={soilPts} className={s.ovHalo} strokeWidth={7} />
-              <polyline points={soilPts} className={s.ovSoil} />
-              {rye.parcels.map((q, i) => {
-                const [cx, cy] = q.crown
-                const [tx, ty] = q.tip
-                const [rx, ry] = q.rootEnd
-                const top = `↑${shoot[i]} cm`
-                const bottom = `${q.num} ↓${root[i]} cm`
-                const tw = top.length * 12.2 + 18
-                const bw = bottom.length * 12.2 + 18
-                const ly = Math.max(ty - 38, 4)
-                const gold = spadeish(q)
-                return (
-                  <g key={q.num}>
-                    <line x1={cx} y1={cy} x2={tx} y2={ty} className={s.ovHalo} strokeWidth={6} />
-                    <line x1={cx} y1={cy} x2={tx} y2={ty} className={`${s.ovShoot} ${gold ? s.ovGold : ''}`} />
-                    <line x1={cx} y1={cy} x2={rx} y2={ry} className={s.ovHalo} strokeWidth={6} />
-                    <line x1={cx} y1={cy} x2={rx} y2={ry} className={s.ovRoot} />
-                    <circle cx={cx} cy={cy} r={7} className={s.ovDot} />
-                    <rect x={tx - tw / 2} y={ly} width={tw} height={30} rx={8} className={`${s.ovTag} ${gold ? s.ovTagGold : ''}`} />
-                    <text x={tx} y={ly + 21} textAnchor="middle" className={`${s.ovText} ${gold ? s.ovGoldText : ''}`}>
-                      {top}
-                    </text>
-                    <rect x={rx - bw / 2} y={ry + 12} width={bw} height={30} rx={8} className={s.ovTag} />
-                    <text x={rx} y={ry + 33} textAnchor="middle" className={s.ovText}>
-                      {bottom}
-                    </text>
-                  </g>
-                )
-              })}
-              <rect x={end[0] + 8} y={end[1] - 16} width={132} height={32} rx={8} className={`${s.ovTag} ${s.ovTagGold}`} />
-              <text x={end[0] + 74} y={end[1] + 6} textAnchor="middle" className={`${s.ovText} ${s.ovGoldText} ${s.ovSmall}`}>
-                TALAJSZINT
-              </text>
-            </svg>
-          </div>
-        </div>
-        <p className={s.dialogNote}>
-          Az eredeti fotó: egy kép, egy lépték, középen mérőszalag. Arany vonal: talajszint (gyökérnyak); szaggatott: hajtás;
-          fehér: gyökér. A számok mért hosszak; a fotó ferde szögű, ezért a vonalak hossza csak irány.
-        </p>
+  return (
+    <div className={s.ovFit}>
+      <div ref={box} className={s.ovBox}>
+        <Image
+          src={`${rye.dir}/${rye.overview.file}`}
+          alt={OVERVIEW_ITEM.alt}
+          fill
+          priority
+          draggable={false}
+          sizes="(max-width: 1024px) 1100px, 1400px"
+          onLoad={onLoad}
+        />
+        <svg
+          viewBox={`0 0 ${w} ${h}`}
+          className={s.ovSvg}
+          role="img"
+          aria-label={`Jelölések: talajszint a gyökérnyakaknál, hajtás felfelé, gyökér lefelé, mért hosszal. ${rye.parcels
+            .map((q, i) => `${q.num} ${shoot[i]}/${root[i]} cm`)
+            .join(', ')}`}
+        >
+          <polyline points={soilPts} className={s.ovHalo} strokeWidth={7} />
+          <polyline points={soilPts} className={s.ovSoil} />
+          {rye.parcels.map((q, i) => {
+            const [cx, cy] = q.crown
+            const [tx, ty] = q.tip
+            const [rx, ry] = q.rootEnd
+            const top = `↑${shoot[i]} cm`
+            const bottom = `${q.num} ↓${root[i]} cm`
+            const tw = (top.length * 12.2 + 18) * k
+            const bw = (bottom.length * 12.2 + 18) * k
+            const ly = Math.max(ty - 8 - th, 4)
+            const gold = spadeish(q)
+            return (
+              <g key={q.num}>
+                <line x1={cx} y1={cy} x2={tx} y2={ty} className={s.ovHalo} strokeWidth={6} />
+                <line x1={cx} y1={cy} x2={tx} y2={ty} className={`${s.ovShoot} ${gold ? s.ovGold : ''}`} />
+                <line x1={cx} y1={cy} x2={rx} y2={ry} className={s.ovHalo} strokeWidth={6} />
+                <line x1={cx} y1={cy} x2={rx} y2={ry} className={s.ovRoot} />
+                <circle cx={cx} cy={cy} r={7} className={s.ovDot} />
+                <rect x={tx - tw / 2} y={ly} width={tw} height={th} rx={8} className={`${s.ovTag} ${gold ? s.ovTagGold : ''}`} />
+                <text x={tx} y={ly + th * 0.7} textAnchor="middle" fontSize={fs} className={`${s.ovText} ${gold ? s.ovGoldText : ''}`}>
+                  {top}
+                </text>
+                <rect x={rx - bw / 2} y={ry + 12} width={bw} height={th} rx={8} className={s.ovTag} />
+                <text x={rx} y={ry + 12 + th * 0.7} textAnchor="middle" fontSize={fs} className={s.ovText}>
+                  {bottom}
+                </text>
+              </g>
+            )
+          })}
+          <rect x={end[0] - 132 * k - 8} y={end[1] - 16 * k - 40} width={132 * k} height={32 * k} rx={8} className={`${s.ovTag} ${s.ovTagGold}`} />
+          <text x={end[0] - 66 * k - 8} y={end[1] + 6 * k - 40} textAnchor="middle" fontSize={fs} className={`${s.ovText} ${s.ovGoldText} ${s.ovSmall}`}>
+            TALAJSZINT
+          </text>
+        </svg>
       </div>
-    </div>,
-    document.body,
+    </div>
   )
 }

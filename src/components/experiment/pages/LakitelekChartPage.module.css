@@ -1231,3 +1231,11 @@
     display: none;
   }
 }
+
+/* Phones and tablets: the clamped description opens its full text by tap, so it is a 44 px target
+   (it showed up once 2025 and 2026 could be on screen together, ticket 015) */
+@media (max-width: 1024px) {
+  .resultDesc {
+    min-height: 44px;
+  }
+}

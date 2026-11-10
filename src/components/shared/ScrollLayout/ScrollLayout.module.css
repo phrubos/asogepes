@@ -638,3 +638,96 @@
     transition: none;
   }
 }
+
+/* ---------- Year chips of a /kutatas site (ticket 015) ----------
+   Small 25 / 26 on the same line as the site name, right after it (on the last line of a
+   two-line name), so they read as part of the site. Always full strength, also when the section
+   is not the active one. */
+.headLine {
+  display: flex;
+  align-items: last baseline;
+  gap: 6px;
+}
+
+/* a two-line name (Kecskemét-Borbás): the chips at the middle of the name, not on its last line
+   (bottom of the row, lifted by half the name's height minus half a chip) */
+.headLine[data-two-line] {
+  align-items: flex-end;
+}
+
+.headLine[data-two-line] .yearChips {
+  margin-bottom: 6px;
+}
+
+.headLine > .headRow {
+  width: auto;
+  min-width: 0;
+}
+
+.yearChips {
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  /* they move with the name on hover (same shift and timing as .sectionHeader) */
+  transition: transform 0.3s ease;
+}
+
+.sectionGroup:hover .yearChips {
+  transform: translateX(4px);
+}
+
+.sectionGroup.active .yearChips {
+  transform: translateX(0);
+}
+
+.yearChip {
+  min-width: 22px;
+  height: 20px;
+  padding: 0 3px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: transparent;
+  color: rgba(245, 240, 232, 0.75);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 18px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.yearChip:hover {
+  border-color: rgba(212, 168, 75, 0.6);
+  color: var(--color-white);
+}
+
+.yearChip:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.yearChipOn,
+.yearChipOn:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold);
+  color: #1a1612;
+}
+
+.yearChip[aria-disabled='true'] {
+  cursor: default;
+}
+
+/* a site measured in one year only: a quiet locked chip */
+.yearChips:has(> :only-child) .yearChipOn {
+  border-color: rgba(212, 168, 75, 0.5);
+  background: rgba(212, 168, 75, 0.18);
+  color: var(--color-gold-light);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yearChip,
+  .yearChips {
+    transition: none;
+  }
+}

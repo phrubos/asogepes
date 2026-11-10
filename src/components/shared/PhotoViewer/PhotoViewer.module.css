@@ -536,6 +536,10 @@
         background: transparent;
         border-left: none;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
+        /* no blur here: a backdrop-filter makes the panel the box of the fixed close button,
+           which then sat on the title instead of in the screen's corner */
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
         touch-action: pan-y;
         overscroll-behavior: contain;
     }

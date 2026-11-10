@@ -1,0 +1,37 @@
+/* Year divider between the two seasons of one block, when both years are chosen (ticket 015) */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212, 168, 75, 0.5), rgba(212, 168, 75, 0));
+}
+
+.year {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 168, 75, 0.5);
+  background: rgba(212, 168, 75, 0.1);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-gold-light);
+}
+
+/* the second season of a block starts with some air after the first */
+.divider:not(:first-child) {
+  margin-top: 48px;
+}
+
+@media (max-width: 1024px) {
+  .divider:not(:first-child) {
+    margin-top: 32px;
+  }
+}

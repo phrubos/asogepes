@@ -5,14 +5,13 @@ import { locations } from '@/lib/data'
 import { szentkiralySeasons, szentkiralyTomato, findSeason, type Treatment } from '@/lib/seasons'
 import { szentkiralyOnionField, szentkiralyTomatoField } from '@/lib/field-maps'
 import { useSeason } from '../season/SeasonContext'
-import SeasonSwitch from '../season/SeasonSwitch'
+import SiteYearSwitch from '../season/SiteYearSwitch'
 import FieldMapCard from '../fieldmap/FieldMapCard'
 import SiteInfoLayout, { siteFacts } from '../fieldmap/SiteInfoLayout'
 import styles from './SzentkirályInfoPage.module.css'
 
 const data = locations.szentkiraly
 const site = szentkiralySeasons
-const siteYears = site.seasons.map((s) => s.year)
 // both fields on one map: the last view is fitted to them (≈ 2.3 km apart, scale ~500 m)
 const FIELDS = [szentkiralyOnionField, szentkiralyTomatoField]
 const TOMATO_YEARS = szentkiralyTomato.seasons.map((s) => s.year)
@@ -59,7 +58,7 @@ export default function SzentkirályInfoPage() {
   return (
     <SiteInfoLayout
       badge="01. helyszín"
-      season={<SeasonSwitch years={siteYears} small />}
+      season={<SiteYearSwitch site="szentkiraly" small />}
       title={data.name}
       lead={lead}
       facts={facts}
