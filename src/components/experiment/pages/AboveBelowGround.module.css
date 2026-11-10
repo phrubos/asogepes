@@ -1,0 +1,567 @@
+/* "Föld felett, föld alatt": photo pair above the soil line, root pair below, a spine between them.
+   Same card look as the Timeline chart above it. */
+.card {
+  --spine: 204px;
+  --gap-photo: 0px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(26, 23, 20, 0.95), rgba(35, 30, 25, 0.98));
+  color: var(--color-cream);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.date {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #2e2620;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #d9cfc0;
+}
+
+.kicker {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-gold-light);
+}
+
+.gold {
+  color: var(--color-gold-light);
+}
+
+/* Shared three-column frame: photo | spine | photo */
+.colHeads,
+.photoRow,
+.soilLine,
+.rootRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--spine) minmax(0, 1fr);
+}
+
+.colHeads {
+  padding-bottom: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #a89c8c;
+}
+
+.colHeads > :last-child {
+  text-align: right;
+}
+
+/* ---------- Above ground ---------- */
+.photoRow {
+  position: relative;
+  container-type: inline-size;
+}
+
+.photo,
+.root {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background: #2e2620;
+}
+
+.photo {
+  aspect-ratio: 800 / 1300;
+}
+
+.photo img,
+.root img {
+  object-fit: cover;
+}
+
+.photo.left {
+  border-radius: 10px 0 0 0;
+}
+
+.photo.right {
+  border-radius: 0 10px 0 0;
+}
+
+.spine {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 16px;
+  background: #17120f;
+}
+
+.spineText,
+.loupeText {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #d9cfc0;
+}
+
+/* Canopy lines across the whole row; the photo height is (row - spine) / 2 * 1300/800 */
+.photoRow {
+  --ph: calc((100cqw - var(--spine)) / 2 * 1.625);
+}
+
+.line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.lineSpade {
+  top: calc(var(--ph) * 0.7415);
+  border-top: 3px solid var(--color-gold);
+}
+
+.lineControl {
+  top: calc(var(--ph) * 0.8954);
+  border-top: 3px dashed var(--color-cream);
+}
+
+.pill {
+  position: absolute;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(28, 22, 19, 0.88);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Pills sit on top of their line (bottom edge 4px above it) */
+.pillKnee {
+  left: 10px;
+  bottom: calc(10.46% + 4px);
+  color: var(--color-cream);
+}
+
+.pillThigh {
+  left: 3.5%;
+  bottom: calc(25.85% + 4px);
+  color: var(--color-gold-light);
+}
+
+/* +38 %: between the two lines, in the spine */
+.result {
+  position: absolute;
+  left: calc(50% - 90px);
+  top: calc(var(--ph) * 0.757);
+  width: 180px;
+  height: calc(var(--ph) * 0.123);
+  min-height: 72px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: #3a2e1a;
+  border: 1px solid rgba(212, 168, 75, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.resultNum {
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: var(--color-gold-light);
+}
+
+.resultSub {
+  font-size: 0.8125rem;
+  color: var(--color-cream);
+}
+
+/* ---------- Soil line ---------- */
+.soilLine {
+  align-items: center;
+  min-height: 28px;
+  background: var(--color-soil);
+}
+
+.soilLine > .kicker {
+  padding: 0 12px;
+}
+
+.cause {
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--color-cream);
+}
+
+/* ---------- Below ground ---------- */
+.root {
+  aspect-ratio: 900 / 922;
+}
+
+.root.left {
+  border-radius: 0 0 0 10px;
+}
+
+.root.right {
+  border-radius: 0 0 10px 0;
+}
+
+.dig {
+  position: absolute;
+  inset: 0;
+}
+
+.scale {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: rgba(28, 22, 19, 0.8);
+  font-size: 0.75rem;
+  color: #d9cfc0;
+}
+
+
+
+
+
+
+.spineRoots {
+  align-items: center;
+  gap: 10px;
+  padding: 16px 14px;
+}
+
+.spineRoots > .kicker {
+  align-self: flex-start;
+}
+
+.loupe {
+  width: 168px;
+  height: 168px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px var(--color-gold);
+}
+
+.loupe svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.note {
+  margin: 16px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #a89c8c;
+}
+
+/* ---------- Loupe loop (runs only on screen, never under reduced motion: useLoopActive) ---------- */
+.drop,
+.pulse {
+  opacity: 0;
+}
+
+.pulse {
+  offset-path: path('M120 0 C 128 60, 104 120, 116 180 S 112 240, 110 260');
+}
+
+.live .drop {
+  animation: drink 3s ease-in infinite;
+}
+
+.live .pulse {
+  animation: uptake 3s linear infinite;
+}
+
+@keyframes drink {
+  0% { transform: translate(0, 0); opacity: 0; }
+  15% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+}
+
+@keyframes uptake {
+  0% { offset-distance: 100%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { offset-distance: 0%; opacity: 0; }
+}
+
+/* ---------- Scroll entrance (desktop, motion allowed): roots are dug up, then the canopy lines are drawn ---------- */
+@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
+  .card:not(.seen) .dig {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  .card:not(.seen) .line {
+    transform: scaleX(0);
+  }
+
+  .card:not(.seen) .result,
+  .card:not(.seen) .pill {
+    opacity: 0;
+  }
+
+  .seen .dig {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 900ms cubic-bezier(0.22, 1, 0.36, 1) 200ms;
+  }
+
+  .seen .line {
+    transform: scaleX(1);
+    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1) 600ms;
+  }
+
+  .seen .lineControl {
+    transition-delay: 450ms;
+  }
+
+  .seen .result,
+  .seen .pill {
+    opacity: 1;
+    transition: opacity 400ms ease 1100ms;
+  }
+}
+
+/* ---------- Phones and tablets: two columns, the spine content moves under its row ---------- */
+@media (max-width: 1024px) {
+  .card {
+    --spine: 0px;
+    padding: 16px;
+  }
+
+  .colHeads,
+  .photoRow,
+  .soilLine,
+  .rootRow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .colHeads > :nth-child(2) {
+    display: none;
+  }
+
+  .photo.left,
+  .photo.right {
+    grid-row: 1;
+  }
+
+  .result {
+    position: static;
+    grid-row: 2;
+    grid-column: 1 / -1;
+    width: auto;
+    height: auto;
+    min-height: 0;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 0;
+  }
+
+  .photoRow > .spine {
+    grid-row: 3;
+    grid-column: 1 / -1;
+    padding: 12px;
+  }
+
+  .soilLine > :nth-child(2) {
+    text-align: right;
+    padding-right: 12px;
+  }
+
+  .root.left,
+  .root.right {
+    grid-row: 1;
+  }
+
+  .spineRoots {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 10px;
+    padding: 14px 12px;
+  }
+
+  .spineRoots > .kicker {
+    grid-column: 1 / -1;
+  }
+
+  .loupe {
+    width: 112px;
+    height: 112px;
+  }
+
+  .root.left {
+    border-radius: 0;
+  }
+
+  .root.right {
+    border-radius: 0;
+  }
+
+  .spineRoots {
+    border-radius: 0 0 10px 10px;
+  }
+
+
+  .pill {
+    font-size: 0.75rem;
+  }
+
+  .pillKnee {
+    left: 6px;
+  }
+}
+
+
+
+
+
+/* ---------- Annotations on the root photos: ring + tag (no connector lines) ---------- */
+.mark {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transform: translate(-50%, -19px);
+}
+
+.ring {
+  width: 38px;
+  height: 38px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2.5px solid var(--color-cream);
+  box-shadow: 0 0 0 2px rgba(28, 22, 19, 0.65), inset 0 0 0 2px rgba(28, 22, 19, 0.45);
+}
+
+/* Gold = the spot the loupe magnifies: the same ring as the white one, in gold */
+.markGold .ring {
+  border-color: var(--color-gold);
+}
+
+.tag {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(28, 22, 19, 0.9);
+  border: 1px solid rgba(245, 240, 232, 0.25);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--color-cream);
+}
+
+.markGold .tag {
+  border-color: rgba(212, 168, 75, 0.6);
+  color: var(--color-gold-light);
+}
+
+/* Desktop entrance: the rings settle after the roots are dug up */
+@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
+  .card:not(.seen) .mark {
+    opacity: 0;
+  }
+
+  .seen .mark {
+    opacity: 1;
+    transition: opacity 400ms ease 1000ms;
+  }
+}
+
+/* Phones and tablets: small ring in place, the tag spans the photo bottom */
+@media (max-width: 1024px) {
+  .mark {
+    position: static;
+    transform: none;
+  }
+
+  .ring {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 26px;
+    height: 26px;
+    margin: -13px 0 0 -13px;
+  }
+
+  .tag {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+    white-space: normal;
+    border-radius: 8px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Desktop leader from the loupe to the gold ring (drawn by JS across the root row) */
+.rootRow {
+  position: relative;
+}
+
+.leader {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Each dash styled like the rings: gold core, thin dark edge (same dash pattern, round ends) */
+.leaderHalo {
+  stroke: rgba(28, 22, 19, 0.65);
+  stroke-width: 6;
+  stroke-dasharray: 7 9;
+  stroke-linecap: round;
+}
+
+.leaderLine {
+  stroke: var(--color-gold);
+  stroke-width: 2.5;
+  stroke-dasharray: 7 9;
+}
+
+@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
+  .card:not(.seen) .leader {
+    opacity: 0;
+  }
+
+  .seen .leader {
+    opacity: 1;
+    transition: opacity 400ms ease 1000ms;
+  }
+}

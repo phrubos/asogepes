@@ -160,38 +160,11 @@
   animation: fade 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.soil {
-  fill: rgba(58, 47, 35, 0.5);
-}
-
-.soilLine {
-  stroke: rgba(212, 168, 75, 0.25);
-}
-
-.shoot,
-.root {
-  transform-box: fill-box;
-}
-
-.shoot {
-  fill: rgba(212, 168, 75, 0.8);
-  transform-origin: 50% 100%;
-  animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.root {
-  fill: rgba(169, 163, 154, 0.8);
-  transform-origin: 50% 0;
-  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .line,
   .colSolid,
   .colBand,
-  .fadeIn,
-  .shoot,
-  .root {
+  .fadeIn {
     animation: none;
   }
 }

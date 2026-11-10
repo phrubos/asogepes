@@ -3,13 +3,17 @@
 import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
 import { locations } from '@/lib/data'
-import SeasonOnly, { yearAdj } from '../season/SeasonOnly'
+import { SeasonLabel } from '../season/SeasonOnly'
+import { useSeason } from '../season/SeasonContext'
 import styles from './LakitelekPhotosPage.module.css'
 import PhotoViewer from '@/components/shared/PhotoViewer/PhotoViewer'
+import LakitelekRyeBoard from './LakitelekRyeBoard'
 
 const data = locations.lakitelek
 
+/** 2025: the photo viewer; 2026: the seven rye bundles of May (LakitelekRyeBoard) */
 export default function LakitelekPhotosPage() {
+  const { year } = useSeason()
   return (
     <div className={styles.container}>
       {/* Header */}
@@ -23,7 +27,7 @@ export default function LakitelekPhotosPage() {
           <MapPin size={12} />
           <span>Lakitelek</span>
         </div>
-                <SeasonOnly years={[2025]} missingNote={(y) => `a ${yearAdj(y)} fotók még nincsenek fent`} />
+        <SeasonLabel switchAt="lakitelek-info" />
       </motion.div>
 
       {/* Content */}
@@ -33,7 +37,7 @@ export default function LakitelekPhotosPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <PhotoViewer items={data.photos || []} />
+        {year === 2026 ? <LakitelekRyeBoard /> : <PhotoViewer items={data.photos || []} />}
       </motion.div>
     </div>
   )

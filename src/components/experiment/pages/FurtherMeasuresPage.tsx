@@ -53,10 +53,6 @@ const lifeNoJuly = szkLife.fields.filter((f) => f.values[1] === null)
 const lifeTopJuly = lifeJuly.reduce((b, f) => ((f.values[1] as number) > (b.values[1] as number) ? f : b))
 const lifeFb = szkLife.fields.flatMap((f) => f.fb).filter((v): v is number => v !== null)
 
-const rng = (a: number[]) => [Math.min(...a), Math.max(...a)]
-const [shootLo, shootHi] = rng(laki.rye.shoot)
-const [rootLo, rootHi] = rng(laki.rye.root)
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
 
 const SZK_CHAPTERS: Chapter[] = [
   {
@@ -84,7 +80,6 @@ const SZK_CHAPTERS: Chapter[] = [
 
 /* Szentkirály tomato */
 const tomLooser = tom.bulkDensity.spade.every((v, i) => v < tom.bulkDensity.control[i])
-const tomShootPct = Math.round((tom.shoot.spade / tom.shoot.control - 1) * 100)
 const tomFb = [...tom.life.fb.control, ...tom.life.fb.spade]
 const r = Math.round
 
@@ -101,10 +96,7 @@ const TOMATO_CHAPTERS: Chapter[] = [
     title: 'Humusz',
     body: `${cap(namedIn(tom.humus.dates[0]))} egyforma volt (${hu(tom.humus.control[0], 2)} és ${hu(tom.humus.spade[0], 2)} m/m%). ${cap(namedIn(tom.humus.dates[1]))} az ásógépes parcellán ${hu(tom.humus.spade[1], 2)}, a kombinátorosan ${hu(tom.humus.control[1], 2)}.`,
   },
-  {
-    title: 'Hajtáshossz',
-    body: `${cap(namedIn(tom.shoot.date))} az ásógépes parcellán ${tom.shoot.spade} cm, a kombinátoroson ${tom.shoot.control} cm volt a paradicsom hajtása: ${tomShootPct} %-kal hosszabb.`,
-  },
+  // Hajtáshossz lives in the "Föld felett, föld alatt" block of the tomato section (photos + numbers)
   {
     title: 'Talajélet',
     body:
@@ -125,10 +117,7 @@ const LAKI_CHAPTERS: Chapter[] = [
       `10 cm mélyen, a ${laki.water.parcels.length} parcella átlagai: ${laki.water.dates.map((d, j) => `${named(d)} ${hu(lakiWater[j].lo, 1)}–${hu(lakiWater[j].hi, 1)} %`).join(', ')}.` +
       (wetAboveAll ? ` ${cap(namedIn(laki.water.dates[wetIdx]))} mind a ${laki.water.parcels.length} parcellán nedvesebb volt, mint a másik két mérésnél.` : ''),
   },
-  {
-    title: 'Hajtás és gyökér',
-    body: `${cap(namedIn(laki.rye.date))} a rozs hajtása ${shootLo}–${shootHi} cm, a gyökere ${rootLo}–${rootHi} cm volt a ${laki.rye.shoot.length} parcellán.`,
-  },
+  // Hajtás és gyökér lives in the Fotók block (LakitelekRyeBoard: the seven bundles with the measured lengths)
   {
     title: 'Humusz',
     body:
@@ -256,34 +245,6 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
   }
 
   if (isTom && step === 3) {
-    const d = tom.shoot
-    title = 'Hajtáshossz'
-    unit = `${when(d.date)} · cm`
-    const y = lin(0, 100, yBot, yTop + FS)
-    // Phones: columns kept left so the callout fits beside the gold one
-    const cw = phone ? 70 : 100
-    const cols = [
-      { name: 'KOMBINÁTOR', v: d.control, x: X0 + (phone ? 40 : 90), cls: own.control },
-      { name: 'ÁSÓGÉP', v: d.spade, x: X0 + (phone ? 150 : 290), cls: own.spadeLine },
-    ]
-    chart = (
-      <>
-        {grid([0, 25, 50, 75, 100], y, 0)}
-        {cols.map((c, i) => (
-          <g key={c.name} className={c.cls}>
-            <rect x={c.x} y={y(c.v)} width={cw} height={y(0) - y(c.v)} rx={6} className={own.colSolid} style={{ animationDelay: `${i * 200}ms` }} />
-            <text x={c.x + cw / 2} y={y(c.v) - 10} fontSize={FS} textAnchor="middle" className={`${own.endLabel} ${own.fadeIn}`} style={{ animationDelay: `${500 + i * 200}ms` }}>
-              {c.v} cm
-            </text>
-            {xTick(c.x + cw / 2, c.name, i === 1)}
-          </g>
-        ))}
-      </>
-    )
-    callouts = <Callout {...box} x={cols[1].x + cw} y={y(d.spade * 0.6)} side="right" main={`+${tomShootPct} %`} sub="hosszabb hajtás" delay={900} />
-  }
-
-  if (isTom && step === 4) {
     const d = tom.life
     title = 'Talajélet'
     unit = `${d.unit} · ${when(d.dates[0])} → ${when(d.dates[1])}`
@@ -436,7 +397,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
     )
   }
 
-  if (isLaki && step === 4) {
+  if (isLaki && step === 3) {
     const d = laki.humus
     title = 'Humusz parcellánként'
     unit = `m/m% · ${when(d.dates[0])} ○ → ● ${when(d.dates[1])} (tarló)`
@@ -522,38 +483,6 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
     )
   }
 
-  if (isLaki && step === 3) {
-    const d = laki.rye
-    title = `Rozs, ${when(d.date)}`
-    unit = 'cm · parcellánként'
-    const soil = H - FS * 4.2
-    const k = (soil - FS * 1.5) / 130
-    const n = d.shoot.length
-    const span = W - X0 - (phone ? 150 : 250)
-    const xs = d.shoot.map((_, i) => X0 + (span / (n - 1)) * i)
-    const bw = phone ? 16 : 22
-    const last = n - 1
-    chart = (
-      <>
-        <rect x={-2} y={soil} width={W + 4} height={H - soil + 2} className={own.soil} />
-        <line x1={-2} x2={W + 2} y1={soil} y2={soil} className={own.soilLine} />
-        {d.shoot.map((s, i) => (
-          <g key={i}>
-            <rect x={xs[i] - bw / 2} y={soil - s * k} width={bw} height={s * k} rx={4} className={own.shoot} style={{ animationDelay: `${i * 70}ms` }} />
-            <rect x={xs[i] - bw / 2} y={soil} width={bw} height={d.root[i] * k} rx={3} className={own.root} style={{ animationDelay: `${500 + i * 70}ms` }} />
-            <text x={xs[i]} y={H - FS * 0.6} fontSize={FS - 1} textAnchor="middle" className={own.rowName}>{ROMAN[i]}</text>
-          </g>
-        ))}
-      </>
-    )
-    callouts = (
-      <>
-        <Callout {...box} x={xs[last] + bw / 2} y={soil - d.shoot[last] * k * 0.6} side="right" main={`${shootLo}–${shootHi} cm`} sub="hajtás" delay={900} />
-        <Callout {...box} x={xs[last] + bw / 2} y={soil + d.root[last] * k} side="right" dy={-FS * 0.5} main={`${rootLo}–${rootHi} cm`} sub="gyökér" grey delay={1100} />
-      </>
-    )
-  }
-
   const stage = (
     <>
       <div className={own.chartHead}>
@@ -580,7 +509,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
           <span>{isLaki ? 'Lakitelek' : 'Szentkirály'}</span>
         </div>
         <h3 className={styles.headerTitle}>
-          {isLaki ? 'További mérések: talaj és rozs' : isTom ? 'További mérések: a paradicsomtábla' : 'További mérések: a talaj a hagyma alatt'}
+          {isLaki ? 'További mérések: a talaj a rozs alatt' : isTom ? 'További mérések: a paradicsomtábla' : 'További mérések: a talaj a hagyma alatt'}
         </h3>
         <div className={styles.seasonRow}>
           <div className={own.metaRow}>

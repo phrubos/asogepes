@@ -612,6 +612,50 @@ export const lakitelekSoil2026 = {
   },
 }
 
+/**
+ * Lakitelek rye in May 2026, photographed on the day of the May soil measurement: one dug-up
+ * bundle per parcel (Drive "Képek-Univ-Lakitelek", 20260519_122008 overview, 122113–122151 close-ups).
+ * The close-ups are scaled to the sack's width (one scale) with the root crown at the same height.
+ * Texts are visual characterisations of a single bundle; the shoot/root lengths are the measured ones
+ * (`lakitelekSoil2026.rye`). Stage on every parcel: end of heading (BBCH ~59).
+ * `tip`, `crown`, `rootEnd`: points on the overview photo (1600 × 627 px) for its annotation.
+ */
+export const lakitelekRye2026 = {
+  dir: '/images/kutatás_pics/Lakitelek/rozs',
+  overview: { file: 'mind-a-het.webp', w: 1600, h: 627 },
+  /** the soil line on the overview runs through the crowns, from these two edge points */
+  soilEdge: [[40, 428], [1470, 364]] as [number, number][],
+  parcels: [
+    { num: 'I.', short: 'mély.ág', treatment: 'Mélyásógép', detail: 'mélyásógép 45 cm', role: 'deep', file: 'parcella-1.webp',
+      tip: [330, 100], crown: [185, 415], rootEnd: [130, 470],
+      above: 'Közepes sűrűségű bokor, a kalászok kihúzódtak.', below: 'A gyökérzet oldalra szétterül, sok hosszú gyökérszállal.' },
+    { num: 'II.', short: 'laz+ág', treatment: 'Lazítás + Ásógép', detail: 'lazítás 50 + ásógép 30 cm', role: 'spade', file: 'parcella-2.webp',
+      tip: [500, 75], crown: [410, 395], rootEnd: [375, 445],
+      above: 'Egyenletes, közepes bokor.', below: 'Tömör, kerek gyökércsomó; a homok jól tapad a gyökerekhez.' },
+    { num: 'III.', short: 'ág', treatment: 'Ásógép', detail: 'ásógép 30 cm', role: 'spade', file: 'parcella-3.webp',
+      tip: [630, 90], crown: [590, 405], rootEnd: [575, 460],
+      above: 'Karcsúbb, ritkább bokor, kevesebb szárral.', below: 'A gyökérzet kompakt, kisebb csomóban marad.',
+      note: 'Májusban itt volt a legsekélyebb a laza réteg (19,6 cm); júliusban, tarlón, itt mértük a legmélyebbet (10,4 cm).' },
+    { num: 'IV.', short: 'laz+sz+komb', treatment: 'Lazítás + Szántás + Kombinátor', detail: 'lazítás 50 + szántás 30 + kombinátor 8 cm', role: 'other', file: 'parcella-4.webp',
+      tip: [790, 90], crown: [790, 390], rootEnd: [790, 445],
+      above: 'Széles bokor.', below: 'Bozontos gyökérzet, sok finom gyökérrel.' },
+    { num: 'V.', short: 'sz+komb', treatment: 'Szántás + Kombinátor', detail: 'szántás 30 + kombinátor 8 cm', role: 'other', file: 'parcella-5.webp',
+      tip: [915, 70], crown: [990, 380], rootEnd: [1005, 430],
+      above: 'Közepes bokor, magas hajtás.', below: 'A gyökércsomó közepes méretű.' },
+    { num: 'VI.', short: 'laz+sz+ág', treatment: 'Lazítás + Szántás + Ásógép', detail: 'lazítás 50 + szántás 30 + ásógép 25 cm', role: 'spade', file: 'parcella-6.webp',
+      tip: [1060, 25], crown: [1180, 385], rootEnd: [1210, 440],
+      above: 'A legdúsabb bokor, sok szárral.', below: 'A legnagyobb, legmélyebbre nyúló gyökércsomó a hét közül.' },
+    { num: 'VII.', short: 'sz+ág', treatment: 'Szántás + Ásógép', detail: 'szántás 30 + ásógép 25 cm', role: 'spade', file: 'parcella-7.webp',
+      tip: [1205, 30], crown: [1390, 370], rootEnd: [1430, 425],
+      above: 'Sok szár, magas hajtás.', below: 'Dús gyökérzet, két tömbben.' },
+  ] as {
+    num: string; short: string; treatment: string; detail: string; role: 'deep' | 'spade' | 'other'; file: string
+    tip: [number, number]; crown: [number, number]; rootEnd: [number, number]
+    /** visual characterisation: the bush (above the soil line) and the root ball (below it) */
+    above: string; below: string; note?: string
+  }[],
+}
+
 // ---------------------------------------------------------------------------
 // The research sites and the seasons measured at each (hero map, home figures)
 const onionYears = szentkiralySeasons.seasons.map((s) => s.year)

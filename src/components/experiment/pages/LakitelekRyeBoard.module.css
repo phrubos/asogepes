@@ -1,0 +1,1008 @@
+/* Lakitelek › Fotók, 2026: the seven rye bundles of May on one scale (design: canvas B variant) */
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: var(--color-cream);
+}
+
+.gold {
+  color: var(--color-gold-light);
+}
+
+/* ---------- Title + overview thumbnail ---------- */
+.top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-white);
+}
+
+.lead {
+  margin: 0;
+  max-width: 44rem;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: #d9cfc0;
+}
+
+.thumb {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #201a16;
+  color: var(--color-cream);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.thumb:hover,
+.thumb:focus-visible {
+  border-color: rgba(212, 168, 75, 0.6);
+}
+
+.thumbImg {
+  position: relative;
+  flex: none;
+  width: 150px;
+  height: 59px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.thumbImg img {
+  object-fit: cover;
+}
+
+.thumbText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.thumbTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.thumbSub {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: #a89c8c;
+}
+
+/* ---------- Filter ---------- */
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.filters {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #2a221d;
+}
+
+.filter {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #d9cfc0;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.filterOn {
+  background: var(--color-gold);
+  color: #1f1a16;
+}
+
+.count {
+  font-size: 0.8125rem;
+  color: #a89c8c;
+}
+
+/* Phones only: what the gold line means (the axis column is hidden there) */
+.legend {
+  display: none;
+}
+
+/* ---------- The tile strip ---------- */
+.frame {
+  container-type: inline-size;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #201a16;
+}
+
+.strip {
+  --gap: 12px;
+  --axis: 96px;
+  --tile-w: calc((100cqw - var(--axis) - 7 * var(--gap)) / 7);
+  /* the close-ups are 480 × 1000, the root crown at 70.5 % of the height */
+  --img-h: calc(var(--tile-w) * 1000 / 480);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, var(--tile-w)) var(--axis);
+  column-gap: var(--gap);
+}
+
+.soil {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--img-h) * 0.705 - 1px);
+  z-index: 2;
+  height: 2px;
+  background: var(--color-gold);
+  box-shadow: 0 0 0 1px rgba(20, 15, 12, 0.55), 0 1px 4px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.tile {
+  position: relative;
+  min-width: 0;
+}
+
+.tileBtn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.tileBtn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.tileBtn:focus-visible {
+  outline: none;
+}
+
+.photo {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: var(--img-h);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #2e2620;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.2s ease;
+}
+
+.photo img {
+  object-fit: cover;
+}
+
+/* hover hints only on the other tiles; the chosen one stays solid gold under the mouse too */
+.tile:not(.tileOn) .tileBtn:not(:disabled):hover .photo {
+  outline-color: rgba(232, 200, 122, 0.45);
+}
+
+.tileOn .photo,
+.tileBtn:focus-visible .photo {
+  outline-color: var(--color-gold-light);
+}
+
+/* Magnifier: the site's photo-corner button (as in the bulk density steps: Expand icon, rounded square,
+   dark glass); a 44 px tap target around a 32 px square on the narrow tiles */
+.zoomBtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+.zoomIcon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(20, 17, 14, 0.55);
+  backdrop-filter: blur(6px);
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.zoomBtn:hover .zoomIcon,
+.zoomBtn:focus-visible .zoomIcon {
+  background: rgba(20, 17, 14, 0.8);
+  border-color: rgba(212, 168, 75, 0.5);
+}
+
+.zoomBtn:focus-visible {
+  outline: none;
+}
+
+/* ---------- Big view of one parcel, in the strip's place ----------
+   Desktop: photo left; on the right the head on top, and the body positioned against the photo's height:
+   the soil line (70.5 % of the close-up) runs on from the photo and splits it into above / below ground. */
+.zoom {
+  --zphoto: 300px;
+  --zgap: 40px;
+  --zsoil: 70.5%;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--zphoto) minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  column-gap: var(--zgap);
+}
+
+.zoomPhoto {
+  position: relative;
+  grid-row: 1 / span 2;
+  width: 100%;
+  aspect-ratio: 480 / 1000;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #2e2620;
+  outline: 2px solid var(--color-gold-light);
+  outline-offset: 2px;
+}
+
+.zoomPhoto img {
+  object-fit: cover;
+}
+
+.zoomSoil {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--zsoil) - 1px);
+  height: 2px;
+  background: var(--color-gold);
+  box-shadow: 0 0 0 1px rgba(20, 15, 12, 0.55), 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.zoomHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.zoomHead .cardTitle {
+  font-size: 1.75rem;
+  line-height: 1.15;
+}
+
+.zoomBody {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--zphoto) + var(--zgap));
+  right: 0;
+  /* the layer spans the whole column; only its text takes the pointer, so the head's buttons stay clickable */
+  pointer-events: none;
+}
+
+.zoomBody p {
+  pointer-events: auto;
+}
+
+.zAbove,
+.zBelow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 24px;
+}
+
+.zAbove {
+  bottom: calc(100% - var(--zsoil) + 20px);
+  align-items: end;
+}
+
+.zBelow {
+  top: calc(var(--zsoil) + 20px);
+  align-items: start;
+}
+
+.zSoil {
+  position: absolute;
+  left: calc(-1 * var(--zgap) - 2px);
+  right: 0;
+  top: calc(var(--zsoil) - 1px);
+  height: 2px;
+  background: var(--color-gold);
+  box-shadow: 0 0 0 1px rgba(20, 15, 12, 0.55);
+}
+
+.zSoilTag {
+  position: absolute;
+  right: 0;
+  top: -13px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--color-gold);
+  background: #1c1613;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-gold-light);
+}
+
+.zFigure {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.zLabel {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a89c8c;
+}
+
+.zNum {
+  font-family: var(--font-display);
+  font-size: 3.25rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.zUnit {
+  font-size: 1.375rem;
+}
+
+.zSub {
+  font-size: 0.8125rem;
+  color: #a89c8c;
+}
+
+.zTexts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 18px;
+}
+
+.zText {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 1.125rem;
+  line-height: 1.55;
+}
+
+.zAbove .zText {
+  margin-bottom: 4px;
+}
+
+.zNote {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-gold-light);
+}
+
+.zoomNav {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navBtn,
+.back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #2a221d;
+  color: var(--color-cream);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.navBtn {
+  width: 44px;
+}
+
+.back {
+  margin-left: 8px;
+  padding: 0 16px;
+  background: transparent;
+}
+
+.navBtn:hover:not(:disabled),
+.back:hover,
+.navBtn:focus-visible,
+.back:focus-visible {
+  border-color: var(--color-gold);
+}
+
+.navBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.navPos {
+  min-width: 44px;
+  text-align: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.875rem;
+  color: #a89c8c;
+}
+
+.name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #a89c8c;
+}
+
+.name.gold {
+  color: var(--color-gold-light);
+}
+
+.short {
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #a89c8c;
+}
+
+.bar {
+  display: block;
+  height: 8px;
+  margin-top: 2px;
+  border-radius: 4px;
+  background: #8a8178;
+}
+
+.barGold {
+  background: var(--color-gold);
+}
+
+.nums {
+  margin-top: -4px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #d9cfc0;
+}
+
+.axis {
+  position: relative;
+  height: var(--img-h);
+  font-size: 0.75rem;
+  color: #a89c8c;
+}
+
+.axis > span {
+  position: absolute;
+  left: 0;
+  white-space: nowrap;
+}
+
+.axisUp {
+  top: calc(70.5% - 52px);
+}
+
+.axisSoil {
+  top: calc(70.5% - 14px);
+  left: -4px !important;
+  z-index: 3;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--color-gold);
+  background: #1c1613;
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-gold-light);
+}
+
+.axisDown {
+  top: calc(70.5% + 22px);
+}
+
+.axisNums {
+  top: calc(100% + 34px);
+  white-space: normal !important;
+  line-height: 1.4;
+}
+
+/* ---------- Card for the chosen parcel ---------- */
+.card {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr) 260px;
+  gap: 24px;
+  align-items: start;
+  padding: 20px 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #201a16;
+}
+
+.cardHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cardKicker {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #a89c8c;
+}
+
+.cardKicker.gold {
+  color: var(--color-gold-light);
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.cardDetail {
+  font-size: 0.8125rem;
+  color: #a89c8c;
+}
+
+.cardText {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardText p {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.cardText .note {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-gold-light);
+}
+
+.values {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.875rem;
+}
+
+.values > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #2a221d;
+}
+
+.values dt {
+  color: #a89c8c;
+}
+
+.values dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.foot {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #a89c8c;
+}
+
+/* ---------- Overview dialog ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(20, 15, 12, 0.97);
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(1400px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  color: var(--color-cream);
+}
+
+.dialogHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dialogTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+}
+
+.close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: var(--color-cream);
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus-visible {
+  border-color: var(--color-gold);
+}
+
+.scroller {
+  overflow-x: auto;
+  border-radius: 10px;
+}
+
+/* never narrower than 1040 px, so the labels stay >= 12 px; smaller screens scroll sideways */
+.ovBox {
+  position: relative;
+  width: 100%;
+  min-width: 1040px;
+  aspect-ratio: 1600 / 627;
+}
+
+.ovBox img {
+  object-fit: cover;
+}
+
+.ovSvg {
+  position: absolute;
+  inset: 0;
+  /* same 1600 : 627 ratio as the box, so the height follows from the width */
+  width: 100%;
+}
+
+.ovHalo {
+  fill: none;
+  stroke: rgba(20, 15, 12, 0.68);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ovSoil {
+  fill: none;
+  stroke: var(--color-gold);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+}
+
+.ovShoot {
+  stroke: #d9cfc0;
+  stroke-width: 2.5;
+  stroke-dasharray: 10 7;
+  stroke-linecap: round;
+}
+
+.ovShoot.ovGold {
+  stroke: var(--color-gold-light);
+}
+
+.ovRoot {
+  stroke: var(--color-cream);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.ovDot {
+  fill: var(--color-gold);
+  stroke: #1c1613;
+  stroke-width: 2.5;
+}
+
+.ovTag {
+  fill: rgba(20, 15, 12, 0.88);
+  stroke: #a89c8c;
+  stroke-width: 1.5;
+}
+
+.ovTag.ovTagGold {
+  stroke: var(--color-gold-light);
+}
+
+.ovText {
+  font-family: var(--font-mono, monospace);
+  font-size: 19px;
+  font-weight: 600;
+  fill: var(--color-cream);
+}
+
+.ovText.ovGoldText {
+  fill: var(--color-gold-light);
+}
+
+.ovText.ovSmall {
+  font-size: 19px;
+  letter-spacing: 1px;
+}
+
+.dialogNote {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #d9cfc0;
+}
+
+/* ---------- Phones and tablets ---------- */
+@media (max-width: 1024px) {
+  .top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 1.375rem;
+  }
+
+  .lead {
+    font-size: 0.9375rem;
+  }
+
+  .thumb {
+    align-self: flex-start;
+  }
+
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #a89c8c;
+  }
+
+  .legendLine {
+    flex: none;
+    width: 24px;
+    height: 2px;
+    background: var(--color-gold);
+  }
+
+  /* the strip scrolls sideways at a fixed tile width instead of squeezing seven tiles into 350 px */
+  .frame {
+    overflow-x: auto;
+    padding: 16px;
+    container-type: normal;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 16px;
+  }
+
+  .strip {
+    --tile-w: 112px;
+    grid-template-columns: repeat(7, var(--tile-w));
+    width: max-content;
+  }
+
+  .tile {
+    scroll-snap-align: start;
+  }
+
+  /* phones: head on top, then photo | above / soil / below in normal flow */
+  .zoom {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 16px;
+    row-gap: 16px;
+  }
+
+  .zoomHead {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .zoomHead .cardTitle {
+    font-size: 1.25rem;
+  }
+
+  .zoomPhoto {
+    grid-row: 2;
+  }
+
+  .zoomBody {
+    position: static;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+    pointer-events: auto;
+  }
+
+  .zAbove,
+  .zBelow {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  /* the text sits beside a small photo, not against its height: a plain divider here, the soil line is on the photo */
+  .zSoil {
+    position: relative;
+    left: auto;
+    top: auto;
+    height: 1px;
+    margin: 4px 0;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: none;
+  }
+
+  .zSoilTag {
+    display: none;
+  }
+
+  .zNum {
+    font-size: 2rem;
+  }
+
+  .zUnit {
+    font-size: 1rem;
+  }
+
+  .zTexts {
+    padding-top: 0;
+  }
+
+  .zText {
+    font-size: 0.9375rem;
+  }
+
+  .zNote {
+    font-size: 0.875rem;
+  }
+
+  .back {
+    margin-left: 0;
+  }
+
+  .axis {
+    display: none;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .cardText p {
+    font-size: 0.9375rem;
+  }
+
+  .values {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    font-size: 0.8125rem;
+  }
+
+  .values > div {
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 10px;
+  }
+
+  .overlay {
+    padding: 16px 0;
+    align-items: flex-start;
+  }
+
+  .dialogHead,
+  .dialogNote {
+    padding: 0 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb,
+  .filter,
+  .tileBtn,
+  .photo,
+  .zoomIcon,
+  .navBtn,
+  .back {
+    transition: none;
+  }
+}

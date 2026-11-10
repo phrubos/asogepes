@@ -5,6 +5,7 @@ import { MapPin } from 'lucide-react'
 import Timeline from '../Timeline'
 import { szentkiralyTomato } from '@/lib/seasons'
 import SeasonOnly from '../season/SeasonOnly'
+import AboveBelowGround from './AboveBelowGround'
 // Same page frame as the onion field's loose-layer block
 import styles from './SzentkirályTimelinePage.module.css'
 import own from './SzentkiralyTomatoPage.module.css'
@@ -54,6 +55,8 @@ export default function SzentkiralyTomatoPage() {
           summary={season.summary}
         />
       </motion.div>
+
+      <AboveBelowGround />
     </div>
   )
 }
