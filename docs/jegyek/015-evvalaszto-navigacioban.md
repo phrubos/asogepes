@@ -26,7 +26,7 @@ A /kutatas oldalon minden helyszín mellett két apró gomb (2025, 2026): egyik,
 - 2026-11-10 (felhasználó, később): mégis kicsi 25 / 26 a név **mellett, egy sorban**, „csak 2025” felirat nélkül; kétsoros névnél (Kecskemét-Borbás) a név magasságának felénél. 240 px-es sínen a SZENTKIRÁLY + két gomb kifér (1 px tartalék).
 - Hover: a gombok a névvel együtt csúsznak 4 px-et (0,3 s), az aktív helyszínnél nem; a gombok 22 px szélesek, 6 px-re a névtől, így hover közben is a sínen belül maradnak (jobb szél 236 / 240 px).
 - Évelválasztó alatt (mindkét év) a blokk saját „Év: 2025” címkéje nem jelenik meg (duplikáció, felhasználó 11-10); egy év esetén marad.
-- A rozs összképe a 2025-ös fotónézegetőben nyílik (PhotoViewerModal ): X, oldalpanel, nagyítás, töltő; telefonon a nézegető X-e a képernyő sarkában (a panel blur-je elvitte).
+- A rozs összképe a 2025-ös fotónézegetőben nyílik (`PhotoViewerModal`, `content` mező): X, oldalpanel, nagyítás, töltő; telefonon a nézegető X-e a képernyő sarkában (a panel blur-je elvitte).
 
 ## Nyitott kérdések
 
