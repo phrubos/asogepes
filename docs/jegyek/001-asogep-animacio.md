@@ -89,6 +89,14 @@ A felhasználónak tetszik a demó ötlete, de a gépnek jobban kell hasonlítan
 - [x] Kapjon-e a `HeavyCultivatorSVG` hasonló animációt? Igen, az A változat (2026-11-07).
 - [ ] Kellenek-e a 38WX altalajlazító fogai?
 
+## Ötlet későbbre: 3D ásógép Blenderben (2026-11-09, nem kezdtük el)
+
+- Claude a háttérben futtatja a Blendert (a programot nem kell megnyitni): egy fényforrás, valódi anyagok, a gép az Andornak.mp4 alapján. A formákból rakott 3D-nél sokkal hihetőbb képet adhat.
+- Elsősorban kisfilmhez való (`cinematic-film`): az animáció pontosan az Andornak.mp4 egyik képkockájára érkezne meg, onnan a valódi felvétel megy tovább.
+- Az oldalra csak előre renderelt videóként vagy képsorként kerülhet; nem lehet elmosódottabb a mostani SVG-nél (a canvas-lejátszást ezért vetettük el).
+- A modellt képkockánként össze kell vetni a valódi géppel (kapák száma, váz, tengely, takarólemez).
+- Kell hozzá: Blender telepítése, a felhasználó jóváhagyása.
+
 ## Kész, ha
 
 - [x] Alapból mindkét kártyán a kész kép látszik (a szerveroldali HTML-ben a kompakt rögök `opacity="0"`, a gép rejtve)
