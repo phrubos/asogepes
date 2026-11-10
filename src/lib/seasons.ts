@@ -420,11 +420,17 @@ export interface GrowthMeasure {
 
 export interface GrowthSeason {
   year: number
-  dates: { id: string; date: MeasureDate; control: GrowthMeasure; spade: GrowthMeasure }[]
+  dates: {
+    id: string
+    date: MeasureDate
+    control: GrowthMeasure
+    spade: GrowthMeasure
+    /** Field photo of the lifted plants, turned 90°: kontroll left, ásógép right, the tape between */
+    photo: string
+  }[]
   /** The bulb size both plots reached, a month apart */
   catchUp: { mm: number; spadeDate: MeasureDate; controlDate: MeasureDate }
   summary: string
-  rangeNote: string
 }
 
 /** Source: Drive "Ásógép-2026", onion phenology on 06.26 and 07.22 */
@@ -438,17 +444,18 @@ export const szentkiralyGrowth: { seasons: GrowthSeason[] } = {
           date: { month: 'JÚN.', third: 'vége' },
           control: { leafLength: [23, 36], leafCount: [5, 7], bulb: 25 },
           spade: { leafLength: [38, 65], leafCount: [8, 9], bulb: 55 },
+          photo: '/images/kutatás_pics/Szentkirály/hagyma/hagyma-2026-06-26.webp',
         },
         {
           id: 'jul',
           date: { month: 'JÚL.', third: 'vége' },
           control: { leafLength: [50, 50], leafCount: [6, 8], bulb: 55 },
           spade: { leafLength: [60, 70], leafCount: [12, 12], bulb: 85 },
+          photo: '/images/kutatás_pics/Szentkirály/hagyma/hagyma-2026-07-22.webp',
         },
       ],
       catchUp: { mm: 55, spadeDate: { month: 'JÚN.', third: 'vége' }, controlDate: { month: 'JÚL.', third: 'vége' } },
       summary: 'Az ásógépes hagymán június végén 55 mm-es fejet mértünk, a kontroll ezt július végére érte el.',
-      rangeNote: 'Halvány levél = a mért tartomány felső vége (a forrás tartományokat ad, pl. levélhossz 23–36 cm).',
     },
   ],
 }
