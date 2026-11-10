@@ -27,8 +27,16 @@ export default function MobileSectionBar() {
     if (!open) return
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    const current = sheetRef.current?.querySelector<HTMLElement>('[aria-current="true"], [data-active]')
-    ;(current ?? sheetRef.current?.querySelector<HTMLElement>('button'))?.focus()
+    // open the sheet where the reader is: the current subsection (else section) a third of the way down
+    const sheet = sheetRef.current
+    const current =
+      sheet?.querySelector<HTMLElement>('[aria-current="true"]') ??
+      sheet?.querySelector<HTMLElement>('[data-active]')
+    if (sheet && current) {
+      const offset = current.getBoundingClientRect().top - sheet.getBoundingClientRect().top
+      sheet.scrollTop = Math.max(0, sheet.scrollTop + offset - sheet.clientHeight / 3)
+    }
+    ;(current ?? sheet?.querySelector<HTMLElement>('button'))?.focus({ preventScroll: true })
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setOpen(false)

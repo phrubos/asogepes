@@ -101,20 +101,38 @@ const sectionOffsets: Record<string, number> = {
 // Re-aim once the scroll stops, until the target sits at its offset; a touch or wheel by the user cancels.
 // A far target (more than ~1.5 screens away) is not smooth-scrolled the whole way: the page jumps to
 // just short of it and only the last stretch animates, so a click doesn't run through every section between.
+// <html> has scroll-behavior: smooth; turn it off for one call instead of passing behavior 'instant',
+// which older Safari rejects (the far jump then never happened)
+function jumpTo(top: number) {
+  const html = document.documentElement
+  const previous = html.style.scrollBehavior
+  html.style.scrollBehavior = 'auto'
+  window.scrollTo(0, top)
+  html.style.scrollBehavior = previous
+}
+
+// Only one navigation runs at a time: a new one stops the previous re-aim loop,
+// which would otherwise pull the page back to the old target
+let cancelRunning: (() => void) | null = null
+
 function scrollToElement(element: HTMLElement, offset: number) {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  // 'instant', not 'auto': <html> has scroll-behavior: smooth, which 'auto' would follow
-  const behavior: ScrollBehavior = reduced ? 'instant' : 'smooth'
   const targetTop = () => element.getBoundingClientRect().top + window.scrollY - offset
-  const aim = () => window.scrollTo({ top: targetTop(), behavior })
+  const aim = () => (reduced ? jumpTo(targetTop()) : window.scrollTo({ top: targetTop(), behavior: 'smooth' }))
 
+  cancelRunning?.()
   let cancelled = false
-  const cancel = () => { cancelled = true }
+  const cancel = () => { cancelled = true; cleanup() }
+  // the reader takes over: wheel, touch, or a press on the scrollbar
   window.addEventListener('wheel', cancel, { once: true, passive: true })
   window.addEventListener('touchstart', cancel, { once: true, passive: true })
-  const cleanup = () => {
+  window.addEventListener('mousedown', cancel, { once: true, passive: true })
+  cancelRunning = cancel
+  function cleanup() {
     window.removeEventListener('wheel', cancel)
     window.removeEventListener('touchstart', cancel)
+    window.removeEventListener('mousedown', cancel)
+    if (cancelRunning === cancel) cancelRunning = null
   }
 
   // After the (last) smooth scroll: re-aim whenever the scroll stops short of the target
@@ -129,7 +147,9 @@ function scrollToElement(element: HTMLElement, offset: number) {
       else { stillFrames = 0; lastY = window.scrollY }
       if (stillFrames >= 6) {
         const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
-        if (Math.abs(element.getBoundingClientRect().top - offset) <= 2 || atBottom || corrections >= 4) return cleanup()
+        // the top section (Bevezető) can't rise to the offset: done once the page is at the top
+        const atTop = window.scrollY <= 0 && targetTop() <= 0
+        if (Math.abs(element.getBoundingClientRect().top - offset) <= 2 || atBottom || atTop || corrections >= 4) return cleanup()
         corrections++
         stillFrames = 0
         aim()
@@ -151,7 +171,7 @@ function scrollToElement(element: HTMLElement, offset: number) {
   const lead = Math.sign(distance) * window.innerHeight * 0.4
   let jumps = 0
   const jump = () => {
-    window.scrollTo({ top: targetTop() - lead, behavior: 'instant' })
+    jumpTo(targetTop() - lead)
     let lastTop = targetTop()
     let still = 0
     const wait = () => {
