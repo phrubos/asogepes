@@ -1,6 +1,6 @@
 # 017 · Kutatás oldal: fejezetritmus és egy közös belépő
 
-**Státusz:** vár (a felhasználó jóváhagyására; utána 2. lépés: /technologia) · **Létrehozva:** 2026-11-10 · **Méret:** M
+**Státusz:** kész · **Létrehozva:** 2026-11-10 · **Méret:** M
 
 ## Cél
 
@@ -26,7 +26,7 @@ A /kutatas ne egy hosszú, egyforma szalag legyen: a helyszínek fejezetként v�
 
 ## Nyitott kérdések
 
-- [ ] A felhasználó jóváhagyja-e a kinézetet; utána a /technologia egyszeri belépője.
+- [x] A felhasználó jóváhagyja-e a kinézetet; utána a /technologia egyszeri belépője.
 
 ## Kész, ha
 
@@ -44,3 +44,10 @@ A /kutatas ne egy hosszú, egyforma szalag legyen: a helyszínek fejezetként v�
   - `layout-check`, `motion-check`, `mobile-check` zöld; `nav-check`: csak a 4 ismert Suspense-hiba.
 - Mobil TBT (/kutatas, dev szerver, 3-3 futás): előtte 2609 / 2670 / 3563 ms, utána 2623 / 3484 / 2537 ms. A medián 2670 → 2623, nem nőtt.
 - Az első változat IntersectionObservert használt; `?section=` ugrás után a blokk opacity 0-n maradt. Javítva: görgetésre futó helyzetmérés.
+- 2. lépés (2026-11-11): a /technologia modellkártyái (38SX, 38WX, 40SX) a `whileInView once: false` helyett a közös `shared/RevealBlock`-ot kapták (egyszer úsznak be). A komponens az `experiment/season/` mappából a `shared/` mappába került.
+- A checker (2026-11-11) minden pontot rendben talált:
+  - 1920, 1440 és 1366 px: közvetlen link, 40SX-kattintás és gyors görgetés után 0 halvány kártya.
+  - Kattintás után a scrollY stabil (1920 px-en 3920).
+  - Ki- és visszagörgetés után a kártyák nem halványulnak el újra.
+  - /kutatas ugrások: 0 halvány blokk; telefonon minden statikus.
+  - `motion-check` és `layout-check` zöld; tsc hibamentes (`src/`).

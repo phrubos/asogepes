@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { flushSync } from 'react-dom'
-import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import ModelSection from '../ModelSection'
+import RevealBlock from '@/components/shared/RevealBlock'
 import { modelData, type ModelId } from '@/lib/technology-data'
 import { SCROLL_TARGET_EVENT } from '@/components/shared/ScrollLayout/ScrollLayout'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
@@ -106,15 +106,10 @@ export default function ModelsCombinedPage() {
                             })}
                         </div>
 
-                        <motion.div
-                            className="mobile-static"
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, ease: "easeOut" }}
-                            viewport={{ once: false, amount: 0.2 }}
-                        >
+                        {/* the site's one entrance, once (ticket 017): it no longer fades out and back in when scrolled past */}
+                        <RevealBlock>
                             <ModelSection modelId={modelId} />
-                        </motion.div>
+                        </RevealBlock>
 
                         {nextModel && (
                             <button type="button" className={styles.nextModel} onClick={() => { focusAfterSwitch.current = true; select(nextModel.id) }}>

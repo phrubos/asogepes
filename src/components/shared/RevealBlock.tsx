@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 /**
- * A /kutatas block with the page's one entrance (ticket 017): it fades in and rises 24 px, once, when
+ * A content block with the site's one entrance (ticket 017; /kutatas blocks, /technologia models): it fades in and rises 24 px, once, when
  * its top comes into the lower part of the screen. Charts inside keep their own drawing.
  * Not an IntersectionObserver: inside the content-visibility sections it stays silent after a jump
  * (?section= links, the menu), and the block would stay invisible. A rect check on scroll does not.
@@ -20,8 +20,8 @@ export default function RevealBlock({
   children,
   ...data
 }: {
-  id: string
-  className: string
+  id?: string
+  className?: string
   style?: CSSProperties
   innerRef?: Ref<HTMLDivElement>
   children: ReactNode
@@ -62,7 +62,7 @@ export default function RevealBlock({
     <motion.div
       ref={setRef}
       id={id}
-      className={`${className} mobile-static`}
+      className={className ? `${className} mobile-static` : 'mobile-static'}
       style={style}
       {...data}
       initial={reduced ? false : { opacity: 0, y: 24 }}

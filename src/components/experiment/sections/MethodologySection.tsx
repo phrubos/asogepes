@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ChevronDown } from 'lucide-react'
-import RevealBlock from '../season/RevealBlock'
+import RevealBlock from '@/components/shared/RevealBlock'
 import { MethodologyPage } from '../pages'
 import MeasuredPropertiesPage from '../pages/MeasuredPropertiesPage'
 import SoilLifeMethodPage from '../pages/SoilLifeMethodPage'

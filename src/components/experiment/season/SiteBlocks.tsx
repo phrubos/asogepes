@@ -1,7 +1,7 @@
 'use client'
 
 import { Fragment, type CSSProperties, type ReactElement } from 'react'
-import RevealBlock from './RevealBlock'
+import RevealBlock from '@/components/shared/RevealBlock'
 import { FixedSeason, useYearFilter, type SiteId } from './YearFilter'
 import styles from './SiteBlocks.module.css'
 
