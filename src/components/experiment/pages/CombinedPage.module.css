@@ -22,7 +22,26 @@
   box-sizing: border-box;
   scroll-margin-top: 100px;
   scroll-snap-align: start;
-  margin-bottom: 110px; /* Space between subsections */
+  margin-bottom: 96px; /* between the blocks of one location (ticket 017: a location break is about twice this) */
+}
+
+/* A location opens a new chapter: a clearly bigger break before it than between its blocks
+   (phones 104 px vs 48 px; on desktop the blocks fill a screen, so a hairline marks the chapter too) */
+.site {
+  position: relative;
+  padding-top: 120px;
+}
+
+/* the chapter mark: a hairline from the left edge (titles align left), gold fading out */
+.site::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  /* starts at the badge: the site block is a centred 1200px box with a 32px inset */
+  left: max(32px, (100% - 1200px) / 2 + 32px);
+  width: min(100% - 64px, 720px);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212, 168, 75, 0.55), rgba(212, 168, 75, 0.12) 60%, transparent);
 }
 
 .section:last-child {
@@ -68,12 +87,21 @@
     max-height: none;
     overflow: visible;
     min-height: 0;
-    margin-bottom: 48px; /* subsections of one location; locations are 64px apart */
+    margin-bottom: 48px; /* subsections of one location; locations are 104px apart */
     scroll-margin-top: 64px;
   }
 
   .section > * {
     flex: none;
+  }
+
+  .site {
+    padding-top: 40px;
+  }
+
+  .site::before {
+    left: 0; /* phones: one 20px gutter, nothing inset */
+    width: 100%;
   }
 }
 

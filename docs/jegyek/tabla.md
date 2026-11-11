@@ -1,9 +1,10 @@
 # Tábla
 
-Utoljára frissítve: 2026-11-10. Folyamat és státuszok: [README](README.md).
+Utoljára frissítve: 2026-11-11. Folyamat és státuszok: [README](README.md).
 
 | # | Feladat | Státusz | Fájlok | Párhuzamosan? | Forrás / megjegyzés |
 |---|---|---|---|---|---|
+| [017](017-kutatas-ritmus.md) | /kutatas: fejezetritmus (nagyobb szünet + hajszálvonal a helyszínek előtt), egyszeri belépő a blokkokon | 1. lépés kész (11-11: a hajszálvonal széles képernyőn is a badge-nél kezdődik); 2. lépés vár | `experiment/pages/CombinedPage.module.css`, `experiment/season/{RevealBlock,SiteBlocks}.tsx`, `experiment/sections/MethodologySection.tsx`, `*CombinedPage.tsx` | nem (közös fájlok) | felhasználó 11-10; 2. lépés: /technologia egyszeri belépő |
 | [004](004-lakitelek-3d-fold-alatt.md) | Lakitelek 3D: hengerek a föld alatt (rizotron), színkód, penetrométer | folyamatban (dev szerveres ellenőrzés hátra) | `experiment/FieldChart3DCanvas.tsx`, `experiment/pages/LakitelekChartPage.tsx` | igen | Attila üzenete 11-07; nyitott kérdések a jegyben |
 | [008](008-technologia-utmutato-modellkartya.md) | `/technologia`: másodlagos „Lásd a kísérletben” gombok telefonon, összehasonlítás a 38SX kártyán | vár (megrendelőre: csillagok forrása; kutatókra: 38SX számok eltérése) — a kód kész, checker rendben | `solution-v2/ApplicationGuide.module.css`, `solution-v2/ModelSection.*` | igen | mobil UX 11-09 K5–K7 |
 | — | 2026-os fotók feltöltése a kutatás oldalra | részben (Lakitelek rozs: 014; Szentkirály paradicsom: 013) | `public/images/kutatás_pics`, `src/lib/data.ts` | igen | audit 11-03 §10 |
@@ -22,6 +23,8 @@ Utoljára frissítve: 2026-11-10. Folyamat és státuszok: [README](README.md).
 
 | Feladat | Mikor | Hol |
 |---|---|---|
+| [018](018-asztali-fejezetritmus.md) Asztali fejezetritmus (100vh-s blokkok ki a /problema, /technologia, /kutatas oldalon): **elvetve, visszaállítva**: belelógó következő fejezet, utánagörgetés, vibrálás a 40SX-nél | 2026-11-11 | — |
+| [016](016-fotok-pontos-datummal.md) Minden kutatási fotó alatt „Fotó(k): hely, pontos dátum” (közös `PhotoCredit`), a dátum kikerült a címekből, a paradicsom „Július” címkéje helyett credit; checker: minden pont rendben. Nyitott: a 2025-ös szentkirályi hagymafotó napja | 2026-11-10 | `ui/PhotoCredit`, `shared/PhotoViewer/*`, `lib/data.ts`, `lib/seasons.ts`, `experiment/pages/{SzentkiralyGrowthPage,AboveBelowGround,LakitelekRyeBoard,BulkDensityMethodPage}.*` |
 | [015](015-evvalaszto-navigacioban.md) Évválasztó a /kutatas sínen (A: évek a helyszínnév alatt), szűkülő tartalom; töltő a 2026-os rozsfotókon | 2026-11-10 | `experiment/season/*`, `ResearchScrollLayout.tsx`, `*CombinedPage.tsx`, `shared/ScrollLayout/*`, `LakitelekRyeBoard.*` |
 | [014](014-lakitelek-rozs-majus.md) Lakitelek rozs: hét parcella májusban a Fotók blokkban (2026): egy léptékű csempesor talajszinttel, szűrő, nagy nézet (föld felett / föld alatt), jelölt összkép; „Hajtás és gyökér” ki a léptetőből; checker: rendben, 2 telefonos hiba javítva. Nyitott: sorhossz/tőszám a kutatóknak | 2026-11-10 | `experiment/pages/LakitelekRyeBoard.*`, `LakitelekPhotosPage.tsx`, `FurtherMeasuresPage.*`, `lib/seasons.ts`, `public/images/kutatás_pics/Lakitelek/rozs/` |
 | [013](013-paradicsom-fold-felett-alatt.md) Szentkirály paradicsom: „Föld felett, föld alatt” (kutató a két parcellán egy léptékben + gyökérpár, gyűrűs jelölők, nagyító), Hajtáshossz ki a léptetőből; checker: minden pont rendben | 2026-11-10 | `experiment/pages/AboveBelowGround.*`, `SzentkiralyTomatoPage.tsx`, `FurtherMeasuresPage.tsx`, `public/images/kutatás_pics/Szentkirály/paradicsom/` |

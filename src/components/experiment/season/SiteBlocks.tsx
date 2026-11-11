@@ -1,6 +1,7 @@
 'use client'
 
 import { Fragment, type CSSProperties, type ReactElement } from 'react'
+import RevealBlock from './RevealBlock'
 import { FixedSeason, useYearFilter, type SiteId } from './YearFilter'
 import styles from './SiteBlocks.module.css'
 
@@ -32,7 +33,7 @@ export default function SiteBlocks({ site, blocks, sectionClass }: { site: SiteI
         const style = b.phoneHeight ? ({ '--phone-h': `${b.phoneHeight}px` } as CSSProperties) : undefined
         const each = b.once ? [ys[ys.length - 1]] : ys
         return (
-          <div key={b.id} id={b.id} className={sectionClass} style={style}>
+          <RevealBlock key={b.id} id={b.id} className={sectionClass} style={style}>
             {each.map((y, i) => (
               <Fragment key={y}>
                 {/* a quiet seam between the two copies; each copy says its own year beside the badge */}
@@ -42,7 +43,7 @@ export default function SiteBlocks({ site, blocks, sectionClass }: { site: SiteI
                 </FixedSeason>
               </Fragment>
             ))}
-          </div>
+          </RevealBlock>
         )
       })}
     </>

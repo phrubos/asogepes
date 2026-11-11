@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ChevronDown } from 'lucide-react'
+import RevealBlock from '../season/RevealBlock'
 import { MethodologyPage } from '../pages'
 import MeasuredPropertiesPage from '../pages/MeasuredPropertiesPage'
 import SoilLifeMethodPage from '../pages/SoilLifeMethodPage'
@@ -48,8 +49,8 @@ function Block({ id, component, phoneHeight, collapsible }: (typeof blocks)[numb
     }
 
     return (
-        <div
-            ref={ref}
+        <RevealBlock
+            innerRef={ref}
             id={id}
             className={`${combined.section} ${collapsible ? styles.collapsible : ''}`}
             data-open={collapsible ? open || undefined : undefined}
@@ -70,7 +71,7 @@ function Block({ id, component, phoneHeight, collapsible }: (typeof blocks)[numb
                     <ChevronDown size={18} aria-hidden="true" className={styles.collapseIcon} />
                 </button>
             )}
-        </div>
+        </RevealBlock>
     )
 }
 

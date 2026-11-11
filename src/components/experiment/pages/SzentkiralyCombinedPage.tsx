@@ -23,7 +23,7 @@ const blocks: SiteBlock[] = [
 
 export default function SzentkiralyCombinedPage() {
     return (
-        <div className={styles.combinedWrapper}>
+        <div className={`${styles.combinedWrapper} ${styles.site}`}>
             <SiteBlocks site="szentkiraly" blocks={blocks} sectionClass={styles.section} />
         </div>
     )

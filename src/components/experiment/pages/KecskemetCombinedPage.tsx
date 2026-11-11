@@ -15,7 +15,7 @@ const blocks: SiteBlock[] = [
 
 export default function KecskemetCombinedPage() {
     return (
-        <div className={styles.combinedWrapper}>
+        <div className={`${styles.combinedWrapper} ${styles.site}`}>
             <SiteBlocks site="kecskemet" blocks={blocks} sectionClass={styles.section} />
         </div>
     )

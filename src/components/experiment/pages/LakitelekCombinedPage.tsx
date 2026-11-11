@@ -19,7 +19,7 @@ const blocks: SiteBlock[] = [
 
 export default function LakitelekCombinedPage() {
     return (
-        <div className={styles.combinedWrapper}>
+        <div className={`${styles.combinedWrapper} ${styles.site}`}>
             <SiteBlocks site="lakitelek" blocks={blocks} sectionClass={styles.section} />
         </div>
     )
