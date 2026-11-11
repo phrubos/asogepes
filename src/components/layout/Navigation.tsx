@@ -198,14 +198,15 @@ export default function Navigation() {
                 className={styles.mobileOverlay}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                exit={{ opacity: 0, transition: { duration: 0.2 } }}
                 onClick={() => setMobileMenuOpen(false)}
               />
+              {/* closing is quicker than opening and has no stagger (ticket 021) */}
               <motion.nav
                 className={styles.mobileNav}
                 initial={{ clipPath: 'inset(0 0 100% 0)' }}
                 animate={{ clipPath: 'inset(0 0 0% 0)' }}
-                exit={{ clipPath: 'inset(0 0 100% 0)' }}
+                exit={{ clipPath: 'inset(0 0 100% 0)', transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 aria-label="Mobil navigáció"
               >
@@ -215,7 +216,7 @@ export default function Navigation() {
                       key={item.href}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
+                      exit={{ opacity: 0, y: -10, transition: { duration: 0.12 } }}
                       transition={{ delay: 0.1 + index * 0.05 }}
                     >
                       <Link

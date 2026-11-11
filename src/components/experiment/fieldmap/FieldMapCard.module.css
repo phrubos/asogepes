@@ -51,14 +51,14 @@
   justify-content: space-between;
   gap: 12px;
   border-bottom: 1px solid var(--paper-line);
-  padding-bottom: 4px;
+  padding-bottom: var(--space-xs);
 }
 
 .title {
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
-  font-size: 1.125rem;
+  font-size: var(--text-xl);
 }
 
 /* Map margin, as on printed maps: zoom level + coordinates above the frame, furniture below it */
@@ -67,12 +67,12 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
-  gap: 4px 12px;
+  gap: var(--space-xs) 12px;
   margin-top: 10px;
 }
 
 .stageTag {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -80,7 +80,7 @@
 }
 
 .coord {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   letter-spacing: 0.06em;
   color: var(--paper-muted);
   font-variant-numeric: tabular-nums;
@@ -90,7 +90,7 @@
   position: relative;
   aspect-ratio: 1 / 1;
   max-width: 100%;
-  margin-top: 8px;
+  margin-top: var(--space-sm);
   border: 1px solid var(--paper-line);
 }
 
@@ -108,7 +108,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 24px;
+  gap: var(--space-sm) var(--space-lg);
   margin-top: 10px;
   min-height: 44px;
 }
@@ -131,7 +131,7 @@
 .scale {
   display: grid;
   gap: 3px;
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -152,10 +152,10 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: var(--paper-muted);
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity var(--dur-slow) var(--ease-out);
 }
 
 .keyOn {
@@ -165,7 +165,7 @@
 .key li {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .keySpade,
@@ -194,11 +194,11 @@
   margin: -6px -12px -6px 0;
   padding: 0;
   border: 0;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: transparent;
   color: var(--paper-dim);
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
 .replay:hover {
@@ -276,7 +276,7 @@
 .lay {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+  transition: opacity var(--dur-base) var(--ease-out), visibility 0s linear 0.25s;
 }
 
 .s0 .l0,
@@ -284,7 +284,7 @@
 .s2 .l2 {
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.35s ease, visibility 0s;
+  transition: opacity var(--dur-base) var(--ease-out), visibility 0s;
 }
 
 /* pin: the dot pops, the label only fades (scaling text renders it blurry) */
@@ -375,7 +375,7 @@ g.fieldOff {
 
 .field,
 .l2 g {
-  transition: fill 0.3s ease, stroke 0.3s ease, opacity 0.3s ease;
+  transition: fill var(--dur-base) var(--ease-out), stroke var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out);
 }
 
 /* the dashed link between two fields and its distance, haloed in the paper colour */
@@ -391,7 +391,7 @@ g.fieldOff {
   paint-order: stroke;
   font-variant-numeric: tabular-nums;
   opacity: 0;
-  transition: opacity 0.35s ease;
+  transition: opacity var(--dur-base) var(--ease-out);
 }
 
 /* the distance arrives after its line has drawn (the component draws the line) */
@@ -448,6 +448,6 @@ g.fieldOff {
   }
 
   .paper {
-    padding: 26px 16px 16px;
+    padding: 26px var(--space-md) var(--space-md);
   }
 }

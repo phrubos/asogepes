@@ -61,7 +61,7 @@ const applicationModes: ApplicationMode[] = [
     soilType: 'Bármely talajtípus',
     rating: 5,
     isBest: false,
-    color: '#5A7A8B'
+    color: '#D4A84B' // gold (was blue-grey; no blue on the site)
   }
 ]
 

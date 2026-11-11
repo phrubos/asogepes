@@ -22,5 +22,7 @@ A QA-build a `.next-qa` mappába kerül és a 3100-as porton fut, így nem ütk�
 | `node scripts/qa/trace.js <url> "<selector>" [w] [h]` | Egy elem és ősei: doboz, margók, paddingok, gap, igazítás, max-width, távolság a következő elemig (miért ott van, ahol) | csak riport |
 | `node scripts/qa/snap.js <base> "<selector>" <outPrefix> [--pages=…] [--widths=390,1440]` | Egy elem képe és mérése (margó, méret, hézag felette/alatta) két szélességen, JSON-ban; az előtte/utána mod használja | csak riport |
 | `node scripts/qa/shots.js <outDir> [url]` | Viewport-lépésenkénti képernyőképek + konzolhibák | csak riport |
+| `node scripts/qa/token-check.js [--list font-size]` | Design tokenek őre (020): a `src/**/*.css` különböző beírt betűméret-, lekerekítés-, árnyék-, szín- és átmenetértékei nem nőhetnek a szkriptben rögzített plafon fölé | 1, ha egy szám nő |
+| `node scripts/qa/style-diff.js dump <out.json> [url]` · `diff <a.json> <b.json> [--tol=0.5]` | CSS-átalakítás előtt/után: minden látható elem számolt betűmérete, lekerekítése, árnyéka, színei, térközei és mérete a 4 oldalon, 390 és 1440 px-en (reduced motion); a diff tulajdonságonként listázza az eltéréseket | diff: 1, ha van eltérés |
 
 Git Bash alatt a `--pages=/…` argumentumot az MSYS útvonallá alakítja: `MSYS_NO_PATHCONV=1 node scripts/qa/clip-check.js … --pages=/kutatas`. A `--show=N` oldalanként N levágott elemet ír ki (alapérték 8).

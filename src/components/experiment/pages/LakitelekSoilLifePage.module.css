@@ -1,9 +1,9 @@
 /* Lakitelek soil life: 7 parcels on one timeline, told in steps (frame: story/Story) */
 
 .lead {
-  margin: 8px 0 0;
+  margin: var(--space-sm) 0 0;
   max-width: 70ch;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.75);
 }
@@ -23,7 +23,7 @@
 }
 
 .bandYear {
-  fill: #e8c87a;
+  fill: var(--color-gold-light);
   font-family: var(--font-mono, monospace);
   font-weight: 600;
 }
@@ -53,7 +53,7 @@
 }
 
 .deep {
-  fill: #1a1612;
+  fill: var(--color-earth-900);
   stroke: var(--color-gold);
   background: transparent;
   border: 2px solid var(--color-gold);
@@ -83,20 +83,20 @@
 }
 
 .bracketOn {
-  stroke: #e8c87a;
+  stroke: var(--color-gold-light);
 }
 
 /* The mean line draws itself the first time its chapter opens */
 .avgLine {
   fill: none;
-  stroke: #f5f0e8;
+  stroke: var(--color-cream);
   stroke-width: 2.5;
   stroke-linejoin: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   transition:
     stroke-dashoffset 1s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--dur-slow) var(--ease-out);
 }
 
 .drawn {
@@ -104,12 +104,12 @@
 }
 
 .avgDot {
-  fill: #f5f0e8;
+  fill: var(--color-cream);
 }
 
 .gap {
   fill: none;
-  stroke: #e8c87a;
+  stroke: var(--color-gold-light);
   stroke-width: 2;
 }
 
@@ -118,12 +118,12 @@
   font-family: var(--font-mono, monospace);
   font-weight: 600;
   paint-order: stroke;
-  stroke: #1a1612;
+  stroke: var(--color-earth-900);
   stroke-width: 4px;
 }
 
 .labelGold {
-  fill: #e8c87a;
+  fill: var(--color-gold-light);
 }
 
 @keyframes labelIn {
@@ -158,7 +158,7 @@
 
 .trace {
   fill: none;
-  stroke: #e8c87a;
+  stroke: var(--color-gold-light);
   stroke-width: 3;
   stroke-linejoin: round;
   stroke-dasharray: 1;
@@ -181,7 +181,7 @@
 }
 
 .tickFlag {
-  fill: #e8c87a;
+  fill: var(--color-gold-light);
   font-family: var(--font-mono, monospace);
   font-weight: 400;
 }
@@ -195,9 +195,9 @@
 }
 
 .pickerLabel {
-  margin-right: 4px;
+  margin-right: var(--space-xs);
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
@@ -206,16 +206,16 @@
 .pick {
   min-width: 40px;
   height: 36px;
-  padding: 0 8px;
-  border-radius: 8px;
+  padding: 0 var(--space-sm);
+  border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: transparent;
   color: rgba(255, 255, 255, 0.85);
   font-family: var(--font-display);
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
 
 .pick:hover {
@@ -232,12 +232,12 @@
 .pickOn:hover {
   border-color: var(--color-gold);
   background: var(--color-gold);
-  color: #1a1612;
+  color: var(--color-earth-900);
 }
 
 .pickName {
   margin-left: 6px;
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   color: rgba(255, 255, 255, 0.8);
 }
 
@@ -248,7 +248,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -261,7 +261,7 @@
 .key {
   width: 11px;
   height: 11px;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   box-sizing: border-box;
 }
 
@@ -276,7 +276,7 @@
     order: 3;
     flex-basis: 100%;
     max-width: none;
-    margin-top: 4px;
+    margin-top: var(--space-xs);
   }
 }
 
@@ -298,7 +298,7 @@
   .picker {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 4px;
+    gap: var(--space-xs);
   }
 
   .pickerLabel {

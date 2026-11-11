@@ -36,7 +36,7 @@ export default function TechHeroSection() {
                         </h1>
                         <p className={styles.subTitle}>
                             Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
-                            miközben megszünteti a tömörödést. Ismerje meg a gép működését.
+                            miközben megszünteti a tömörödést. Ismerd meg a gép működését.
                         </p>
                     </div>
                 </div>

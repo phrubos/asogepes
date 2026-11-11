@@ -1,4 +1,3 @@
-export { default as HeroPage } from './HeroPage'
 export { default as MethodologyPage } from './MethodologyPage'
 export { default as SzentkirályInfoPage } from './SzentkirályInfoPage'
 export { default as SzentkirályTimelinePage } from './SzentkirályTimelinePage'

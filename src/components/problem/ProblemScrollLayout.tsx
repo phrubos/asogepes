@@ -17,7 +17,7 @@ export default function ProblemScrollLayout() {
         },
         {
             id: 'compaction',
-            label: 'Öntözés és\nTömörödés',
+            label: 'Öntözés és\ntömörödés',
             component: <CompactionSection />,
         },
         {

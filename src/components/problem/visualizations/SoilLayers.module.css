@@ -1,7 +1,7 @@
 /* Soil profile playback layers (ticket 001); the stage clips them to the rounded picture */
 .stage {
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 /* Absolutely positioned over the base svg, which gives the frame its height */

@@ -32,10 +32,10 @@
 .caption {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--space-sm);
   margin: 0;
-  padding: 0 0.5rem;
-  font-size: 0.8125rem;
+  padding: 0 var(--space-sm);
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.65);
 }

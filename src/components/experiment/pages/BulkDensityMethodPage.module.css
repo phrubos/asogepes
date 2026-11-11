@@ -10,7 +10,7 @@
     'steps card'
     'foot foot';
   column-gap: 40px;
-  row-gap: 16px;
+  row-gap: var(--space-md);
   align-items: start;
 }
 
@@ -24,7 +24,7 @@
   border-radius: 20px;
   overflow: hidden;
   background: #14110e;
-  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-3);
   cursor: grab;
   user-select: none;
 }
@@ -61,12 +61,12 @@
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: rgba(20, 17, 14, 0.55);
   backdrop-filter: blur(6px);
   color: var(--color-white);
   cursor: pointer;
-  transition: background-color 150ms ease, border-color 150ms ease;
+  transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
 
 .zoom:hover {
@@ -85,11 +85,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 24px;
-  padding: 32px 36px 56px;
+  gap: var(--space-lg);
+  padding: var(--space-xl) 36px 56px;
   background:
     radial-gradient(120% 90% at 20% 0%, rgba(212, 168, 75, 0.12), transparent 60%),
-    #1a1612;
+    var(--color-earth-900);
 }
 
 .labFlow {
@@ -105,7 +105,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   color: rgba(245, 240, 232, 0.85);
 }
 
@@ -126,7 +126,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 8px 14px;
+  gap: var(--space-sm) 14px;
   font-family: var(--font-display);
   font-size: 1.75rem;
   font-weight: 600;
@@ -146,14 +146,14 @@
 
 .formula small {
   font-family: var(--font-mono, monospace);
-  font-size: 1rem;
+  font-size: var(--text-lg);
   font-weight: 600;
-  color: #e8c87a;
+  color: var(--color-gold-light);
 }
 
 .labCaption {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -163,14 +163,14 @@
   grid-area: steps;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .stepBtn {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: var(--space-xs);
   min-height: 44px;
   padding: 0 2px 6px;
   border: 0;
@@ -179,7 +179,7 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: color 150ms ease;
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
 .stepBtn:hover {
@@ -189,7 +189,7 @@
 .stepBtn:focus-visible {
   outline: 2px solid var(--color-gold);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .bar {
@@ -239,18 +239,18 @@
 
 .stepNum {
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.08em;
   color: inherit;
 }
 
 .stepOn .stepNum {
-  color: #e8c87a;
+  color: var(--color-gold-light);
 }
 
 .stepName {
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   font-weight: 600;
   line-height: 1.2;
 }
@@ -261,8 +261,8 @@
   align-self: stretch;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px 24px 12px;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-lg) 12px;
   border: 1px solid rgba(212, 168, 75, 0.3);
   border-radius: 20px;
   background:
@@ -291,12 +291,12 @@
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(212, 168, 75, 0.35);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: rgba(212, 168, 75, 0.1);
-  color: #e8c87a;
+  color: var(--color-gold-light);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 150ms ease, border-color 150ms ease, opacity 150ms ease;
+  transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
 }
 
 .navBtn:hover:not(:disabled) {
@@ -323,16 +323,16 @@
   display: block;
   margin-bottom: 6px;
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: #e8c87a;
+  color: var(--color-gold-light);
 }
 
 .stepTitle {
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-sm);
   font-family: var(--font-display);
-  font-size: 1.625rem;
+  font-size: var(--text-h3);
   font-weight: 700;
   line-height: 1.15;
   color: var(--color-white);
@@ -340,7 +340,7 @@
 
 .stepBody {
   margin: 0;
-  font-size: 1.0625rem;
+  font-size: var(--text-lg);
   line-height: 1.6;
   color: rgba(245, 240, 232, 0.9);
 }
@@ -356,10 +356,10 @@
 .foot {
   grid-area: foot;
   max-width: 80ch;
-  margin: 8px 0 0;
-  padding-top: 16px;
+  margin: var(--space-sm) 0 0;
+  padding-top: var(--space-md);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   line-height: 1.6;
   color: rgba(245, 240, 232, 0.8);
 }
@@ -367,20 +367,20 @@
 /* Laptops: a bit shorter so the block fits one screen */
 @media (max-height: 900px) and (min-width: 1025px) {
   .layout {
-    column-gap: 32px;
+    column-gap: var(--space-xl);
   }
 
   .card {
-    padding: 20px 20px 8px;
+    padding: 20px 20px var(--space-sm);
     gap: 12px;
   }
 
   .stepTitle {
-    font-size: 1.375rem;
+    font-size: var(--text-3xl);
   }
 
   .stepBody {
-    font-size: 1rem;
+    font-size: var(--text-lg);
   }
 }
 
@@ -395,18 +395,18 @@
       'steps'
       'text'
       'foot';
-    gap: 16px;
+    gap: var(--space-md);
   }
 
   .frame {
     border-bottom: 0;
-    border-radius: 16px 16px 0 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     box-shadow: none;
   }
 
   /* the lab step has a 3:2 frame here too: flow wraps into two short lines, the formula stays big */
   .lab {
-    padding: 48px 20px 16px; /* top: room for the Újra button */
+    padding: var(--space-2xl) 20px var(--space-md); /* top: room for the Újra button */
     gap: 12px;
   }
 
@@ -424,8 +424,8 @@
   }
 
   .formula {
-    gap: 4px 10px;
-    font-size: 1.25rem;
+    gap: var(--space-xs) 10px;
+    font-size: var(--text-2xl);
   }
 
   .formula strong {
@@ -460,15 +460,15 @@
     position: relative;
     z-index: 1;
     display: flex;
-    gap: 8px;
+    gap: var(--space-sm);
   }
 
   .stepTitle {
-    font-size: 1.375rem;
+    font-size: var(--text-3xl);
   }
 
   .stepBody {
-    font-size: 1rem;
+    font-size: var(--text-lg);
   }
 
   /* the lower half of the photo frame */
@@ -478,10 +478,10 @@
     padding: 12px 12px 10px;
     border: 1px solid rgba(212, 168, 75, 0.3);
     border-top: 1px dashed rgba(212, 168, 75, 0.25);
-    border-radius: 0 0 16px 16px;
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
     background:
       radial-gradient(120% 90% at 0% 0%, rgba(212, 168, 75, 0.08), transparent 60%),
-      #1a1612;
+      var(--color-earth-900);
     touch-action: pan-y;
     user-select: none;
   }
@@ -502,7 +502,7 @@
   .frame {
     border-bottom: 1px solid rgba(212, 168, 75, 0.3);
     border-right: 0;
-    border-radius: 16px 0 0 16px;
+    border-radius: var(--radius-xl) 0 0 var(--radius-xl);
   }
 
   .diagram {
@@ -511,14 +511,14 @@
     align-items: center;
     border-top: 1px solid rgba(212, 168, 75, 0.3);
     border-left: 1px dashed rgba(212, 168, 75, 0.25);
-    border-radius: 0 16px 16px 0;
+    border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
   }
 }
 
 /* Phones: the lab step drops the icon row (the step text says it), the formula carries the frame */
 @media (max-width: 600px) {
   .stepName {
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
   }
 
   .labFlow {

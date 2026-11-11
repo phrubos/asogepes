@@ -40,11 +40,11 @@
     .switcher {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 4px;
-        margin-bottom: 24px;
-        padding: 4px;
+        gap: var(--space-xs);
+        margin-bottom: var(--space-lg);
+        padding: var(--space-xs);
         border: 1px solid rgba(212, 168, 75, 0.2);
-        border-radius: 14px;
+        border-radius: var(--radius-lg);
         background: rgba(245, 240, 232, 0.04);
     }
 
@@ -55,14 +55,14 @@
         justify-content: center;
         gap: 2px;
         min-height: 56px;
-        padding: 6px 4px;
+        padding: 6px var(--space-xs);
         border: none;
-        border-radius: 10px;
+        border-radius: var(--radius-lg);
         background: transparent;
         color: rgba(245, 240, 232, 0.72);
         font: inherit;
         cursor: pointer;
-        transition: background-color 0.2s ease, color 0.2s ease;
+        transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
     }
 
     .tab[aria-selected='true'] {
@@ -77,13 +77,13 @@
 
     .tabName {
         font-family: var(--font-display);
-        font-size: 1.0625rem;
+        font-size: var(--text-lg);
         font-weight: 700;
         line-height: 1.1;
     }
 
     .tabType {
-        font-size: 0.75rem;
+        font-size: var(--text-xs);
         line-height: 1.2;
         text-align: center;
     }
@@ -91,13 +91,13 @@
     .nextModel {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--space-sm);
         align-self: flex-start;
         min-height: 48px;
-        margin-top: 24px;
+        margin-top: var(--space-lg);
         padding: 0 18px;
         border: 1px solid rgba(212, 168, 75, 0.35);
-        border-radius: 999px;
+        border-radius: var(--radius-pill);
         background: transparent;
         color: var(--color-gold);
         font: inherit;

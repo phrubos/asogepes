@@ -1,7 +1,7 @@
 /* Módszertan: the measured properties grid and the soil-life method (frame: SzentkirályTimelinePage) */
 
 .page {
-  gap: 24px;
+  gap: var(--space-lg);
 }
 
 .lead {
@@ -9,8 +9,8 @@
   flex-basis: 100%;
   max-width: 68ch;
   /* under the title, left aligned like it */
-  margin: 8px 0 0;
-  font-size: 0.9375rem;
+  margin: var(--space-sm) 0 0;
+  font-size: var(--text-base);
   line-height: 1.6;
   color: rgba(245, 240, 232, 0.8);
 }
@@ -29,10 +29,10 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 16px;
+  gap: var(--space-sm);
+  padding: var(--space-md);
   border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   background: rgba(20, 17, 14, 0.55);
 }
 
@@ -40,12 +40,12 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .cardName {
   font-family: var(--font-display);
-  font-size: 1.0625rem;
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--color-white);
   line-height: 1.25;
@@ -54,27 +54,27 @@
 .years {
   flex: none;
   display: inline-flex;
-  gap: 4px;
+  gap: var(--space-xs);
 }
 
 .yearOn,
 .yearOff {
   min-width: 28px;
   height: 20px;
-  padding: 0 4px;
+  padding: 0 var(--space-xs);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   border-radius: 5px;
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
 }
 
 .yearOn {
   background: var(--color-gold);
-  color: #1a1612;
+  color: var(--color-earth-900);
 }
 
 .yearOff {
@@ -84,35 +84,35 @@
 }
 
 .cardWhat {
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   line-height: 1.45;
   color: rgba(245, 240, 232, 0.88);
 }
 
 .cardMeta {
   margin-top: auto;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.6);
 }
 
 .unit {
   font-family: var(--font-mono, monospace);
-  color: #e8c87a;
+  color: var(--color-gold-light);
 }
 
 .fields {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 8px 16px;
-  font-size: 0.875rem;
+  gap: var(--space-sm) var(--space-md);
+  font-size: var(--text-md);
   color: rgba(245, 240, 232, 0.8);
 }
 
 .fieldsLabel {
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -122,7 +122,7 @@
 .fieldList {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 20px;
+  gap: var(--space-xs) 20px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -138,7 +138,7 @@
   display: inline-flex;
   gap: 14px;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
 }
 
 .legend > span {
@@ -175,12 +175,12 @@
 .text {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 .body {
   margin: 0;
-  font-size: 1rem;
+  font-size: var(--text-lg);
   line-height: 1.7;
   color: rgba(245, 240, 232, 0.85);
 }
@@ -189,7 +189,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: var(--space-sm);
 }
 
 .roundList {
@@ -208,7 +208,7 @@
   grid-template-columns: 190px minmax(0, 1fr);
   gap: 12px;
   padding: 6px 0 6px 18px;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   color: rgba(245, 240, 232, 0.85);
 }
 
@@ -220,14 +220,14 @@
   width: 9px;
   height: 9px;
   margin-top: -4.5px;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: var(--color-gold);
 }
 
 .roundWhen {
   font-family: var(--font-mono, monospace);
-  font-size: 0.875rem;
-  color: #e8c87a;
+  font-size: var(--text-md);
+  color: var(--color-gold-light);
 }
 
 .example {
@@ -244,14 +244,14 @@
 .exampleTag {
   align-self: flex-start;
   padding: 3px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(212, 168, 75, 0.15);
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #e8c87a;
+  color: var(--color-gold-light);
 }
 
 .exampleValue {
@@ -264,23 +264,23 @@
 
 .exampleValue small {
   font-family: var(--font-mono, monospace);
-  font-size: 1rem;
+  font-size: var(--text-lg);
   font-weight: 600;
-  color: #e8c87a;
+  color: var(--color-gold-light);
 }
 
 .exampleWhat {
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   color: rgba(245, 240, 232, 0.75);
 }
 
 .split2 {
   display: flex;
   height: 40px;
-  margin-top: 8px;
-  border-radius: 10px;
+  margin-top: var(--space-sm);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
@@ -294,7 +294,7 @@
 
 .fungi {
   background: var(--color-gold);
-  color: #1a1612;
+  color: var(--color-earth-900);
 }
 
 .bacteria {
@@ -304,7 +304,7 @@
 }
 
 .exampleCaption {
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -312,7 +312,7 @@
   margin: 6px 0 0;
   padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.6);
 }
@@ -325,7 +325,7 @@
   }
 
   .cardWhat {
-    font-size: 0.875rem;
+    font-size: var(--text-md);
   }
 
   .exampleValue {
@@ -342,11 +342,11 @@
 /* Phones and tablets: one column, left aligned */
 @media (max-width: 1024px) {
   .page {
-    gap: 16px;
+    gap: var(--space-md);
   }
 
   .lead {
-    margin: 8px 0 0;
+    margin: var(--space-sm) 0 0;
   }
 
   .grid {
@@ -355,7 +355,7 @@
 
   .split {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: var(--space-lg);
   }
 
   .legend {
@@ -375,15 +375,15 @@
 @media (max-width: 600px) {
   .grid {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: var(--space-sm);
   }
 
   .card {
     padding: 12px 14px;
-    gap: 4px;
+    gap: var(--space-xs);
   }
 
   .cardWhat {
-    font-size: 0.9375rem;
+    font-size: var(--text-base);
   }
 }

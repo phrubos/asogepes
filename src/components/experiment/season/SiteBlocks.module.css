@@ -5,13 +5,13 @@ hr.divider {
   /* beats CombinedPage's `.section > * { flex: 1; min-height: 0 }` (flex-basis 0 left the line 0px tall) */
   flex: none;
   height: 1px;
-  margin: 48px 0;
+  margin: var(--space-2xl) 0;
   border: 0;
   background: linear-gradient(90deg, rgba(212, 168, 75, 0), rgba(212, 168, 75, 0.35) 20%, rgba(212, 168, 75, 0.35) 80%, rgba(212, 168, 75, 0));
 }
 
 @media (max-width: 1024px) {
   hr.divider {
-    margin: 32px 0;
+    margin: var(--space-xl) 0;
   }
 }

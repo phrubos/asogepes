@@ -15,7 +15,7 @@ const HERO_NAV_ITEMS = [
         title: 'Az öntözés okozta tömörödés',
         icon: <Droplet size={24} />,
         color: '#A0846B',
-        accent: '#FDD835',
+        accent: '#D4A84B', // gold → ochre → terracotta: rising severity in the site palette
         stats: '0-20 cm',
         alertLevel: 'Magas'
     },
@@ -25,7 +25,7 @@ const HERO_NAV_ITEMS = [
         title: 'A szántóföldi nehézkultivátor korlátai',
         icon: <UnfoldHorizontal size={24} />,
         color: '#7D6B5A',
-        accent: '#FB8C00',
+        accent: '#C8873A',
         stats: '20-35 cm',
         alertLevel: 'Kritikus'
     },
@@ -35,7 +35,7 @@ const HERO_NAV_ITEMS = [
         title: 'A szántás korlátai',
         icon: <Redo size={24} />,
         color: '#5C4D3D',
-        accent: '#E53935',
+        accent: '#C45C3E',
         stats: '35+ cm',
         alertLevel: 'Veszély'
     }

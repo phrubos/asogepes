@@ -1,7 +1,7 @@
 .credit {
   display: block;
   margin-top: 6px;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 400;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.55);

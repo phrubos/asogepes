@@ -405,7 +405,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
           // Removed onMouseLeave
           >
             <motion.button
-              className={`${styles.miniFolder} ${styles.miniFolderPurple} ${hoveredMiniFolder && hoveredMiniFolder !== 'guide' ? styles.miniFolderDimmed : ''}`}
+              className={`${styles.miniFolder} ${styles.miniFolderGuide} ${hoveredMiniFolder && hoveredMiniFolder !== 'guide' ? styles.miniFolderDimmed : ''}`}
               variants={navButtonLeftVariants}
               initial="hidden"
               animate="visible"
@@ -415,8 +415,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               onMouseLeave={() => setHoveredMiniFolder(null)}
               whileHover={{ y: -4 }}
             >
-              <div className={`${styles.miniFolderTab} ${styles.miniFolderTabPurple}`}>
-                Guide
+              <div className={`${styles.miniFolderTab} ${styles.miniFolderTabGuide}`}>
+                Útmutató
               </div>
               <div className={styles.miniFolderBack} />
               <div className={styles.miniFolderSheets}>
@@ -429,7 +429,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
                 <span className={styles.miniFolderLabel}>Módszer választó</span>
                 <span className={styles.miniFolderDesc}>Melyik a legjobb?</span>
               </div>
-              <div className={styles.miniFolderGlowPurple} />
+              <div className={styles.miniFolderGlowGuide} />
               {/* Floating sparkles */}
               <motion.div
                 className={styles.floatingSparkles}
@@ -498,7 +498,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
             {/* Header */}
             <div className={styles.hubHeader}>
               <h2 className={styles.hubTitle}>Technológia</h2>
-              <span className={styles.hubSubtitle}>Válasszon témát</span>
+              <span className={styles.hubSubtitle}>Válassz témát</span>
             </div>
 
             {/* Options */}

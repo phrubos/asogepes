@@ -45,7 +45,7 @@ One research site, two partners. The site has its own earth-tone identity; the p
 - Calm, scientific, concrete: a measured number beats an adjective. "A talaj nem …" style short claims, then the evidence.
 - The research runs **2025 onwards** ("2025 óta"), not just 2025.
 - Numbers come from `src/lib/data.ts` and the location pages (`experiment/pages/*`); never invent or round them differently. AI-generated images and footage are illustration only and never stand in for measured results.
-- Neutral address on the site (no "te", no sales pitch). Agroskill's own warm "Ön" tone and their Funkciógarancia belong to their channels, not to the research pages; quote them only in a clearly marked contact or partner block.
+- Address on the site: informal "te" in UI copy and calls to action ("Fedezd fel", "Válassz témát", "Ismerd meg"), never "Ön" (user decision, 2026-11-11); no sales pitch. Agroskill's own warm "Ön" tone and their Funkciógarancia belong to their channels, not to the research pages; quote them only in a clearly marked contact or partner block.
 - Correct accents always (ő, ű, á); technical words as on the site: ásógép, talajtömörödés, eketalp, penetrométer, lazítás forgatás nélkül.
 
 ## Site icon

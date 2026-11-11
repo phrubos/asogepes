@@ -16,7 +16,7 @@
     z-index: 108;
     height: 56px;
     /* the site menu button sits on the right, above this bar */
-    padding: 0 60px 0 8px; /* 8px + 44px menu button + 8px */
+    padding: 0 60px 0 var(--space-sm); /* 8px + 44px menu button + 8px */
     background: rgba(26, 22, 18, 0.96);
     border-bottom: 1px solid rgba(212, 168, 75, 0.14);
     backdrop-filter: blur(12px);
@@ -26,14 +26,14 @@
 .trigger {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
   min-width: 0;
   max-width: 100%;
   height: 44px;
   margin: auto 0;
   padding: 0 12px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-cream);
   font: inherit;
@@ -54,7 +54,7 @@
 
 .section {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: var(--text-lg);
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -62,7 +62,7 @@
 }
 
 .sub {
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: rgba(245, 240, 232, 0.68);
   white-space: nowrap;
   overflow: hidden;
@@ -99,16 +99,36 @@
   box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.45);
 }
 
+/* the drag handle of the sheet: stays on top while the list scrolls, and owns the touch so a
+   downward drag moves the sheet instead of the page (ticket 021) */
 .sheetHeader {
+  position: sticky;
+  top: -8px;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 0;
+  margin: -8px -20px 0;
+  padding: var(--space-md) 20px var(--space-sm);
+  background: var(--color-earth-800);
+  touch-action: none;
+  cursor: grab;
+}
+
+.grabber {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 36px;
+  height: 4px;
+  margin-left: -18px;
+  border-radius: var(--radius-pill);
+  background: rgba(245, 240, 232, 0.25);
 }
 
 .sheetTitle {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: var(--text-2xl);
   font-weight: 600;
   color: var(--color-cream);
 }
@@ -121,7 +141,7 @@
   height: 44px;
   margin-right: -10px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: rgba(245, 240, 232, 0.8);
   cursor: pointer;
@@ -146,7 +166,7 @@
   min-height: 48px;
   padding: 10px 12px;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: transparent;
   font: inherit;
   text-align: left;
@@ -155,7 +175,7 @@
 
 .item {
   font-family: var(--font-display);
-  font-size: 1.0625rem;
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--color-cream);
 }
@@ -165,15 +185,15 @@
 }
 
 .subList {
-  padding: 0 0 8px 12px;
+  padding: 0 0 var(--space-sm) 12px;
 }
 
 .subItem {
   min-height: 44px;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   color: rgba(245, 240, 232, 0.75);
   border-left: 2px solid rgba(245, 240, 232, 0.12);
-  border-radius: 0 10px 10px 0;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
 }
 
 .item[aria-current='true'],
@@ -190,7 +210,7 @@
 .itemRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .itemRow > .item {
@@ -208,12 +228,12 @@
   min-width: 48px;
   height: 44px;
   padding: 0 10px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   border: 1px solid rgba(245, 240, 232, 0.2);
   background: transparent;
   color: rgba(245, 240, 232, 0.8);
   font-family: var(--font-mono, monospace);
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   font-weight: 600;
   cursor: pointer;
 }
@@ -226,7 +246,7 @@
 .yearChipOn {
   border-color: var(--color-gold);
   background: var(--color-gold);
-  color: #1a1612;
+  color: var(--color-earth-900);
 }
 
 .yearChip[aria-disabled='true'] {

@@ -9,12 +9,12 @@
   justify-content: center;
   gap: 0.75rem;
   border: none;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   font-family: var(--font-display, 'Fraunces', serif);
   font-weight: 600;
   cursor: pointer;
   overflow: hidden;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow var(--dur-base) var(--ease-out);
   transform-style: preserve-3d;
   perspective: 1000px;
   /* also used as a link (href) */
@@ -32,17 +32,17 @@
 
 .sm {
   padding: 0.625rem 1.25rem;
-  font-size: 0.875rem;
+  font-size: var(--text-md);
 }
 
 .md {
-  padding: 1rem 2rem;
-  font-size: 1rem;
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--text-lg);
 }
 
 .lg {
   padding: 1.25rem 2.5rem;
-  font-size: 1.125rem;
+  font-size: var(--text-xl);
 }
 
 /* ========================================
@@ -107,7 +107,7 @@
   width: 56px;
   height: 56px;
   padding: 0;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
@@ -181,7 +181,7 @@
 
 .ripple {
   position: absolute;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: rgba(255, 255, 255, 0.4);
   transform: translate(-50%, -50%) scale(0);
   animation: rippleEffect 0.6s ease-out forwards;
@@ -207,8 +207,8 @@
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  gap: var(--space-sm);
+  transition: transform var(--dur-base) var(--ease-out);
 }
 
 .magneticButton:hover .content {
@@ -217,7 +217,7 @@
 
 /* Arrow icon animation */
 .content svg {
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--dur-base) var(--ease-out);
 }
 
 .magneticButton:hover .content svg {
@@ -230,13 +230,13 @@
 
 @media (max-width: 768px) {
   .lg {
-    padding: 1rem 2rem;
-    font-size: 1rem;
+    padding: var(--space-md) var(--space-xl);
+    font-size: var(--text-lg);
   }
 
   .md {
     padding: 0.875rem 1.75rem;
-    font-size: 0.9375rem;
+    font-size: var(--text-base);
   }
 }
 

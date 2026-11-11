@@ -3,15 +3,15 @@
 .pillBadge {
   display: inline-block;
   /* font-family removed to match standard sans style */
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: var(--text-xs);
+  font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-gold);
   background: rgba(212, 168, 75, 0.1);
   border: 1px solid rgba(212, 168, 75, 0.3);
-  padding: 0.5rem 1rem;
-  border-radius: 100px;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-pill);
   margin-bottom: var(--space-md);
   backdrop-filter: blur(4px);
 }
@@ -78,7 +78,7 @@
   gap: var(--space-lg);
   align-items: flex-start;
   background: linear-gradient(135deg, rgba(26, 23, 20, 0.8) 0%, rgba(35, 30, 25, 0.9) 100%);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   border: 1px solid rgba(255, 255, 255, 0.08);
   /* TiltCard handles hover effects */
   height: auto;
@@ -103,12 +103,12 @@
   }
 
   .itemContent h3 {
-    font-size: 0.9rem;
+    font-size: var(--text-md);
     margin-bottom: 2px;
   }
 
   .itemContent p {
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     line-height: 1.4;
   }
 }
@@ -128,14 +128,14 @@
 
 .itemContent h3 {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--color-white);
   margin-bottom: var(--space-xs);
 }
 
 .itemContent p {
-  font-size: 0.85rem;
+  font-size: var(--text-md);
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
 }
@@ -208,7 +208,7 @@
 }
 
 .problemCardContent {
-  padding: 1rem 1.25rem;
+  padding: var(--space-md) 1.25rem;
   /* Reduced padding */
   height: 100%;
   display: flex;
@@ -251,7 +251,7 @@
   height: auto;
   display: block;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform var(--dur-slow) var(--ease-out);
 }
 
 /* ========================================
@@ -294,20 +294,20 @@
 .problemCard {
   background: linear-gradient(135deg, rgba(26, 23, 20, 0.8) 0%, rgba(35, 30, 25, 0.9) 100%) !important;
   /* Force override of TiltCard default */
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   border: 1px solid rgba(255, 255, 255, 0.08);
   height: 100%;
   display: flex;
   flex-direction: column;
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+  transition: background-color var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+  box-shadow: var(--shadow-2);
 }
 
 .problemCard:hover {
   background: linear-gradient(135deg, rgba(26, 23, 20, 0.9) 0%, rgba(35, 30, 25, 0.95) 100%) !important;
   border-color: rgba(212, 168, 75, 0.3);
   transform: translateY(-5px);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-3);
 }
 
 .problemIcon {
@@ -321,7 +321,7 @@
   justify-content: center;
   margin-bottom: var(--space-md);
   color: var(--color-gold);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
 }
 
 .problemCard:hover .problemIcon {
@@ -331,11 +331,11 @@
 
 .problemCardTitle {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--color-white);
   margin-bottom: var(--space-xs);
-  transition: color 0.3s ease;
+  transition: color var(--dur-base) var(--ease-out);
 }
 
 .problemCard:hover .problemCardTitle {
@@ -343,7 +343,7 @@
 }
 
 .problemCardDesc {
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
   margin: 0;
@@ -395,7 +395,7 @@
   .problemIcon {
     width: 42px;
     height: 42px;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
   }
 
   .problemIcon svg {
@@ -404,12 +404,12 @@
   }
 
   .problemCardTitle {
-    font-size: 1rem;
-    margin-bottom: 0.25rem;
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-xs);
   }
 
   .problemCardDesc {
-    font-size: 0.9375rem;
+    font-size: var(--text-base);
     line-height: 1.4;
   }
 
@@ -421,7 +421,7 @@
   .pillBadge {
     padding: 0.35rem 0.75rem;
     margin-bottom: 1vh;
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
   }
 }
 
@@ -441,10 +441,10 @@
 
 .soilProfile {
   background: linear-gradient(135deg, rgba(26, 23, 20, 0.8) 0%, rgba(35, 30, 25, 0.9) 100%);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-2);
 }
 
 .soilProfileHeader {
@@ -455,7 +455,7 @@
   background: rgba(212, 168, 75, 0.1);
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   color: var(--color-gold);
 }
 
@@ -476,7 +476,7 @@
   display: flex;
   align-items: flex-start;
   gap: var(--space-sm);
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
 }
@@ -502,13 +502,13 @@
   }
 
   .soilProfileHeader {
-    padding: 0.6rem 1rem;
-    font-size: 0.875rem;
+    padding: 0.6rem var(--space-md);
+    font-size: var(--text-md);
   }
 
   .soilProfileVisual {
-    padding: 1rem;
-    gap: 0.5rem !important;
+    padding: var(--space-md);
+    gap: var(--space-sm) !important;
   }
 
   .comparisonList {
@@ -516,7 +516,7 @@
   }
 
   .comparisonList li {
-    font-size: 0.9375rem;
+    font-size: var(--text-base);
   }
 }
 
@@ -564,9 +564,9 @@
   width: 100%;
   height: 60vh;
   aspect-ratio: 4/5;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-2xl);
   overflow: hidden;
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-3);
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
 }
@@ -578,13 +578,13 @@
   justify-content: center;
   min-height: 0;
   width: 100%;
-  padding: 0.5rem;
+  padding: var(--space-sm);
   overflow: visible;
 }
 
 @media (max-height: 900px) and (min-width: 1025px) {
   .ploughStructureContent {
-    padding: 0.25rem;
+    padding: var(--space-xs);
     justify-content: flex-start;
   }
 }
@@ -623,11 +623,11 @@
   }
 
   .cultivatorGrid {
-    gap: 1.5rem;
+    gap: var(--space-lg);
   }
 
   .statsPageGrid {
-    gap: 1.5rem;
+    gap: var(--space-lg);
   }
 }
 
@@ -681,7 +681,7 @@
 
   .combinedSection + .combinedSection,
   .combinedSectionCompact + .combinedSectionCompact {
-    margin-top: 64px;
+    margin-top: var(--space-3xl);
   }
 }
 
@@ -702,7 +702,7 @@
   .soilCaptionBelow {
     display: block;
     margin: 0;
-    font-size: 0.9375rem;
+    font-size: var(--text-base);
     line-height: 1.5;
     color: rgba(245, 240, 232, 0.8);
   }
@@ -717,7 +717,7 @@
   }
 
   .cultivatorGrid {
-    gap: 32px;
+    gap: var(--space-xl);
   }
 
   .compactionPageWrapper {
@@ -735,7 +735,7 @@
 
   .problemCard {
     height: auto;
-    padding: 16px 0;
+    padding: var(--space-md) 0;
     background: none;
     border: none;
     border-top: 1px solid rgba(245, 240, 232, 0.08);
@@ -759,13 +759,13 @@
   }
 
   .problemCardTitle {
-    margin: 0 0 4px;
-    font-size: 1.125rem;
+    margin: 0 0 var(--space-xs);
+    font-size: var(--text-xl);
   }
 
   .problemCardDesc {
     margin: 0;
-    font-size: 0.9375rem;
+    font-size: var(--text-base);
     line-height: 1.55;
   }
 }
@@ -808,7 +808,7 @@
     width: 100%;
     margin: 0;
     border: 1px solid rgba(245, 240, 232, 0.1);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     background: rgba(245, 240, 232, 0.03);
   }
 
@@ -825,24 +825,24 @@
   }
 
   .soilReadout dt {
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     color: rgba(245, 240, 232, 0.6);
   }
 
   .soilReadout dd {
     margin: 0;
     font-family: var(--font-display);
-    font-size: 1.0625rem;
+    font-size: var(--text-lg);
     font-weight: 600;
     color: var(--color-cream);
-    transition: color 0.3s;
+    transition: color var(--dur-base) var(--ease-out);
   }
 }
 
 /* Phones and tablets: the two cultivator soil profiles are one comparison, so they sit close */
 @media (max-width: 1024px) {
   .soilProfilesContainer {
-    gap: 16px;
+    gap: var(--space-md);
   }
 }
 
@@ -879,7 +879,7 @@
 /* Soil profile comparison title: centred over the two profiles on desktop, left on phones and tablets */
 .comparisonHeading {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-lg);
 }
 
 @media (max-width: 1024px) {

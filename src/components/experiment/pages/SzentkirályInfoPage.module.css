@@ -11,7 +11,7 @@
   width: 100%;
   text-align: center;
   font-family: var(--font-display);
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--color-gold);
   letter-spacing: 0.1em;
@@ -24,7 +24,7 @@
 .treatment {
   background: linear-gradient(135deg, rgba(26, 23, 20, 0.8) 0%, rgba(35, 30, 25, 0.9) 100%);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   padding: var(--space-lg);
   position: relative;
   overflow: hidden;
@@ -37,7 +37,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  border-radius: 14px 14px 0 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .treatmentControl::before {
@@ -60,7 +60,7 @@
   display: inline-block;
   padding: 4px var(--space-sm);
   border-radius: 5px;
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -86,7 +86,7 @@
 }
 
 .treatmentList li {
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.7);
   padding-left: var(--space-md);
@@ -100,7 +100,7 @@
   top: 8px;
   width: 4px;
   height: 4px;
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   background: rgba(255, 255, 255, 0.3);
 }
 
@@ -127,9 +127,9 @@
   justify-content: center;
   background: rgba(212, 168, 75, 0.1);
   border: 2px solid rgba(212, 168, 75, 0.3);
-  border-radius: 50%;
+  border-radius: var(--radius-round);
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 800;
   color: var(--color-gold);
   letter-spacing: 0.05em;
@@ -153,7 +153,7 @@
   .treatmentVs span {
     width: 36px;
     height: 36px;
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
   }
 }
 
@@ -164,7 +164,7 @@
   }
 
   .treatmentList li {
-    font-size: 0.8125rem;
+    font-size: var(--text-sm);
   }
 }
 
@@ -173,7 +173,7 @@
 @media (max-width: 1024px) {
   .treatmentComparison {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 8px;
+    gap: var(--space-sm);
   }
 
   .treatmentVs {
@@ -185,7 +185,7 @@
   }
 
   .treatmentList li {
-    font-size: 0.875rem;
+    font-size: var(--text-md);
     line-height: 1.4;
   }
 }
@@ -211,15 +211,15 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: 6px 14px;
-  padding: 12px 16px;
+  padding: 12px var(--space-md);
   border: 1px dashed rgba(255, 255, 255, 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.02);
 }
 
 .treatmentBaseLabel {
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -227,13 +227,13 @@
 }
 
 .treatmentBaseText {
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   color: rgba(255, 255, 255, 0.85);
 }
 
 .treatmentBaseNote {
   margin-left: auto;
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -259,7 +259,7 @@
 @media (max-width: 1024px) {
   .treatmentMulti {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 8px;
+    gap: var(--space-sm);
   }
 
   .treatmentBaseNote {

@@ -40,8 +40,9 @@
 
 .title {
     font-family: var(--font-display);
-    /* Reduced font size for compact fit */
-    font-size: clamp(1.75rem, 3.5vw, 3.5rem);
+    /* two lines on every desktop width: the longer line is ~9.5em of Fraunces 800 and the column is
+       ~0.31vw wide, so 3.15vw keeps it inside (3.5vw broke it into 3-4 lines between 1280 and 1600px) */
+    font-size: clamp(1.75rem, 3.15vw, 3.5rem);
     line-height: 1.1;
     font-weight: 800;
     color: var(--color-white);
@@ -51,7 +52,7 @@
 }
 
 .subTitle {
-    font-size: 1rem;
+    font-size: var(--text-lg);
     /* Slightly smaller */
     line-height: 1.5;
     color: rgba(245, 240, 232, 0.95);
@@ -134,14 +135,14 @@
     }
 
     .subTitle {
-        font-size: 0.9375rem;
+        font-size: var(--text-base);
     }
 }
 
 /* Phones and tablets: hero reads left-aligned, starting just under the section bar */
 @media (max-width: 1024px) {
     .heroPage {
-        padding: 24px 0 0;
+        padding: var(--space-lg) 0 0;
     }
 
     .content {

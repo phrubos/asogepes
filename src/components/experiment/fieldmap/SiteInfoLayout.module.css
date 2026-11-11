@@ -12,7 +12,7 @@
     'facts map';
   grid-template-rows: auto 1fr;
   column-gap: clamp(32px, 4vw, 56px);
-  row-gap: 24px;
+  row-gap: var(--space-lg);
   align-items: start;
   width: 100%;
   max-width: 1200px;
@@ -54,8 +54,8 @@
   padding: 4px var(--space-md);
   background: rgba(212, 168, 75, 0.1);
   border: 1px solid rgba(212, 168, 75, 0.2);
-  border-radius: 100px;
-  font-size: 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--color-gold);
   text-transform: uppercase;
@@ -64,7 +64,7 @@
 
 .headerTitle {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-size: var(--text-h2);
   font-weight: 800;
   color: var(--color-white);
   margin: 0;
@@ -74,7 +74,7 @@
 .lead {
   margin: 0;
   max-width: 48ch;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.72);
 }
@@ -92,8 +92,8 @@
   display: grid;
   grid-template-columns: 28px minmax(0, 7.5rem) minmax(0, 1fr);
   align-items: baseline;
-  gap: 4px 16px;
-  padding: 16px 0;
+  gap: var(--space-xs) var(--space-md);
+  padding: var(--space-md) 0;
   border-bottom: 1px solid rgba(232, 200, 122, 0.16);
 }
 
@@ -103,7 +103,7 @@
 }
 
 .factLabel {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -111,7 +111,7 @@
 }
 
 .factValue {
-  font-size: 1.0625rem;
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--color-white);
   line-height: 1.35;
@@ -120,7 +120,7 @@
 .factValue small {
   display: block;
   margin-top: 2px;
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   font-weight: 400;
   color: rgba(255, 255, 255, 0.65);
 }
@@ -134,7 +134,7 @@
       'map'
       'facts';
     grid-template-rows: auto;
-    row-gap: 16px;
+    row-gap: var(--space-md);
     padding: 0;
   }
 
@@ -157,7 +157,7 @@
 
 /* the A of Kₐ: a subscript would shrink below 12px */
 .factValue sub {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
 }
 
 /* Optional full-width block under facts + map (e.g. the treatment cards on Szentkirály and Borbás) */
@@ -172,7 +172,7 @@
 .below {
   grid-area: below;
   min-width: 0;
-  margin-top: 16px;
+  margin-top: var(--space-md);
 }
 
 @media (max-width: 1024px) {
@@ -186,6 +186,6 @@
   }
 
   .below {
-    margin-top: 8px;
+    margin-top: var(--space-sm);
   }
 }

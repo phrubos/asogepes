@@ -33,7 +33,7 @@
     /* Remove white border, we'll use a better indicator */
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     z-index: 5;
-    transition: border-color 0.2s;
+    transition: border-color var(--dur-fast) var(--ease-out);
 }
 
 .container:hover .leftImageContainer {
@@ -62,13 +62,13 @@
     height: 44px;
     background: #0a0a0a;
     border: 2px solid var(--color-gold, #d4a84b);
-    border-radius: 50%;
+    border-radius: var(--radius-round);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-1);
     color: var(--color-gold, #d4a84b);
-    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
 
 .sliderHandle:hover .handleButton {
@@ -80,11 +80,11 @@
 .label {
     position: absolute;
     top: 20px;
-    padding: 4px 8px;
+    padding: var(--space-xs) var(--space-sm);
     background: rgba(0, 0, 0, 0.6);
     color: white;
-    font-size: 12px;
-    border-radius: 4px;
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
     pointer-events: none;
     z-index: 15;
     font-weight: 500;
@@ -138,7 +138,7 @@
     width: 12px;
     flex: 1;
     background: linear-gradient(to bottom, #ff0000, #ffff00, #00ff00, #0000ff);
-    margin: 8px 0;
+    margin: var(--space-sm) 0;
     border: 1px solid white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -150,13 +150,13 @@
     align-items: center;
     color: white;
     font-weight: bold;
-    font-size: 12px;
+    font-size: var(--text-xs);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .scaleValue {
     background: rgba(0, 0, 0, 0.5);
-    padding: 2px 4px;
+    padding: 2px var(--space-xs);
     border-radius: 3px;
     white-space: nowrap;
 }
@@ -195,7 +195,7 @@
     max-width: 100px;
     max-height: 100px;
     border: 2px solid white;
-    border-radius: 50%;
+    border-radius: var(--radius-round);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     background: rgba(255, 255, 255, 0.1);
 }
@@ -208,13 +208,13 @@
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
     background: #000000;
     padding: 2px 6px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     backdrop-filter: blur(2px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     width: max-content;
     /* Ensure it doesn't wrap unnecessarily */
     z-index: 10;
-    margin-top: 4px;
+    margin-top: var(--space-xs);
     /* Space between ring and label */
 }
 
@@ -251,7 +251,7 @@
 }
 
 .watermarkLine {
-    font-size: 12px;
+    font-size: var(--text-xs);
     color: rgba(255, 255, 255, 0.8);
     font-weight: 500;
     line-height: 1.2;
@@ -299,11 +299,11 @@
    Let's hardcode gold for now as that's what is used, or use inherit.
 */
 .overlayLineWithArrows::before {
-    border-right-color: #d4a84b;
+    border-right-color: var(--color-gold);
 }
 
 .overlayLineWithArrows::after {
-    border-left-color: #d4a84b;
+    border-left-color: var(--color-gold);
 }
 
 .overlayLineLabel {
@@ -313,8 +313,8 @@
     background: rgba(0, 0, 0, 0.6);
     color: white;
     padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 12px;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
     text-transform: uppercase;
 }
 
@@ -345,8 +345,8 @@
     background: rgba(0, 0, 0, 0.6);
     color: white;
     padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 12px;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
     text-transform: uppercase;
 }
 
@@ -386,13 +386,13 @@
 
 .arrowLabel {
     font-weight: 800;
-    font-size: 18px;
+    font-size: var(--text-xl);
     color: #ffd700;
     /* Gold */
     text-transform: uppercase;
     letter-spacing: 1px;
     background: rgba(0, 0, 0, 0.7);
-    padding: 4px 10px;
+    padding: var(--space-xs) 10px;
     border-radius: 6px;
     border: 1px solid rgba(255, 215, 0, 0.3);
     backdrop-filter: blur(2px);
@@ -400,12 +400,12 @@
 
 .arrowSubLabel {
     font-weight: 500;
-    font-size: 13px;
+    font-size: var(--text-sm);
     color: white;
     background: rgba(0, 0, 0, 0.7);
     padding: 2px 6px;
-    border-radius: 4px;
-    margin-top: 4px;
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-xs);
     max-width: 180px;
     white-space: pre-wrap;
     text-align: inherit;

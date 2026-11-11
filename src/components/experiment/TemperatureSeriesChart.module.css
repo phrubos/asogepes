@@ -4,7 +4,7 @@
   gap: var(--space-lg);
   padding: var(--space-lg);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   background: linear-gradient(135deg, rgba(26, 23, 20, 0.95) 0%, rgba(35, 30, 25, 0.98) 100%);
 }
 
@@ -19,18 +19,18 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  margin-bottom: 4px;
+  margin-bottom: var(--space-xs);
 }
 
 .titleIcon {
-  color: #ff7043;
+  color: var(--color-accent-light);
   flex: none;
 }
 
 .title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.125rem;
+  font-size: var(--text-xl);
   font-weight: 600;
   color: var(--color-white);
 }
@@ -40,9 +40,9 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 12px 16px 12px;
+  padding: 12px var(--space-md) 12px;
   border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.025);
 }
 
@@ -50,10 +50,10 @@
   align-self: flex-start;
   padding: 3px 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.05);
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -72,7 +72,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
   min-width: 0;
 }
 
@@ -91,7 +91,7 @@
   height: 100%;
   display: flex;
   align-items: flex-end;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.03);
 }
 
@@ -108,17 +108,17 @@
 
 .barControl {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.15) 100%);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .barSpade {
-  background: linear-gradient(180deg, #ff7043 0%, #e64a19 50%, #bf360c 100%);
-  box-shadow: 0 4px 15px rgba(255, 112, 67, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, var(--color-accent-light) 0%, var(--color-accent) 50%, #8A3A24 100%);
+  box-shadow: 0 4px 15px rgba(196, 92, 62, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .barValue {
   font-family: var(--font-mono, monospace);
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--color-white);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
@@ -137,15 +137,15 @@
   padding: 2px 6px;
   border-radius: 5px;
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   line-height: 1.4;
   white-space: nowrap;
 }
 
 .warm {
-  border: 1px solid rgba(255, 112, 67, 0.45);
-  background: rgba(255, 112, 67, 0.14);
+  border: 1px solid rgba(196, 92, 62, 0.45);
+  background: rgba(196, 92, 62, 0.14);
   color: #ff8a65;
 }
 
@@ -162,7 +162,7 @@
 
 .date {
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.7);
   white-space: nowrap;
@@ -172,10 +172,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px 20px;
-  margin: 4px 0 0;
+  margin: var(--space-xs) 0 0;
   padding: 0;
   list-style: none;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -195,14 +195,14 @@
   display: flex;
   align-items: center;
   padding: var(--space-md) var(--space-lg);
-  border: 1px solid rgba(255, 112, 67, 0.15);
+  border: 1px solid rgba(196, 92, 62, 0.15);
   border-radius: var(--radius-md);
-  background: rgba(255, 112, 67, 0.05);
+  background: rgba(196, 92, 62, 0.05);
 }
 
 .explanation p {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.75);
 }
@@ -215,11 +215,11 @@
 /* Laptop screens (up to 900px tall, e.g. 1366x768, 1536x864): lower bars so the block fits */
 @media (max-height: 900px) and (min-width: 1025px) {
   .container {
-    padding: 18px 24px;
+    padding: 18px var(--space-lg);
   }
 
   .main {
-    gap: 8px;
+    gap: var(--space-sm);
   }
 
   .header {
@@ -232,11 +232,11 @@
 
   .band {
     gap: 6px;
-    padding: 8px 16px;
+    padding: var(--space-sm) var(--space-md);
   }
 
   .day {
-    gap: 4px;
+    gap: var(--space-xs);
   }
 }
 
@@ -260,8 +260,8 @@
 @media (max-width: 1024px) {
   .container {
     grid-template-columns: minmax(0, 1fr);
-    padding: 16px;
-    gap: 16px;
+    padding: var(--space-md);
+    gap: var(--space-md);
   }
 
   .band {
@@ -270,12 +270,12 @@
 
   .days {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px 8px;
+    gap: var(--space-md) var(--space-sm);
   }
 
   .plot {
     height: 96px;
-    gap: 4px;
+    gap: var(--space-xs);
     padding-left: 0;
   }
 
@@ -309,17 +309,17 @@
     display: inline-flex;
     align-self: flex-start;
     align-items: center;
-    gap: 4px;
-    padding: 4px;
-    border-radius: 14px;
+    gap: var(--space-xs);
+    padding: var(--space-xs);
+    border-radius: var(--radius-lg);
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .depthPickerLabel {
-    padding: 0 8px 0 10px;
+    padding: 0 var(--space-sm) 0 10px;
     font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.5);
@@ -328,21 +328,21 @@
   .depthOption {
     min-height: 44px;
     min-width: 72px;
-    padding: 0 16px;
+    padding: 0 var(--space-md);
     border: 0;
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     background: transparent;
     color: rgba(255, 255, 255, 0.75);
     font-family: var(--font-mono, monospace);
-    font-size: 0.875rem;
+    font-size: var(--text-md);
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
   }
 
   .depthOptionOn {
     background: var(--color-gold);
-    color: #1a1612;
+    color: var(--color-earth-900);
   }
 
   .depthOption:focus-visible {

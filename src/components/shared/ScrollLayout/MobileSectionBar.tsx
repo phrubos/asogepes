@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useDragControls } from 'framer-motion'
 import { ChevronDown, X } from 'lucide-react'
 import { useScrollNav, YearChips } from './ScrollLayout'
 import styles from './MobileSectionBar.module.css'
@@ -9,6 +9,10 @@ import styles from './MobileSectionBar.module.css'
 // "Kecskemét-\nBorbás" joins without a space after the hyphen; other line breaks become a space
 export const oneLine = (label: string) =>
     label.replace(/-\s*\n\s*/g, '-').replace(/\s*\n\s*/g, ' ')
+
+// the sheet closes when dragged down further than this, or flicked faster than this (px/s)
+const CLOSE_DISTANCE = 80
+const CLOSE_VELOCITY = 500
 
 /**
  * Phones and tablets: one sticky bar that names where the reader is, and opens a sheet with every
@@ -19,6 +23,7 @@ export default function MobileSectionBar() {
   const [open, setOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const sheetRef = useRef<HTMLDivElement>(null)
+  const dragControls = useDragControls()
 
   const section = sections.find(s => s.id === activeSection) ?? sections[0]
   const sub = section?.subsections?.find(s => s.id === activeSubsection)
@@ -104,10 +109,21 @@ export default function MobileSectionBar() {
               aria-label="Tartalom"
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
-              exit={{ y: '100%' }}
+              // closing is quicker than opening and accelerates away (ticket 021)
+              exit={{ y: '100%', transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } }}
               transition={{ type: 'spring', stiffness: 420, damping: 40 }}
+              // drag down from the header to close; the list itself keeps its own scrolling
+              drag="y"
+              dragListener={false}
+              dragControls={dragControls}
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: 1 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > CLOSE_DISTANCE || info.velocity.y > CLOSE_VELOCITY) setOpen(false)
+              }}
             >
-              <div className={styles.sheetHeader}>
+              <div className={styles.sheetHeader} onPointerDown={e => dragControls.start(e)}>
+                <span className={styles.grabber} aria-hidden="true" />
                 <span className={styles.sheetTitle}>Tartalom</span>
                 <button type="button" className={styles.close} onClick={() => setOpen(false)} aria-label="Bezárás">
                   <X size={20} aria-hidden="true" />

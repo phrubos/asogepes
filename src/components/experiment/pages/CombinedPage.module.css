@@ -87,7 +87,7 @@
     max-height: none;
     overflow: visible;
     min-height: 0;
-    margin-bottom: 48px; /* subsections of one location; locations are 104px apart */
+    margin-bottom: var(--space-2xl); /* subsections of one location; locations are 104px apart */
     scroll-margin-top: 64px;
   }
 

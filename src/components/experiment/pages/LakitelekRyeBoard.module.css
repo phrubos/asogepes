@@ -2,7 +2,7 @@
 .board {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-md);
   color: var(--color-cream);
 }
 
@@ -15,7 +15,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 32px;
+  gap: var(--space-xl);
 }
 
 .titles {
@@ -28,7 +28,7 @@
 .title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: var(--text-h3);
   font-weight: 700;
   line-height: 1.2;
   color: var(--color-white);
@@ -37,7 +37,7 @@
 .lead {
   margin: 0;
   max-width: 44rem;
-  font-size: 1rem;
+  font-size: var(--text-lg);
   line-height: 1.55;
   color: #d9cfc0;
 }
@@ -48,14 +48,14 @@
   align-items: center;
   gap: 12px;
   min-height: 44px;
-  padding: 8px 14px 8px 8px;
-  border-radius: 12px;
+  padding: var(--space-sm) 14px var(--space-sm) var(--space-sm);
+  border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: #201a16;
   color: var(--color-cream);
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--dur-fast) var(--ease-out);
 }
 
 .thumb:hover,
@@ -83,15 +83,15 @@
 }
 
 .thumbTitle {
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   font-weight: 600;
 }
 
 .thumbSub {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.75rem;
+  gap: var(--space-xs);
+  font-size: var(--text-xs);
   color: #a89c8c;
 }
 
@@ -101,29 +101,29 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px 16px;
+  gap: var(--space-sm) var(--space-md);
 }
 
 .filters {
   display: flex;
   gap: 6px;
-  padding: 4px;
-  border-radius: 999px;
+  padding: var(--space-xs);
+  border-radius: var(--radius-pill);
   background: #2a221d;
 }
 
 .filter {
   min-height: 44px;
-  padding: 0 16px;
+  padding: 0 var(--space-md);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: #d9cfc0;
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
 
 .filterOn {
@@ -132,7 +132,7 @@
 }
 
 .count {
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: #a89c8c;
 }
 
@@ -145,7 +145,7 @@
 .frame {
   container-type: inline-size;
   padding: 20px;
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: #201a16;
 }
@@ -192,7 +192,7 @@
   font-family: inherit;
   text-align: left;
   cursor: pointer;
-  transition: opacity 0.25s ease;
+  transition: opacity var(--dur-base) var(--ease-out);
 }
 
 .tileBtn:disabled {
@@ -209,12 +209,12 @@
   display: block;
   width: 100%;
   height: var(--img-h);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   background: #2e2620;
   outline: 2px solid transparent;
   outline-offset: 2px;
-  transition: outline-color 0.2s ease;
+  transition: outline-color var(--dur-fast) var(--ease-out);
 }
 
 .photo img {
@@ -258,7 +258,7 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(20, 17, 14, 0.55);
   backdrop-filter: blur(6px);
-  transition: background-color 150ms ease, border-color 150ms ease;
+  transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
 
 .zoomBtn:hover .zoomIcon,
@@ -290,7 +290,7 @@
   grid-row: 1 / span 2;
   width: 100%;
   aspect-ratio: 480 / 1000;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   background: #2e2620;
   outline: 2px solid var(--color-gold-light);
@@ -315,11 +315,11 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--space-md);
 }
 
 .zoomHead .cardTitle {
-  font-size: 1.75rem;
+  font-size: var(--text-h3);
   line-height: 1.15;
 }
 
@@ -344,7 +344,7 @@
   right: 0;
   display: grid;
   grid-template-columns: 170px minmax(0, 1fr);
-  gap: 24px;
+  gap: var(--space-lg);
 }
 
 .zAbove {
@@ -371,12 +371,12 @@
   position: absolute;
   right: 0;
   top: -13px;
-  padding: 4px 8px;
+  padding: var(--space-xs) var(--space-sm);
   border-radius: 6px;
   border: 1px solid var(--color-gold);
   background: #1c1613;
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--color-gold-light);
@@ -390,7 +390,7 @@
 
 .zLabel {
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -405,36 +405,36 @@
 }
 
 .zUnit {
-  font-size: 1.375rem;
+  font-size: var(--text-3xl);
 }
 
 .zSub {
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: #a89c8c;
 }
 
 .zTexts {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-sm);
   padding-top: 18px;
 }
 
 .zText {
   margin: 0;
   max-width: 34rem;
-  font-size: 1.125rem;
+  font-size: var(--text-xl);
   line-height: 1.55;
 }
 
 .zAbove .zText {
-  margin-bottom: 4px;
+  margin-bottom: var(--space-xs);
 }
 
 .zNote {
   margin: 0;
   max-width: 34rem;
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   line-height: 1.5;
   color: var(--color-gold-light);
 }
@@ -443,7 +443,7 @@
   flex: none;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .navBtn,
@@ -453,15 +453,15 @@
   justify-content: center;
   gap: 6px;
   min-height: 44px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(255, 255, 255, 0.16);
   background: #2a221d;
   color: var(--color-cream);
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--dur-fast) var(--ease-out);
 }
 
 .navBtn {
@@ -469,8 +469,8 @@
 }
 
 .back {
-  margin-left: 8px;
-  padding: 0 16px;
+  margin-left: var(--space-sm);
+  padding: 0 var(--space-md);
   background: transparent;
 }
 
@@ -490,7 +490,7 @@
   min-width: 44px;
   text-align: center;
   font-family: var(--font-mono, monospace);
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   color: #a89c8c;
 }
 
@@ -500,7 +500,7 @@
   align-items: baseline;
   column-gap: 6px;
   font-family: var(--font-mono, monospace);
-  font-size: 1rem;
+  font-size: var(--text-lg);
   font-weight: 700;
   color: #a89c8c;
 }
@@ -511,7 +511,7 @@
 
 .short {
   font-family: var(--font-inter, sans-serif);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 500;
   color: #a89c8c;
 }
@@ -520,7 +520,7 @@
   display: block;
   height: 8px;
   margin-top: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: #8a8178;
 }
 
@@ -531,7 +531,7 @@
 .nums {
   margin-top: -4px;
   font-family: var(--font-mono, monospace);
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 500;
   color: #d9cfc0;
 }
@@ -539,7 +539,7 @@
 .axis {
   position: relative;
   height: var(--img-h);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   color: #a89c8c;
 }
 
@@ -557,7 +557,7 @@
   top: calc(70.5% - 14px);
   left: -4px !important;
   z-index: 3;
-  padding: 4px 8px;
+  padding: var(--space-xs) var(--space-sm);
   border-radius: 6px;
   border: 1px solid var(--color-gold);
   background: #1c1613;
@@ -581,10 +581,10 @@
 .card {
   display: grid;
   grid-template-columns: 230px minmax(0, 1fr) 260px;
-  gap: 24px;
+  gap: var(--space-lg);
   align-items: start;
-  padding: 20px 24px;
-  border-radius: 16px;
+  padding: 20px var(--space-lg);
+  border-radius: var(--radius-xl);
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: #201a16;
 }
@@ -592,12 +592,12 @@
 .cardHead {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-xs);
 }
 
 .cardKicker {
   font-family: var(--font-mono, monospace);
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -610,13 +610,13 @@
 
 .cardTitle {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: var(--text-2xl);
   font-weight: 700;
   line-height: 1.25;
 }
 
 .cardDetail {
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: #a89c8c;
 }
 
@@ -628,12 +628,12 @@
 
 .cardText p {
   margin: 0;
-  font-size: 1.0625rem;
+  font-size: var(--text-lg);
   line-height: 1.6;
 }
 
 .cardText .note {
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
   line-height: 1.55;
   color: var(--color-gold-light);
 }
@@ -644,15 +644,15 @@
   gap: 6px;
   margin: 0;
   font-family: var(--font-mono, monospace);
-  font-size: 0.875rem;
+  font-size: var(--text-md);
 }
 
 .values > div {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 8px;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 12px;
+  border-radius: var(--radius-md);
   background: #2a221d;
 }
 
@@ -667,7 +667,7 @@
 
 .foot {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   line-height: 1.5;
   color: #a89c8c;
 }
@@ -680,16 +680,16 @@
   container-type: size;
   display: grid;
   place-items: center;
-  padding: 32px;
+  padding: var(--space-xl);
 }
 
 .ovBox {
   position: relative;
   width: min(100cqw, 100cqh * 1600 / 627);
   aspect-ratio: 1600 / 627;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-3);
 }
 
 .ovBox img {
@@ -752,7 +752,7 @@
 
 .ovText {
   font-family: var(--font-mono, monospace);
-  font-size: 19px;
+  font-size: var(--text-xl);
   font-weight: 600;
   fill: var(--color-cream);
 }
@@ -762,7 +762,7 @@
 }
 
 .ovText.ovSmall {
-  font-size: 19px;
+  font-size: var(--text-xl);
   letter-spacing: 1px;
 }
 
@@ -772,15 +772,15 @@
   .top {
     flex-direction: column;
     align-items: stretch;
-    gap: 16px;
+    gap: var(--space-md);
   }
 
   .title {
-    font-size: 1.375rem;
+    font-size: var(--text-3xl);
   }
 
   .lead {
-    font-size: 0.9375rem;
+    font-size: var(--text-base);
   }
 
   .thumb {
@@ -790,9 +790,9 @@
   .legend {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-sm);
     margin: 0;
-    font-size: 0.8125rem;
+    font-size: var(--text-sm);
     color: #a89c8c;
   }
 
@@ -806,7 +806,7 @@
   /* the strip scrolls sideways at a fixed tile width instead of squeezing seven tiles into 350 px */
   .frame {
     overflow-x: auto;
-    padding: 16px;
+    padding: var(--space-md);
     container-type: normal;
     scroll-snap-type: x proximity;
     scroll-padding-inline: 16px;
@@ -826,8 +826,8 @@
   .zoom {
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
     grid-template-rows: auto auto;
-    column-gap: 16px;
-    row-gap: 16px;
+    column-gap: var(--space-md);
+    row-gap: var(--space-md);
   }
 
   .zoomHead {
@@ -838,7 +838,7 @@
   }
 
   .zoomHead .cardTitle {
-    font-size: 1.25rem;
+    font-size: var(--text-2xl);
   }
 
   .zoomPhoto {
@@ -870,7 +870,7 @@
     left: auto;
     top: auto;
     height: 1px;
-    margin: 4px 0;
+    margin: var(--space-xs) 0;
     background: rgba(255, 255, 255, 0.12);
     box-shadow: none;
   }
@@ -884,7 +884,7 @@
   }
 
   .zUnit {
-    font-size: 1rem;
+    font-size: var(--text-lg);
   }
 
   .zTexts {
@@ -892,11 +892,11 @@
   }
 
   .zText {
-    font-size: 0.9375rem;
+    font-size: var(--text-base);
   }
 
   .zNote {
-    font-size: 0.875rem;
+    font-size: var(--text-md);
   }
 
   .back {
@@ -911,24 +911,24 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 16px;
+    padding: var(--space-md);
   }
 
   .cardText p {
-    font-size: 0.9375rem;
+    font-size: var(--text-base);
   }
 
   .values {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
-    font-size: 0.8125rem;
+    font-size: var(--text-sm);
   }
 
   .values > div {
     flex-direction: column;
     gap: 2px;
-    padding: 8px 10px;
+    padding: var(--space-sm) 10px;
   }
 
   /* the overview in the photo viewer: 1040 px wide (labels >= 12 px), scrolled sideways by finger */
@@ -936,7 +936,7 @@
     overflow-x: auto;
     overscroll-behavior-x: contain;
     place-items: center start;
-    padding: 0 16px;
+    padding: 0 var(--space-md);
   }
 
   .ovBox {

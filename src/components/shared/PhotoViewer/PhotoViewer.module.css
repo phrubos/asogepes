@@ -4,10 +4,10 @@
 .container {
     position: relative;
     width: 100%;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-xl);
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--space-lg);
 }
 
 /* Image Wrapper & Ambient System */
@@ -19,17 +19,17 @@
     max-height: 80vh;
     overflow: hidden;
     background-color: #0f0f0f;
-    border-radius: 16px;
+    border-radius: var(--radius-xl);
     /* Slightly more rounded */
     cursor: zoom-in;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-3);
     /* Deep shadow */
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    transition: border-color var(--dur-slow) var(--ease-out), box-shadow var(--dur-slow) var(--ease-out);
 }
 
 .imageWrapper:hover {
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+    box-shadow: var(--shadow-3);
     border-color: rgba(255, 255, 255, 0.15);
 }
 
@@ -108,7 +108,7 @@
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: var(--space-lg);
     /* Wider gap since no background */
     z-index: 10;
     padding: 0;
@@ -131,11 +131,11 @@
     /* Pure white icon */
     border: 1px solid rgba(255, 255, 255, 0.3);
     /* Stronger border */
-    border-radius: 50%;
+    border-radius: var(--radius-round);
     cursor: pointer;
-    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
     backdrop-filter: blur(4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-1);
     /* Shadow for pop */
 }
 
@@ -154,7 +154,7 @@
     background: rgba(0, 0, 0, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-1);
     padding: 0 1.2rem;
     height: 44px;
     border-radius: 22px;
@@ -165,8 +165,8 @@
     width: 10px;
     height: 10px;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: var(--radius-round);
+    transition: background-color var(--dur-slow) var(--ease-out), box-shadow var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
 }
 
 .activeIndicator {
@@ -177,8 +177,8 @@
 
 /* Description Area (Matches 'Talajszerkezet' Timeline style) */
 .descriptionArea {
-    padding: 2rem;
-    border-radius: 16px;
+    padding: var(--space-xl);
+    border-radius: var(--radius-xl);
     /* Dark gradient background to match Timeline component */
     background: linear-gradient(135deg, rgba(26, 23, 20, 0.98) 0%, rgba(35, 30, 25, 0.98) 100%);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -196,7 +196,7 @@
     /* Custom Scrollbar */
     scrollbar-width: thin;
     scrollbar-color: var(--color-gold, #d4a84b) rgba(255, 255, 255, 0.05);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-2);
 }
 
 .descriptionArea::before,
@@ -224,12 +224,12 @@
 .textContainer {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-md);
     z-index: 1;
 }
 
 .title {
-    font-size: 1.5rem;
+    font-size: var(--text-3xl);
     font-weight: 700;
     color: var(--color-gold, #d4a84b);
     /* Gold title */
@@ -240,7 +240,7 @@
 }
 
 .description {
-    font-size: 1rem;
+    font-size: var(--text-lg);
     line-height: 1.7;
     color: rgba(255, 255, 255, 0.8);
     /* Slightly muted for readability */
@@ -261,7 +261,7 @@
 .definitionList {
     list-style: none;
     padding: 0;
-    margin: 1rem 0 0 0;
+    margin: var(--space-md) 0 0 0;
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
@@ -274,9 +274,9 @@
 .definitionItem {
     display: grid;
     grid-template-columns: 50px 1fr;
-    gap: 0.5rem;
+    gap: var(--space-sm);
     align-items: baseline;
-    font-size: 1rem;
+    font-size: var(--text-lg);
 }
 
 .definitionKey {
@@ -286,13 +286,13 @@
     min-width: 24px;
     min-height: 24px;
     height: auto;
-    padding: 2px 8px;
+    padding: 2px var(--space-sm);
     background: rgba(255, 255, 255, 0.1);
     border: 1.5px solid #fff;
     color: #fff;
-    border-radius: 99px;
+    border-radius: var(--radius-pill);
     font-weight: 700;
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     white-space: nowrap;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     margin-right: 6px;
@@ -322,7 +322,7 @@
         flex-direction: row;
         align-items: stretch;
         /* Both sides equal height */
-        gap: 2rem;
+        gap: var(--space-xl);
         height: auto;
     }
 
@@ -332,7 +332,7 @@
         height: auto;
         min-height: 100%;
         width: auto;
-        border-radius: 16px;
+        border-radius: var(--radius-xl);
         /* Ensure aspect ratio doesn't collapse excessively, but allow stretch */
         aspect-ratio: auto;
     }
@@ -349,7 +349,7 @@
         margin-top: 0;
         background: transparent;
         border: none;
-        padding: 0 1rem;
+        padding: 0 var(--space-md);
     }
 }
 
@@ -367,7 +367,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    padding: var(--space-xl);
     overscroll-behavior: contain;
     touch-action: none;
 }
@@ -415,12 +415,12 @@
     max-height: 100%;
     width: auto;
     height: auto;
-    border-radius: 12px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-3);
 }
 
 .modalInfoPanel {
-    padding: 3rem 2rem;
+    padding: var(--space-2xl) var(--space-xl);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -431,28 +431,28 @@
 }
 
 .modalHeader {
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-xl);
 }
 
 .modalTitle {
-    font-size: 1.5rem;
+    font-size: var(--text-3xl);
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
     color: var(--color-gold, #d4a84b);
     font-family: var(--font-display);
 }
 
 .modalMeta {
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     color: rgba(255, 255, 255, 0.5);
     font-family: var(--font-mono, monospace);
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
     text-transform: uppercase;
     letter-spacing: 0.1em;
 }
 
 .modalDescription {
-    font-size: 1rem;
+    font-size: var(--text-lg);
     line-height: 1.7;
     color: rgba(255, 255, 255, 0.9);
     font-weight: 300;
@@ -470,8 +470,8 @@
     border: none;
     color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+    border-radius: var(--radius-sm);
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
 }
 
 .zoomBtn:hover:not(:disabled) {
@@ -486,7 +486,7 @@
 
 .zoomLevel {
     font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     color: rgba(255, 255, 255, 0.5);
     min-width: 40px;
     text-align: center;
@@ -501,13 +501,13 @@
     color: white;
     cursor: pointer;
     z-index: 20;
-    border-radius: 50%;
+    border-radius: var(--radius-round);
     width: 44px;
     height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s, transform 0.2s;
+    transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
 
 .closeButton:hover {
@@ -532,7 +532,7 @@
 
     .modalInfoPanel {
         justify-content: flex-start;
-        padding: 20px 20px 32px;
+        padding: 20px 20px var(--space-xl);
         background: transparent;
         border-left: none;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -545,7 +545,7 @@
     }
 
     .modalHeader {
-        margin-bottom: 1rem;
+        margin-bottom: var(--space-md);
     }
 
     .closeButton {
@@ -565,7 +565,7 @@
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: var(--space-lg);
     z-index: 30;
     pointer-events: none;
     /* Let clicks pass through gaps */
@@ -585,11 +585,11 @@
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
     background: rgba(0, 0, 0, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     backdrop-filter: blur(10px);
     z-index: 20;
 }
@@ -607,7 +607,7 @@
 }
 
 .watermarkLine {
-    font-size: 12px;
+    font-size: var(--text-xs);
     color: rgba(255, 255, 255, 0.8);
     font-weight: 500;
     line-height: 1.2;
@@ -617,11 +617,11 @@
 .label {
     position: absolute;
     top: 20px;
-    padding: 4px 8px;
+    padding: var(--space-xs) var(--space-sm);
     background: rgba(0, 0, 0, 0.6);
     color: white;
-    font-size: 12px;
-    border-radius: 4px;
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
     pointer-events: none;
     z-index: 15;
     font-weight: 500;
@@ -642,15 +642,15 @@
     z-index: 20;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-sm);
     min-height: 44px;
-    padding: 0 16px;
+    padding: 0 var(--space-md);
     border: 1px solid var(--color-gold, #d4a84b);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: rgba(26, 22, 18, 0.9);
     color: var(--color-gold, #d4a84b);
     font: inherit;
-    font-size: 0.875rem;
+    font-size: var(--text-md);
     font-weight: 600;
     cursor: pointer;
     transform: translateX(-50%);
@@ -678,13 +678,13 @@
    the text below it reads in the page flow instead of a 560px inner scroll box */
 @media (max-width: 1024px) {
     .container {
-        gap: 8px;
+        gap: var(--space-sm);
         margin-bottom: 0;
     }
 
     .imageWrapper {
         aspect-ratio: 16 / 10 !important;
-        border-radius: 12px;
+        border-radius: var(--radius-lg);
     }
 
     .bottomControls {
@@ -694,7 +694,7 @@
 
     .indicators {
         padding: 0 14px;
-        gap: 8px;
+        gap: var(--space-sm);
     }
 
     .imageWrapper .watermark,
@@ -705,16 +705,16 @@
     .zoomHint {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--space-sm);
         align-self: center;
         min-height: 44px;
         padding: 0 14px;
         border: 1px solid rgba(212, 168, 75, 0.3);
-        border-radius: 999px;
+        border-radius: var(--radius-pill);
         background: rgba(212, 168, 75, 0.08);
         color: var(--color-gold, #d4a84b);
         font: inherit;
-        font-size: 0.875rem;
+        font-size: var(--text-md);
         font-weight: 600;
         cursor: pointer;
     }
@@ -748,7 +748,7 @@
    block (1.375rem, 16px under "Egyéb fotók"; user, ticket 015) */
 @media (max-width: 1024px) {
     .title {
-        font-size: 1.375rem;
+        font-size: var(--text-3xl);
         line-height: 1.2;
     }
 }

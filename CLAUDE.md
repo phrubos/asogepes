@@ -34,6 +34,8 @@ node scripts/qa/perf.js          # FCP/LCP/CLS/TBT report
 node scripts/qa/mobile-check.js  # phones (390/360 px): no empty band > 300px, no overlapping text, tap targets >= 44px
 node scripts/qa/layout-check.js  # <=1024px: one 20px gutter, left-aligned titles, title gap <= 24px, badge gap <= 16px
 node scripts/qa/trace.js <url> "<selector>" [w] [h]  # why an element sits where it does (box/margin/gap of it and its ancestors)
+node scripts/qa/token-check.js  # design-token guard: distinct hand-written font-size/radius/shadow/colour/transition values may not rise
+node scripts/qa/style-diff.js dump <out.json> && … diff <a.json> <b.json>  # computed-style before/after of every element, 4 pages x 390/1440
 ```
 
 For a quick check of a CSS change, point the scripts at the dev server instead (`node scripts/qa/layout-check.js http://localhost:3000`); the user usually has `npm run dev` running and prefers that to a QA build. CSS-module classes are hashed: select with `[class*=Component_class]`, accents become `_` (`Szentkir_lyInfoPage`).
@@ -56,7 +58,7 @@ src/components/
 ├── home/          # Hero
 ├── problem/       # ProblemScrollLayout, sections/, pages/, visualizations/ (SVG soil profiles)
 ├── solution-v2/   # TechnologyScrollLayout, sections/, pages/, HubFolder, ModelSection, ApplicationGuide
-├── experiment/    # ResearchScrollLayout, sections/, pages/ (per location), FieldChart3DCanvas, BookLayout
+├── experiment/    # ResearchScrollLayout, sections/, pages/ (per location), FieldChart3DCanvas
 ├── layout/        # Navigation, Footer
 ├── shared/        # ScrollLayout, PhotoViewer, BeforeAfterSlider, ThermalOverlays
 ├── ui/            # MagneticButton, ImageLightbox, PageBadge, AnimatedNumber, SoilLoader
@@ -101,4 +103,5 @@ Hook: `.claude/hooks/css-guard.js` runs after every Edit/Write of a `*.module.cs
 - `height: 100%` against a parent that only has `min-height` resolves to 0 (the 3D canvas and the fullscreen photo broke this way): fill with `position: absolute; inset: 0` or a grid row
 - Photo overlays (`ThermalOverlays`, `BeforeAfterSlider`) use `%` coordinates for the desktop crop: in mobile previews (`[data-preview]`) they are hidden, the fullscreen `PhotoViewer` shows them
 - In a `flex-direction: column` container vertical centring comes from `justify-content`; a laptop rule that centres content in the leftover height leaves a big band under the title
-- Fonts come from `next/font` in `app/layout.tsx` (`--font-inter`, `--font-fraunces`); don't add CSS `@import` font URLs
+- Fonts come from `next/font` in `app/layout.tsx` (`--font-inter`, `--font-fraunces`, `--font-mono`); don't add CSS `@import` font URLs
+- Use the tokens in `globals.css` instead of new literals: `--text-xs…3xl` (12–24px), `--radius-sm/md/lg/xl/pill/round`, `--space-*`, `--color-*`, motion `--dur-fast/base/slow` + `--ease-out`. `--space-4xl/5xl` shrink below 1600px, so a fixed 96/128px stays a literal. `token-check.js` fails when a new one-off value appears

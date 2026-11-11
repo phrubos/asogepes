@@ -128,7 +128,7 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
             transition={{ delay: 0.2 }}
           >
             <div className={styles.panelHeader}>
-              <Wrench size={24} color="var(--color-gold)" /> Műszaki Adatok
+              <Wrench size={24} color="var(--color-gold)" /> Műszaki adatok
             </div>
 
             <div className={styles.specsBoxContainer}>
@@ -145,14 +145,14 @@ export default function ModelSection({ modelId }: ModelSectionProps) {
               <div className={styles.specRow}>
                 <div className={styles.specIconBox}><Gauge size={24} /></div>
                 <div className={styles.specContent}>
-                  <span className={styles.specLabel}>Teljesítmény Igény</span>
+                  <span className={styles.specLabel}>Teljesítményigény</span>
                   <span className={styles.specValue}>{model.specs.power}</span>
                 </div>
               </div>
             </div>
 
             <div className={styles.featuresList}>
-              <div className={styles.featuresTitle}>Főbb Jellemzők</div>
+              <div className={styles.featuresTitle}>Főbb jellemzők</div>
               {model.specs.features.map((feature, idx) => (
                 <div key={idx} className={styles.featureItem}>
                   <CheckCircle2 size={16} />

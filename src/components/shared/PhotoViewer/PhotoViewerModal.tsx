@@ -407,7 +407,7 @@ export function PhotoViewerModal({
                                         KÉP {currentIndex + 1} / {totalItems}
                                     </div>
                                 )}
-                                <h2 className={styles.modalTitle}>{currentImage.title || 'Foto Részletek'}</h2>
+                                <h2 className={styles.modalTitle}>{currentImage.title || 'Fotó részletei'}</h2>
                             </div>
                             <div className={styles.modalDescription}>
                                 <FormattedText

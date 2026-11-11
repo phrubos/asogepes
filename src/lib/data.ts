@@ -471,7 +471,7 @@ export const modelDetails = {
     specs: {
       depth: '15-35 cm',
       power: '90-150 LE',
-      features: ['Kompakt felépítés', 'Költséghatékony', 'Könnyű karbantartás']
+      features: ['Önállóan és szántás után is használható', 'Lakitelken 2025-ben ipari paradicsom alatt vizsgálva (III. és VII. parcella)']
     },
     fieldApplication: {
       location: 'Lakitelek',

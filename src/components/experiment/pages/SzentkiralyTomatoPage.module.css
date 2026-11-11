@@ -1,7 +1,7 @@
 /* One line about the field under the title */
 .about {
-  margin: 8px 0 0;
-  font-size: 0.9375rem;
+  margin: var(--space-sm) 0 0;
+  font-size: var(--text-base);
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -9,6 +9,6 @@
   .about {
     order: 3;
     flex-basis: 100%;
-    margin-top: 4px;
+    margin-top: var(--space-xs);
   }
 }

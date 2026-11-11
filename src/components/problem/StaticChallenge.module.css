@@ -2,7 +2,7 @@
 .item {
   display: flex;
   gap: 14px;
-  padding: 16px 0;
+  padding: var(--space-md) 0;
   border-top: 1px solid rgba(245, 240, 232, 0.08);
 }
 
@@ -13,7 +13,7 @@
   flex-shrink: 0;
   width: 40px;
   height: 40px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: rgba(212, 168, 75, 0.12);
   color: var(--color-gold);
 }
@@ -28,9 +28,9 @@
 }
 
 .title {
-  margin: 0 0 4px;
+  margin: 0 0 var(--space-xs);
   font-family: var(--font-display);
-  font-size: 1.125rem;
+  font-size: var(--text-xl);
   font-weight: 600;
   line-height: 1.3;
   color: var(--color-cream);
@@ -38,19 +38,19 @@
 
 /* the card copy was sized for a small hover card; read it at body size here */
 .body p {
-  font-size: 0.9375rem !important;
+  font-size: var(--text-base) !important;
   line-height: 1.55;
   opacity: 0.85 !important;
 }
 
 .body p + p,
 .badge {
-  font-size: 0.875rem !important;
+  font-size: var(--text-md) !important;
   opacity: 1 !important;
 }
 
 .badge {
-  margin-top: 8px;
+  margin-top: var(--space-sm);
   font-weight: 600;
   color: var(--color-gold);
 }
