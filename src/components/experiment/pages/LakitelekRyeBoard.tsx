@@ -7,6 +7,7 @@ import { PhotoViewerModal } from '@/components/shared/PhotoViewer/PhotoViewerMod
 import { lakitelekRye2026 as rye, lakitelekSoil2026, lakitelekSeasons } from '@/lib/seasons'
 import SoilLoader from '@/components/ui/SoilLoader'
 import s from './LakitelekRyeBoard.module.css'
+import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
 
 type Filter = 'all' | 'spade' | 'other'
 type Parcel = (typeof rye.parcels)[number]
@@ -258,6 +259,7 @@ export default function LakitelekRyeBoard() {
         A hét közeli fotót a zsák szélessége alapján egy léptékre igazítottuk, a gyökérnyakak egy vonalba kerültek. A fotók
         ferde szögből készültek, ezért a hajtás hossza a képen csak közelítő: a pontos érték a mért szám. Parcellánként egy
         mintacsomót ástunk ki; a bokor sűrűségét szemrevételezéssel becsültük.
+        <PhotoCredit plural>Lakitelek, {rye.photoDate}</PhotoCredit>
       </p>
 
       {overview && (
@@ -318,7 +320,8 @@ function Details({ i }: { i: number }) {
 const OVERVIEW_ITEM = {
   src: `${rye.dir}/${rye.overview.file}`,
   alt: 'Hét kiásott rozs-mintacsomó fehér zsákokon, balról jobbra az I–VII. parcella, középen mérőszalag',
-  title: 'Mind a hét egy képen · május',
+  title: 'Mind a hét egy képen',
+  credit: `Lakitelek, ${rye.photoDate}`,
   description:
     'Az eredeti fotó: egy kép, egy lépték, középen mérőszalag.\n\nArany vonal: talajszint (gyökérnyak); szaggatott: hajtás; fehér: gyökér. A számok mért hosszak; a fotó ferde szögű, ezért a vonalak hossza csak irány.',
   content: (onLoad: () => void) => <OverviewFigure onLoad={onLoad} />,

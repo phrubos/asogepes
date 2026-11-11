@@ -14,6 +14,7 @@ import BulkDensityDiagram from './BulkDensityDiagram'
 import styles from './SzentkirályTimelinePage.module.css'
 import own from './MethodologyBlocks.module.css'
 import bd from './BulkDensityMethodPage.module.css'
+import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
 
 const hu = (v: number, d = 2) => v.toFixed(d).replace('.', ',')
 const STEP_MS = 5000
@@ -263,7 +264,9 @@ export default function BulkDensityMethodPage() {
         <p className={bd.foot}>
           Táblánként több ponton veszünk mintát, és ezek átlagát közöljük. A szezonban 2–3 mérésnapon ismételjük meg, így
           látszik, hogyan tömörödik vissza a talaj a művelés után.
-          <span className={bd.credit}>Fotók: {EX.place}, {EX.photoDate}</span>
+          <PhotoCredit plural>
+            {EX.place}, {EX.photoDate}
+          </PhotoCredit>
         </p>
       </div>
 

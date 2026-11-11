@@ -427,6 +427,8 @@ export interface GrowthSeason {
     spade: GrowthMeasure
     /** Field photo of the lifted plants, turned 90°: kontroll left, ásógép right, the tape between */
     photo: string
+    /** day the photo was taken: "2026. június 26." */
+    photoDate: string
   }[]
   /** The bulb size both plots reached, a month apart */
   catchUp: { mm: number; spadeDate: MeasureDate; controlDate: MeasureDate }
@@ -445,6 +447,7 @@ export const szentkiralyGrowth: { seasons: GrowthSeason[] } = {
           control: { leafLength: [23, 36], leafCount: [5, 7], bulb: 25 },
           spade: { leafLength: [38, 65], leafCount: [8, 9], bulb: 55 },
           photo: '/images/kutatás_pics/Szentkirály/hagyma/hagyma-2026-06-26.webp',
+          photoDate: '2026. június 26.',
         },
         {
           id: 'jul',
@@ -452,6 +455,7 @@ export const szentkiralyGrowth: { seasons: GrowthSeason[] } = {
           control: { leafLength: [50, 50], leafCount: [6, 8], bulb: 55 },
           spade: { leafLength: [60, 70], leafCount: [12, 12], bulb: 85 },
           photo: '/images/kutatás_pics/Szentkirály/hagyma/hagyma-2026-07-22.webp',
+          photoDate: '2026. július 22.',
         },
       ],
       catchUp: { mm: 55, spadeDate: { month: 'JÚN.', third: 'vége' }, controlDate: { month: 'JÚL.', third: 'vége' } },
@@ -622,6 +626,7 @@ export const lakitelekSoil2026 = {
  */
 export const lakitelekRye2026 = {
   dir: '/images/kutatás_pics/Lakitelek/rozs',
+  photoDate: '2026. május 19.',
   overview: { file: 'mind-a-het.webp', w: 1600, h: 627 },
   /** the soil line on the overview runs through the crowns, from these two edge points */
   soilEdge: [[40, 428], [1470, 364]] as [number, number][],

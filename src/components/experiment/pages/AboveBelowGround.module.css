@@ -28,17 +28,6 @@
   color: var(--color-white);
 }
 
-.date {
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: #2e2620;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: #d9cfc0;
-}
-
 .kicker {
   font-size: 0.75rem;
   font-weight: 600;

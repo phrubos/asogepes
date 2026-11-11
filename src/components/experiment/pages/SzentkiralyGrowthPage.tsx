@@ -13,6 +13,7 @@ import { cap, named, namedIn, short } from '../story/dates'
 // Same page frame as the onion field's loose-layer block
 import styles from './SzentkirályTimelinePage.module.css'
 import own from './SzentkiralyGrowthPage.module.css'
+import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
 
 const site = szentkiralyGrowth
 const season = site.seasons[site.seasons.length - 1]
@@ -59,10 +60,18 @@ const CAPTIONS = [
   'A körök átmérője arányos a mért fejátmérővel.',
 ]
 
+/** both field photos, day by day: "Fotók: Szentkirály, 2026. június 26. és július 22." */
+const credit = (
+  <PhotoCredit plural>
+    Szentkirály, {first.photoDate} és {second.photoDate.replace(/^\d+\. /, '')}
+  </PhotoCredit>
+)
+
 const PHOTOS = [first, second].map((d) => ({
   src: d.photo,
   alt: `Felszedett vöröshagymák, Szentkirály, ${season.year}. ${named(d.date)}: balra a kontroll, jobbra az ásógépes parcella, középen mérőszalag`,
-  title: `Vöröshagyma, ${season.year}. ${named(d.date)}`,
+  title: `Vöröshagyma, ${named(d.date)}`,
+  credit: `Szentkirály, ${d.photoDate}`,
   description: `Balra a kontroll (fej Ø ${d.control.bulb} mm, ${leaves(d.control)}), jobbra az ásógépes parcella (fej Ø ${d.spade.bulb} mm, ${leaves(d.spade)}). A fotó 90°-kal elforgatva: a fejek alul.`,
 }))
 
@@ -382,9 +391,13 @@ export default function SzentkiralyGrowthPage() {
       {step === 2 ? (
         <p className={own.caption}>
           Húzd az arany vonalat a képen: tőle balra a {named(first.date)}i, jobbra a {named(second.date)}i állapot.
+          {credit}
         </p>
       ) : (
-        <p className={own.caption}>{CAPTIONS[step - 1]}</p>
+        <p className={own.caption}>
+          {CAPTIONS[step - 1]}
+          {credit}
+        </p>
       )}
       {step <= 3 && (
         <button

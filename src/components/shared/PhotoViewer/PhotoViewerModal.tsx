@@ -8,6 +8,7 @@ import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
 import ThermalOverlays from '../ThermalOverlays/ThermalOverlays'
 import SoilLoader from '@/components/ui/SoilLoader'
 import { FormattedText } from './FormattedText'
+import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
 
 interface ThermalOverlay {
     scale?: {
@@ -48,6 +49,7 @@ interface PhotoViewerModalProps {
         src: string
         alt: string
         title?: string
+        credit?: string
         description: string
         type?: 'image' | 'comparison'
         leftSrc?: string
@@ -413,6 +415,7 @@ export function PhotoViewerModal({
                                         ? (sliderPos >= 50 ? currentImage.leftDescription : currentImage.rightDescription)
                                         : currentImage.description}
                                 />
+                                {currentImage.credit && <PhotoCredit>{currentImage.credit}</PhotoCredit>}
                             </div>
                         </div>
                     </motion.div>

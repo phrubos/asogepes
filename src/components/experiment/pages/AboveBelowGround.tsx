@@ -7,6 +7,7 @@ import { szentkiralyTomatoSoil as tom } from '@/lib/seasons'
 import { useLoopActive } from '@/hooks/useLoopActive'
 import { cap, namedIn } from '../story/dates'
 import s from './AboveBelowGround.module.css'
+import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
 
 const DIR = '/images/kutatás_pics/Szentkirály/paradicsom'
 const shootPct = Math.round((tom.shoot.spade / tom.shoot.control - 1) * 100)
@@ -119,7 +120,6 @@ export default function AboveBelowGround() {
     <section ref={ref} className={`${s.card} ${seen ? s.seen : ''}`} aria-labelledby="fold-felett-cim">
       <div className={s.head}>
         <h4 id="fold-felett-cim" className={s.title}>Föld felett, föld alatt</h4>
-        <span className={s.date}>Július</span>
       </div>
 
       <div className={s.colHeads} aria-hidden="true">
@@ -186,6 +186,7 @@ export default function AboveBelowGround() {
 
       <p className={s.note}>
         Sematikus rajz. Hajtáshossz: mért adat, {namedIn(tom.shoot.date)}. Gyökér: szemrevételezéssel, egy kiásott növénypáron; gyökértömeget nem mértünk.
+        <PhotoCredit plural>Szentkirály, 2026. július 2.</PhotoCredit>
       </p>
       <span className="sr-only">{cap(namedIn(tom.shoot.date))} az ásógépes parcellán {tom.shoot.spade} cm, a kombinátoroson {tom.shoot.control} cm volt a paradicsom hajtása.</span>
     </section>

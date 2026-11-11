@@ -49,6 +49,7 @@ export const locations = {
         src: '/images/kutatás_pics/Szentkirály/ernő_termal_0307_cut_mod.jpeg',
         alt: 'Szentkirály Hőkamera - Március 7.',
         title: 'A kísérleti parcella drónos hőtérképe',
+        credit: 'Szentkirály, 2025. március 7.',
         objectFit: 'contain',
         aspectRatio: '16/9',
         rightLabel: 'Hőtérkép',
@@ -85,7 +86,8 @@ export const locations = {
       {
         src: '/images/kutatás_pics/Szentkirály/erno_hagyma.jpg',
         alt: 'Szentkirály Hagyma',
-        title: 'Június - Hagymaállomány',
+        title: 'A hagymaállomány júniusban',
+        credit: 'Szentkirály, 2025. június',
         description: 'Az ábrán a jól fejlett hagyma állományt látjuk. A gépnyomtól balra az ásógépezett, jobbra a kontroll, kultivátorozott és kombinátorozott felület. Jól látszik, hogy az ásógépezés gyomszabályozó hatása sokkal erőteljesebb, a preemergens gyomírtószer hatóanyagának aktiválódásakor a magról kelő gyomok éppen optimális fejlettségi állapotban voltak.',
         type: 'image' as const
       }
@@ -132,7 +134,8 @@ export const locations = {
       {
         src: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
         alt: 'Kecskemét Összehasonlítás',
-        title: 'Ortofotó és hőtérkép, az ültetés után, 05.\u00A016-án',
+        title: 'Ortofotó és hőtérkép, az ültetés után',
+        credit: 'Kecskemét-Borbás, 2025. május 16.',
         description: 'A képen látható felső, 11 méter széles sáv ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. A drónos légifelvételen jól látszik, hogy a lazább szerkezetű, ásógépezett felület már felszáradt, mert gyorsabban felmelegedett, az alsó, kontroll sáv ugyanakkor még nedves, hőmérséklete alacsonyabb.',
         type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/kecskemet_borbas/01_ortho_cut.jpeg',
@@ -160,7 +163,8 @@ export const locations = {
       {
         src: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_cut_orto.jpeg',
         alt: 'Kecskemét Összehasonlítás 2',
-        title: 'Ortofotó és TGI (lombfelület) index, 06.\u00A019-én',
+        title: 'Ortofotó és TGI (lombfelület) index',
+        credit: 'Kecskemét-Borbás, 2025. június 19.',
         description: 'A képen látható felső, 11 méter széles sáv ásógépezve volt, az alatta lévő kontroll csak ásóboronázva. Mindkét parcellára 9 sor ipari paradicsom került. Szemmel is jó látható, hogy a felső mezőn nagyobb a lombfelület borítás, mint az alsón. Az alkalmazott térinformatikai szoftver szerint a kontroll mezőben 35,9%-os, az ásógépezett mezőben 41,5%-os a lombfelület borítás. Az ásógépezett felületen tehát gyorsabb ütemben fejlődtek a növények.',
         type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/kecskemet_borbas/ásógépezett_0619_cut_orto.jpeg',
@@ -182,7 +186,8 @@ export const locations = {
       {
         src: '/images/kutatás_pics/kecskemet_borbas/paradicsom_sáringer.webp',
         alt: 'Kecskemét Paradicsom Állapot',
-        title: 'A lombtömeg alakulása, 06.\u00A019-én',
+        title: 'A lombtömeg alakulása',
+        credit: 'Kecskemét-Borbás, 2025. június 19.',
         description: 'A kép bal oldalára eső sorok a kontroll, a középső és a tőle jobbra eső sorok az ásógépezett parcellán fejlődtek. A lombtömeg és a hajtáshossz átlagosan 15%-kal nagyobb az ásógépezett területen.',
         type: 'image' as const,
         overlays: {
@@ -305,7 +310,8 @@ export const locations = {
       {
         src: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_orto_1.jpeg',
         alt: 'Lakitelek Összehasonlítás',
-        title: 'Ortofotó és hőtérkép a talajelőkészítés után, 05.\u00A002-án',
+        title: 'Ortofotó és hőtérkép a talajelőkészítés után',
+        credit: 'Lakitelek, 2025. május 2.',
         description: 'A fotó közvetlenül a talajművelési kombinációk befejezése után készült.',
         type: 'comparison' as const,
         leftSrc: '/images/kutatás_pics/Lakitelek/Lakitelek_0502_orto_1.jpeg',

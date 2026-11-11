@@ -9,6 +9,7 @@ import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
 import ThermalOverlays from '../ThermalOverlays/ThermalOverlays'
 import SoilLoader from '@/components/ui/SoilLoader'
 import { FormattedText } from './FormattedText'
+import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
 
 interface ThermalOverlay {
     scale?: {
@@ -53,6 +54,8 @@ export interface PhotoItem {
     alt: string
     description: string
     title?: string
+    /** where and when, shown as "Fotó: Lakitelek, 2025. május 2." */
+    credit?: string
     type?: 'image' | 'comparison'
     leftSrc?: string
     rightSrc?: string
@@ -288,6 +291,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                     >
                         <h3 className={styles.title}>{currentItem.title || 'Fotó'}</h3>
                         <FormattedText className={styles.description} text={displayDescription} />
+                        {currentItem.credit && <PhotoCredit>{currentItem.credit}</PhotoCredit>}
                     </motion.div>
                 </AnimatePresence>
             </div>
