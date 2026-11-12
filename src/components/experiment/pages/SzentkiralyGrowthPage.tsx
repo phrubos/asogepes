@@ -306,7 +306,7 @@ export default function SzentkiralyGrowthPage() {
           <div className={own.halfImg} style={{ left: 0, transformOrigin: `${px(220)} ${py(259)}` }}>
             <Photo src={second.photo} sizes="(max-width: 1024px) 100vw, 1000px" />
           </div>
-          <span className={own.band} style={{ left: '6.08%', top: '60.66%', width: '88.61%', height: '20.22%' }} />
+          <span className={own.band} style={{ left: '7.6%', top: '60.66%', width: '89.6%', height: '20.22%' }} />
           <span className={own.halfTag} style={{ left: 14 }}>
             <span>KONTROLL · {M2}</span>
             <b>Ø {second.control.bulb} mm</b>
