@@ -28,20 +28,24 @@ export default function PageEnd({ next }: { next: PageEndNext }) {
         </Link>
       </nav>
 
-      <div className={styles.partners}>
-        <span className={styles.partnersLabel}>A kutatást végezte</span>
-        {PARTNERS.map((p) => (
-          <a key={p.href} href={p.href} target="_blank" rel="noopener noreferrer" className={styles.partner}>
-            <Image
-              src={p.logo}
-              alt={`${p.name} – ${p.detail}`}
-              width={p.width}
-              height={p.height}
-              unoptimized
-              className={styles.partnerLogo}
-            />
-          </a>
-        ))}
+      <div className={styles.signoff}>
+        <div className={styles.partners}>
+          <span className={styles.partnersLabel}>A kutatást végezte</span>
+          {PARTNERS.map((p) => (
+            <a key={p.href} href={p.href} target="_blank" rel="noopener noreferrer" className={styles.partner}>
+              <Image
+                src={p.logo}
+                alt={`${p.name} – ${p.detail}`}
+                width={p.width}
+                height={p.height}
+                unoptimized
+                className={styles.partnerLogo}
+              />
+            </a>
+          ))}
+        </div>
+
+        <small className={styles.copyright}>© 2026</small>
       </div>
     </div>
   )

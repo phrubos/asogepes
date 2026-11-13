@@ -1,9 +1,10 @@
 # Tábla
 
-Utoljára frissítve: 2026-11-11. Folyamat és státuszok: [README](README.md).
+Utoljára frissítve: 2026-11-13. Folyamat és státuszok: [README](README.md).
 
 | # | Feladat | Státusz | Fájlok | Párhuzamosan? | Forrás / megjegyzés |
 |---|---|---|---|---|---|
+| [022](022-adatkezelesi-tajekoztato.md) | Adatkezelési tájékoztató (`/adatkezeles`); cookie-banner nem kell | parkolva — vázlat a `022-vazlat/` mappában; ha folytatjuk: kapcsolati e-mail kell a megrendelőtől | `app/adatkezeles/*`, `layout/Footer.*`, `shared/PageEnd/*`, `app/sitemap.ts` | igen | cookie-kérdés 11-13 |
 | [019](019-design-gyorsjavitasok.md) | Design gyorsjavítások: `--font-mono`, palettán kívüli színek, magyar címkék és nagybetűzés, tegezés, egy jelvénystílus, 38SX pontok, kétsoros hero-címek | kész | `app/layout.tsx`, `lib/technology-data.ts`, `lib/data.ts`, `solution-v2/{HubFolder,ApplicationGuide,ModelSection,OperationPrinciple}.*`, `solution-v2/sections/TechHeroSection.tsx`, `solution-v2/pages/HeroPage.module.css`, `problem/sections/ProblemHeroSection.tsx`, `problem/pages/ProblemHeroPage.module.css`, `ui/PageBadge`, `PhotoViewerModal.tsx` | nem (sok közös fájl) | UI/UX audit 11-11 (7 szabály) 1–5. pont |
 | [020](020-design-tokenek.md) | Design tokenek összevonása (69 betűméret, 45 lekerekítés, 75 árnyék, 328 beírt szín → skálák) + stylelint őr | kész | szinte minden `*.module.css`, `globals.css`, `HubFolder.tsx`, `scripts/qa/{token-check,style-diff}.js`, `CLAUDE.md` | nem | UI/UX audit 11-11, 6. pont |
 | [021](021-mozgas-finomitas.md) | Mozgás: átmenet-tokenek, húzható tartalomjegyzék-lap, gyorsabb zárás | kész | `globals.css`, `shared/ScrollLayout/MobileSectionBar.*`, `layout/Navigation.tsx`, CSS-modulok (41), törölve: `experiment/BookLayout` | nem (020 után) | UI/UX audit 11-11, 7. pont |
@@ -24,6 +25,7 @@ Utoljára frissítve: 2026-11-11. Folyamat és státuszok: [README](README.md).
 
 | Feladat | Mikor | Hol |
 |---|---|---|
+| Partner-aláírás egységesen középen minden szélességen (a tartalmi oldalak végén asztalin is, címke a logók fölött), alatta „© 2026” halk mono sorban hajszálvonal után, a főoldal láblécében is | 2026-11-13 | `shared/PageEnd/*`, `layout/Footer.*` |
 | [017](017-kutatas-ritmus.md) /kutatas fejezetritmus (szünet + arany hajszálvonal a helyszínek előtt), egyszeri belépő a /kutatas blokkjain és a /technologia modellkártyáin (`shared/RevealBlock`); checker: minden pont rendben | 2026-11-11 | `experiment/pages/CombinedPage.module.css`, `shared/RevealBlock.tsx`, `experiment/season/SiteBlocks.tsx`, `experiment/sections/MethodologySection.tsx`, `*CombinedPage.tsx`, `solution-v2/pages/ModelsCombinedPage.tsx` |
 | [018](018-asztali-fejezetritmus.md) Asztali fejezetritmus (100vh-s blokkok ki a /problema, /technologia, /kutatas oldalon): **elvetve, visszaállítva**: belelógó következő fejezet, utánagörgetés, vibrálás a 40SX-nél | 2026-11-11 | — |
 | [016](016-fotok-pontos-datummal.md) Minden kutatási fotó alatt „Fotó(k): hely, pontos dátum” (közös `PhotoCredit`), a dátum kikerült a címekből, a paradicsom „Július” címkéje helyett credit; checker: minden pont rendben. Nyitott: a 2025-ös szentkirályi hagymafotó napja | 2026-11-10 | `ui/PhotoCredit`, `shared/PhotoViewer/*`, `lib/data.ts`, `lib/seasons.ts`, `experiment/pages/{SzentkiralyGrowthPage,AboveBelowGround,LakitelekRyeBoard,BulkDensityMethodPage}.*` |

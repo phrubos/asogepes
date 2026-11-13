@@ -32,6 +32,7 @@ export default function Footer() {
             </Fragment>
           ))}
         </div>
+        <small className={styles.copyright}>© 2026</small>
       </div>
     </footer>
   )

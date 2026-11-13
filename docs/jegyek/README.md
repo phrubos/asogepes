@@ -6,9 +6,10 @@ Nagyobb feladatokhoz (új funkció, új adat, animáció, több oldalt érintő 
 
 1. **Ötlet** → felkerül a [`tabla.md`](tabla.md)-be egy sorral. Nem kell még jegy.
 2. **Jegy** → ha dolgozni akarunk rajta, a `_sablon.md` alapján készül egy `NNN-rovid-nev.md` fájl. Claude kérdez, amíg minden nyitott kérdés el nem dől; a döntések a jegybe kerülnek.
+   - **Új vizuális blokknál** (új szekció, vizualizáció, animáció, kártya): mielőtt a kódba kerül, Claude három változatot készít egy artifact oldalon, egymás mellett, 390 és 1440 px-es nézetben, a meglévő design (tokenek, betűk, színek) szerint. Te választasz vagy módosítást kérsz; a választott változat linkje a jegy „Döntések” részébe kerül, és a checker ehhez méri az eredményt. Meglévő blokk javításához nem kell.
 3. **Kész a munkára** → ha a jegyben nincs nyitott kérdés, és a „Kész, ha” lista mérhető. Ezt te jelzed („mehet a 003”).
 4. **Folyamatban** → Claude dolgozik rajta.
-5. **Ellenőrzés** → a `checker` agent (`.claude/agents/checker.md`) friss kontextussal lefuttatja a QA-szkripteket a dev szerveren, és a „Kész, ha” lista minden pontját számmal igazolja vagy cáfolja.
+5. **Ellenőrzés** → a `checker` agent (`.claude/agents/checker.md`) friss kontextussal lefuttatja a QA-szkripteket a dev szerveren, és a „Kész, ha” lista minden pontját számmal igazolja vagy cáfolja. Ad egy 1–10-es vizuális pontszámot is, indoklással; ez tájékoztató, felülbírálhatod.
 6. **Kész** → a jegy alján egy rövid „Eredmény” rész (mi változott, mérések), a táblán a státusz frissül. Commit/push csak kérésre.
 
 ## Státuszok

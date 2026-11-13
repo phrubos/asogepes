@@ -136,7 +136,6 @@ export default function BeforeAfterSlider({
 
     const handleMove = useCallback((clientX: number) => {
         if (!containerRef.current || !interactionEnabled) {
-            console.log('[BeforeAfterSlider] handleMove ignored:', { container: !!containerRef.current, interactionEnabled })
             return
         }
 
@@ -146,12 +145,10 @@ export default function BeforeAfterSlider({
         const x = Math.max(0, Math.min(clientX - rect.left, rect.width))
         const percent = Math.max(0, Math.min((x / rect.width) * 100, 100))
 
-        console.log('[BeforeAfterSlider] Handling move:', { percent })
         setSliderPosition(percent)
     }, [interactionEnabled])
 
     const onMouseDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-        console.log('[BeforeAfterSlider] onMouseDown:', { interactionEnabled })
         if (!interactionEnabled) return
         e.stopPropagation() // Prevent modal from starting a pan
         setIsDragging(true)

@@ -19,6 +19,10 @@ Mit kap a látogató / a megrendelő, egy-két mondatban.
 
 - ÉÉÉÉ-HH-NN: … (ki döntött, miért)
 
+## Változatok (csak új vizuális blokknál)
+
+- Mockup oldal: (artifact link) · választott: A / B / C · módosítások: …
+
 ## Nyitott kérdések
 
 - [ ] … (amíg van ilyen, a jegy nem „kész a munkára”)

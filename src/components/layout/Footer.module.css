@@ -51,6 +51,21 @@
     opacity: 0.8;
 }
 
+/* The page's last line: a hairline under the logos, then a quiet mono label (as on the page ends) */
+.copyright {
+    display: block;
+    max-width: 40rem;
+    margin: var(--space-2xl) auto calc(-1 * var(--space-xl));
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(245, 240, 232, 0.06);
+    font-family: var(--font-mono, monospace);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    color: rgba(245, 240, 232, 0.6);
+}
+
 @media (max-width: 768px) {
     .footer {
         padding: var(--space-3xl) 0;
@@ -67,6 +82,10 @@
 
     .link:last-child .logo {
         height: 34px;
+    }
+
+    .copyright {
+        margin-bottom: calc(-1 * var(--space-lg));
     }
 
     .footerDivider {

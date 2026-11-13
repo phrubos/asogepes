@@ -30,72 +30,78 @@
     left: 0;
     height: 100%;
     overflow: hidden;
-    /* Remove white border, we'll use a better indicator */
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
     z-index: 5;
-    transition: border-color var(--dur-fast) var(--ease-out);
 }
 
-.container:hover .leftImageContainer {
-    border-color: rgba(212, 168, 75, 0.6);
-}
-
+/* Same look as the onion time slider on /kutatas (SzentkiralyGrowthPage): a thin gold line with
+   a solid gold knob */
 .sliderHandle {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 40px;
-    /* Wider hit area */
+    width: 44px;
     transform: translateX(-50%);
-    /* Centered on the line */
     background: transparent;
     cursor: ew-resize;
     z-index: 30;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* No shadow on the line itself, just the button */
+}
+
+.sliderHandle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 21px;
+    width: 2px;
+    background: var(--color-gold);
+    box-shadow: 0 0 12px rgba(212, 168, 75, 0.7);
 }
 
 .handleButton {
-    width: 44px;
-    height: 44px;
-    background: #0a0a0a;
-    border: 2px solid var(--color-gold, #d4a84b);
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background: var(--color-gold);
     border-radius: var(--radius-round);
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: var(--shadow-1);
-    color: var(--color-gold, #d4a84b);
-    transition: background-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+    color: var(--color-earth-900);
+    transition: background-color var(--dur-fast) var(--ease-out);
 }
 
 .sliderHandle:hover .handleButton {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(212, 168, 75, 0.4);
-    background: #151515;
+    background: var(--color-gold-light);
 }
 
 .label {
     position: absolute;
-    top: 20px;
-    padding: var(--space-xs) var(--space-sm);
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
+    top: 14px;
+    padding: 6px 12px;
+    background: rgba(26, 22, 18, 0.8);
+    color: #c9c0b4;
+    font-family: var(--font-mono, monospace);
     font-size: var(--text-xs);
-    border-radius: var(--radius-sm);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: var(--radius-pill);
     pointer-events: none;
     z-index: 15;
-    font-weight: 500;
 }
 
 .labelLeft {
-    left: 20px;
+    left: 16px;
 }
 
 .labelRight {
-    right: 20px;
+    right: 16px;
+    border: 1px solid rgba(212, 168, 75, 0.5);
+    color: var(--color-gold-light);
 }
 
 /* Thermal Overlays */

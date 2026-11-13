@@ -35,10 +35,23 @@ For the specific element(s) in the criteria, measure them: `node scripts/qa/snap
 
 Check every acceptance criterion one by one. Also check the project rules that a change can easily break: 20px phone gutter, left-aligned titles, title→content <= 24px, badge→content <= 16px, no text < 12px, no horizontal scroll at 360/390 px, reduced motion honoured.
 
+## Visual score
+
+After the measured checks, look at the 390 and 1440 px screenshots of the changed block and give it a visual score from 1 to 10. Score against this site's own design, not against trends: earth-tone palette, Fraunces/Inter, the token scale in `globals.css`, the mobile rules above, and how well the block matches its neighbours on the same page. If the ticket names a chosen mockup or reference, score how closely the build matches it.
+
+Be strict. Agents rate their own work too high, and so will you if you are lenient. Rough scale:
+- 9–10: you would not change anything; it looks like it was always part of the site.
+- 7–8: good, with one or two visible details (an uneven gap, a weak hierarchy, a stray colour).
+- 5–6: works, but looks added on: different rhythm, size or style from the rest of the page.
+- below 5: broken or clearly off-brand.
+
+Give the score only with concrete reasons: which element, at which width, what you see. No reason, no point deducted, and no point awarded. The score is advisory; the user may override it, and a low score alone does not turn KÉSZ into NEM KÉSZ.
+
 ## Report (in Hungarian, short)
 
 ```
 Ítélet: KÉSZ | NEM KÉSZ | RÉSZBEN
+Vizuális pontszám: N/10 — 1–3 indok (elem, szélesség, mit látsz)
 
 | Kritérium | Eredmény | Mérés |
 |---|---|---|

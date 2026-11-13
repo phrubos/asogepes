@@ -69,16 +69,21 @@
   transform: translateX(4px);
 }
 
+/* The partner sign-off closes the page, it is not content: centred at every width, like the home
+   footer (user, 2026-11-10 for phones, 2026-11-13 for desktop). Label on its own line above the logos */
 .partners {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: var(--space-sm) var(--space-2xl);
+  gap: var(--space-md) var(--space-3xl);
   padding-top: var(--space-xl);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .partnersLabel {
+  flex-basis: 100%;
+  text-align: center;
   font-family: var(--font-mono, monospace);
   font-size: var(--text-xs);
   letter-spacing: 0.08em;
@@ -108,6 +113,30 @@
   height: 30px;
 }
 
+/* Partner row + the © line under it: one sign-off block, the line sits close to the logos */
+.signoff {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* The page's last line: the same quiet mono label style as "A kutatást végezte", under a hairline */
+.copyright {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.6);
+}
+
 /* Phones and tablets: the one 20px gutter, left-aligned, no centred box */
 @media (max-width: 1024px) {
   .pageEnd {
@@ -124,12 +153,9 @@
     right: 20px;
   }
 
-  /* The partner sign-off closes the page, it is not content: centred, as in the home footer
-     (user, 2026-11-10; the one exception to the left-aligned phone rule) */
+  /* Phones: logos stacked (the one exception to the left-aligned phone rule, see .partners) */
   .partners {
     flex-direction: column;
-    align-items: center;
-    text-align: center;
     gap: 12px;
   }
 }

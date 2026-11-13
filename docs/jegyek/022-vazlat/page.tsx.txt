@@ -1,0 +1,167 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import styles from './page.module.css'
+
+export const metadata: Metadata = {
+  title: 'Adatkezelési tájékoztató | Ásógépes Talajművelés',
+  description: 'Milyen adat keletkezik az oldal látogatásakor: nincs süti, nincs analitika, csak a tárhely rövid ideig őrzött szervernaplója.',
+}
+
+/**
+ * Controller details. Seat, registration and tax numbers are from agroskill.hu/adatvedelmi-szabalyzat
+ * (2026-11-13). The contact e-mail is still to be given by the client (ticket 022): until then the
+ * placeholder shows, and the page must not go to production.
+ */
+const CONTROLLER = {
+  name: 'Agroskill Kereskedelmi és Szolgáltató Kft.',
+  seat: '6031 Szentkirály, Rákóczi utca 42.',
+  registration: '03-09-131072',
+  tax: '26153263-2-03',
+  email: null as string | null,
+}
+
+const UPDATED = '2026. november 13.'
+
+export default function AdatkezelesPage() {
+  return (
+    <main id="main-content" className={styles.page}>
+      <article className={styles.inner}>
+        <header className={styles.head}>
+          <span className={styles.kicker}>Adatvédelem</span>
+          <h1 className={styles.title}>Adatkezelési tájékoztató</h1>
+          <p className={styles.lead}>
+            Ez az oldal nem használ sütit, nem mér látogatottságot, és nem kér tőled semmilyen adatot. Az egyetlen,
+            ami a látogatáskor keletkezik, a tárhelyszolgáltató rövid ideig őrzött szervernaplója. Az alábbiakban
+            ezt írjuk le részletesen.
+          </p>
+          <p className={styles.updated}>Hatályos: {UPDATED}</p>
+        </header>
+
+        <section className={styles.section}>
+          <h2>Az adatkezelő</h2>
+          <dl className={styles.facts}>
+            <dt>Név</dt>
+            <dd>{CONTROLLER.name}</dd>
+            <dt>Székhely</dt>
+            <dd>{CONTROLLER.seat}</dd>
+            <dt>Cégjegyzékszám</dt>
+            <dd>{CONTROLLER.registration}</dd>
+            <dt>Adószám</dt>
+            <dd>{CONTROLLER.tax}</dd>
+            <dt>E-mail</dt>
+            <dd>
+              {CONTROLLER.email ? (
+                <a href={`mailto:${CONTROLLER.email}`}>{CONTROLLER.email}</a>
+              ) : (
+                <span className={styles.todo}>[kitöltendő]</span>
+              )}
+            </dd>
+          </dl>
+          <p>
+            A kutatást a Neumann János Egyetem Kertészeti és Vidékfejlesztési Kara és az Agroskill Kft. közösen végzi;
+            a weboldalt az Agroskill Kft. üzemelteti.
+          </p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>Milyen adat keletkezik</h2>
+          <p>
+            Amikor megnyitsz egy oldalt, a böngésződ kérést küld a szervernek. A tárhelyszolgáltató ezt a kérést
+            technikai naplóban rögzíti, ahogy minden webes tárhely:
+          </p>
+          <ul>
+            <li>az IP-címed és az abból becsült ország, város,</li>
+            <li>a kérés időpontja és a megnyitott oldal címe,</li>
+            <li>a böngésződ típusa és verziója.</li>
+          </ul>
+          <dl className={styles.facts}>
+            <dt>Cél</dt>
+            <dd>az oldal kiszolgálása, hibakeresés és a visszaélések (például túlterheléses támadás) kivédése</dd>
+            <dt>Jogalap</dt>
+            <dd>az adatkezelő jogos érdeke, GDPR 6. cikk (1) bekezdés f) pont</dd>
+            <dt>Megőrzés</dt>
+            <dd>a tárhely beállításai szerint legfeljebb 1 nap, utána a napló automatikusan törlődik</dd>
+          </dl>
+          <p>
+            A naplót nem kapcsoljuk össze más adattal, nem készítünk belőle profilt, és nem adjuk tovább
+            harmadik félnek.
+          </p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>Tárhelyszolgáltató és adattovábbítás</h2>
+          <p>
+            Az oldalt a Vercel Inc. (440 N Barranca Ave #4133, Covina, CA 91723, Amerikai Egyesült Államok) szolgálja
+            ki, adatfeldolgozóként. Az adatok így az Egyesült Államokba is eljuthatnak. A Vercel részt vesz az EU–USA
+            adatvédelmi keretrendszerben (Data Privacy Framework), és az Európai Bizottság általános szerződési
+            feltételeit alkalmazza, ezért az adattovábbítás az uniós szabályok szerint megfelelő védelemmel történik.
+            A Vercel saját tájékoztatója:{' '}
+            <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
+              vercel.com/legal/privacy-policy
+            </a>
+            .
+          </p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>Sütik és böngészőben tárolt adat</h2>
+          <p>
+            Az oldal nem helyez el sütit, és nem használ analitikát, hirdetési vagy közösségi követőkódot. A betűtípusok
+            és a videók a saját tárhelyünkről töltődnek, külső szolgáltatóhoz (például a Google-höz) nem fordul a
+            böngésződ.
+          </p>
+          <p>
+            Egyetlen jelzőt tárolunk a böngésződ munkamenet-tárolójában (sessionStorage): azt, hogy a Kutatás oldalon
+            a helyszíntérkép animációja már lejátszódott, így nem indul újra. Ez nem azonosít téged, nem kerül a
+            szerverre, és a böngészőlap bezárásakor törlődik. Ehhez nem kell hozzájárulás.
+          </p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>Külső hivatkozások</h2>
+          <p>
+            A partnerlogók a Neumann János Egyetem és az Agroskill Kft. saját oldalára mutatnak. Ha rájuk kattintasz,
+            ott már az ő adatkezelési tájékoztatójuk érvényes.
+          </p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>Jogaid</h2>
+          <p>
+            A GDPR alapján kérhetsz tájékoztatást és hozzáférést a rólad kezelt adatokhoz (15. cikk), kérheted azok
+            helyesbítését (16. cikk), törlését (17. cikk) vagy kezelésük korlátozását (18. cikk), és tiltakozhatsz
+            a jogos érdeken alapuló adatkezelés ellen (21. cikk). Kérésedet az adatkezelő e-mail-címére küldheted,
+            és legfeljebb egy hónapon belül válaszolunk. Mivel a napló legfeljebb egy napig él, és név nélküli
+            technikai adatot tartalmaz, előfordulhat, hogy egy adott látogatóhoz tartozó bejegyzést már nem tudunk
+            azonosítani.
+          </p>
+          <p>Ha úgy érzed, hogy az adatkezelés sérti a jogaidat, panaszt tehetsz itt:</p>
+          <dl className={styles.facts}>
+            <dt>Hatóság</dt>
+            <dd>Nemzeti Adatvédelmi és Információszabadság Hatóság (NAIH)</dd>
+            <dt>Cím</dt>
+            <dd>1055 Budapest, Falk Miksa utca 9–11. · levelezési cím: 1363 Budapest, Pf. 9.</dd>
+            <dt>Web, e-mail</dt>
+            <dd>
+              <a href="https://naih.hu" target="_blank" rel="noopener noreferrer">naih.hu</a> ·{' '}
+              <a href="mailto:ugyfelszolgalat@naih.hu">ugyfelszolgalat@naih.hu</a>
+            </dd>
+          </dl>
+          <p>Bírósághoz is fordulhatsz; a pert a lakóhelyed szerinti törvényszék előtt is megindíthatod.</p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>Változások</h2>
+          <p>
+            Ha az oldal működése változik (például analitika vagy beágyazott videó kerül rá), ezt a tájékoztatót
+            előtte frissítjük, és a hatálybalépés dátumát fent módosítjuk.
+          </p>
+        </section>
+
+        <Link href="/" className={styles.home}>
+          Vissza a főoldalra
+        </Link>
+      </article>
+    </main>
+  )
+}
