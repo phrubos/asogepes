@@ -1,6 +1,6 @@
 /* Contact footer (ticket 023, canvas variant 5).
    Desktop: brand | pages | Agroskill | NJE columns, © line under them.
-   <=1024px: label, the two partners as accordion rows, pages, logos, © (grid areas reorder, one DOM). */
+   <=1024px: label, one card per partner, © (the columns, pages and logo row are hidden). */
 .contact {
   display: grid;
   /* Columns as wide as their content, spread so the gaps between them read equal */
@@ -66,9 +66,7 @@
 }
 
 .logoNje,
-.logoAgro,
-.toggleLogoNje,
-.toggleLogoAgro {
+.logoAgro {
   display: block;
   flex: none;
   align-self: flex-start;
@@ -118,10 +116,6 @@
 }
 
 /* Partner columns */
-.toggle {
-  display: none;
-}
-
 .rows {
   list-style: none;
   margin: 0;
@@ -225,16 +219,19 @@ a.row:hover .route {
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Phones and tablets: label, accordion rows, pages, logos, © — all left-aligned in the one gutter */
+
+/* Phone/tablet cards: built from CONTACTS in MobileCard, hidden on desktop */
+.mCards {
+  display: none;
+}
+
+/* Phones and tablets: label, one card per partner, © — all left-aligned in the one gutter */
 @media (max-width: 1024px) {
   .contact {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       'label'
-      'agro'
-      'nje'
-      'pages'
-      'brand'
+      'cards'
       'legal';
     gap: 0;
   }
@@ -246,126 +243,160 @@ a.row:hover .route {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .desktopOnly {
+  .partner,
+  .pages,
+  .brand {
     display: none;
   }
 
-  .partner {
-    gap: 0;
+  .mCards {
+    grid-area: cards;
+    display: block;
+  }
+
+  .mCard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: var(--space-md) 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .toggle {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    width: 100%;
-    min-height: 72px;
-    padding: 14px 0;
-    background: none;
-    border: 0;
-    color: inherit;
-    font: inherit;
-    text-align: left;
-    cursor: pointer;
+  .mCardCompact {
+    gap: var(--space-sm);
   }
 
-  .toggle:focus-visible {
-    outline: 2px solid var(--color-gold);
-    outline-offset: 2px;
-  }
-
-  .toggleText {
-    flex: 1;
+  .mWho {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: var(--space-sm);
-    min-width: 0;
   }
 
-  .toggleLogoNje { height: 32px; }
-  .toggleLogoAgro { height: 26px; }
+  .mLogoNje,
+  .mLogoAgro {
+    display: block;
+    flex: none;
+    align-self: flex-start;
+    width: auto;
+    max-width: none;
+  }
 
-  .role {
+  .mLogoNje { height: 32px; }
+  .mLogoAgro { height: 26px; }
+
+  .mRole {
+    min-width: 0;
+    flex: 1;
     font-size: var(--text-md);
     color: rgba(255, 255, 255, 0.7);
   }
 
-  .chevron {
-    flex: none;
-    color: rgba(255, 255, 255, 0.6);
-    transition: transform var(--dur-base) var(--ease-out);
-  }
-
-  .partner[data-open] .chevron {
-    transform: rotate(180deg);
-  }
-
-  .panel {
-    display: none;
-    padding-bottom: var(--space-md);
-  }
-
-  .partner[data-open] .panel {
-    display: block;
-  }
-
-  .row,
-  .social {
-    min-height: 44px;
-  }
-
-  /* short words ("TikTok") still get a 44px-wide target */
-  .social {
-    min-width: 44px;
-  }
-
-  .phone {
-    min-height: 44px;
-  }
-
-  .pages {
-    padding-top: var(--space-md);
-  }
-
-  .pageList {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .pageLink {
-    min-height: 44px;
-    padding-left: 0;
-  }
-
-  .brand {
-    padding-top: var(--space-md);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: var(--space-md);
-  }
-
-  .logos {
-    flex-direction: row;
-    flex-wrap: wrap;
+  .mCall {
+    display: flex;
     align-items: center;
-    gap: var(--space-sm) var(--space-lg);
-    padding-left: 0;
-    border-left: 0;
+    justify-content: center;
+    gap: 10px;
+    min-height: 52px;
+    border-radius: var(--radius-pill);
+    background: var(--color-gold);
+    color: var(--color-earth-900);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
   }
 
-  .logoNje { height: 28px; }
-  .logoAgro { height: 22px; }
+  .mPair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    grid-auto-flow: column;
+    gap: var(--space-sm);
+  }
+
+  .mGhost {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    min-height: 48px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--radius-pill);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: var(--text-md);
+    text-decoration: none;
+  }
+
+  .mGhost svg {
+    flex: none;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .mRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  .mWeb {
+    display: flex;
+    align-items: center;
+    flex: none;
+    min-height: 44px;
+    font-size: var(--text-base);
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.3);
+    text-underline-offset: 4px;
+  }
+
+  .mSocials {
+    display: flex;
+    margin: 0 0 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mSocial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-round);
+    color: rgba(255, 255, 255, 0.55);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .mSocial:hover {
+    color: var(--color-gold-light);
+  }
+
+  .mSocial .icon {
+    color: inherit;
+  }
+
+  .mCall:focus-visible,
+  .mGhost:focus-visible,
+  .mWeb:focus-visible,
+  .mSocial:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
 
   .legal {
-    flex-direction: column;
-    padding-top: var(--space-sm);
+    padding-top: var(--space-md);
     border-top: 0;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .legal span:nth-child(2) {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .chevron {
+  .mSocial {
     transition: none;
   }
 }

@@ -61,12 +61,24 @@
   text-overflow: ellipsis;
 }
 
+/* a long subsection name ellipsizes; its year (ticket 024) always stays visible after it */
 .sub {
+  display: flex;
+  min-width: 0;
   font-size: var(--text-sm);
   color: rgba(245, 240, 232, 0.68);
   white-space: nowrap;
+}
+
+.subLabel {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.subTail {
+  flex: none;
+  white-space: pre;
 }
 
 .chevron {

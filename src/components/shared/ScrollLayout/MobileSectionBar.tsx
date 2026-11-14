@@ -87,8 +87,8 @@ export default function MobileSectionBar() {
             <span className={styles.section}>{oneLine(section.label)}</span>
             {sub && (
               <span className={styles.sub}>
-                {sub.label}
-                {part && <>{' · '}<span className={styles.subYear}>{part.label}</span></>}
+                <span className={styles.subLabel}>{sub.label}</span>
+                {part && <span className={styles.subTail}>{' · '}<span className={styles.subYear}>{part.label}</span></span>}
               </span>
             )}
           </span>

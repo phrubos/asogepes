@@ -1,10 +1,10 @@
 'use client'
 
-import { useId, useState, type ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ChevronDown, Link2, Mail, MapPin, Phone } from 'lucide-react'
+import { Link2, Mail, MapPin, Phone } from 'lucide-react'
 import { CONTACTS, type PartnerContact, type SocialKind } from '@/lib/contact'
 import { PARTNERS, type Partner } from '@/lib/partners'
 import styles from './ContactFooter.module.css'
@@ -42,11 +42,11 @@ const SOCIAL_CUTOUTS: Record<SocialKind, { base: ReactNode; cut: ReactNode }> = 
   },
 }
 
-function SocialIcon({ kind }: { kind: SocialKind }) {
+function SocialIcon({ kind, size = 16 }: { kind: SocialKind; size?: number }) {
   const maskId = useId()
   const { base, cut } = SOCIAL_CUTOUTS[kind]
   return (
-    <svg className={styles.icon} width={16} height={16} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <svg className={styles.icon} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <mask id={maskId}>
         <g fill="#fff">{base}</g>
         <g fill="#000" stroke="#000">{cut}</g>
@@ -139,16 +139,92 @@ function ContactRows({ c }: { c: PartnerContact }) {
   )
 }
 
+/** Phone/tablet card of one partner: logo and role, a call button, e-mail + route, the web link and icon-only socials */
+function MobileCard({ c, nje }: { c: PartnerContact; nje: Partner | undefined }) {
+  const partner = partnerOf(c)
+  const mapsHref = c.address?.mapsHref
+  const hasActions = !!(c.phone || c.email || mapsHref)
+  const logo = partner && <Logo partner={partner} className={partner === nje ? styles.mLogoNje : styles.mLogoAgro} />
+  const web = c.web && (
+    <a href={c.web.href} target="_blank" rel="noopener noreferrer" className={styles.mWeb}>
+      {c.web.label}
+    </a>
+  )
+  const socials = c.socials && c.socials.length > 0 && (
+    <ul className={styles.mSocials} aria-label={`${c.partner} a közösségi oldalakon`}>
+      {c.socials.map((s) => (
+        <li key={s.kind}>
+          <a href={s.href} target="_blank" rel="noopener noreferrer" className={styles.mSocial} aria-label={s.label}>
+            <SocialIcon kind={s.kind} size={18} />
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+
+  if (!hasActions) {
+    const place = c.address && !mapsHref ? ` · ${c.address.label}` : ''
+    return (
+      <section className={`${styles.mCard} ${styles.mCardCompact}`} aria-label={c.partner}>
+        {logo}
+        <div className={styles.mRow}>
+          <span className={styles.mRole}>{`${c.role}${place}`}</span>
+          {web}
+          {socials}
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <section className={styles.mCard} aria-label={c.partner}>
+      <div className={styles.mWho}>
+        {logo}
+        <span className={styles.mRole}>{c.role}</span>
+      </div>
+      {c.phone && (
+        <a href={c.phone.href} className={styles.mCall}>
+          <Phone size={18} aria-hidden="true" />
+          {c.phone.label}
+        </a>
+      )}
+      {(c.email || mapsHref) && (
+        <div className={styles.mPair}>
+          {c.email && (
+            <a href={c.email.href} className={styles.mGhost} aria-label={`E-mail: ${c.email.label}`}>
+              <Mail size={16} aria-hidden="true" />
+              E-mail
+            </a>
+          )}
+          {mapsHref && (
+            <a href={mapsHref} target="_blank" rel="noopener noreferrer" className={styles.mGhost}>
+              <MapPin size={16} aria-hidden="true" />
+              <span>
+                Útvonal <span aria-hidden="true">↗</span>
+                <span className="sr-only"> (térkép, új lapon)</span>
+              </span>
+            </a>
+          )}
+        </div>
+      )}
+      {(web || socials) && (
+        <div className={styles.mRow}>
+          {web}
+          {socials}
+        </div>
+      )}
+    </section>
+  )
+}
+
 /**
  * Who to contact, at the end of every page (ticket 023, canvas variant 5).
  * Desktop: four columns (partners' logos · pages · Agroskill · NJE KVK) and a © line.
- * <=1024px: a "Kapcsolat" label, the two partners as accordion rows (Agroskill open), pages, logos, ©.
- * The accordion is CSS-gated: on desktop the toggle buttons are hidden and every panel shows.
+ * <=1024px: a "Kapcsolat" label, one card per partner (MobileCard), ©; the columns, pages and logo row are hidden.
  * DOM order is the phone order (contacts first, so focus follows what is read); desktop places the columns by grid area.
  */
 export default function ContactFooter() {
   const pathname = usePathname()
-  const [open, setOpen] = useState<string | null>(CONTACTS[0]?.partner ?? null)
   const nje = PARTNERS.find((p) => p.name === 'Neumann János Egyetem')
   const agro = PARTNERS.find((p) => p.name === 'Agroskill Kft.')
 
@@ -156,36 +232,21 @@ export default function ContactFooter() {
     <div className={styles.contact}>
       <h2 className={`${styles.label} ${styles.mobileLabel}`}>Kapcsolat</h2>
 
-      {CONTACTS.map((c) => {
-        const partner = partnerOf(c)
-        const isOpen = open === c.partner
-        const panelId = `contact-${c.partner.replace(/[^a-z]/gi, '').toLowerCase()}`
-        return (
-          <section key={c.partner} className={styles.partner} data-open={isOpen ? '' : undefined} aria-label={c.partner}>
-            <h2 className={`${styles.label} ${styles.desktopOnly}`}>{c.title}</h2>
-            <button
-              type="button"
-              className={styles.toggle}
-              aria-expanded={isOpen}
-              aria-controls={panelId}
-              onClick={() => setOpen(isOpen ? null : c.partner)}
-            >
-              <span className={styles.toggleText}>
-                {partner && <Logo partner={partner} className={partner === nje ? styles.toggleLogoNje : styles.toggleLogoAgro} />}
-                <span className="sr-only">{c.partner}: </span>
-                <span className={styles.role}>{c.role}</span>
-              </span>
-              <ChevronDown size={20} aria-hidden="true" className={styles.chevron} />
-            </button>
-            <div id={panelId} className={styles.panel}>
-              <ContactRows c={c} />
-            </div>
-          </section>
-        )
-      })}
+      {CONTACTS.map((c) => (
+        <section key={c.partner} className={styles.partner} aria-label={c.partner}>
+          <h2 className={styles.label}>{c.title}</h2>
+          <ContactRows c={c} />
+        </section>
+      ))}
+
+      <div className={styles.mCards}>
+        {CONTACTS.map((c) => (
+          <MobileCard key={c.partner} c={c} nje={nje} />
+        ))}
+      </div>
 
       <nav aria-label="Oldalak" className={styles.pages}>
-        <h2 className={`${styles.label} ${styles.desktopOnly}`}>Oldalak</h2>
+        <h2 className={styles.label}>Oldalak</h2>
         <ul className={styles.pageList}>
           {PAGES.map((p) => {
             const current = pathname === p.href
@@ -201,7 +262,7 @@ export default function ContactFooter() {
       </nav>
 
       <div className={styles.brand}>
-        <h2 className={`${styles.label} ${styles.desktopOnly}`}>A kutatás mögött</h2>
+        <h2 className={styles.label}>A kutatás mögött</h2>
         <div className={styles.logos}>
           {[nje, agro].map((p) =>
             p ? (

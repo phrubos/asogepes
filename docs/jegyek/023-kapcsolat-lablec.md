@@ -25,6 +25,7 @@ A lap végén a látogató megtudja, kihez forduljon: a gépről, bemutatóról 
 - 2026-11-14: az egyetemi adatok még nincsenek meg: csak a ténylegesen ismert adat (kvk.nje.hu, Kecskemét) jelenik meg, helykitöltő nem kerül élesbe.
 - 2026-11-14: az óriás „Ásógép” szóvédjegy és a mottó kimaradt (felhasználói megjegyzés a canvason; a mottó a főoldal hero-ját ismételné).
 - 2026-11-14: UX-átnézés (`ux-heuristics`, 6,5 → 9/10): arany mono hasábcímek, kiemelt telefonszám, ikonok a sorok elején, „Útvonal ↗” Google Maps link, aktuális oldal jelölve, kattintható logók, © 60%-os fehér.
+- 2026-11-13: telefon/tablet (≤1024 px) új elrendezés, A változat „Gyorsgombok” (`.superdesign/design_iterations/footer_mobil_1.html`; felhasználó: túl zsúfolt, az oldallista nem kell): partnerenként logó + szerep, arany hívógomb, E-mail / Útvonal gomb, web + ikon-only közösségi linkek; lenyitható sorok, oldallista, ismételt logósor és a második ©-sor kimaradt. 390 px-en 732 → 461 px. Asztali változatlan (box + számított stílus dump egyezik).
 - Logók: mindig fix magasság + `align-self: flex-start` (a mockupban a flex oszlop szélességre nyújtotta az Agroskill logót).
 
 ## Változatok (csak új vizuális blokknál)
