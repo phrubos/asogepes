@@ -1,0 +1,371 @@
+/* Contact footer (ticket 023, canvas variant 5).
+   Desktop: brand | pages | Agroskill | NJE columns, © line under them.
+   <=1024px: label, the two partners as accordion rows, pages, logos, © (grid areas reorder, one DOM). */
+.contact {
+  display: grid;
+  /* Columns as wide as their content, spread so the gaps between them read equal */
+  grid-template-columns: repeat(4, auto);
+  justify-content: space-between;
+  grid-template-areas:
+    'brand pages agro nje'
+    'legal legal legal legal';
+  gap: var(--space-2xl) var(--space-2xl);
+  color: var(--color-white);
+  text-align: left;
+}
+
+.brand { grid-area: brand; }
+.pages { grid-area: pages; }
+.partner:nth-of-type(1) { grid-area: agro; }
+.partner:nth-of-type(2) { grid-area: nje; }
+.legal { grid-area: legal; }
+
+.brand,
+.pages,
+.partner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+/* Column titles: a quiet mono label (gold is kept for the page's own highlights) */
+.label {
+  margin: 0;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mobileLabel {
+  display: none;
+}
+
+/* Logos stacked beside a hairline; fixed heights, the width follows the file's ratio */
+.logos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  padding-left: var(--space-lg);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.logoLink:hover {
+  opacity: 0.8;
+}
+
+.logoNje,
+.logoAgro,
+.toggleLogoNje,
+.toggleLogoAgro {
+  display: block;
+  flex: none;
+  align-self: flex-start;
+  width: auto;
+}
+
+.logoNje { height: 40px; }
+.logoAgro { height: 30px; }
+
+/* Pages */
+.pageList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pageLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: 36px;
+  padding-left: 14px;
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.pageLink:hover {
+  color: var(--color-gold-light);
+}
+
+.pageLink[aria-current='page'] {
+  padding-left: 0;
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.pageLink[aria-current='page']::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-round);
+  background: var(--color-gold);
+}
+
+/* Partner columns */
+.toggle {
+  display: none;
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-height: 36px;
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+a.row:hover {
+  color: var(--color-gold-light);
+}
+
+.icon {
+  flex: none;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.phone {
+  min-height: 40px;
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--color-white);
+  font-variant-numeric: tabular-nums;
+}
+
+.underlined {
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 4px;
+}
+
+/* Address with its route link under it, so "Útvonal" never hangs alone at the row's end */
+.address {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-block: var(--space-xs);
+}
+
+.route {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
+
+a.row:hover .route {
+  color: inherit;
+}
+
+.socials {
+  list-style: none;
+  margin: var(--space-xs) 0 0;
+  padding: 0;
+  /* 2 x 2, so no single link is left alone on a second line */
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 0 var(--space-xl);
+}
+
+.social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: 36px;
+  font-size: var(--text-md);
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.social:hover {
+  color: var(--color-gold-light);
+}
+
+.social:hover .icon {
+  color: inherit;
+}
+
+/* The page's last line */
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Phones and tablets: label, accordion rows, pages, logos, © — all left-aligned in the one gutter */
+@media (max-width: 1024px) {
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'label'
+      'agro'
+      'nje'
+      'pages'
+      'brand'
+      'legal';
+    gap: 0;
+  }
+
+  .mobileLabel {
+    display: block;
+    grid-area: label;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .desktopOnly {
+    display: none;
+  }
+
+  .partner {
+    gap: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    width: 100%;
+    min-height: 72px;
+    padding: 14px 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .toggle:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+
+  .toggleText {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    min-width: 0;
+  }
+
+  .toggleLogoNje { height: 32px; }
+  .toggleLogoAgro { height: 26px; }
+
+  .role {
+    font-size: var(--text-md);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .chevron {
+    flex: none;
+    color: rgba(255, 255, 255, 0.6);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .partner[data-open] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .panel {
+    display: none;
+    padding-bottom: var(--space-md);
+  }
+
+  .partner[data-open] .panel {
+    display: block;
+  }
+
+  .row,
+  .social {
+    min-height: 44px;
+  }
+
+  /* short words ("TikTok") still get a 44px-wide target */
+  .social {
+    min-width: 44px;
+  }
+
+  .phone {
+    min-height: 44px;
+  }
+
+  .pages {
+    padding-top: var(--space-md);
+  }
+
+  .pageList {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pageLink {
+    min-height: 44px;
+    padding-left: 0;
+  }
+
+  .brand {
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: var(--space-md);
+  }
+
+  .logos {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm) var(--space-lg);
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .logoNje { height: 28px; }
+  .logoAgro { height: 22px; }
+
+  .legal {
+    flex-direction: column;
+    padding-top: var(--space-sm);
+    border-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+}

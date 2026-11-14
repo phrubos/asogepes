@@ -1,13 +1,17 @@
 .pageEnd {
   position: relative;
   z-index: 1;
-  box-sizing: border-box;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: var(--space-3xl) 3% var(--space-4xl);
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xl);
+}
+
+/* The "Tovább" card stays in the content's centred column */
+.nextWrap {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-3xl) 3% 0;
 }
 
 .next {
@@ -69,80 +73,28 @@
   transform: translateX(4px);
 }
 
-/* The partner sign-off closes the page, it is not content: centred at every width, like the home
-   footer (user, 2026-11-10 for phones, 2026-11-13 for desktop). Label on its own line above the logos */
-.partners {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-md) var(--space-3xl);
-  padding-top: var(--space-xl);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+/* The contact footer is its own surface, not more content: a full-width darker band under the
+   last section (the same treatment as the home footer), with its content in the centred column */
+.contact {
+  position: relative;
+  margin-top: var(--space-4xl);
+  padding: var(--space-3xl) 0 var(--space-2xl);
+  background: linear-gradient(180deg, rgba(20, 17, 14, 0.98) 0%, rgba(10, 8, 6, 1) 100%);
+  border-top: 1px solid rgba(212, 168, 75, 0.1);
 }
 
-.partnersLabel {
-  flex-basis: 100%;
-  text-align: center;
-  font-family: var(--font-mono, monospace);
-  font-size: var(--text-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.partner {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  transition: opacity var(--dur-fast) var(--ease-out);
-}
-
-.partner:hover {
-  opacity: 0.8;
-}
-
-/* One visual weight: the NJE mark has two text lines, so it sits a bit taller than the Agroskill one */
-.partnerLogo {
-  display: block;
-  width: auto;
-  height: 40px;
-}
-
-.partner:last-child .partnerLogo {
-  height: 30px;
-}
-
-/* Partner row + the © line under it: one sign-off block, the line sits close to the logos */
-.signoff {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-
-/* The page's last line: the same quiet mono label style as "A kutatást végezte", under a hairline */
-.copyright {
-  display: block;
+.contactInner {
   box-sizing: border-box;
-  width: 100%;
-  max-width: 40rem;
+  max-width: 1100px;
   margin: 0 auto;
-  text-align: center;
-  padding-top: var(--space-md);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  font-family: var(--font-mono, monospace);
-  font-size: var(--text-xs);
-  letter-spacing: 0.08em;
-  font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.6);
+  padding: 0 3%;
 }
 
 /* Phones and tablets: the one 20px gutter, left-aligned, no centred box */
 @media (max-width: 1024px) {
-  .pageEnd {
+  .nextWrap {
     max-width: none;
-    padding: 0 20px var(--space-2xl);
-    gap: var(--space-xl);
+    padding: 0 20px;
   }
 
   .next {
@@ -153,10 +105,55 @@
     right: 20px;
   }
 
-  /* Phones: logos stacked (the one exception to the left-aligned phone rule, see .partners) */
-  .partners {
-    flex-direction: column;
-    gap: 12px;
+  .contact {
+    margin-top: var(--space-2xl);
+    padding: var(--space-xl) 0 var(--space-2xl);
+  }
+
+  .contactInner {
+    max-width: none;
+    padding: 0 20px;
+  }
+}
+
+/* Desktop curtain reveal (user, 2026-11-14): the contact footer sticks to the viewport bottom
+   behind the lid, so the last stretch of scrolling lifts the page off it, like a turned layer of
+   soil over the one beneath. The footer only sticks inside .pageEnd, so the reveal is at most the
+   lid's height. Off on phones (the footer is nearly a screen tall there) and for reduced motion */
+@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
+  .lid {
+    position: relative;
+    z-index: 1;
+    padding-bottom: var(--space-4xl);
+    /* opaque: the parked footer must not show through behind the card (#171311 = the page
+       gradient's last stop, so the seam disappears) */
+    background: #171311;
+    box-shadow: 0 32px 48px -16px rgba(0, 0, 0, 0.6);
+  }
+
+  /* a long fade above the lid, so the lit page darkens gradually into it instead of at one line
+     (the footer never rises above the lid's top, so nothing shows through here) */
+  .lid::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: calc(var(--space-4xl) * 2);
+    background: linear-gradient(180deg, transparent, #171311);
+    pointer-events: none;
+  }
+
+  .contact {
+    position: sticky;
+    bottom: 0;
+    z-index: 0;
+    margin-top: 0;
+  }
+
+  /* a keyboard user tabbing into the footer must see the focused link */
+  .contact:focus-within {
+    z-index: 2;
   }
 }
 

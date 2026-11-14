@@ -222,7 +222,10 @@ html {
 }
 
 body {
+    /* clip, not hidden: hidden on both html and body made body its own scroll container, so
+       position: sticky never stuck to the viewport (the page-end curtain reveal, ticket 023) */
     overflow-x: hidden;
+    overflow-x: clip;
     font-family: var(--font-body);
     /* Use 1rem so it respects the html font-size scaling */
     font-size: var(--text-lg);
