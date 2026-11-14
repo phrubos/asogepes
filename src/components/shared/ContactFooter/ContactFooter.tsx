@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useId, type ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -61,11 +61,11 @@ function partnerOf(c: PartnerContact): Partner | undefined {
 }
 
 /** Logo at its own aspect ratio: the height comes from the class, the width follows (never stretched) */
-function Logo({ partner, className }: { partner: Partner; className: string }) {
+function Logo({ partner, className, alt = '' }: { partner: Partner; className: string; alt?: string }) {
   return (
     <Image
       src={partner.logo}
-      alt=""
+      alt={alt}
       width={partner.width}
       height={partner.height}
       unoptimized
@@ -139,70 +139,61 @@ function ContactRows({ c }: { c: PartnerContact }) {
   )
 }
 
-const dot = <span className={styles.cDot} aria-hidden="true">·</span>
-
-/** Items of one colophon line, parted by a muted dot */
-function CLine({ items }: { items: ReactNode[] }) {
-  return (
-    <p className={styles.cLine}>
-      {items.map((item, i) => (
-        <Fragment key={i}>
-          {i > 0 && dot}
-          {item}
-        </Fragment>
-      ))}
-    </p>
-  )
-}
-
-/** Phone/tablet colophon of one partner: who it is for, phone / e-mail / route / web as quiet text links */
-function ColophonLines({ c }: { c: PartnerContact }) {
+/** Phone/tablet "soil profile" column of one partner (variant E): logo, role, then the links stacked */
+function SoilPartner({ c }: { c: PartnerContact }) {
+  const p = partnerOf(c)
   const mapsHref = c.address?.mapsHref
-  const who = <span className={styles.cWho}>{c.role}</span>
-  const email = c.email && (
-    <a href={c.email.href} className={styles.cLink} aria-label={`E-mail: ${c.email.label}`}>
-      E-mail
-    </a>
+  // the desktop column title minus the partner name ('Gép, bemutató · Agroskill' -> 'Gép, bemutató')
+  const role = c.title.split(' · ')[0]
+  return (
+    <div className={styles.sPartner}>
+      {p && (
+        <Logo
+          partner={p}
+          alt={p.name}
+          className={p.name === 'Neumann János Egyetem' ? styles.sLogoNje : styles.sLogoAgro}
+        />
+      )}
+      <span className={styles.sRole}>{role}</span>
+      <div className={styles.sStack}>
+        {c.phone && (
+          <a href={c.phone.href} className={`${styles.sLink} ${styles.sTel}`}>
+            {c.phone.label}
+          </a>
+        )}
+        {c.email && (
+          <a href={c.email.href} className={styles.sLink} aria-label={`E-mail: ${c.email.label}`}>
+            E-mail
+          </a>
+        )}
+        {c.address && !mapsHref && <span className={styles.sLink}>{c.address.label}</span>}
+        {mapsHref && (
+          <a href={mapsHref} target="_blank" rel="noopener noreferrer" className={styles.sLink}>
+            Útvonal&nbsp;<span aria-hidden="true">↗</span>
+            <span className="sr-only"> (térkép, új lapon)</span>
+          </a>
+        )}
+        {c.web && (
+          <a href={c.web.href} target="_blank" rel="noopener noreferrer" className={styles.sLink}>
+            {c.web.label}
+          </a>
+        )}
+      </div>
+    </div>
   )
-  const route = mapsHref && (
-    <a href={mapsHref} target="_blank" rel="noopener noreferrer" className={styles.cLink}>
-      Útvonal <span aria-hidden="true">↗</span>
-      <span className="sr-only"> (térkép, új lapon)</span>
-    </a>
-  )
-  const web = c.web && (
-    <a href={c.web.href} target="_blank" rel="noopener noreferrer" className={styles.cLink}>
-      {c.web.label}
-    </a>
-  )
-  const tel = c.phone && (
-    <a href={c.phone.href} className={`${styles.cLink} ${styles.cTel}`}>
-      {c.phone.label}
-    </a>
-  )
-  const place = c.address && !mapsHref ? c.address.label : null
-  const rest = [email, route, web].filter(Boolean)
-
-  if (tel) {
-    return (
-      <>
-        <CLine items={[who, tel]} />
-        {rest.length > 0 && <CLine items={rest} />}
-      </>
-    )
-  }
-  return <CLine items={[who, place, ...rest].filter(Boolean)} />
 }
 
 /**
  * Who to contact, at the end of every page (ticket 023, canvas variant 5).
  * Desktop: four columns (partners' logos · pages · Agroskill · NJE KVK) and a © line.
- * <=1024px: a centred colophon (mark, partner logos, contact lines, socials, ©); the columns, pages and logo row are hidden.
+ * <=1024px (variant E, user 2026-11-14): the partners side by side in two short columns, © and socials
+ * on one bottom line; the soil background itself is drawn by the footer element (PageEnd, layout/Footer).
+ * On phones the desktop columns, pages and logo row are hidden.
  * DOM order is the phone order (contacts first, so focus follows what is read); desktop places the columns by grid area.
  */
 export default function ContactFooter() {
   const pathname = usePathname()
-  const markId = useId()
+  const soilId = useId()
   const nje = PARTNERS.find((p) => p.name === 'Neumann János Egyetem')
   const agro = PARTNERS.find((p) => p.name === 'Agroskill Kft.')
 
@@ -215,44 +206,32 @@ export default function ContactFooter() {
         </section>
       ))}
 
-      <section className={styles.colophon} aria-labelledby={markId}>
-        {/* the heading is for screen readers; the mark is a quiet colophon line, not a section title */}
-        <h2 id={markId} className="sr-only">Kapcsolat</h2>
-        <p className={styles.cMark}>A kutatás mögött</p>
-        <div className={styles.cLogos}>
-          {[nje, agro].map((p) =>
-            p ? (
-              <a
-                key={p.href}
-                href={p.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${p.name} – ${p.detail} (új lapon)`}
-                className={styles.cLogoLink}
-              >
-                <Logo partner={p} className={p === nje ? styles.cLogoNje : styles.cLogoAgro} />
-              </a>
+      <section className={styles.soil} aria-labelledby={soilId}>
+        <h2 id={soilId} className="sr-only">Kapcsolat</h2>
+        <div className={styles.sCols}>
+          {CONTACTS.map((c) => (
+            <SoilPartner key={c.partner} c={c} />
+          ))}
+        </div>
+        <div className={styles.sBottom}>
+          <span className={styles.sLegal}>
+            <span aria-hidden="true">© 2026 NJE × Agroskill</span>
+            <span className="sr-only">© 2026 Neumann János Egyetem × Agroskill Kft.</span>
+          </span>
+          {CONTACTS.map((c) =>
+            c.socials && c.socials.length > 0 ? (
+              <ul key={c.partner} className={styles.sSocials} aria-label={`${c.partner} a közösségi oldalakon`}>
+                {c.socials.map((sc) => (
+                  <li key={sc.kind}>
+                    <a href={sc.href} target="_blank" rel="noopener noreferrer" className={styles.sSocial} aria-label={sc.label}>
+                      <SocialIcon kind={sc.kind} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
             ) : null,
           )}
         </div>
-        <div className={styles.cLines}>
-          {CONTACTS.map((c) => (
-            <ColophonLines key={c.partner} c={c} />
-          ))}
-        </div>
-        {CONTACTS.map((c) =>
-          c.socials && c.socials.length > 0 ? (
-            <ul key={c.partner} className={styles.cSocials} aria-label={`${c.partner} a közösségi oldalakon`}>
-              {c.socials.map((sc) => (
-                <li key={sc.kind}>
-                  <a href={sc.href} target="_blank" rel="noopener noreferrer" className={styles.cSocial} aria-label={sc.label}>
-                    <SocialIcon kind={sc.kind} />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : null,
-        )}
       </section>
 
       <nav aria-label="Oldalak" className={styles.pages}>

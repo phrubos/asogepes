@@ -10,6 +10,16 @@
     padding: var(--space-5xl) var(--space-2xl);
 }
 
+/* The lid of the footer's curtain reveal (Footer.module.css): opaque and above the sticky footer,
+   with a soft shadow on the footer as the hero lifts off it */
+@media (prefers-reduced-motion: no-preference) {
+    .hero {
+        z-index: 1;
+        background-color: var(--color-earth-900);
+        box-shadow: 0 32px 48px -16px rgba(0, 0, 0, 0.6);
+    }
+}
+
 @media (max-height: 900px) and (min-width: 1025px) {
     .hero {
         min-height: 100vh;

@@ -1,0 +1,48 @@
+/* The footer as the soil under the page (ticket 023, variant E, user 2026-11-14): a fine grain, faint
+   horizon bands in the lower half and an irregular gold surface line on top (SoilHorizon).
+   Used with `composes: ground from ...` by PageEnd's and the home page's footer; the consumer sets
+   position (relative or sticky) and puts its content above the bands (position: relative; z-index: 1). */
+.ground {
+  overflow: hidden;
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1.2px) 0 0 / 7px 7px,
+    linear-gradient(180deg, rgba(20, 17, 14, 1) 0%, rgba(10, 8, 6, 1) 100%);
+}
+
+.ground::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46%;
+  background: repeating-linear-gradient(180deg, transparent 0 34px, rgba(212, 168, 75, 0.035) 34px 35px);
+  pointer-events: none;
+}
+
+.horizon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 18px;
+  fill: none;
+  stroke: rgba(212, 168, 75, 0.35);
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.narrow {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .wide {
+    display: none;
+  }
+
+  .narrow {
+    display: block;
+  }
+}

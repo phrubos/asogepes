@@ -1,22 +1,14 @@
 .footer {
-    background: linear-gradient(180deg, rgba(20, 17, 14, 0.98) 0%, rgba(10, 8, 6, 1) 100%);
+    composes: ground from '../shared/SoilGround/SoilGround.module.css';
     padding: var(--space-4xl) 0 var(--space-2xl);
-    border-top: 1px solid rgba(212, 168, 75, 0.1);
     position: relative;
 }
 
-.footer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.2), transparent);
-}
-
-/* Same width as the content page ends (PageEnd), so the contact footer reads alike everywhere */
+/* Same width as the content page ends (PageEnd), so the contact footer reads alike everywhere;
+   above the soil's horizon bands */
 .inner {
+    position: relative;
+    z-index: 1;
     box-sizing: border-box;
     max-width: 1100px;
     margin: 0 auto;
@@ -26,17 +18,27 @@
 /* Phones and tablets: the one 20px gutter */
 @media (max-width: 1024px) {
     .footer {
-        padding: 40px 0 32px;
-        background: linear-gradient(180deg, transparent 0, rgba(10, 8, 6, 1) 56px), var(--color-earth-900);
-        border-top: 0;
-    }
-
-    .footer::before {
-        display: none;
+        padding: 44px 0 28px;
     }
 
     .inner {
         max-width: none;
         padding: 0 20px;
+    }
+}
+
+/* Curtain reveal, as on the content page ends (user, 2026-11-14): the footer sticks to the viewport
+   bottom behind the hero (Hero.module.css lifts it to z-index 1), so the last stretch of scrolling
+   lifts the hero off it. Off for reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+    .footer {
+        position: sticky;
+        bottom: 0;
+        z-index: 0;
+    }
+
+    /* a keyboard user tabbing into the footer must see the focused link */
+    .footer:focus-within {
+        z-index: 2;
     }
 }

@@ -73,17 +73,18 @@
   transform: translateX(4px);
 }
 
-/* The contact footer is its own surface, not more content: a full-width darker band under the
-   last section (the same treatment as the home footer), with its content in the centred column */
+/* The contact footer is its own surface, not more content: a full-width band of soil under the last
+   section (SoilGround, the same as the home footer), with its content in the centred column */
 .contact {
+  composes: ground from '../SoilGround/SoilGround.module.css';
   position: relative;
   margin-top: var(--space-4xl);
   padding: var(--space-3xl) 0 var(--space-2xl);
-  background: linear-gradient(180deg, rgba(20, 17, 14, 0.98) 0%, rgba(10, 8, 6, 1) 100%);
-  border-top: 1px solid rgba(212, 168, 75, 0.1);
 }
 
 .contactInner {
+  position: relative;
+  z-index: 1;
   box-sizing: border-box;
   max-width: 1100px;
   margin: 0 auto;
@@ -105,12 +106,9 @@
     right: 20px;
   }
 
-  /* the footer sinks into the page: a gradual darkening, no hard edge */
   .contact {
     margin-top: var(--space-2xl);
-    padding: 40px 0 32px;
-    background: linear-gradient(180deg, transparent 0, rgba(10, 8, 6, 1) 56px);
-    border-top: 0;
+    padding: 44px 0 28px;
   }
 
   .contactInner {
@@ -119,11 +117,11 @@
   }
 }
 
-/* Desktop curtain reveal (user, 2026-11-14): the contact footer sticks to the viewport bottom
-   behind the lid, so the last stretch of scrolling lifts the page off it, like a turned layer of
-   soil over the one beneath. The footer only sticks inside .pageEnd, so the reveal is at most the
-   lid's height. Off on phones (the footer is nearly a screen tall there) and for reduced motion */
-@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
+/* Curtain reveal (user, 2026-11-14; on phones too since the short variant-E footer): the contact
+   footer sticks to the viewport bottom behind the lid, so the last stretch of scrolling lifts the
+   page off it, like a turned layer of soil over the one beneath. The footer only sticks inside
+   .pageEnd, so the reveal is at most the lid's height. Off for reduced motion */
+@media (prefers-reduced-motion: no-preference) {
   .lid {
     position: relative;
     z-index: 1;
@@ -157,6 +155,16 @@
   /* a keyboard user tabbing into the footer must see the focused link */
   .contact:focus-within {
     z-index: 2;
+  }
+}
+
+@media (max-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .lid {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .lid::before {
+    height: var(--space-4xl);
   }
 }
 

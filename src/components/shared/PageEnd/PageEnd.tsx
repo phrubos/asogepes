@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import ContactFooter from '@/components/shared/ContactFooter/ContactFooter'
+import SoilHorizon from '@/components/shared/SoilGround/SoilGround'
 import styles from './PageEnd.module.css'
 
 export interface PageEndNext {
@@ -18,7 +19,7 @@ export interface PageEndNext {
 export default function PageEnd({ next }: { next: PageEndNext }) {
   return (
     <div className={styles.pageEnd}>
-      {/* The lid: on desktop it slides up over the contact footer, which stays put (curtain reveal) */}
+      {/* The lid: it slides up over the contact footer, which stays put (curtain reveal) */}
       <div className={styles.lid}>
         <nav aria-label="Tovább" className={styles.nextWrap}>
           <Link href={next.href} className={styles.next}>
@@ -31,6 +32,7 @@ export default function PageEnd({ next }: { next: PageEndNext }) {
       </div>
 
       <footer className={styles.contact}>
+        <SoilHorizon />
         <div className={styles.contactInner}>
           <ContactFooter />
         </div>
