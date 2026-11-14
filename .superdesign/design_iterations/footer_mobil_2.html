@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobil lábléc, visszafogottan – D / E / F</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-earth-900: #1A1612;
+  --color-gold: #D4A84B;
+  --color-gold-light: #E8C87A;
+  --color-cream: #F5F0E8;
+  --color-white: #FDFCFA;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --text-xs: 0.75rem; --text-sm: 0.8125rem; --text-md: 0.875rem; --text-base: 0.9375rem; --text-lg: 1rem;
+  --radius-md: 8px; --radius-lg: 12px; --radius-pill: 999px;
+  --dur-fast: 150ms; --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: #0E0C0A; color: var(--color-cream); font-family: var(--font-body); font-size: var(--text-base); line-height: 1.5; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+
+.page { max-width: 1320px; margin: 0 auto; padding: 48px 20px 96px; }
+.page > header h1 { font-family: var(--font-display); font-weight: 600; font-size: 2rem; margin: 0 0 8px; }
+.page > header p { margin: 0 0 8px; color: rgba(245, 240, 232, 0.75); max-width: 920px; }
+.eyebrowTop { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-gold); margin-bottom: 8px; }
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 6px 32px; margin: 16px 0 0; padding: 0; list-style: none; max-width: 980px; font-size: var(--text-md); color: rgba(245, 240, 232, 0.7); }
+.rules li::before { content: '— '; color: var(--color-gold); }
+
+.grid { display: flex; gap: 32px; flex-wrap: wrap; margin-top: 36px; align-items: flex-start; }
+.col { width: 390px; max-width: 100%; }
+.col > h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; margin: 0 0 4px; }
+.col > h2 .tag { font-family: var(--font-mono); font-size: var(--text-md); color: var(--color-earth-900); background: var(--color-gold); border-radius: 4px; padding: 2px 8px; margin-right: 8px; vertical-align: 2px; }
+.col .sum { font-size: var(--text-md); color: rgba(245, 240, 232, 0.7); margin: 0 0 6px; min-height: 88px; }
+.col .meta { font-family: var(--font-mono); font-size: var(--text-xs); color: rgba(245, 240, 232, 0.5); margin-bottom: 10px; }
+.col .meta b { color: var(--color-gold-light); font-weight: 600; }
+
+/* phone: the end of the page content, the "next page" card, then the footer */
+.phone { width: 390px; max-width: 100%; border-radius: 28px; overflow: hidden; border: 1px solid rgba(212, 168, 75, 0.18); background: linear-gradient(180deg, #2A231C 0%, #1F1A16 50%, #171311 100%); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4); }
+.stub { padding: 28px 20px 40px; }
+.stubText { font-size: var(--text-base); color: rgba(245, 240, 232, 0.8); margin: 0 0 20px; font-style: italic; }
+.stubCard { position: relative; padding: 20px 56px 20px 20px; border-radius: var(--radius-lg); border: 1px solid rgba(212, 168, 75, 0.25); background: linear-gradient(135deg, rgba(212, 168, 75, 0.1), rgba(212, 168, 75, 0.03)); }
+.stubCard .k { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-gold); }
+.stubCard .t { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; }
+.stubCard .d { font-size: var(--text-md); color: rgba(245, 240, 232, 0.7); }
+.stubCard .arrow { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: var(--color-gold); }
+
+/* shared quiet footer pieces */
+.logo { display: block; width: auto; max-width: none; align-self: flex-start; flex: none; }
+.quietLabel { margin: 0; font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
+.legal { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.4); }
+/* inline links: compact to the eye, 44px tall to the thumb (padding, negative margin keeps the line tight) */
+.il { display: inline-flex; align-items: center; min-height: 44px; margin: -10px 0; text-decoration: none; transition: color var(--dur-fast) var(--ease-out); }
+.il:hover { color: var(--color-gold-light); }
+.dot { color: rgba(255, 255, 255, 0.25); padding: 0 8px; }
+.soc { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.4); transition: color var(--dur-fast) var(--ease-out); }
+.soc:hover { color: var(--color-gold-light); }
+
+/* ---------- D: the page "sinks" into a darker band, a quiet ledger ---------- */
+.D { position: relative; padding: 36px 20px 32px; background: #0D0B09; color: rgba(255, 255, 255, 0.62); font-size: var(--text-md); display: flex; flex-direction: column; gap: 22px; }
+/* the edge: a short gold hairline from the left, fading out, over a soft inner shadow, so the page ends here */
+.D::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 24px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent); pointer-events: none; }
+.D::after { content: ''; position: absolute; left: 20px; top: 0; width: 120px; height: 1px; background: linear-gradient(90deg, rgba(212, 168, 75, 0.5), transparent); }
+.D .p { display: flex; flex-direction: column; gap: 8px; }
+.D .logoAgro { height: 18px; opacity: 0.85; }
+.D .logoNje { height: 24px; opacity: 0.85; }
+.D .line { line-height: 1.6; }
+.D .tel { color: rgba(255, 255, 255, 0.85); font-variant-numeric: tabular-nums; }
+.D .sub { font-size: var(--text-sm); color: rgba(255, 255, 255, 0.45); display: flex; align-items: center; justify-content: space-between; }
+.D .socials { display: flex; margin-right: -12px; }
+.D .hair { height: 1px; background: rgba(255, 255, 255, 0.06); }
+
+/* ---------- E: soil horizons in the background, the partners side by side ---------- */
+.E { position: relative; padding: 44px 20px 28px; color: rgba(255, 255, 255, 0.62); font-size: var(--text-md); overflow: hidden;
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1.2px) 0 0 / 7px 7px,
+    linear-gradient(180deg, #14110E 0%, #110E0B 45%, #0E0B09 70%, #0B0907 100%);
+}
+/* the soil line on top: one soft, irregular horizon instead of a straight border */
+.E .horizon { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 18px; display: block; }
+/* faint horizon bands lower down, like a soil profile seen from the side */
+.E::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 46%; pointer-events: none;
+  background: repeating-linear-gradient(180deg, transparent 0 34px, rgba(212, 168, 75, 0.035) 34px 35px); }
+.E .inner { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 22px; }
+.E .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+.E .p { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.E .p + .p { padding-left: 20px; border-left: 1px solid rgba(255, 255, 255, 0.07); }
+.E .logoAgro { height: 16px; opacity: 0.85; margin-bottom: 6px; }
+.E .logoNje { height: 22px; opacity: 0.85; margin-bottom: 2px; }
+.E .role { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255, 255, 255, 0.38); margin-bottom: 4px; }
+.E .stack { display: flex; flex-direction: column; }
+.E .stack .il { margin: -6px 0; }
+.E .tel { color: rgba(255, 255, 255, 0.85); font-variant-numeric: tabular-nums; }
+.E .bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.E .socials { display: flex; margin-right: -12px; }
+
+/* ---------- F: a colophon, the page signed off at its foot (centred like the partner logos) ---------- */
+.F { position: relative; padding: 40px 20px 32px; background: linear-gradient(180deg, rgba(13, 11, 9, 0) 0, #0D0B09 56px); color: rgba(255, 255, 255, 0.58); font-size: var(--text-md); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.F .mark { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 280px; }
+.F .mark::before, .F .mark::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.35)); }
+.F .mark::after { background: linear-gradient(90deg, rgba(212, 168, 75, 0.35), transparent); }
+.F .logos { display: flex; align-items: center; justify-content: center; gap: 20px; }
+.F .logoAgro { height: 16px; opacity: 0.8; align-self: center; }
+.F .logoNje { height: 24px; opacity: 0.8; align-self: center; }
+.F .lines { display: flex; flex-direction: column; gap: 6px; line-height: 1.6; }
+.F .who { color: rgba(255, 255, 255, 0.85); }
+.F .tel { font-variant-numeric: tabular-nums; }
+.F .socials { display: flex; justify-content: center; margin: -6px 0; }
+
+.notes { margin-top: 32px; font-size: var(--text-sm); color: rgba(245, 240, 232, 0.55); max-width: 980px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+    <mask id="m-fb"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M16 7.5h-1.8a2.7 2.7 0 0 0-2.7 2.7V23M8.8 13.2h6.4" fill="none" stroke="#000" stroke-width="2.6"/></mask>
+    <mask id="m-yt"><rect x="1.5" y="5" width="21" height="14" rx="4.5" fill="#fff"/><path d="M10 9v6l5.2-3z" fill="#000"/></mask>
+    <mask id="m-ig"><rect x="2" y="2" width="20" height="20" rx="6" fill="#fff"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="#000" stroke-width="2.2"/><circle cx="17.2" cy="6.8" r="1.3" fill="#000"/></mask>
+    <mask id="m-tt"><rect x="2" y="2" width="20" height="20" rx="6" fill="#fff"/><path d="M13.4 6v8.6a2.7 2.7 0 1 1-2.7-2.7M13.4 6c.3 1.9 1.7 3.3 3.8 3.5" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round"/></mask>
+    <symbol id="s-fb" viewBox="0 0 24 24"><rect width="24" height="24" fill="currentColor" mask="url(#m-fb)"/></symbol>
+    <symbol id="s-yt" viewBox="0 0 24 24"><rect width="24" height="24" fill="currentColor" mask="url(#m-yt)"/></symbol>
+    <symbol id="s-ig" viewBox="0 0 24 24"><rect width="24" height="24" fill="currentColor" mask="url(#m-ig)"/></symbol>
+    <symbol id="s-tt" viewBox="0 0 24 24"><rect width="24" height="24" fill="currentColor" mask="url(#m-tt)"/></symbol>
+  </defs>
+</svg>
+
+<template id="stub">
+  <div class="stub">
+    <p class="stubText">Mindkét évben az ásógépes parcella maradt mélyebben laza a tenyészidő végén.</p>
+    <div class="stubCard"><div class="k">Következő oldal</div><div class="t">Technológia</div><div class="d">Hogyan dolgozik az ásógép, és melyik modell mire való.</div><svg class="arrow" width="22" height="22"><use href="#i-arrow"/></svg></div>
+  </div>
+</template>
+<template id="socials">
+  <a class="soc" href="#" aria-label="Facebook"><svg width="16" height="16"><use href="#s-fb"/></svg></a>
+  <a class="soc" href="#" aria-label="YouTube"><svg width="16" height="16"><use href="#s-yt"/></svg></a>
+  <a class="soc" href="#" aria-label="Instagram"><svg width="16" height="16"><use href="#s-ig"/></svg></a>
+  <a class="soc" href="#" aria-label="TikTok"><svg width="16" height="16"><use href="#s-tt"/></svg></a>
+</template>
+
+<div class="page">
+  <header>
+    <div class="eyebrowTop">lábléc · telefon (≤1024 px) · második kör</div>
+    <h1>Visszafogottabb mobil lábléc</h1>
+    <p>A mostani (arany hívógombos) lábléc görgetéskor túl erős, úgy hat, mint egy új tartalmi blokk. Ezek a változatok a lap aljaként olvashatók: sötétebb, „lesüllyedő” háttér, kisebb és halkabb betűk, töltött gombok nélkül. Az adatok és a 44 px-es koppintási felületek maradnak. Az asztali lábléc nem változik.</p>
+    <ul class="rules">
+      <li>A „Következő oldal” kártya marad a fő hívás, a lábléc alatta halkabb</li>
+      <li>Szöveg 13–14 px, 40–65%-os fehér; csak a telefonszám világosabb</li>
+      <li>Logók kisebbek, 85%-os átlátszósággal (szín nem változik)</li>
+      <li>Nincs töltött gomb és nincs arany felület, arany csak egy-egy hajszálvonalban</li>
+    </ul>
+  </header>
+
+  <div class="grid">
+    <div class="col" data-measure>
+      <h2><span class="tag">D</span>Lesüllyedő sáv</h2>
+      <p class="sum">A lap egy sötétebb sávba „süllyed”, felül egy finom belső árnyékkal és egy rövid, elhalványuló arany hajszállal. Partnerenként egy logó és egy-két sor szöveges link, pontokkal elválasztva, mint egy impresszum.</p>
+      <div class="meta">lábléc: <b data-h></b> (most 461 px)</div>
+      <div class="phone">
+        <div data-stub></div>
+        <footer class="D" data-foot>
+          <div class="p">
+            <img class="logo logoAgro" src="../../public/images/partners/agroskill.png" alt="Agroskill Kft.">
+            <span class="sub">Gép, bemutató, ajánlat</span>
+            <div class="line"><a class="il tel" href="tel:+36303497789">+36 30 349 7789</a><span class="dot">·</span><a class="il" href="mailto:kis.pal@agroskill.hu">E-mail</a><span class="dot">·</span><a class="il" href="#">Útvonal ↗</a></div>
+            <div class="sub"><a class="il" href="#">agroskill.hu</a><span class="socials" data-socials></span></div>
+          </div>
+          <div class="hair"></div>
+          <div class="p">
+            <img class="logo logoNje" src="../../public/images/partners/nje-kvk.svg" alt="Neumann János Egyetem, Kertészeti és Vidékfejlesztési Kar">
+            <div class="line">Kutatás, mérések · Kecskemét<span class="dot">·</span><a class="il" href="#">kvk.nje.hu</a></div>
+          </div>
+          <span class="legal">© 2026 Neumann János Egyetem × Agroskill Kft.</span>
+        </footer>
+      </div>
+    </div>
+
+    <div class="col" data-measure>
+      <h2><span class="tag">E</span>Talajszelvény</h2>
+      <p class="sum">A háttér a talaj: felül egy szabálytalan, halvány „talajfelszín” vonal, alul alig látható rétegcsíkok és finom szemcsézet. A két partner egymás mellett, két rövid hasábban, így a lábléc a legrövidebb.</p>
+      <div class="meta">lábléc: <b data-h></b> (most 461 px)</div>
+      <div class="phone">
+        <div data-stub></div>
+        <footer class="E" data-foot>
+          <svg class="horizon" viewBox="0 0 390 18" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 18V7c18-2 34 1 52-1s30-4 48-2 36 4 54 2 28-5 46-4 34 4 52 3 30-3 46-3 34 3 50 2 26-2 42-1V18Z" fill="#14110E"/>
+            <path d="M0 7c18-2 34 1 52-1s30-4 48-2 36 4 54 2 28-5 46-4 34 4 52 3 30-3 46-3 34 3 50 2 26-2 42-1" fill="none" stroke="rgba(212,168,75,0.28)" stroke-width="1"/>
+          </svg>
+          <div class="inner">
+            <div class="cols">
+              <div class="p">
+                <img class="logo logoAgro" src="../../public/images/partners/agroskill.png" alt="Agroskill Kft.">
+                <span class="role">Gép, bemutató</span>
+                <div class="stack">
+                  <a class="il tel" href="tel:+36303497789">+36 30 349 7789</a>
+                  <a class="il" href="mailto:kis.pal@agroskill.hu">E-mail</a>
+                  <a class="il" href="#">Útvonal ↗</a>
+                  <a class="il" href="#">agroskill.hu</a>
+                </div>
+              </div>
+              <div class="p">
+                <img class="logo logoNje" src="../../public/images/partners/nje-kvk.svg" alt="Neumann János Egyetem, Kertészeti és Vidékfejlesztési Kar">
+                <span class="role">Kutatás, mérések</span>
+                <div class="stack">
+                  <span class="il">Kecskemét</span>
+                  <a class="il" href="#">kvk.nje.hu</a>
+                </div>
+              </div>
+            </div>
+            <div class="bottom"><span class="legal">© 2026 NJE × Agroskill</span><span class="socials" data-socials></span></div>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <div class="col" data-measure>
+      <h2><span class="tag">F</span>Kolofon</h2>
+      <p class="sum">A lap úgy zárul, mint egy könyv utolsó oldala: két arany hajszál között a két logó középen (a partnerlogók eddig is középen álltak az oldalak végén), alatta középre zárt, halk sorok. A háttér fokozatosan sötétedik, nincs éles határ.</p>
+      <div class="meta">lábléc: <b data-h></b> (most 461 px)</div>
+      <div class="phone">
+        <div data-stub></div>
+        <footer class="F" data-foot>
+          <div class="mark"><span class="quietLabel">A kutatás mögött</span></div>
+          <div class="logos">
+            <img class="logo logoNje" src="../../public/images/partners/nje-kvk.svg" alt="Neumann János Egyetem, Kertészeti és Vidékfejlesztési Kar">
+            <img class="logo logoAgro" src="../../public/images/partners/agroskill.png" alt="Agroskill Kft.">
+          </div>
+          <div class="lines">
+            <div><span class="who">Gép, bemutató</span> · <a class="il tel" href="tel:+36303497789">+36 30 349 7789</a></div>
+            <div><a class="il" href="mailto:kis.pal@agroskill.hu">E-mail</a><span class="dot">·</span><a class="il" href="#">Útvonal ↗</a><span class="dot">·</span><a class="il" href="#">agroskill.hu</a></div>
+            <div><span class="who">Kutatás</span> · Kecskemét<span class="dot">·</span><a class="il" href="#">kvk.nje.hu</a></div>
+          </div>
+          <div class="socials" data-socials></div>
+          <span class="legal">© 2026 Neumann János Egyetem × Agroskill Kft.</span>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <p class="notes">Közös mindháromban: a „Kapcsolat” felirat helyett a partnerek logója vezet be; a telefonszám marad egy koppintásra (tel: link); minden link 44 px magas koppintási felületet kap, de vizuálisan egy sorban marad. Az F változat középre zárása a projektszabály kivétele (a partnerlogók az oldalak végén eddig is középen álltak); ha a balra zárt rend fontosabb, D vagy E.</p>
+</div>
+
+<script>
+const stub = document.getElementById('stub').innerHTML
+const soc = document.getElementById('socials').innerHTML
+document.querySelectorAll('[data-stub]').forEach((el) => { el.outerHTML = stub })
+document.querySelectorAll('[data-socials]').forEach((el) => { el.innerHTML = soc })
+function measure() {
+  document.querySelectorAll('[data-measure]').forEach((c) => {
+    const f = c.querySelector('[data-foot]')
+    const s = getComputedStyle(f)
+    c.querySelector('[data-h]').textContent = Math.round(f.getBoundingClientRect().height - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom)) + ' px'
+  })
+}
+window.addEventListener('load', measure)
+</script>
+</body>
+</html>

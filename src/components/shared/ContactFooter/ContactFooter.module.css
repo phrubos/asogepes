@@ -1,6 +1,6 @@
 /* Contact footer (ticket 023, canvas variant 5).
    Desktop: brand | pages | Agroskill | NJE columns, © line under them.
-   <=1024px: label, one card per partner, © (the columns, pages and logo row are hidden). */
+   <=1024px: a centred colophon (the columns, pages and logo row are hidden). */
 .contact {
   display: grid;
   /* Columns as wide as their content, spread so the gaps between them read equal */
@@ -38,10 +38,6 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);
-}
-
-.mobileLabel {
-  display: none;
 }
 
 /* Logos stacked beside a hairline; fixed heights, the width follows the file's ratio */
@@ -220,27 +216,19 @@ a.row:hover .route {
 }
 
 
-/* Phone/tablet cards: built from CONTACTS in MobileCard, hidden on desktop */
-.mCards {
+/* Phone/tablet colophon (ticket 023, variant F): the page signed off at its foot. Built from CONTACTS in
+   ContactFooter, hidden on desktop. Centred like the partner logos at the page ends. */
+.colophon {
   display: none;
 }
 
-/* Phones and tablets: label, one card per partner, © — all left-aligned in the one gutter */
 @media (max-width: 1024px) {
   .contact {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      'label'
-      'cards'
+      'colophon'
       'legal';
-    gap: 0;
-  }
-
-  .mobileLabel {
-    display: block;
-    grid-area: label;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    gap: var(--space-md);
   }
 
   .partner,
@@ -249,145 +237,157 @@ a.row:hover .route {
     display: none;
   }
 
-  .mCards {
-    grid-area: cards;
-    display: block;
-  }
-
-  .mCard {
+  .colophon {
+    grid-area: colophon;
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
-    padding: var(--space-md) 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    align-items: center;
+    gap: 18px;
+    font-size: var(--text-md);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
   }
 
-  .mCardCompact {
-    gap: var(--space-sm);
-  }
-
-  .mWho {
+  .cMark {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 280px;
+    margin: 0;
+    font-family: var(--font-mono, monospace);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.4);
   }
 
-  .mLogoNje,
-  .mLogoAgro {
+  .cMark::before,
+  .cMark::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.35));
+  }
+
+  .cMark::after {
+    background: linear-gradient(90deg, rgba(212, 168, 75, 0.35), transparent);
+  }
+
+  .cLogos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .cLogoLink {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .cLogoNje,
+  .cLogoAgro {
     display: block;
     flex: none;
-    align-self: flex-start;
     width: auto;
     max-width: none;
+    opacity: 0.8;
   }
 
-  .mLogoNje { height: 32px; }
-  .mLogoAgro { height: 26px; }
+  .cLogoNje { height: 24px; }
+  .cLogoAgro { height: 16px; }
 
-  .mRole {
-    min-width: 0;
-    flex: 1;
-    font-size: var(--text-md);
-    color: rgba(255, 255, 255, 0.7);
-  }
-
-  .mCall {
+  .cLines {
     display: flex;
+    flex-direction: column;
+    gap: 6px;
+    line-height: 1.6;
+  }
+
+  .cLine {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    min-height: 52px;
-    border-radius: var(--radius-pill);
-    background: var(--color-gold);
-    color: var(--color-earth-900);
-    font-size: var(--text-lg);
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    text-decoration: none;
+    margin: 0;
   }
 
-  .mPair {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    grid-auto-flow: column;
-    gap: var(--space-sm);
+  .cLine > * {
+    white-space: nowrap;
   }
 
-  .mGhost {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-sm);
-    min-height: 48px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: var(--radius-pill);
-    color: rgba(255, 255, 255, 0.9);
-    font-size: var(--text-md);
-    text-decoration: none;
-  }
-
-  .mGhost svg {
-    flex: none;
-    color: rgba(255, 255, 255, 0.55);
-  }
-
-  .mRow {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-sm);
-  }
-
-  .mWeb {
-    display: flex;
-    align-items: center;
-    flex: none;
-    min-height: 44px;
-    font-size: var(--text-base);
+  .cWho {
     color: rgba(255, 255, 255, 0.85);
-    text-decoration: underline;
-    text-decoration-color: rgba(255, 255, 255, 0.3);
-    text-underline-offset: 4px;
   }
 
-  .mSocials {
+  .cDot {
+    padding: 0 var(--space-sm);
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .cLink {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin: -10px 0;
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .cLink:hover {
+    color: var(--color-gold-light);
+  }
+
+  .cTel {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cSocials {
     display: flex;
-    margin: 0 0 0 auto;
+    justify-content: center;
+    margin: -6px 0;
     padding: 0;
     list-style: none;
   }
 
-  .mSocial {
+  .cSocial {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 44px;
     height: 44px;
-    border-radius: var(--radius-round);
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.4);
     transition: color var(--dur-fast) var(--ease-out);
   }
 
-  .mSocial:hover {
+  .cSocial:hover {
     color: var(--color-gold-light);
   }
 
-  .mSocial .icon {
+  .cSocial .icon {
     color: inherit;
   }
 
-  .mCall:focus-visible,
-  .mGhost:focus-visible,
-  .mWeb:focus-visible,
-  .mSocial:focus-visible {
+  .cLink:focus-visible,
+  .cLogoLink:focus-visible,
+  .cSocial:focus-visible {
     outline: 2px solid var(--color-gold);
     outline-offset: 2px;
   }
 
   .legal {
-    padding-top: var(--space-md);
+    justify-content: center;
+    padding-top: 0;
     border-top: 0;
-    color: rgba(255, 255, 255, 0.55);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
   }
 
   .legal span:nth-child(2) {
@@ -396,7 +396,8 @@ a.row:hover .route {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mSocial {
+  .cLink,
+  .cSocial {
     transition: none;
   }
 }

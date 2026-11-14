@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, type ReactNode } from 'react'
+import { Fragment, useId, type ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -42,11 +42,11 @@ const SOCIAL_CUTOUTS: Record<SocialKind, { base: ReactNode; cut: ReactNode }> = 
   },
 }
 
-function SocialIcon({ kind, size = 16 }: { kind: SocialKind; size?: number }) {
+function SocialIcon({ kind }: { kind: SocialKind }) {
   const maskId = useId()
   const { base, cut } = SOCIAL_CUTOUTS[kind]
   return (
-    <svg className={styles.icon} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <svg className={styles.icon} width={16} height={16} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <mask id={maskId}>
         <g fill="#fff">{base}</g>
         <g fill="#000" stroke="#000">{cut}</g>
@@ -139,99 +139,75 @@ function ContactRows({ c }: { c: PartnerContact }) {
   )
 }
 
-/** Phone/tablet card of one partner: logo and role, a call button, e-mail + route, the web link and icon-only socials */
-function MobileCard({ c, nje }: { c: PartnerContact; nje: Partner | undefined }) {
-  const partner = partnerOf(c)
+const dot = <span className={styles.cDot} aria-hidden="true">·</span>
+
+/** Items of one colophon line, parted by a muted dot */
+function CLine({ items }: { items: ReactNode[] }) {
+  return (
+    <p className={styles.cLine}>
+      {items.map((item, i) => (
+        <Fragment key={i}>
+          {i > 0 && dot}
+          {item}
+        </Fragment>
+      ))}
+    </p>
+  )
+}
+
+/** Phone/tablet colophon of one partner: who it is for, phone / e-mail / route / web as quiet text links */
+function ColophonLines({ c }: { c: PartnerContact }) {
   const mapsHref = c.address?.mapsHref
-  const hasActions = !!(c.phone || c.email || mapsHref)
-  const logo = partner && <Logo partner={partner} className={partner === nje ? styles.mLogoNje : styles.mLogoAgro} />
+  const who = <span className={styles.cWho}>{c.role}</span>
+  const email = c.email && (
+    <a href={c.email.href} className={styles.cLink} aria-label={`E-mail: ${c.email.label}`}>
+      E-mail
+    </a>
+  )
+  const route = mapsHref && (
+    <a href={mapsHref} target="_blank" rel="noopener noreferrer" className={styles.cLink}>
+      Útvonal <span aria-hidden="true">↗</span>
+      <span className="sr-only"> (térkép, új lapon)</span>
+    </a>
+  )
   const web = c.web && (
-    <a href={c.web.href} target="_blank" rel="noopener noreferrer" className={styles.mWeb}>
+    <a href={c.web.href} target="_blank" rel="noopener noreferrer" className={styles.cLink}>
       {c.web.label}
     </a>
   )
-  const socials = c.socials && c.socials.length > 0 && (
-    <ul className={styles.mSocials} aria-label={`${c.partner} a közösségi oldalakon`}>
-      {c.socials.map((s) => (
-        <li key={s.kind}>
-          <a href={s.href} target="_blank" rel="noopener noreferrer" className={styles.mSocial} aria-label={s.label}>
-            <SocialIcon kind={s.kind} size={18} />
-          </a>
-        </li>
-      ))}
-    </ul>
+  const tel = c.phone && (
+    <a href={c.phone.href} className={`${styles.cLink} ${styles.cTel}`}>
+      {c.phone.label}
+    </a>
   )
+  const place = c.address && !mapsHref ? c.address.label : null
+  const rest = [email, route, web].filter(Boolean)
 
-  if (!hasActions) {
-    const place = c.address && !mapsHref ? ` · ${c.address.label}` : ''
+  if (tel) {
     return (
-      <section className={`${styles.mCard} ${styles.mCardCompact}`} aria-label={c.partner}>
-        {logo}
-        <div className={styles.mRow}>
-          <span className={styles.mRole}>{`${c.role}${place}`}</span>
-          {web}
-          {socials}
-        </div>
-      </section>
+      <>
+        <CLine items={[who, tel]} />
+        {rest.length > 0 && <CLine items={rest} />}
+      </>
     )
   }
-
-  return (
-    <section className={styles.mCard} aria-label={c.partner}>
-      <div className={styles.mWho}>
-        {logo}
-        <span className={styles.mRole}>{c.role}</span>
-      </div>
-      {c.phone && (
-        <a href={c.phone.href} className={styles.mCall}>
-          <Phone size={18} aria-hidden="true" />
-          {c.phone.label}
-        </a>
-      )}
-      {(c.email || mapsHref) && (
-        <div className={styles.mPair}>
-          {c.email && (
-            <a href={c.email.href} className={styles.mGhost} aria-label={`E-mail: ${c.email.label}`}>
-              <Mail size={16} aria-hidden="true" />
-              E-mail
-            </a>
-          )}
-          {mapsHref && (
-            <a href={mapsHref} target="_blank" rel="noopener noreferrer" className={styles.mGhost}>
-              <MapPin size={16} aria-hidden="true" />
-              <span>
-                Útvonal <span aria-hidden="true">↗</span>
-                <span className="sr-only"> (térkép, új lapon)</span>
-              </span>
-            </a>
-          )}
-        </div>
-      )}
-      {(web || socials) && (
-        <div className={styles.mRow}>
-          {web}
-          {socials}
-        </div>
-      )}
-    </section>
-  )
+  return <CLine items={[who, place, ...rest].filter(Boolean)} />
 }
 
 /**
  * Who to contact, at the end of every page (ticket 023, canvas variant 5).
  * Desktop: four columns (partners' logos · pages · Agroskill · NJE KVK) and a © line.
- * <=1024px: a "Kapcsolat" label, one card per partner (MobileCard), ©; the columns, pages and logo row are hidden.
+ * <=1024px: a centred colophon (mark, partner logos, contact lines, socials, ©); the columns, pages and logo row are hidden.
  * DOM order is the phone order (contacts first, so focus follows what is read); desktop places the columns by grid area.
  */
 export default function ContactFooter() {
   const pathname = usePathname()
+  const markId = useId()
   const nje = PARTNERS.find((p) => p.name === 'Neumann János Egyetem')
   const agro = PARTNERS.find((p) => p.name === 'Agroskill Kft.')
 
   return (
     <div className={styles.contact}>
-      <h2 className={`${styles.label} ${styles.mobileLabel}`}>Kapcsolat</h2>
-
       {CONTACTS.map((c) => (
         <section key={c.partner} className={styles.partner} aria-label={c.partner}>
           <h2 className={styles.label}>{c.title}</h2>
@@ -239,11 +215,45 @@ export default function ContactFooter() {
         </section>
       ))}
 
-      <div className={styles.mCards}>
-        {CONTACTS.map((c) => (
-          <MobileCard key={c.partner} c={c} nje={nje} />
-        ))}
-      </div>
+      <section className={styles.colophon} aria-labelledby={markId}>
+        {/* the heading is for screen readers; the mark is a quiet colophon line, not a section title */}
+        <h2 id={markId} className="sr-only">Kapcsolat</h2>
+        <p className={styles.cMark}>A kutatás mögött</p>
+        <div className={styles.cLogos}>
+          {[nje, agro].map((p) =>
+            p ? (
+              <a
+                key={p.href}
+                href={p.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${p.name} – ${p.detail} (új lapon)`}
+                className={styles.cLogoLink}
+              >
+                <Logo partner={p} className={p === nje ? styles.cLogoNje : styles.cLogoAgro} />
+              </a>
+            ) : null,
+          )}
+        </div>
+        <div className={styles.cLines}>
+          {CONTACTS.map((c) => (
+            <ColophonLines key={c.partner} c={c} />
+          ))}
+        </div>
+        {CONTACTS.map((c) =>
+          c.socials && c.socials.length > 0 ? (
+            <ul key={c.partner} className={styles.cSocials} aria-label={`${c.partner} a közösségi oldalakon`}>
+              {c.socials.map((sc) => (
+                <li key={sc.kind}>
+                  <a href={sc.href} target="_blank" rel="noopener noreferrer" className={styles.cSocial} aria-label={sc.label}>
+                    <SocialIcon kind={sc.kind} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : null,
+        )}
+      </section>
 
       <nav aria-label="Oldalak" className={styles.pages}>
         <h2 className={styles.label}>Oldalak</h2>

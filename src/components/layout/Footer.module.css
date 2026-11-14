@@ -26,7 +26,13 @@
 /* Phones and tablets: the one 20px gutter */
 @media (max-width: 1024px) {
     .footer {
-        padding: var(--space-2xl) 0;
+        padding: 40px 0 32px;
+        background: linear-gradient(180deg, transparent 0, rgba(10, 8, 6, 1) 56px), var(--color-earth-900);
+        border-top: 0;
+    }
+
+    .footer::before {
+        display: none;
     }
 
     .inner {

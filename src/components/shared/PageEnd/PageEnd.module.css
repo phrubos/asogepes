@@ -105,9 +105,12 @@
     right: 20px;
   }
 
+  /* the footer sinks into the page: a gradual darkening, no hard edge */
   .contact {
     margin-top: var(--space-2xl);
-    padding: var(--space-xl) 0 var(--space-2xl);
+    padding: 40px 0 32px;
+    background: linear-gradient(180deg, transparent 0, rgba(10, 8, 6, 1) 56px);
+    border-top: 0;
   }
 
   .contactInner {
