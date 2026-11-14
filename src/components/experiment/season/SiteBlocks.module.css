@@ -10,8 +10,25 @@ hr.divider {
   background: linear-gradient(90deg, rgba(212, 168, 75, 0), rgba(212, 168, 75, 0.35) 20%, rgba(212, 168, 75, 0.35) 80%, rgba(212, 168, 75, 0));
 }
 
+/* Id target of one year copy (ticket 024). The wrapper is now the section's child, so it repeats
+   CombinedPage's `.section > * { flex: 1 }` for the page inside it. */
+.part {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.part > * {
+  flex: 1;
+  min-height: 0;
+}
+
 @media (max-width: 1024px) {
   hr.divider {
     margin: var(--space-xl) 0;
+  }
+
+  .part > * {
+    flex: none;
   }
 }

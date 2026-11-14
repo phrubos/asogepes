@@ -21,8 +21,12 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
+/* read-only rows (not a control): no pointer, no hover */
 .row {
   display: flex;
   align-items: center;
@@ -30,26 +34,10 @@
   width: 100%;
   min-height: 36px;
   padding: 0 var(--space-sm);
-  border: 0;
   border-radius: var(--radius-md);
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  transition: background-color var(--dur-fast) var(--ease-out);
 }
 
-.row:hover {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.row:focus-visible {
-  outline: 2px solid var(--color-gold);
-  outline-offset: 1px;
-}
-
-.active,
-.active:hover {
+.active {
   background: rgba(212, 168, 75, 0.14);
 }
 
@@ -123,8 +111,3 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-@media (max-width: 1024px) {
-  .row {
-    min-height: 44px;
-  }
-}

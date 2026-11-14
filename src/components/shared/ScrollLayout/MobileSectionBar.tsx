@@ -19,7 +19,7 @@ const CLOSE_VELOCITY = 500
  * section and subsection. Replaces the bottom dot rail and the "scroll down" pill below 1025px.
  */
 export default function MobileSectionBar() {
-  const { sections, activeSection, activeSubsection, scrollToSection } = useScrollNav()
+  const { sections, activeSection, activeSubsection, activePart, scrollToSection } = useScrollNav()
   const [open, setOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const sheetRef = useRef<HTMLDivElement>(null)
@@ -27,6 +27,7 @@ export default function MobileSectionBar() {
 
   const section = sections.find(s => s.id === activeSection) ?? sections[0]
   const sub = section?.subsections?.find(s => s.id === activeSubsection)
+  const part = sub?.parts?.find(p => p.id === activePart)
 
   useEffect(() => {
     if (!open) return
@@ -80,11 +81,16 @@ export default function MobileSectionBar() {
           onClick={() => setOpen(true)}
           aria-haspopup="dialog"
           aria-expanded={open}
-          aria-label={`Tartalom — most: ${oneLine(section.label)}${sub ? `, ${sub.label}` : ''}`}
+          aria-label={`Tartalom — most: ${oneLine(section.label)}${sub ? `, ${sub.label}` : ''}${part ? ` ${part.label}` : ''}`}
         >
           <span className={styles.where}>
             <span className={styles.section}>{oneLine(section.label)}</span>
-            {sub && <span className={styles.sub}>{sub.label}</span>}
+            {sub && (
+              <span className={styles.sub}>
+                {sub.label}
+                {part && <>{' · '}<span className={styles.subYear}>{part.label}</span></>}
+              </span>
+            )}
           </span>
           <ChevronDown size={18} className={styles.chevron} aria-hidden="true" />
         </button>
@@ -147,18 +153,44 @@ export default function MobileSectionBar() {
                     </div>
                     {s.subsections && s.subsections.length > 0 && (
                       <ol className={styles.subList}>
-                        {s.subsections.map(ss => (
-                          <li key={ss.id}>
+                        {s.subsections.map(ss => {
+                          const parentOfCurrent = !!activePart && !!ss.parts?.some(p => p.id === activePart)
+                          const subItem = (
                             <button
                               type="button"
                               className={styles.subItem}
-                              aria-current={ss.id === activeSubsection ? 'true' : undefined}
+                              aria-current={ss.id === activeSubsection && !parentOfCurrent ? 'true' : undefined}
+                              data-parent-current={parentOfCurrent || undefined}
                               onClick={() => go(ss.id)}
                             >
                               {ss.label}
                             </button>
-                          </li>
-                        ))}
+                          )
+                          return (
+                            <li key={ss.id}>
+                              {ss.parts && ss.parts.length > 0 ? (
+                                <div className={styles.subRow}>
+                                  {subItem}
+                                  <span className={styles.subParts} role="group" aria-label={`${ss.label}: évek`}>
+                                    {ss.parts.map(p => (
+                                      <button
+                                        key={p.id}
+                                        type="button"
+                                        className={styles.subPart}
+                                        aria-current={p.id === activePart ? 'true' : undefined}
+                                        onClick={() => go(p.id)}
+                                      >
+                                        <span>{p.label}</span>
+                                      </button>
+                                    ))}
+                                  </span>
+                                </div>
+                              ) : (
+                                subItem
+                              )}
+                            </li>
+                          )
+                        })}
                       </ol>
                     )}
                   </li>

@@ -206,6 +206,67 @@
   border-left-color: var(--color-gold);
 }
 
+/* A subsection with year parts (ticket 024): its row, and one tap target per year on the right */
+.subRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.subRow > .subItem {
+  flex: 1;
+  min-width: 0;
+}
+
+.subItem[data-parent-current] {
+  color: var(--color-gold);
+  border-left-color: var(--color-gold);
+}
+
+.subParts {
+  flex: none;
+  display: flex;
+}
+
+.subPart {
+  min-width: 52px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-md);
+  color: rgba(245, 240, 232, 0.75);
+  cursor: pointer;
+}
+
+.subPart > span {
+  padding-bottom: 1px;
+  border-bottom: 1px dotted rgba(245, 240, 232, 0.35);
+}
+
+.subPart[aria-current='true'] {
+  background: rgba(212, 168, 75, 0.12);
+  color: var(--color-gold);
+}
+
+.subPart[aria-current='true'] > span {
+  border-bottom: 1px solid var(--color-gold);
+}
+
+.subPart:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.subYear {
+  font-family: var(--font-mono, monospace);
+  color: var(--color-gold-light);
+}
+
 /* A site's row in the sheet: its name, and its 25 / 26 chips on the right (ticket 015) */
 .itemRow {
   display: flex;

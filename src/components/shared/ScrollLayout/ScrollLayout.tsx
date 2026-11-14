@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef, createContext, useContext, type ReactNode } from 'react'
+import { Fragment, useState, useCallback, useEffect, useRef, createContext, useContext, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import styles from './ScrollLayout.module.css'
@@ -15,6 +15,8 @@ export interface ScrollSection {
   subsections?: {
     id: string
     label: string
+    /** parts of one subsection shown one under the other (/kutatas year parts, ticket 024); the rail and the sheet list them as jump links */
+    parts?: { id: string; label: string }[]
   }[]
   /** Year chips beside the section number (/kutatas sites, ticket 015): every year measured there, */
   years?: number[]
@@ -64,6 +66,7 @@ interface ScrollContextType {
   scrollToSection: (sectionId: string) => void
   activeSection: string
   activeSubsection: string | null
+  activePart: string | null
   sections: ScrollSection[]
 }
 
@@ -199,6 +202,7 @@ function announceTarget(id: string) {
 export default function ScrollLayout({ sections, resetEventName, end }: ScrollLayoutProps) {
   const [activeSection, setActiveSection] = useState(sections[0]?.id || '')
   const [activeSubsection, setActiveSubsection] = useState<string | null>(null)
+  const [activePart, setActivePart] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const isProgrammaticScroll = useRef(false)
   const router = useRouter()
@@ -223,6 +227,7 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
     setActiveSection(sectionId)
     const firstSubsection = section.subsections?.[0]
     setActiveSubsection(firstSubsection?.id || null)
+    setActivePart(null)
 
     // Determine scroll target: first subsection element if exists, otherwise section wrapper
     const targetId = firstSubsection?.id || sectionId
@@ -245,28 +250,32 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
   }, [router, sections, getScrollOffset])
 
   // Handle subsection click - scroll to subsection content
-  const handleSubsectionClick = useCallback((subsectionId: string, parentSectionId: string) => {
+  const handleSubsectionClick = useCallback((subsectionId: string, parentSectionId: string, partId?: string) => {
     isProgrammaticScroll.current = true
 
     setActiveSection(parentSectionId)
     setActiveSubsection(subsectionId)
+    // a block with year parts starts with its first part
+    const firstPart = sections.find(s => s.id === parentSectionId)?.subsections?.find(s => s.id === subsectionId)?.parts?.[0]?.id
+    setActivePart(partId ?? firstPart ?? null)
 
-    announceTarget(subsectionId)
-    const element = document.getElementById(subsectionId)
+    const targetId = partId ?? subsectionId
+    announceTarget(targetId)
+    const element = document.getElementById(targetId)
     if (element) {
       // Dynamic offset - some sections need to appear higher
       scrollToElement(element, getScrollOffset(subsectionId))
 
       // Update URL
       const url = new URL(window.location.href)
-      url.searchParams.set('section', subsectionId)
+      url.searchParams.set('section', targetId)
       router.replace(url.pathname + url.search, { scroll: false })
     }
 
     setTimeout(() => {
       isProgrammaticScroll.current = false
     }, 1000)
-  }, [router, getScrollOffset])
+  }, [router, sections, getScrollOffset])
 
   // Legacy function for context - used by NextSectionIndicator
   const scrollToSection = useCallback((sectionId: string) => {
@@ -282,6 +291,11 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
           handleSubsectionClick(sectionId, section.id)
           break
         }
+        const parent = section.subsections?.find(s => s.parts?.some(p => p.id === sectionId))
+        if (parent) {
+          handleSubsectionClick(parent.id, section.id, sectionId)
+          break
+        }
       }
     }
   }, [handleSectionClick, handleSubsectionClick, sections])
@@ -292,16 +306,21 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
     didInitFromUrl.current = true
     const sectionId = new URLSearchParams(window.location.search).get('section')
     if (sectionId) {
-      const section = sections.find(s => s.id === sectionId)
-      const subsection = sections.flatMap(s => s.subsections || []).find(sub => sub.id === sectionId)
-
-      if (section || subsection) {
-        setTimeout(() => {
-          scrollToSection(sectionId)
-        }, 100)
-      }
+      // resolved after the delay, from the latest sections: a year filter from the URL is applied after the first render
+      setTimeout(() => {
+        const { sections: current, scrollToSection: scrollTo } = latest.current
+        const subsections = current.flatMap(s => s.subsections || [])
+        const known = (id: string) =>
+          current.some(s => s.id === id) || subsections.some(sub => sub.id === id || sub.parts?.some(p => p.id === id))
+        // a part of a year that is filtered out falls back to its block
+        const target = known(sectionId) ? sectionId : sectionId.match(/^(.*)-\d{4}$/)?.[1]
+        if (target && known(target)) scrollTo(target)
+      }, 100)
     }
-  }, [sections, scrollToSection])
+  }, [])
+
+  const latest = useRef({ sections, scrollToSection })
+  latest.current = { sections, scrollToSection }
 
   // Track the active section while scrolling. The active block is the one crossing a reading line,
   // a subsection before its section. Desktop: 50% of the viewport. Phones/tablets: 35%, because the
@@ -309,8 +328,10 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
   // filled the upper half of the screen. A rAF-throttled scroll listener (not IntersectionObserver
   // thresholds) so a crossing is never missed, also for blocks taller than the screen.
   useEffect(() => {
-    const subsectionIds = sections.flatMap(s => s.subsections?.map(sub => sub.id) ?? [])
-    const sectionIds = sections.map(s => s.id)
+    const partsOf = new Map<string, string[]>()
+    for (const sub of sections.flatMap(s => s.subsections ?? [])) {
+      if (sub.parts?.length) partsOf.set(sub.id, sub.parts.map(p => p.id))
+    }
     const narrow = window.matchMedia('(max-width: 1024px)')
     let current = ''
     let frame = 0
@@ -321,31 +342,52 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
         const r = document.getElementById(id)?.getBoundingClientRect()
         return !!r && r.top <= line && r.bottom > line
       }
-      return subsectionIds.find(contains) ?? sectionIds.find(contains)
+      // the section first: a block inside a section that is not rendered (content-visibility) keeps a stale rect
+      const section = sections.find(s => contains(s.id))
+      if (!section) return undefined
+      return section.subsections?.find(sub => contains(sub.id))?.id ?? section.id
+    }
+
+    // the last part that has reached the line, else the first
+    const pickPart = (subId: string) => {
+      const parts = partsOf.get(subId)
+      if (!parts) return null
+      const line = window.innerHeight * (narrow.matches ? 0.35 : 0.5)
+      let part = parts[0]
+      for (const id of parts) {
+        const r = document.getElementById(id)?.getBoundingClientRect()
+        if (r && r.top <= line) part = id
+      }
+      return part
     }
 
     const update = () => {
       frame = 0
       if (isProgrammaticScroll.current) return
       const id = pickActive()
-      if (!id || id === current) return
-      current = id
+      if (!id) return
+      const partId = pickPart(id)
+      const key = partId ?? id
+      if (key === current) return
+      current = key
 
       const mainSection = sections.find(s => s.id === id)
       if (mainSection) {
         setActiveSection(id)
         // When main section is in view, activate first subsection
         setActiveSubsection(mainSection.subsections?.[0]?.id || null)
+        setActivePart(null)
       } else {
         const parent = sections.find(s => s.subsections?.some(sub => sub.id === id))
         if (!parent) return
         setActiveSection(parent.id)
         setActiveSubsection(id)
+        setActivePart(partId)
       }
 
       // Update URL silently
       const url = new URL(window.location.href)
-      url.searchParams.set('section', id)
+      url.searchParams.set('section', key)
       window.history.replaceState({}, '', url.pathname + url.search)
     }
 
@@ -401,9 +443,11 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
       const containerRect = sidebarContentRef.current.getBoundingClientRect()
       let targetTop = 0
 
-      // If we have an active subsection, target it
+      // If we have an active subsection, target it (its year part first)
       if (activeSubsection) {
-        const subBtn = document.querySelector(`[data-sidebar-subsection="${activeSubsection}"]`)
+        const subBtn =
+          (activePart && document.querySelector(`[data-sidebar-part="${activePart}"]`)) ||
+          document.querySelector(`[data-sidebar-subsection="${activeSubsection}"]`)
         if (subBtn) {
           const rect = subBtn.getBoundingClientRect()
           // Target middle of the subsection button
@@ -458,10 +502,10 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
       window.removeEventListener('resize', calculateProgress)
       clearTimeout(timeoutId)
     }
-  }, [activeSection, activeSubsection, sections])
+  }, [activeSection, activeSubsection, activePart, sections])
 
   return (
-    <ScrollContext.Provider value={{ scrollToSection, activeSection, activeSubsection, sections }}>
+    <ScrollContext.Provider value={{ scrollToSection, activeSection, activeSubsection, activePart, sections }}>
       <div ref={containerRef} className={styles.scrollContainer}>
         {/* Left Sidebar Navigation (Timeline) */}
         <nav className={styles.sidebar}>
@@ -518,17 +562,43 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
                         {section.subsections.map((sub) => {
                           const isSubActive = activeSubsection === sub.id
                           return (
-                            <button
-                              key={sub.id}
-                              data-sidebar-subsection={sub.id}
-                              className={`${styles.subPageBtn} ${isSubActive ? styles.activeBtn : ''}`}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                handleSubsectionClick(sub.id, section.id)
-                              }}
-                            >
-                              {sub.label}
-                            </button>
+                            <Fragment key={sub.id}>
+                              <button
+                                data-sidebar-subsection={sub.id}
+                                className={`${styles.subPageBtn} ${isSubActive ? styles.activeBtn : ''}`}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleSubsectionClick(sub.id, section.id)
+                                }}
+                              >
+                                {sub.label}
+                              </button>
+                              {isSubActive && sub.parts && sub.parts.length > 0 && (
+                                <div className={styles.subParts} role="group" aria-label={`${sub.label}: évek`}>
+                                  <span className={styles.subPartsBend} aria-hidden="true">└</span>
+                                  {sub.parts.map((p, i) => {
+                                    const on = activePart === p.id
+                                    return (
+                                      <Fragment key={p.id}>
+                                        {i > 0 && <span aria-hidden="true">·</span>}
+                                        <button
+                                          type="button"
+                                          data-sidebar-part={p.id}
+                                          aria-current={on ? 'true' : undefined}
+                                          className={`${styles.subPartBtn} ${on ? styles.subPartOn : ''}`}
+                                          onClick={(e) => {
+                                            e.stopPropagation()
+                                            handleSubsectionClick(sub.id, section.id, p.id)
+                                          }}
+                                        >
+                                          {p.label}
+                                        </button>
+                                      </Fragment>
+                                    )
+                                  })}
+                                </div>
+                              )}
+                            </Fragment>
                           )
                         })}
                       </div>

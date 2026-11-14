@@ -38,9 +38,17 @@ export default function SiteBlocks({ site, blocks, sectionClass }: { site: SiteI
               <Fragment key={y}>
                 {/* a quiet seam between the two copies; each copy says its own year beside the badge */}
                 {i > 0 && <hr className={styles.divider} />}
-                <FixedSeason site={site} year={y} divided={each.length > 1}>
-                  {b.component}
-                </FixedSeason>
+                {each.length > 1 ? (
+                  <div id={`${b.id}-${y}`} className={styles.part}>
+                    <FixedSeason site={site} year={y} divided>
+                      {b.component}
+                    </FixedSeason>
+                  </div>
+                ) : (
+                  <FixedSeason site={site} year={y} divided={false}>
+                    {b.component}
+                  </FixedSeason>
+                )}
               </Fragment>
             ))}
           </RevealBlock>

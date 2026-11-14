@@ -274,12 +274,14 @@
   color: rgba(245, 240, 232, 0.75);
 }
 
+/* the grey bacteria share is the track under the whole bar, so the gold fills over it (never over the card) */
 .split2 {
   display: flex;
   height: 40px;
   margin-top: var(--space-sm);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  background: rgba(169, 163, 154, 0.35);
   font-size: var(--text-sm);
   font-weight: 600;
 }
@@ -292,14 +294,25 @@
   white-space: nowrap;
 }
 
+/* the gold is a scaleX fill under the label (Framer grows it once in view), so the text never stretches */
 .fungi {
-  background: var(--color-gold);
+  position: relative;
   color: var(--color-earth-900);
+}
+
+.fungiFill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-gold);
+  transform-origin: left center;
+}
+
+.splitLabel {
+  position: relative;
 }
 
 .bacteria {
   justify-content: flex-end;
-  background: rgba(169, 163, 154, 0.35);
   color: var(--color-white);
 }
 

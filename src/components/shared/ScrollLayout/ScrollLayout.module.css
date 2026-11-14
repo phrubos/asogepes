@@ -276,6 +276,57 @@
   background: var(--color-gold);
 }
 
+/* Year parts of the active subsection (/kutatas, ticket 024): a quiet "└ 2025 · 2026" line of text links */
+.subParts {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin: -2px 0 2px 4px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.35);
+  animation: slideIn 0.3s ease-out;
+}
+
+.subPartsBend {
+  margin-right: 4px;
+}
+
+.subPartBtn {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: 1px 3px;
+  font: inherit;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+
+.subPartBtn:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.subPartBtn.subPartOn {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
+}
+
+.subPartBtn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .subParts {
+    animation: none;
+  }
+
+  .subPartBtn {
+    transition: none;
+  }
+}
+
 /* ============================================
    MAIN CONTENT AREA
    ============================================ */
@@ -605,6 +656,13 @@
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.01em;
   white-space: nowrap;
+}
+
+.indicatorYear {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--color-gold-light);
 }
 
 .indicatorIcon {

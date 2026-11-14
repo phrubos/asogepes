@@ -1,9 +1,10 @@
 # Tábla
 
-Utoljára frissítve: 2026-11-13. Folyamat és státuszok: [README](README.md).
+Utoljára frissítve: 2026-11-14. Folyamat és státuszok: [README](README.md).
 
 | # | Feladat | Státusz | Fájlok | Párhuzamosan? | Forrás / megjegyzés |
 |---|---|---|---|---|---|
+| [024](024-evreszek-navigacioban.md) | Évrészek (2025 / 2026) a /kutatas navigációjában: oldalsáv, Tartalom lap, jobb alsó gomb, `?section=` | kész — felhasználói átnézésre vár | `shared/ScrollLayout/{ScrollLayout,MobileSectionBar,NextSectionIndicator}.*`, `experiment/ResearchScrollLayout.tsx`, `experiment/season/SiteBlocks.*` | nem (közös `ScrollLayout`) | felhasználó 11-13; mockup A |
 | [022](022-adatkezelesi-tajekoztato.md) | Adatkezelési tájékoztató (`/adatkezeles`); cookie-banner nem kell | parkolva — vázlat a `022-vazlat/` mappában; ha folytatjuk: kapcsolati e-mail kell a megrendelőtől | `app/adatkezeles/*`, `layout/Footer.*`, `shared/PageEnd/*`, `app/sitemap.ts` | igen | cookie-kérdés 11-13 |
 | [019](019-design-gyorsjavitasok.md) | Design gyorsjavítások: `--font-mono`, palettán kívüli színek, magyar címkék és nagybetűzés, tegezés, egy jelvénystílus, 38SX pontok, kétsoros hero-címek | kész | `app/layout.tsx`, `lib/technology-data.ts`, `lib/data.ts`, `solution-v2/{HubFolder,ApplicationGuide,ModelSection,OperationPrinciple}.*`, `solution-v2/sections/TechHeroSection.tsx`, `solution-v2/pages/HeroPage.module.css`, `problem/sections/ProblemHeroSection.tsx`, `problem/pages/ProblemHeroPage.module.css`, `ui/PageBadge`, `PhotoViewerModal.tsx` | nem (sok közös fájl) | UI/UX audit 11-11 (7 szabály) 1–5. pont |
 | [020](020-design-tokenek.md) | Design tokenek összevonása (69 betűméret, 45 lekerekítés, 75 árnyék, 328 beírt szín → skálák) + stylelint őr | kész | szinte minden `*.module.css`, `globals.css`, `HubFolder.tsx`, `scripts/qa/{token-check,style-diff}.js`, `CLAUDE.md` | nem | UI/UX audit 11-11, 6. pont |
@@ -15,7 +16,7 @@ Utoljára frissítve: 2026-11-13. Folyamat és státuszok: [README](README.md).
 | — | 2026-os géptípusok (38SX / 38WX / 40SX) helyszínenként | vár (kutatókra) | `src/lib/data.ts`, `experiment/pages/*` | igen | adatdok. 11-02 §7 |
 | — | Sötét háttér a tartalmi oldalakon (krém villanás ugráskor) | ötlet | `globals.css`, `ScrollLayout` | nem (közös fájl) | audit P2; checker 11-05: villanás nem látszott, de a `body` még krém (rgb 245,240,232), csak a `.scrollContainer` sötét |
 | — | Halott `BookLayout` + `HeroPage` törlése | ötlet | `experiment/BookLayout`, `experiment/pages/HeroPage.tsx`, `pages/index.ts` | igen | audit P2; checker 11-05: nem használja semmi, törölhető; az `experiment/pages/HeroPage.module.css` marad (`ResearchHeroSection` használja), a `pages/index.ts` 1. sora törlendő |
-| — | Kapcsolat sor az oldalvégeken | vár (megrendelőre: mely adatok) | `shared/PageEnd`, `lib/partners.ts` | igen | UX-pontozás 11-06 U4 |
+| [023](023-kapcsolat-lablec.md) | Kapcsolat lábléc (Agroskill + NJE KVK) az oldalvégeken és a főoldalon; telefonon lenyitható | kész — az egyetemi telefon/e-mail/cím pótlandó (`lib/contact.ts`); checker 8/10 | `shared/ContactFooter/*`, `lib/contact.ts`, `shared/PageEnd/*`, `layout/Footer.*` | igen | UX-pontozás 11-06 U4; canvas 11-14, 5. változat |
 | — | `clip-check`: a helyszíntérképek (006) SVG-feliratai vágódnak a tábla-zoomnál (városnevek) | ötlet | `experiment/fieldmap/*`, `scripts/qa/clip-check.js` | igen | checker 11-09 (007); szándékos levágás-e, vagy a szkript zárja ki |
 | — | `nav-check` Suspense-szabály álriasztás | ötlet | `scripts/qa/nav-check.js` | igen | UX-pontozás 11-06 Q1 |
 | — | Alszakasz deep link teszt a `nav-check`-be; „keskeny szövegoszlop” szabály a `layout-check`-be | ötlet | `scripts/qa/` | igen | audit P3 |
