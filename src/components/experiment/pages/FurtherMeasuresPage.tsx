@@ -16,12 +16,13 @@ import switchStyles from '../season/SeasonSwitch.module.css'
 import Story, { type Chapter } from '../story/Story'
 import Callout from '../story/Callout'
 import { cap, named, namedIn, short } from '../story/dates'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import type { Locale } from '@/lib/i18n/config'
 // Same page frame as the other location blocks
 import styles from './SzentkirályTimelinePage.module.css'
 import own from './FurtherMeasuresPage.module.css'
 
 const hu = (v: number, d: number) => v.toFixed(d).replace('.', ',')
-const when = short
 const lin = (d0: number, d1: number, r0: number, r1: number) => (v: number) => r0 + ((v - d0) / (d1 - d0)) * (r1 - r0)
 
 /* Lakitelek numbers the chapters quote, computed from the data */
@@ -43,7 +44,10 @@ const humDown = humDelta.filter((d) => d <= -0.05).length
 const humSame = humDelta.length - humUp - humDown
 const humMax = humDelta.reduce((b, d, i) => (Math.abs(d) > Math.abs(humDelta[b]) ? i : b), 0)
 const humMaxP = laki.humus.parcels[humMax]
-const HUM_NAMES = ['mélyásógép', 'lazítás + ásógép', 'ásógép', 'lazítás + szántás + kombinátor', 'szántás + kombinátor', 'lazítás + szántás + ásógép', 'szántás + ásógép']
+const HUM_NAMES = {
+  hu: ['mélyásógép', 'lazítás + ásógép', 'ásógép', 'lazítás + szántás + kombinátor', 'szántás + kombinátor', 'lazítás + szántás + ásógép', 'szántás + ásógép'],
+  en: ['deep spading machine', 'subsoiling + spading machine', 'spading machine', 'subsoiling + ploughing + combination cultivator', 'ploughing + combination cultivator', 'subsoiling + ploughing + spading machine', 'ploughing + spading machine'],
+}
 
 /* Szentkirály onion soil life */
 const lifeCtl = szkLife.fields.find((f) => f.role === 'control') ?? szkLife.fields[0]
@@ -54,7 +58,12 @@ const lifeTopJuly = lifeJuly.reduce((b, f) => ((f.values[1] as number) > (b.valu
 const lifeFb = szkLife.fields.flatMap((f) => f.fb).filter((v): v is number => v !== null)
 
 
-const SZK_CHAPTERS: Chapter[] = [
+/* Szentkirály tomato */
+const tomLooser = tom.bulkDensity.spade.every((v, i) => v < tom.bulkDensity.control[i])
+const tomFb = [...tom.life.fb.control, ...tom.life.fb.spade]
+const r = Math.round
+
+const SZK_HU: Chapter[] = [
   {
     title: 'Térfogattömeg',
     body: `${cap(namedIn(szk.bulkDensity.dates[0]))} egyformák voltak (${hu(szk.bulkDensity.control[0], 2)} és ${hu(szk.bulkDensity.spade[0], 2)} g/cm³). ${cap(namedIn(szk.bulkDensity.dates[2]))} a kontroll talaj ${hu(szk.bulkDensity.control[2], 2)}, az ásógépes ${hu(szk.bulkDensity.spade[2], 2)} g/cm³. Kisebb = lazább talaj.`,
@@ -78,12 +87,8 @@ const SZK_CHAPTERS: Chapter[] = [
   },
 ]
 
-/* Szentkirály tomato */
-const tomLooser = tom.bulkDensity.spade.every((v, i) => v < tom.bulkDensity.control[i])
-const tomFb = [...tom.life.fb.control, ...tom.life.fb.spade]
-const r = Math.round
 
-const TOMATO_CHAPTERS: Chapter[] = [
+const TOMATO_HU: Chapter[] = [
   {
     title: 'Térfogattömeg',
     body:
@@ -106,7 +111,7 @@ const TOMATO_CHAPTERS: Chapter[] = [
   },
 ]
 
-const LAKI_CHAPTERS: Chapter[] = [
+const LAKI_HU: Chapter[] = [
   {
     title: 'Térfogattömeg',
     body: `${cap(named(laki.bulkDensity.dates[0]))} → ${named(laki.bulkDensity.dates[1])} (tarló): kicsi és vegyes a változás. ${lakiUp} parcellán nőtt, ${lakiDown} parcellán csökkent, ${lakiSame} parcellán nem változott; legfeljebb ${hu(lakiMaxDelta / 100, 2)} g/cm³.`,
@@ -123,25 +128,111 @@ const LAKI_CHAPTERS: Chapter[] = [
     body:
       `Parcellánként egy, az átló mentén vett átlagminta, ezért ez csak irány. ${cap(named(laki.humus.dates[0]))} → ${named(laki.humus.dates[1])} (tarló): ` +
       `${humUp} parcellán nőtt, ${humDown} parcellán csökkent, ${humSame} parcellán alig változott (±0,05 m/m%-on belül). ` +
-      `A legnagyobb változás a ${humMaxP.num} parcellán (${HUM_NAMES[humMax]}): ${hu(humMaxP.values[0], 3)} → ${hu(humMaxP.values[1], 3)} m/m%.`,
+      `A legnagyobb változás a ${humMaxP.num} parcellán (${HUM_NAMES.hu[humMax]}): ${hu(humMaxP.values[0], 3)} → ${hu(humMaxP.values[1], 3)} m/m%.`,
   },
 ]
 
+
+/* English chapters: the same figures, decimal point, terms as in docs/forditas/szojegyzek.md */
+const en2 = (v: number, d: number) => v.toFixed(d)
+const nIn = (d: MeasureDate) => namedIn(d, 'en')
+const nm = (d: MeasureDate) => named(d, 'en')
+
+const SZK_EN: Chapter[] = [
+  {
+    title: 'Bulk density',
+    body: `${cap(nIn(szk.bulkDensity.dates[0]))} the two were the same (${en2(szk.bulkDensity.control[0], 2)} and ${en2(szk.bulkDensity.spade[0], 2)} g/cm³). ${cap(nIn(szk.bulkDensity.dates[2]))} the control soil was ${en2(szk.bulkDensity.control[2], 2)} and the spaded soil ${en2(szk.bulkDensity.spade[2], 2)} g/cm³. Lower = looser soil.`,
+  },
+  {
+    title: 'Water content',
+    body: `${cap(nIn(szk.water.date))}, at 10 cm: the volumetric water content was ${en2(szk.water.spade[0], 1)}–${en2(szk.water.spade[1], 1)}% in the spaded soil and ${en2(szk.water.control[0], 1)}–${en2(szk.water.control[1], 1)}% in the control (measuring points).`,
+  },
+  {
+    title: 'Organic matter',
+    body: `${cap(nIn(szk.humus.dates[0]))} the spaded plot had more (${en2(szk.humus.spade[0], 2)} and ${en2(szk.humus.control[0], 2)}% m/m). ${cap(nIn(szk.humus.dates[1]))} both were ${en2(szk.humus.spade[1], 2)}.`,
+  },
+  {
+    title: 'Soil life',
+    body:
+      `Microbial biomass carbon (${szkLife.unit}) on three parts of the field. ${cap(nIn(szkLife.dates[0]))} ${Math.round(Math.min(...lifeSpring))}–${Math.round(Math.max(...lifeSpring))}; ` +
+      `${nIn(szkLife.dates[1])} the ${lifeTopJuly.role === 'control' ? 'control' : 'one spaded'} part was highest (${Math.round(lifeTopJuly.values[1] as number)}). ` +
+      `The July values are means of 2 samples, with a large spread on the spaded part (±${Math.round(szkLife.julySpread)})` +
+      (lifeNoJuly.length ? `; ${lifeNoJuly.map((f) => f.id).join(', ')} was not sampled in summer.` : '.') +
+      ` Fungal-to-bacterial ratio ${en2(Math.min(...lifeFb), 2)}–${en2(Math.max(...lifeFb), 2)}. Supporting data, not evidence for the spading machine.`,
+  },
+]
+
+const TOMATO_EN: Chapter[] = [
+  {
+    title: 'Bulk density',
+    body:
+      `${cap(nIn(tom.bulkDensity.dates[0]))} the difference was largest: combination cultivator ${en2(tom.bulkDensity.control[0], 2)}, spading machine ${en2(tom.bulkDensity.spade[0], 2)} g/cm³. ` +
+      `${cap(nIn(tom.bulkDensity.dates[2]))} both were denser (${en2(tom.bulkDensity.control[2], 2)} and ${en2(tom.bulkDensity.spade[2], 2)})` +
+      (tomLooser ? `, but the spaded soil was looser at all ${tom.bulkDensity.dates.length} measurements.` : '.') +
+      ' Lower = looser soil.',
+  },
+  {
+    title: 'Organic matter',
+    body: `${cap(nIn(tom.humus.dates[0]))} it was the same (${en2(tom.humus.control[0], 2)} and ${en2(tom.humus.spade[0], 2)}% m/m). ${cap(nIn(tom.humus.dates[1]))} it was ${en2(tom.humus.spade[1], 2)} on the spaded plot and ${en2(tom.humus.control[1], 2)} on the combination-cultivated one.`,
+  },
+  {
+    title: 'Soil life',
+    body:
+      `Microbial biomass carbon (${tom.life.unit}). ${cap(nIn(tom.life.dates[0]))} the combination-cultivated plot had more (${r(tom.life.control[0])} and ${r(tom.life.spade[0])}), ` +
+      `${nIn(tom.life.dates[1])} the spaded one (${r(tom.life.spade[1])} and ${r(tom.life.control[1])}); the August values are means of 2 samples. ` +
+      `Fungal-to-bacterial ratio ${en2(Math.min(...tomFb), 2)}–${en2(Math.max(...tomFb), 2)}. Supporting data.`,
+  },
+]
+
+const LAKI_EN: Chapter[] = [
+  {
+    title: 'Bulk density',
+    body: `${cap(nm(laki.bulkDensity.dates[0]))} → ${nm(laki.bulkDensity.dates[1])} (stubble): the change is small and mixed. It rose on ${lakiUp} plots, fell on ${lakiDown} and stayed the same on ${lakiSame}; at most ${en2(lakiMaxDelta / 100, 2)} g/cm³.`,
+  },
+  {
+    title: 'Water content',
+    body:
+      `At 10 cm, means of the ${laki.water.parcels.length} plots: ${laki.water.dates.map((d, j) => `${nm(d)} ${en2(lakiWater[j].lo, 1)}–${en2(lakiWater[j].hi, 1)}%`).join(', ')}.` +
+      (wetAboveAll ? ` ${cap(nIn(laki.water.dates[wetIdx]))} all ${laki.water.parcels.length} plots were wetter than at the other two measurements.` : ''),
+  },
+  {
+    title: 'Organic matter',
+    body:
+      `One composite sample per plot, taken along the diagonal, so this only shows a direction. ${cap(nm(laki.humus.dates[0]))} → ${nm(laki.humus.dates[1])} (stubble): ` +
+      `it rose on ${humUp} plots, fell on ${humDown} and hardly changed on ${humSame} (within ±0.05% m/m). ` +
+      `The largest change was on plot ${humMaxP.num.replace('.', '')} (${HUM_NAMES.en[humMax]}): ${en2(humMaxP.values[0], 3)} → ${en2(humMaxP.values[1], 3)}% m/m.`,
+  },
+]
+
+const CHAPTERS: Record<Locale, { szk: Chapter[]; tomato: Chapter[]; laki: Chapter[] }> = {
+  hu: { szk: SZK_HU, tomato: TOMATO_HU, laki: LAKI_HU },
+  en: { szk: SZK_EN, tomato: TOMATO_EN, laki: LAKI_EN },
+}
+
 /** "További mérések": the 2026 measurements beside the main ones, told in steps; Szentkirály has a field switch (onion / tomato) */
 const FIELDS = [
-  { id: 'onion', label: 'Hagyma' },
-  { id: 'tomato', label: 'Paradicsom' },
+  { id: 'onion', label: { hu: 'Hagyma', en: 'Onion' } },
+  { id: 'tomato', label: { hu: 'Paradicsom', en: 'Tomato' } },
 ] as const
 type Field = (typeof FIELDS)[number]['id']
 
 export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'lakitelek' }) {
   const phone = useMediaQuery('(max-width: 1024px)') === true
+  const locale = useLocale()
+  const en = locale === 'en'
+  const fmt = (v: number, d: number) => (en ? v.toFixed(d) : hu(v, d))
+  const pct = (s: string) => (en ? `${s}%` : `${s} %`)
+  const when = (d: MeasureDate) => short(d, locale)
+  const ch = CHAPTERS[locale]
+  const K = en ? 'C' : 'K'
+  const A = en ? 'S' : 'Á'
+  const stubble = en ? 'stubble' : 'tarló'
   const [step, setStep] = useState(1)
   const [field, setField] = useState<Field>('onion')
   const isSzk = site === 'szentkiraly' && field === 'onion'
   const isTom = site === 'szentkiraly' && field === 'tomato'
   const isLaki = site === 'lakitelek'
-  const chapters = isLaki ? LAKI_CHAPTERS : isTom ? TOMATO_CHAPTERS : SZK_CHAPTERS
+  const chapters = isLaki ? ch.laki : isTom ? ch.tomato : ch.szk
   const pickField = (f: Field) => {
     setField(f)
     setStep(1)
@@ -159,7 +250,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
     ticks.map((v) => (
       <g key={v}>
         <line x1={X0 - 8} x2={W - 4} y1={y(v)} y2={y(v)} className={own.grid} />
-        <text x={X0 - 14} y={y(v) + 4} fontSize={FS - 1} textAnchor="end" className={own.axis}>{hu(v, d)}</text>
+        <text x={X0 - 14} y={y(v) + 4} fontSize={FS - 1} textAnchor="end" className={own.axis}>{fmt(v, d)}</text>
       </g>
     ))
   const xTick = (x: number, label: string, gold = false) => (
@@ -185,8 +276,8 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
     const last = d.dates.length - 1
     const xs = d.dates.map((_, i) => lin(0, last, X0 + 30, W - (phone ? 110 : 150))(i))
     const lines = [
-      { k: 'K', v: d.control, other: d.spade, cls: own.control },
-      { k: 'Á', v: d.spade, other: d.control, cls: own.spadeLine },
+      { k: K, v: d.control, other: d.spade, cls: own.control },
+      { k: A, v: d.spade, other: d.control, cls: own.spadeLine },
     ]
     const bx = W - 18
     const yc = y(d.control[last])
@@ -202,7 +293,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
               <polyline points={l.v.map((v, i) => `${xs[i]},${y(v)}`).join(' ')} pathLength={1} className={own.line} style={{ animationDelay: `${li * 200}ms` }} />
               {l.v.map((v, i) => <circle key={i} cx={xs[i]} cy={y(v)} r={FS * 0.4} className={own.mark} />)}
               <text x={xs[last] + FS} y={y(l.v[last]) + (up ? -FS * 0.2 : FS * 0.9)} fontSize={FS} className={own.endLabel}>
-                {l.k} {hu(l.v[last], digits)}
+                {l.k} {fmt(l.v[last], digits)}
               </text>
             </g>
           )
@@ -216,53 +307,53 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
 
   if (isSzk && step === 1) {
     const d = szk.bulkDensity
-    title = 'Térfogattömeg'
-    unit = 'g/cm³ · kisebb = lazább talaj'
+    title = en ? 'Bulk density' : 'Térfogattömeg'
+    unit = en ? 'g/cm³ · lower = looser soil' : 'g/cm³ · kisebb = lazább talaj'
     pairChart(d, [1.2, 1.5], [1.2, 1.3, 1.4, 1.5], 2, {
-      main: `${hu(d.control[2], 2)} / ${hu(d.spade[2], 2)}`,
-      sub: `${when(d.dates[2]).toLowerCase()}: a kontroll tömörebb`,
+      main: `${fmt(d.control[2], 2)} / ${fmt(d.spade[2], 2)}`,
+      sub: en ? `${when(d.dates[2])}: the control is denser` : `${when(d.dates[2]).toLowerCase()}: a kontroll tömörebb`,
     })
   }
 
   if (isTom && step === 1) {
     const d = tom.bulkDensity
-    title = 'Térfogattömeg'
-    unit = 'g/cm³ · kisebb = lazább talaj · K = kombinátor'
+    title = en ? 'Bulk density' : 'Térfogattömeg'
+    unit = en ? 'g/cm³ · lower = looser soil · C = combination cultivator' : 'g/cm³ · kisebb = lazább talaj · K = kombinátor'
     pairChart(d, [1.1, 1.6], [1.1, 1.2, 1.3, 1.4, 1.5, 1.6], 2, {
-      main: `${hu(d.control[2], 2)} / ${hu(d.spade[2], 2)}`,
-      sub: `${when(d.dates[2]).toLowerCase()}: a kombinátoros tömörebb`,
+      main: `${fmt(d.control[2], 2)} / ${fmt(d.spade[2], 2)}`,
+      sub: en ? `${when(d.dates[2])}: the combination-cultivated soil is denser` : `${when(d.dates[2]).toLowerCase()}: a kombinátoros tömörebb`,
     })
   }
 
   if (isTom && step === 2) {
     const d = tom.humus
-    title = 'Humusz'
-    unit = `m/m% · ${when(d.dates[0])} → ${when(d.dates[1])}`
+    title = en ? 'Organic matter' : 'Humusz'
+    unit = `${en ? '% m/m' : 'm/m%'} · ${when(d.dates[0])} → ${when(d.dates[1])}`
     pairChart(d, [1.5, 2.0], [1.5, 1.6, 1.7, 1.8, 1.9, 2.0], 2, {
-      main: `${hu(d.control[1], 2)} / ${hu(d.spade[1], 2)}`,
-      sub: `${when(d.dates[1]).toLowerCase()}: az ásógépesen több`,
+      main: `${fmt(d.control[1], 2)} / ${fmt(d.spade[1], 2)}`,
+      sub: en ? `${when(d.dates[1])}: more on the spaded plot` : `${when(d.dates[1]).toLowerCase()}: az ásógépesen több`,
     })
   }
 
   if (isTom && step === 3) {
     const d = tom.life
-    title = 'Talajélet'
+    title = en ? 'Soil life' : 'Talajélet'
     unit = `${d.unit} · ${when(d.dates[0])} → ${when(d.dates[1])}`
     pairChart(d, [300, 650], [300, 400, 500, 600], 0, {
       main: `${r(d.control[1])} / ${r(d.spade[1])}`,
-      sub: `${when(d.dates[1]).toLowerCase()}: 2 minta`,
+      sub: en ? `${when(d.dates[1])}: 2 samples` : `${when(d.dates[1]).toLowerCase()}: 2 minta`,
     })
   }
 
   if (isSzk && step === 2) {
     const d = szk.water
-    title = 'Víztelítettség'
-    unit = `${when(d.date)} · 10 cm · V/V%`
+    title = en ? 'Water content' : 'Víztelítettség'
+    unit = `${when(d.date)} · 10 cm · ${en ? '% v/v' : 'V/V%'}`
     const y = lin(0, 50, yBot, yTop + FS)
     const cw = phone ? 80 : 100
     const cols = [
-      { name: 'KONTROLL', r: d.control, x: X0 + (phone ? 50 : 90), cls: own.control },
-      { name: 'ÁSÓGÉP', r: d.spade, x: X0 + (phone ? 190 : 290), cls: own.spadeLine },
+      { name: en ? 'CONTROL' : 'KONTROLL', r: d.control, x: X0 + (phone ? 50 : 90), cls: own.control },
+      { name: en ? 'SPADING M.' : 'ÁSÓGÉP', r: d.spade, x: X0 + (phone ? 190 : 290), cls: own.spadeLine },
     ]
     chart = (
       <>
@@ -273,7 +364,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
             <rect x={c.x} y={y(c.r[1])} width={cw} height={y(c.r[0]) - y(c.r[1])} rx={6} className={own.colBand} style={{ animationDelay: `${600 + i * 200}ms` }} />
             {i === 0 && (
               <text x={c.x + cw / 2} y={y(c.r[1]) - 10} fontSize={FS} textAnchor="middle" className={`${own.endLabel} ${own.fadeIn}`} style={{ animationDelay: '700ms' }}>
-                {hu(c.r[0], 1)}–{hu(c.r[1], 1)}
+                {fmt(c.r[0], 1)}–{fmt(c.r[1], 1)}
               </text>
             )}
             {xTick(c.x + cw / 2, c.name, i === 1)}
@@ -281,19 +372,19 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
         ))}
       </>
     )
-    callouts = <Callout {...box} x={cols[1].x + cw} y={y(d.spade[1])} side="right" dy={FS * 2} main={`${hu(d.spade[0], 1)}–${hu(d.spade[1], 1)} %`} sub={`kontroll: ${hu(d.control[0], 1)}–${hu(d.control[1], 1)} %`} delay={1000} />
+    callouts = <Callout {...box} x={cols[1].x + cw} y={y(d.spade[1])} side="right" dy={FS * 2} main={pct(`${fmt(d.spade[0], 1)}–${fmt(d.spade[1], 1)}`)} sub={`${en ? 'control' : 'kontroll'}: ${pct(`${fmt(d.control[0], 1)}–${fmt(d.control[1], 1)}`)}`} delay={1000} />
   }
 
   if (isSzk && step === 3) {
     const d = szk.humus
-    title = 'Humusz'
-    unit = `m/m% · ${when(d.dates[0])} → ${when(d.dates[1])}`
+    title = en ? 'Organic matter' : 'Humusz'
+    unit = `${en ? '% m/m' : 'm/m%'} · ${when(d.dates[0])} → ${when(d.dates[1])}`
     const y = lin(2.5, 2.8, yBot, yTop + FS)
     const xa = X0 + (phone ? 60 : 110)
     const xb = W - (phone ? 120 : 220)
     const lines = [
-      { k: 'K', v: d.control, cls: own.control },
-      { k: 'Á', v: d.spade, cls: own.spadeLine },
+      { k: K, v: d.control, cls: own.control },
+      { k: A, v: d.spade, cls: own.spadeLine },
     ]
     chart = (
       <>
@@ -304,7 +395,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
             <circle cx={xa} cy={y(l.v[0])} r={FS * 0.4} className={own.mark} />
             <circle cx={xb} cy={y(l.v[1])} r={FS * 0.4} className={own.mark} />
             <text x={xa + FS * 0.8} y={y(l.v[0]) - FS * 0.7} fontSize={FS} className={own.endLabel}>
-              {l.k} {hu(l.v[0], 2)}
+              {l.k} {fmt(l.v[0], 2)}
             </text>
           </g>
         ))}
@@ -312,7 +403,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
         {xTick(xb, when(d.dates[1]), true)}
       </>
     )
-    callouts = <Callout {...box} x={xb} y={y(d.spade[1])} side="right" dy={-FS * 3} main={`${hu(d.control[1], 2)} = ${hu(d.spade[1], 2)}`} sub={`${when(d.dates[1]).toLowerCase()}: egyforma`} delay={900} />
+    callouts = <Callout {...box} x={xb} y={y(d.spade[1])} side="right" dy={-FS * 3} main={`${fmt(d.control[1], 2)} = ${fmt(d.spade[1], 2)}`} sub={en ? `${when(d.dates[1])}: the same` : `${when(d.dates[1]).toLowerCase()}: egyforma`} delay={900} />
   }
 
   type Parcel = { num: string; role: 'deep' | 'spade' | 'other'; values: number[] }
@@ -326,7 +417,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
         {ticks.map((v) => (
           <g key={v}>
             <line x1={x(v)} x2={x(v)} y1={FS * 1.6} y2={ry(parcels.length - 1) + rowH / 2} className={own.grid} />
-            <text x={x(v)} y={FS * 1.1} fontSize={FS - 1} textAnchor="middle" className={own.axis}>{hu(v, 2)}</text>
+            <text x={x(v)} y={FS * 1.1} fontSize={FS - 1} textAnchor="middle" className={own.axis}>{fmt(v, 2)}</text>
           </g>
         ))}
         {parcels.map((p, i) => (
@@ -337,7 +428,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
             <circle cx={x(p.values[1])} cy={ry(i)} r={FS * 0.42} className={own.mark} />
             {!phone && (
               <text x={W - 130} y={ry(i) + 5} fontSize={FS - 1} className={own.rowValue}>
-                {hu(p.values[0], digits)} → {hu(p.values[1], digits)}
+                {fmt(p.values[0], digits)} → {fmt(p.values[1], digits)}
               </text>
             )}
           </g>
@@ -349,7 +440,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
 
   if (isSzk && step === 4) {
     const d = szkLife
-    title = 'Talajélet a tábla részein'
+    title = en ? 'Soil life on parts of the field' : 'Talajélet a tábla részein'
     unit = `${d.unit} · ${when(d.dates[0])} → ${when(d.dates[1])}`
     const y = lin(500, 750, yBot, yTop + FS)
     const xa = X0 + (phone ? 60 : 110)
@@ -390,8 +481,8 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
         y={y(lifeCtl.values[1] as number)}
         side="left"
         dy={y(735) - y(lifeCtl.values[1] as number)}
-        main={`${lifeCtl.id}: kontroll`}
-        sub={`${when(d.dates[1]).toLowerCase()}: a legmagasabb`}
+        main={`${lifeCtl.id}: ${en ? 'control' : 'kontroll'}`}
+        sub={en ? `${when(d.dates[1])}: the highest` : `${when(d.dates[1]).toLowerCase()}: a legmagasabb`}
         delay={900}
       />
     )
@@ -399,8 +490,8 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
 
   if (isLaki && step === 3) {
     const d = laki.humus
-    title = 'Humusz parcellánként'
-    unit = `m/m% · ${when(d.dates[0])} ○ → ● ${when(d.dates[1])} (tarló)`
+    title = en ? 'Organic matter per plot' : 'Humusz parcellánként'
+    unit = `${en ? '% m/m' : 'm/m%'} · ${when(d.dates[0])} ○ → ● ${when(d.dates[1])} (${stubble})`
     const g = dumbbell(d.parcels, [0.42, 0.98], [0.5, 0.7, 0.9], (i) => i === humMax, 3)
     const p = d.parcels[humMax]
     chart = g.node
@@ -411,8 +502,8 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
         y={g.ry(humMax)}
         side="right"
         dy={H - FS * 2.2 - g.ry(humMax)}
-        main={`${humDelta[humMax] > 0 ? '+' : ''}${hu(humDelta[humMax], 2)} m/m%`}
-        sub={`${humUp} nőtt · ${humDown} csökkent · ${humSame} alig változott`}
+        main={`${humDelta[humMax] > 0 ? '+' : ''}${fmt(humDelta[humMax], 2)} ${en ? '% m/m' : 'm/m%'}`}
+        sub={en ? `${humUp} rose · ${humDown} fell · ${humSame} hardly changed` : `${humUp} nőtt · ${humDown} csökkent · ${humSame} alig változott`}
         delay={900}
       />
     )
@@ -420,8 +511,8 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
 
   if (isLaki && step === 1) {
     const d = laki.bulkDensity
-    title = 'Térfogattömeg parcellánként'
-    unit = `g/cm³ · ${when(d.dates[0])} ○ → ● ${when(d.dates[1])} (tarló)`
+    title = en ? 'Bulk density per plot' : 'Térfogattömeg parcellánként'
+    unit = `g/cm³ · ${when(d.dates[0])} ○ → ● ${when(d.dates[1])} (${stubble})`
     const g = dumbbell(d.parcels, [1.36, 1.52], [1.4, 1.45, 1.5], (i) => Math.abs(lakiDelta[i]) === lakiMaxDelta)
     const big = lakiDelta.findIndex((v) => Math.abs(v) === lakiMaxDelta && v > 0)
     const mark = big >= 0 ? big : 0
@@ -433,8 +524,8 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
         y={g.ry(mark)}
         side="right"
         dy={H - FS * 2.2 - g.ry(mark)}
-        main={`legfeljebb ${hu(lakiMaxDelta / 100, 2)}`}
-        sub={`${lakiUp} nőtt · ${lakiDown} csökkent · ${lakiSame} nem változott`}
+        main={`${en ? 'at most' : 'legfeljebb'} ${fmt(lakiMaxDelta / 100, 2)}`}
+        sub={en ? `${lakiUp} rose · ${lakiDown} fell · ${lakiSame} unchanged` : `${lakiUp} nőtt · ${lakiDown} csökkent · ${lakiSame} nem változott`}
         delay={900}
       />
     )
@@ -442,8 +533,8 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
 
   if (isLaki && step === 2) {
     const d = laki.water
-    title = 'Víztelítettség'
-    unit = '10 cm · a parcellák átlagai · V/V%'
+    title = en ? 'Water content' : 'Víztelítettség'
+    unit = en ? '10 cm · plot means · % v/v' : '10 cm · a parcellák átlagai · V/V%'
     const y = lin(0, 20, yBot, yTop + FS)
     const step3 = (W - X0 - (phone ? 30 : 160)) / d.dates.length
     const xs = d.dates.map((_, j) => X0 + step3 * (j + 0.5))
@@ -461,7 +552,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
                 <circle key={i} cx={xs[j] + (i - 3) * (cw / 9)} cy={y(p[j])} r={FS * 0.3} className={`${own.mark} ${own.fadeIn}`} style={{ animationDelay: `${300 + j * 150 + i * 30}ms` }} />
               ))}
               <text x={xs[j]} y={y(w.hi) - 10} fontSize={FS} textAnchor="middle" className={`${own.endLabel} ${own.fadeIn}`} style={{ animationDelay: `${600 + j * 150}ms` }}>
-                {hu(w.lo, 1)}–{hu(w.hi, 1)}
+                {fmt(w.lo, 1)}–{fmt(w.hi, 1)}
               </text>
               {xTick(xs[j], when(dt), on)}
             </g>
@@ -476,8 +567,8 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
         y={y(lakiWater[wetIdx].hi)}
         side="left"
         dy={FS * 1.5}
-        main={`${hu(lakiWater[wetIdx].lo, 1)}–${hu(lakiWater[wetIdx].hi, 1)} %`}
-        sub={wetAboveAll ? 'mind a 7 parcella nedvesebb' : 'a 7 parcella tartománya'}
+        main={pct(`${fmt(lakiWater[wetIdx].lo, 1)}–${fmt(lakiWater[wetIdx].hi, 1)}`)}
+        sub={wetAboveAll ? (en ? 'all 7 plots wetter' : 'mind a 7 parcella nedvesebb') : en ? 'range of the 7 plots' : 'a 7 parcella tartománya'}
         delay={1000}
       />
     )
@@ -512,11 +603,13 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
           <SeasonOnly years={[2026]} />
         </div>
         <h3 className={styles.headerTitle}>
-          {isLaki ? 'További mérések: a talaj a rozs alatt' : isTom ? 'További mérések: a paradicsomtábla' : 'További mérések: a talaj a hagyma alatt'}
+          {en
+            ? isLaki ? 'Further measurements: the soil under rye' : isTom ? 'Further measurements: the tomato field' : 'Further measurements: the soil under onion'
+            : isLaki ? 'További mérések: a talaj a rozs alatt' : isTom ? 'További mérések: a paradicsomtábla' : 'További mérések: a talaj a hagyma alatt'}
         </h3>
         {!isLaki && (
-          <div className={`${switchStyles.switch} ${switchStyles.small} ${own.fieldSwitch}`} role="group" aria-label="Tábla">
-            <span className={switchStyles.label} aria-hidden="true">Tábla</span>
+          <div className={`${switchStyles.switch} ${switchStyles.small} ${own.fieldSwitch}`} role="group" aria-label={en ? 'Field' : 'Tábla'}>
+            <span className={switchStyles.label} aria-hidden="true">{en ? 'Field' : 'Tábla'}</span>
             {FIELDS.map((f) => (
               <button
                 key={f.id}
@@ -525,7 +618,7 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
                 aria-pressed={field === f.id}
                 onClick={() => pickField(f.id)}
               >
-                {f.label}
+                {f.label[locale]}
               </button>
             ))}
           </div>
@@ -533,7 +626,9 @@ export default function FurtherMeasuresPage({ site }: { site: 'szentkiraly' | 'l
       </motion.div>
 
       <Story
-        label={isLaki ? 'További mérések, Lakitelek' : isTom ? 'További mérések, Szentkirály, paradicsom' : 'További mérések, Szentkirály, hagyma'}
+        label={en
+          ? isLaki ? 'Further measurements, Lakitelek' : isTom ? 'Further measurements, Szentkirály, tomato' : 'Further measurements, Szentkirály, onion'
+          : isLaki ? 'További mérések, Lakitelek' : isTom ? 'További mérések, Szentkirály, paradicsom' : 'További mérések, Szentkirály, hagyma'}
         chapters={chapters}
         step={step}
         onStep={setStep}

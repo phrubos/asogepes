@@ -4,6 +4,8 @@ const nextConfig = {
   // QA builds (scripts/qa) use NEXT_DIST_DIR=.next-qa so they never clobber a running `next dev`
   distDir: process.env.NEXT_DIST_DIR || '.next',
   serverExternalPackages: [],
+  // Two root layouts ((hu) and (en), ticket 025) need one app-wide 404: app/global-not-found.tsx
+  experimental: { globalNotFound: true },
   images: {
     formats: ['image/avif', 'image/webp'],
   },

@@ -5,6 +5,7 @@ import { animate, useInView, type AnimationPlaybackControls } from 'framer-motio
 import { RotateCcw } from 'lucide-react'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import styles from './PenetrometerExplainer.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
 
 /*
  * How a penetrometer reading becomes the "cm" value on the research charts: the probe goes down,
@@ -37,6 +38,7 @@ function barAt(d: number) {
 }
 
 export default function PenetrometerExplainer() {
+  const en = useLocale() === 'en'
   const reduced = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, amount: 0.6 })
@@ -80,7 +82,7 @@ export default function PenetrometerExplainer() {
   return (
     <div ref={ref} className={styles.wrap}>
       <svg viewBox="0 0 360 260" className={styles.svg} role="img"
-        aria-label="Szemléltető ábra: a szonda lefelé halad, az ellenállás a tömör rétegben átlépi a 20 bart; ennek a mélysége a laza réteg vastagsága">
+        aria-label={en ? 'Illustration: the probe moves down, and in the compact layer the resistance passes 20 bar; that depth is the thickness of the loose layer' : 'Szemléltető ábra: a szonda lefelé halad, az ellenállás a tömör rétegben átlépi a 20 bart; ennek a mélysége a laza réteg vastagsága'}>
         <defs>
           <clipPath id="pen-soil"><rect x="16" y={TOP} width="120" height={H} rx="4" /></clipPath>
         </defs>
@@ -124,21 +126,39 @@ export default function PenetrometerExplainer() {
       </svg>
 
       <div className={styles.text}>
-        <h3 className={styles.heading}>Hogyan lesz a mérésből cm-érték?</h3>
+        <h3 className={styles.heading}>{en ? 'How does a reading become a value in cm?' : 'Hogyan lesz a mérésből cm-érték?'}</h3>
         <p className={styles.p}>
-          Ahogy a szonda lefelé halad, a manométer egyre nagyobb ellenállást mutat. Ahol a görbe
-          átlépi a <strong>20 bart</strong>, ott kezdődik a tömör réteg.
+          {en ? (
+            <>
+              As the probe moves down, the gauge shows more and more resistance. Where the curve passes{' '}
+              <strong>20 bar</strong>, the compact layer begins.
+            </>
+          ) : (
+            <>
+              Ahogy a szonda lefelé halad, a manométer egyre nagyobb ellenállást mutat. Ahol a görbe
+              átlépi a <strong>20 bart</strong>, ott kezdődik a tömör réteg.
+            </>
+          )}
         </p>
         <p className={`${styles.p} ${styles.result} ${reached ? styles.resultOn : ''}`}>
           <span className={styles.bracket} aria-hidden="true" />
-          Az addig mért mélység a <strong>laza réteg vastagsága</strong>: ez a cm-érték szerepel a
-          helyszínek grafikonjain. Minél nagyobb, annál mélyebben laza a talaj.
+          {en ? (
+            <>
+              The depth measured down to that point is the <strong>thickness of the loose layer</strong>: this value in cm
+              appears in the site charts. The larger it is, the deeper the soil is loose.
+            </>
+          ) : (
+            <>
+              Az addig mért mélység a <strong>laza réteg vastagsága</strong>: ez a cm-érték szerepel a
+              helyszínek grafikonjain. Minél nagyobb, annál mélyebben laza a talaj.
+            </>
+          )}
         </p>
         <div className={styles.footer}>
           <button type="button" className={styles.replay} onClick={play}>
-            <RotateCcw size={16} aria-hidden="true" /> Újra
+            <RotateCcw size={16} aria-hidden="true" /> {en ? 'Replay' : 'Újra'}
           </button>
-          <span className={styles.note}>Szemléltető görbe, nem mért adat.</span>
+          <span className={styles.note}>{en ? 'Illustrative curve, not measured data.' : 'Szemléltető görbe, nem mért adat.'}</span>
         </div>
       </div>
     </div>

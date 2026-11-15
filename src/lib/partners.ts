@@ -4,9 +4,13 @@
  * own marks: never recolour or crop them; the site's earth palette stays everywhere else.
  */
 export interface Partner {
+  /** Hungarian name; also the key CONTACTS refers to */
   name: string
   /** Read out with the logo (the logo already shows it visually) */
   detail: string
+  /** Official English name and detail (ticket 025) */
+  nameEn: string
+  detailEn: string
   href: string
   logo: string
   /** Version for light backgrounds (the partner's own light logo), if it differs */
@@ -20,6 +24,8 @@ export const PARTNERS: Partner[] = [
   {
     name: 'Neumann János Egyetem',
     detail: 'Kertészeti és Vidékfejlesztési Kar',
+    nameEn: 'John von Neumann University',
+    detailEn: 'Faculty of Horticulture and Rural Development',
     href: 'https://kvk.nje.hu/',
     // kvk.nje.hu/img/logo-kvk.nje.hu.svg with the dark text set to the site's white (#FDFCFA)
     logo: '/images/partners/nje-kvk.svg',
@@ -31,6 +37,8 @@ export const PARTNERS: Partner[] = [
   {
     name: 'Agroskill Kft.',
     detail: 'Szentkirály',
+    nameEn: 'Agroskill Kft.',
+    detailEn: 'Szentkirály, Hungary',
     href: 'https://www.agroskill.hu/',
     // agroskill.hu header logo, trimmed to its edges
     logo: '/images/partners/agroskill.png',

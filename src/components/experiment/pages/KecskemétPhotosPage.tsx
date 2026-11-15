@@ -6,10 +6,13 @@ import { locations } from '@/lib/data'
 import SeasonOnly from '../season/SeasonOnly'
 import styles from './KecskemétPhotosPage.module.css'
 import PhotoViewer from '@/components/shared/PhotoViewer/PhotoViewer'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { useResearchData } from '@/lib/i18n/useResearchData'
 
-const data = locations.kecskemet
 
 export default function KecskemétPhotosPage() {
+    const data = useResearchData(locations).kecskemet
+    const en = useLocale() === 'en'
     return (
         <div className={styles.container}>
             {/* Header */}
@@ -24,7 +27,7 @@ export default function KecskemétPhotosPage() {
                     <span>Kecskemét-Borbás</span>
                 </div>
                 <SeasonOnly years={[2025]} />
-                <h3 className={styles.headerTitle}>Egyéb fotók</h3>
+                <h3 className={styles.headerTitle}>{en ? 'More photos' : 'Egyéb fotók'}</h3>
             </motion.div>
 
             {/* Content */}

@@ -7,31 +7,56 @@ import Image from 'next/image'
 
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from '../ProblemNew.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
 
+const TEXT = bilingual(
+    {
+        problems: [
+            {
+                title: 'Csekély mértékű átkeverés',
+                description: 'A nehézkultivátor jól lazít, de nem tudja bedolgozni a szármaradványokat és sok esetben rögösít. A majdani árvakelés és a gyomnövények magjai a felszín közelében maradnak, ahogy a herbicidek szermaradékai is.',
+            },
+            { title: 'A tarló zöldülése csak részleges', description: 'A gyomnövények csírázása a tarlóhántás után lassú és részleges.' },
+            { title: 'Egyenletlen lazítás', description: 'A lazítás képe egyenletlen, főként a kapák nyomában laza csak megfelelő mértékben.' },
+            { title: 'Ültetés előtt elmunkálás szükséges', description: 'Ültetésre csak kombinátoros művelés után alkalmas.' },
+        ],
+        badge: 'Kiemelhető problémák',
+        alt: 'Nehézkultivátor',
+    },
+    {
+        problems: [
+            {
+                title: 'Poor mixing',
+                description: 'The heavy cultivator loosens well, but it cannot work crop residues into the soil and often leaves it cloddy. Seeds of future volunteer plants and weeds stay near the surface, and so do herbicide residues.',
+            },
+            { title: 'The stubble greens up only partly', description: 'After stubble cultivation, weeds germinate slowly and only partly.' },
+            { title: 'Uneven loosening', description: 'Loosening is uneven: the soil is loose enough mainly in the tracks of the tines.' },
+            { title: 'Needs a finishing pass before planting', description: 'The soil is ready for planting only after a pass with a combination cultivator.' },
+        ],
+        badge: 'Key problems',
+        alt: 'Heavy cultivator',
+    },
+)
+
+// icons of the four problems, in TEXT order
 const cultivatorProblems = [
     {
-        title: 'Csekély mértékű átkeverés',
-        description: 'A nehézkultivátor jól lazít, de nem tudja bedolgozni a szármaradványokat és sok esetben rögösít. A majdani árvakelés és a gyomnövények magjai a felszín közelében maradnak, ahogy a herbicidek szermaradékai is.',
         icon: 'refresh-cw-off',
     },
     {
-        title: 'A tarló zöldülése csak részleges',
-        description: 'A gyomnövények csírázása a tarlóhántás után lassú és részleges.',
         icon: 'sprout',
     },
     {
-        title: 'Egyenletlen lazítás',
-        description: 'A lazítás képe egyenletlen, főként a kapák nyomában laza csak megfelelő mértékben.',
         icon: 'square-kanban',
     },
     {
-        title: 'Ültetés előtt elmunkálás szükséges',
-        description: 'Ültetésre csak kombinátoros művelés után alkalmas.',
         icon: 'webhook',
     },
 ]
 
 export default function CultivatorProblemsPage() {
+    const t = TEXT[useLocale()]
     const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
     const iconMap: Record<string, React.ReactNode> = {
@@ -65,7 +90,7 @@ export default function CultivatorProblemsPage() {
                 {/* Left Side: Visual & Intro */}
                 <div className={styles.cultivatorVisualSide}>
                     {/* stacked layout: the section title sits over the picture it introduces */}
-                    <span className={`${styles.pillBadge} ${styles.cultivatorImageHeading}`}>Kiemelhető problémák</span>
+                    <span className={`${styles.pillBadge} ${styles.cultivatorImageHeading}`}>{t.badge}</span>
                     <motion.div variants={itemVariants} className={styles.cultivatorImageWrapper}>
                         <motion.div
                             className={styles.cultivatorImageContainer}
@@ -76,7 +101,7 @@ export default function CultivatorProblemsPage() {
                         >
                             <Image
                                 src="/images/premium_cultivator_courtyard.jpg"
-                                alt="Nehézkultivátor"
+                                alt={t.alt}
                                 fill
                                 className={styles.cultivatorImage}
                                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -92,7 +117,7 @@ export default function CultivatorProblemsPage() {
                 {/* Right Side: Problems Grid */}
                 <div className={styles.cultivatorProblemsSide}>
                     <motion.div variants={itemVariants} className={styles.cultivatorProblemsHeading}>
-                        <span className={styles.pillBadge}>Kiemelhető problémák</span>
+                        <span className={styles.pillBadge}>{t.badge}</span>
                     </motion.div>
 
                     <div className={styles.cultivatorProblemsGrid}>
@@ -107,8 +132,8 @@ export default function CultivatorProblemsPage() {
                                         >
                                             {iconMap[problem.icon]}
                                         </motion.div>
-                                        <h3 className={styles.problemCardTitle}>{problem.title}</h3>
-                                        <p className={styles.problemCardDesc}>{problem.description}</p>
+                                        <h3 className={styles.problemCardTitle}>{t.problems[index].title}</h3>
+                                        <p className={styles.problemCardDesc}>{t.problems[index].description}</p>
                                     </div>
                                 </div>
                             </motion.div>
@@ -121,7 +146,7 @@ export default function CultivatorProblemsPage() {
                 isOpen={isLightboxOpen}
                 onClose={() => setIsLightboxOpen(false)}
                 src="/images/premium_cultivator_courtyard.jpg"
-                alt="Nehézkultivátor"
+                alt={t.alt}
             />
         </motion.div>
     )

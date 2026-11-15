@@ -1,0 +1,120 @@
+/* HU / EN switch (ticket 025, mockup B): flag and letters roll up one line */
+
+.inline {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    /* same box as a menu link (8px + 16px line + 8px), so the scrolled pill keeps its height */
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.inline:hover {
+    color: var(--color-white);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.flag {
+    display: inline-block;
+    width: 20px;
+    height: 14px;
+    overflow: hidden;
+    border-radius: 2px;
+    outline: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.flag svg {
+    display: block;
+}
+
+.code {
+    display: inline-flex;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: 0.08em;
+}
+
+.col {
+    display: inline-block;
+    height: 16px;
+    overflow: hidden;
+}
+
+.track {
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.col:nth-child(2) .track {
+    transition-delay: calc(var(--dur-fast) / 2);
+}
+
+.en .flag .track {
+    transform: translateY(-14px);
+}
+
+.en .col .track {
+    transform: translateY(-16px);
+}
+
+/* Phone menu row */
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 3.5rem;
+    padding: 0 var(--space-md);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    color: var(--color-cream);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.word {
+    display: inline-block;
+    height: 24px;
+    overflow: hidden;
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.word .track {
+    transition-delay: calc(var(--dur-fast) / 4);
+}
+
+.en .word .track {
+    transform: translateY(-24px);
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    height: 2rem;
+    padding: 0 var(--space-sm);
+    border: 1px solid var(--color-gold);
+    border-radius: var(--radius-pill);
+    color: var(--color-gold-light);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .track,
+    .col:nth-child(2) .track,
+    .word .track {
+        transition: none;
+    }
+}

@@ -3,7 +3,10 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
-import { lakitelekSoilLife as site } from '@/lib/seasons'
+import { lakitelekSoilLife as SITE } from '@/lib/seasons'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import type { Locale } from '@/lib/i18n/config'
+import { useResearchData } from '@/lib/i18n/useResearchData'
 import { monthLower, monthName } from '@/lib/months'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import Story from '../story/Story'
@@ -13,6 +16,7 @@ import storyStyles from '../story/Story.module.css'
 import styles from './SzentkirályTimelinePage.module.css'
 import own from './LakitelekSoilLifePage.module.css'
 
+const site = SITE
 const r0 = (v: number) => String(Math.round(v))
 const hu2 = (v: number) => v.toFixed(2).replace('.', ',')
 const P = site.parcels
@@ -34,14 +38,15 @@ const deepIndex = P.findIndex((p) => p.role === 'deep')
 const deep = deepIndex >= 0 ? P[deepIndex] : null
 const deepLow = deep ? site.samples.filter((_, j) => P.filter((p) => p.values[j] < deep.values[j]).length <= 1).length : 0
 /** The parcel shown in the first chapter: the spade-only one */
-const sample = Math.max(0, P.findIndex((p) => p.name === 'Ásógép'))
+const sample = Math.max(0, P.findIndex((p) => p.num === 'III.'))
 /* Fungi : bacteria ratio */
 const fbAvgs = site.samples.map((_, j) => P.reduce((a, p) => a + p.fb[j], 0) / P.length)
 const fbFell = P.filter((p) => p.fb[n - 1] < p.fb[n - 2]).length
 const fbEarly = fbAvgs.slice(0, n - 1)
-const lowerDate = (j: number) => monthLower(site.samples[j].date)
+const lowerDate = (j: number, locale: Locale = 'hu') => monthLower(site.samples[j].date, locale)
+const en2 = (v: number) => v.toFixed(2)
 
-const CHAPTERS = [
+const CHAPTERS_HU = [
   {
     title: 'Egy pont = egy parcella',
     body: 'Minden pont egy parcella egy mérésnapon (3 minta átlaga). Arany: ásógéppel művelt, karika: mélyásógép, szürke: ásógép nélkül. Több = élénkebb talajélet.',
@@ -77,11 +82,54 @@ const CHAPTERS = [
 ]
 
 /** Lakitelek, soil life on one timeline across the seasons, told in six steps */
+
+const CHAPTERS_EN = [
+  {
+    title: 'One dot = one plot',
+    body: 'Each dot is one plot on one measuring day (mean of 3 samples). Gold: tilled with a spading machine; ring: deep spading machine; grey: without a spading machine. More = livelier soil life.',
+  },
+  {
+    title: 'Large differences within one day',
+    body: `${lowerDate(widest, 'en')} ${site.samples[widest].iso.slice(0, 4)}: the lowest and the highest plot differ by ${r0(spreads[widest].hi - spreads[widest].lo)} ${site.unit}. On the other measuring days ${Math.min(...otherSpreads)}–${Math.max(...otherSpreads)}.`,
+  },
+  {
+    title: 'The means are closer together',
+    body: `From one measuring day to the next, the mean of the ${P.length} plots differs by at most ${r0(avgHi - avgLo)}: less than the plots differ within one day.`,
+  },
+  {
+    title: fell === P.length ? 'By July it fell everywhere' : `By July it fell on ${fell} plots`,
+    body: `${fell === P.length ? `All ${P.length}` : fell} plots had less in July, on the stubble after the rye, than in April.`,
+  },
+  {
+    title: 'No fixed order',
+    body:
+      `The highest value was on ${topCount} different plots.` +
+      (deep && deepLow === n ? ` The deep-spaded plot ${deep.num.replace('.', '')} was among the lowest two at all ${n} measurements.` : ''),
+  },
+  {
+    title: 'Fungi and bacteria',
+    body:
+      `This much fungal carbon falls on 1 unit of bacterial carbon. The mean of the ${P.length} plots was ${en2(Math.min(...fbEarly))}–${en2(Math.max(...fbEarly))}; ` +
+      `in July, on the stubble, ${en2(fbAvgs[n - 1])}: ${fbFell === P.length ? `all ${P.length}` : fbFell} plots had less than in April.`,
+  },
+  {
+    title: 'Follow one plot',
+    body: `Choose a plot under the chart and follow it through the ${n} measurements.`,
+  },
+]
+
+const CHAPTERS = { hu: CHAPTERS_HU, en: CHAPTERS_EN }
+
 export default function LakitelekSoilLifePage() {
   const phone = useMediaQuery('(max-width: 1024px)') === true
+  const locale = useLocale()
+  const en = locale === 'en'
+  const site = useResearchData(SITE)
+  const ch = CHAPTERS[locale]
+  const num = (p: { num: string }) => (en ? `plot ${p.num.replace('.', '')}` : `${p.num} parcella`)
   const [step, setStep] = useState(1)
   const [sel, setSel] = useState<number | null>(null)
-  const last = CHAPTERS.length
+  const last = ch.length
   const FB = last - 1
   const fbMode = step === FB
   const onStep = (s: number) => {
@@ -136,11 +184,11 @@ export default function LakitelekSoilLifePage() {
   const d0 = at(biggestDrop, n - 2)
   const d1 = at(biggestDrop, n - 1)
   const callout = [
-    <Callout key="1" {...box} x={at(sample, 0).x} y={at(sample, 0).y} side="right" dy={-FS * 4} main={`${r0(P[sample].values[0])} ${site.unit}`} sub={`${P[sample].num} parcella, ${lowerDate(0)}`} />,
-    <Callout key="2" {...box} x={bracketX(widest)} y={wsMid} side="left" dy={Y(ws.hi) - wsMid} main={`${r0(ws.hi - ws.lo)} ${site.unit}`} sub="a legkisebb és a legnagyobb parcella között" />,
-    <Callout key="3" {...box} x={W - 16} y={(Y(avgHi) + Y(avgLo)) / 2} side="left" dy={FS * 6} main={`legfeljebb ${r0(avgHi - avgLo)}`} sub={`a ${n} mérésnap átlaga között`} delay={800} />,
-    <Callout key="4" {...box} x={(d0.x + d1.x) / 2} y={(d0.y + d1.y) / 2} side="left" dy={-FS * (phone ? 4 : 6)} main={`${fell} / ${P.length} parcella`} sub="kevesebb júliusban, a rozs utáni tarlón" delay={700} />,
-    deep ? <Callout key="5" {...box} x={at(deepIndex, 1).x} y={at(deepIndex, 1).y} side="right" dy={-FS * 6} main={`${deep.num} mélyásógép`} sub={`mind a ${n} mérésnél az alsó kettő között`} delay={600} /> : null,
+    <Callout key="1" {...box} x={at(sample, 0).x} y={at(sample, 0).y} side="right" dy={-FS * 4} main={`${r0(P[sample].values[0])} ${site.unit}`} sub={`${num(P[sample])}, ${lowerDate(0, locale)}`} />,
+    <Callout key="2" {...box} x={bracketX(widest)} y={wsMid} side="left" dy={Y(ws.hi) - wsMid} main={`${r0(ws.hi - ws.lo)} ${site.unit}`} sub={en ? 'between the lowest and the highest plot' : 'a legkisebb és a legnagyobb parcella között'} />,
+    <Callout key="3" {...box} x={W - 16} y={(Y(avgHi) + Y(avgLo)) / 2} side="left" dy={FS * 6} main={`${en ? 'at most' : 'legfeljebb'} ${r0(avgHi - avgLo)}`} sub={en ? `between the means of the ${n} measuring days` : `a ${n} mérésnap átlaga között`} delay={800} />,
+    <Callout key="4" {...box} x={(d0.x + d1.x) / 2} y={(d0.y + d1.y) / 2} side="left" dy={-FS * (phone ? 4 : 6)} main={`${fell} / ${P.length} ${en ? 'plots' : 'parcella'}`} sub={en ? 'less in July, on the stubble after the rye' : 'kevesebb júliusban, a rozs utáni tarlón'} delay={700} />,
+    deep ? <Callout key="5" {...box} x={at(deepIndex, 1).x} y={at(deepIndex, 1).y} side="right" dy={-FS * 6} main={en ? `${deep.num.replace('.', '')} deep spading machine` : `${deep.num} mélyásógép`} sub={en ? `among the lowest two at all ${n} measurements` : `mind a ${n} mérésnél az alsó kettő között`} delay={600} /> : null,
     null,
     null,
   ][step - 1]
@@ -156,7 +204,7 @@ export default function LakitelekSoilLifePage() {
       viewBox={`0 0 ${W} ${H}`}
       className={own.chart}
       role="img"
-      aria-label={`Élő mikrobiális szén Lakiteleken, ${P.length} parcella, ${n} mérésnap. Átlagok: ${avgs.map(r0).join(', ')} ${site.unit}; gomba : baktérium arány: ${fbAvgs.map(hu2).join(', ')}.`}
+      aria-label={en ? `Microbial biomass carbon at Lakitelek, ${P.length} plots, ${n} measuring days. Means: ${avgs.map(r0).join(', ')} ${site.unit}; fungal-to-bacterial ratio: ${fbAvgs.map(en2).join(', ')}.` : `Élő mikrobiális szén Lakiteleken, ${P.length} parcella, ${n} mérésnap. Átlagok: ${avgs.map(r0).join(', ')} ${site.unit}; gomba : baktérium arány: ${fbAvgs.map(hu2).join(', ')}.`}
     >
       {bands.map((b, i) => (
         <g key={b.year}>
@@ -170,11 +218,11 @@ export default function LakitelekSoilLifePage() {
         return (
           <g key={v}>
             <line x1={X0 - 10} x2={W - 4} y1={y} y2={y} className={own.grid} />
-            <text x={X0 - 16} y={y + 4} fontSize={FS - 1} textAnchor="end" className={own.axis}>{fbMode ? v.toFixed(1).replace('.', ',') : v}</text>
+            <text x={X0 - 16} y={y + 4} fontSize={FS - 1} textAnchor="end" className={own.axis}>{fbMode ? (en ? v.toFixed(1) : v.toFixed(1).replace('.', ',')) : v}</text>
           </g>
         )
       })}
-      <text x={4} y={Y(650) + 4} fontSize={FS - 1} className={own.axisUnit}>{fbMode ? 'gomba : baktérium' : site.unit}</text>
+      <text x={4} y={Y(650) + 4} fontSize={FS - 1} className={own.axisUnit}>{fbMode ? (en ? 'fungi : bacteria' : 'gomba : baktérium') : site.unit}</text>
 
       {/* Lowest–highest parcel at each date */}
       <g className={storyStyles.focus} style={{ opacity: step === 2 ? 1 : 0 }} aria-hidden="true">
@@ -298,7 +346,7 @@ export default function LakitelekSoilLifePage() {
       {site.samples.map((s, j) => (
         <g key={s.iso}>
           <line x1={xs[j]} x2={xs[j]} y1={yBot + 2} y2={yBot + 9} className={own.tickMark} />
-          <text x={xs[j]} y={tickY} fontSize={TFS} textAnchor="middle" className={own.tickDate}>{monthName(s.date)}</text>
+          <text x={xs[j]} y={tickY} fontSize={TFS} textAnchor="middle" className={own.tickDate}>{monthName(s.date, locale)}</text>
           {s.flag && (
             <text x={xs[j]} y={tickY + FS + 3} fontSize={FS - 1} textAnchor="middle" className={own.tickFlag}>{s.flag}</text>
           )}
@@ -309,8 +357,8 @@ export default function LakitelekSoilLifePage() {
 
   const footer = (
     <>
-      <div className={own.picker} role="group" aria-label="Parcella kiemelése">
-        <span className={own.pickerLabel}>Parcella</span>
+      <div className={own.picker} role="group" aria-label={en ? 'Highlight a plot' : 'Parcella kiemelése'}>
+        <span className={own.pickerLabel}>{en ? 'Plot' : 'Parcella'}</span>
         {P.map((p, i) => {
           const on = step === last && sel === i
           return (
@@ -319,7 +367,7 @@ export default function LakitelekSoilLifePage() {
               type="button"
               className={`${own.pick} ${on ? own.pickOn : ''}`}
               aria-pressed={on}
-              aria-label={`${p.num} ${p.name}`}
+              aria-label={`${p.num} ${site.parcels[i]?.name ?? p.name}`}
               onClick={() => pick(i)}
             >
               {p.num.replace('.', '')}
@@ -327,13 +375,13 @@ export default function LakitelekSoilLifePage() {
           )
         })}
         <span className={own.pickName} aria-live="polite">
-          {step === last && sel !== null ? P[sel].name : ''}
+          {step === last && sel !== null ? site.parcels[sel].name : ''}
         </span>
       </div>
       <ul className={own.legend}>
-        <li><span className={`${own.key} ${own.spade}`} />ásógéppel</li>
-        <li><span className={`${own.key} ${own.deep}`} />mélyásógép</li>
-        <li><span className={`${own.key} ${own.other}`} />ásógép nélkül</li>
+        <li><span className={`${own.key} ${own.spade}`} />{en ? 'spading machine' : 'ásógéppel'}</li>
+        <li><span className={`${own.key} ${own.deep}`} />{en ? 'deep spading machine' : 'mélyásógép'}</li>
+        <li><span className={`${own.key} ${own.other}`} />{en ? 'no spading machine' : 'ásógép nélkül'}</li>
         <li className={own.note}>{site.note}</li>
       </ul>
     </>
@@ -351,11 +399,11 @@ export default function LakitelekSoilLifePage() {
           <MapPin size={12} />
           <span>Lakitelek</span>
         </div>
-        <h3 className={styles.headerTitle}>Talajélet: mérésről mérésre ingadozik</h3>
+        <h3 className={styles.headerTitle}>{en ? 'Soil life varies from one measurement to the next' : 'Talajélet: mérésről mérésre ingadozik'}</h3>
         <p className={own.lead}>{site.lead}</p>
       </motion.div>
 
-      <Story label="Talajélet lépésenként" chapters={CHAPTERS} step={step} onStep={onStep} stage={stage} footer={footer} />
+      <Story label={en ? 'Soil life, step by step' : 'Talajélet lépésenként'} chapters={ch} step={step} onStep={onStep} stage={stage} footer={footer} />
     </div>
   )
 }

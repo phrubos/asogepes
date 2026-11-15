@@ -6,6 +6,13 @@ import { X, Check, Droplets, Bug, Sprout } from 'lucide-react'
 import styles from './PloughingSoilComparison.module.css'
 import PloughedSoilSVG from './visualizations/PloughedSoilSVG'
 import { useLoopActive } from '@/hooks/useLoopActive'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual, localize } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  { noPan: 'NINCS EKETALP ✓', heading: 'TALAJSZELVÉNY ÖSSZEHASONLÍTÁS', ploughed: 'Szántott talaj', spaded: 'Ásógépezett talaj' },
+  { noPan: 'NO PLOUGH PAN ✓', heading: 'SOIL PROFILE COMPARISON', ploughed: 'Ploughed soil', spaded: 'Spaded soil' },
+)
 
 // Determinisztikus random generátor
 const seededRandom = (seed: number) => {
@@ -16,18 +23,18 @@ const seededRandom = (seed: number) => {
 
 // Szántott talaj problémái
 const ploughedProblems = [
-  { icon: Sprout, text: 'Eketalp képződik', detail: '25-30 cm mélységben' },
-  { icon: Sprout, text: 'A gyökérzet fejlődése korlátozott', detail: 'Nem jut át a tömör rétegen' },
-  { icon: Droplets, text: 'A víz mélyebre jutása korlátozott', detail: 'Pangóvíz vagy felszíni elfolyás' },
-  { icon: Bug, text: 'A talajélet károsodik', detail: 'Rétegek felcserélődése' },
+  { icon: Sprout, text: 'Eketalp képződik', detail: '25-30 cm mélységben', en: { text: 'A plough pan forms', detail: 'at a depth of 25–30 cm' } },
+  { icon: Sprout, text: 'A gyökérzet fejlődése korlátozott', detail: 'Nem jut át a tömör rétegen', en: { text: 'Root growth is restricted', detail: 'Roots cannot get through the compacted layer' } },
+  { icon: Droplets, text: 'A víz mélyebre jutása korlátozott', detail: 'Pangóvíz vagy felszíni elfolyás', en: { text: 'Water cannot move deeper', detail: 'Waterlogging or surface run-off' } },
+  { icon: Bug, text: 'A talajélet károsodik', detail: 'Rétegek felcserélődése', en: { text: 'Soil life is harmed', detail: 'Soil layers are inverted' } },
 ]
 
 // Ásógépezett talaj előnyei
 const spadedBenefits = [
-  { icon: Sprout, text: 'Egyenletesen laza szerkezet alakul ki', detail: '0-45 cm mélységig' },
-  { icon: Sprout, text: 'A gyökerek szabadon fejlődnek', detail: 'Nincs akadály' },
-  { icon: Droplets, text: 'A víz mozgása nem korlátozott', detail: 'Egyenletes eloszlás' },
-  { icon: Bug, text: 'A talajélet aktívabb', detail: 'Rétegek megmaradnak' },
+  { icon: Sprout, text: 'Egyenletesen laza szerkezet alakul ki', detail: '0-45 cm mélységig', en: { text: 'An evenly loose structure forms', detail: 'down to 45 cm' } },
+  { icon: Sprout, text: 'A gyökerek szabadon fejlődnek', detail: 'Nincs akadály', en: { text: 'Roots grow freely', detail: 'No barrier' } },
+  { icon: Droplets, text: 'A víz mozgása nem korlátozott', detail: 'Egyenletes eloszlás', en: { text: 'Water moves freely', detail: 'Even distribution' } },
+  { icon: Bug, text: 'A talajélet aktívabb', detail: 'Rétegek megmaradnak', en: { text: 'Soil life is more active', detail: 'Soil layers stay in place' } },
 ]
 
 // Scale Overlay Komponens
@@ -91,6 +98,7 @@ const generateClodPath = (cx: number, cy: number, r: number, seed: number) => {
 
 // Ásógépezett talaj SVG vizualizáció - 600px széles
 const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
+  const t = TEXT[useLocale()]
   const svgRef = useRef<SVGSVGElement>(null)
   const loopActive = useLoopActive(svgRef)
   // Color palette matching PloughedSoilSVG style exactly
@@ -260,7 +268,7 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
       <g>
         <rect x="230" y="165" width="140" height="22" rx="4" fill="#4CAF50" />
         <text x="300" y="180" fill="white" fontSize="12" fontWeight="700" textAnchor="middle">
-          NINCS EKETALP ✓
+          {t.noPan}
         </text>
       </g>
     </svg>
@@ -268,6 +276,8 @@ const SpadedSoilVisual = ({ isHovered }: { isHovered: boolean }) => {
 }
 
 export default function PloughingSoilComparison() {
+  const locale = useLocale()
+  const t = TEXT[locale]
   const [hoveredSide, setHoveredSide] = useState<'ploughed' | 'spaded' | null>(null)
 
   // Header and comparison arrive together (no stagger), no bounce
@@ -295,7 +305,7 @@ export default function PloughingSoilComparison() {
     >
       <motion.div className={styles.header} variants={itemVariants}>
         <span className={styles.pillBadge}>
-          TALAJSZELVÉNY ÖSSZEHASONLÍTÁS
+          {t.heading}
         </span>
       </motion.div>
 
@@ -312,7 +322,7 @@ export default function PloughingSoilComparison() {
           <div className={styles.cardHeader} style={{ padding: '0.5rem 0.75rem' }}>
             <div className={styles.labelBad} style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}>
               <X size={14} strokeWidth={3} />
-              <span>Szántott talaj</span>
+              <span>{t.ploughed}</span>
             </div>
 
           </div>
@@ -323,7 +333,7 @@ export default function PloughingSoilComparison() {
           </div>
 
           <ul className={styles.problemList} style={{ padding: '0.5rem', gap: '0.25rem' }}>
-            {ploughedProblems.map((item, i) => (
+            {ploughedProblems.map((p) => localize(p, locale)).map((item, i) => (
               <li
                 key={i}
                 className={styles.problemItem}
@@ -362,7 +372,7 @@ export default function PloughingSoilComparison() {
           <div className={styles.cardHeader} style={{ padding: '0.5rem 0.75rem' }}>
             <div className={styles.labelGood} style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}>
               <Check size={14} strokeWidth={3} />
-              <span>Ásógépezett talaj</span>
+              <span>{t.spaded}</span>
             </div>
 
           </div>
@@ -373,7 +383,7 @@ export default function PloughingSoilComparison() {
           </div>
 
           <ul className={styles.benefitList} style={{ padding: '0.5rem', gap: '0.25rem' }}>
-            {spadedBenefits.map((item, i) => (
+            {spadedBenefits.map((p) => localize(p, locale)).map((item, i) => (
               <li
                 key={i}
                 className={styles.benefitItem}

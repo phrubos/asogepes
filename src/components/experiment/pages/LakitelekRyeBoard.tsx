@@ -4,26 +4,102 @@ import { useEffect, useRef, useState } from 'react'
 import Image, { type ImageProps } from 'next/image'
 import { ChevronLeft, ChevronRight, Expand, Maximize2, Minimize2 } from 'lucide-react'
 import { PhotoViewerModal } from '@/components/shared/PhotoViewer/PhotoViewerModal'
-import { lakitelekRye2026 as rye, lakitelekSoil2026, lakitelekSeasons } from '@/lib/seasons'
+import { lakitelekRye2026 as RYE, lakitelekSoil2026, lakitelekSeasons } from '@/lib/seasons'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import type { Locale } from '@/lib/i18n/config'
+import { useResearchData } from '@/lib/i18n/useResearchData'
 import SoilLoader from '@/components/ui/SoilLoader'
 import s from './LakitelekRyeBoard.module.css'
 import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
 
+const rye = RYE
 type Filter = 'all' | 'spade' | 'other'
 type Parcel = (typeof rye.parcels)[number]
 
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: 'all', label: 'Mind' },
-  { id: 'spade', label: 'Ásógéppel' },
-  { id: 'other', label: 'Ásógép nélkül' },
+const FILTERS: { id: Filter; label: Record<Locale, string> }[] = [
+  { id: 'all', label: { hu: 'Mind', en: 'All' } },
+  { id: 'spade', label: { hu: 'Ásógéppel', en: 'With spading machine' } },
+  { id: 'other', label: { hu: 'Ásógép nélkül', en: 'Without spading machine' } },
 ]
-const ROLE = { deep: 'mélyásógép', spade: 'ásógéppel', other: 'ásógép nélkül' } as const
+const ROLES = {
+  hu: { deep: 'mélyásógép', spade: 'ásógéppel', other: 'ásógép nélkül' },
+  en: { deep: 'deep spading machine', spade: 'spading machine', other: 'no spading machine' },
+} as const
+
+const TEXT = {
+  hu: {
+    plot: (n: string) => `${n} parcella`,
+    title: 'Rozs a hét parcellában, májusban',
+    leadA: 'Parcellánként egy kiásott mintacsomó, a májusi talajmérés napján. A kalászolás mind a hét parcellán a végén jár',
+    leadB: '(BBCH 59 körül). A talajszint fölött a hajtás, alatta a gyökércsomó.',
+    allSeven: 'Mind a hét egy képen',
+    original: 'eredeti fotó, mért értékekkel',
+    filterBy: 'Szűrés kezelés szerint',
+    count: (n: number, all: boolean) => (all ? '7 parcella' : `${n} parcella választható`),
+    legend: 'talajszint · fölötte hajtás, alatta gyökér · húzd oldalra',
+    closeAlt: (n: string) => `A ${n} parcella mintacsomója közelről, a kalásztól a gyökérig`,
+    prev: 'Előző parcella',
+    next: 'Következő parcella',
+    seven: 'Mind a hét',
+    above: 'Föld felett',
+    shootM: 'hajtás, mért',
+    soil: 'TALAJSZINT',
+    below: 'Föld alatt',
+    rootM: 'gyökér, mért',
+    loose: 'laza réteg',
+    tileAria: (n: string, t: string, sh: number, ro: number) => `${n} parcella, ${t}: hajtás ${sh} cm, gyökér ${ro} cm`,
+    zoomAria: (n: string) => `A ${n} parcella nagyítva`,
+    up: '↑ hajtás',
+    down: '↓ gyökér',
+    nums: 'hajtás / gyökér, mért',
+    method:
+      'A hét közeli fotót a zsák szélessége alapján egy léptékre igazítottuk, a gyökérnyakak egy vonalba kerültek. A fotók ferde szögből készültek, ezért a hajtás hossza a képen csak közelítő: a pontos érték a mért szám. Parcellánként egy mintacsomót ástunk ki; a bokor sűrűségét szemrevételezéssel becsültük.',
+    shoot: 'hajtás',
+    root: 'gyökér',
+    ovAlt: 'Hét kiásott rozs-mintacsomó fehér zsákokon, balról jobbra az I–VII. parcella, középen mérőszalag',
+    ovDesc:
+      'Az eredeti fotó: egy kép, egy lépték, középen mérőszalag.\n\nArany vonal: talajszint (gyökérnyak); szaggatott: hajtás; fehér: gyökér. A számok mért hosszak; a fotó ferde szögű, ezért a vonalak hossza csak irány.',
+  },
+  en: {
+    plot: (n: string) => `Plot ${n.replace('.', '')}`,
+    title: 'Rye on the seven plots, in May',
+    leadA: 'One dug-up sample bunch per plot, on the day of the May soil measurement. Heading was ending on all seven plots',
+    leadB: '(around BBCH 59). Above the soil line the shoot, below it the root ball.',
+    allSeven: 'All seven in one image',
+    original: 'original photo, with measured values',
+    filterBy: 'Filter by treatment',
+    count: (n: number, all: boolean) => (all ? '7 plots' : `${n} plots to choose from`),
+    legend: 'soil line · shoot above, roots below · swipe sideways',
+    closeAlt: (n: string) => `Close-up of the sample bunch from plot ${n.replace('.', '')}, from ear to root`,
+    prev: 'Previous plot',
+    next: 'Next plot',
+    seven: 'All seven',
+    above: 'Above ground',
+    shootM: 'shoot, measured',
+    soil: 'SOIL LEVEL',
+    below: 'Below ground',
+    rootM: 'root, measured',
+    loose: 'loose layer',
+    tileAria: (n: string, t: string, sh: number, ro: number) => `Plot ${n.replace('.', '')}, ${t}: shoot ${sh} cm, root ${ro} cm`,
+    zoomAria: (n: string) => `Plot ${n.replace('.', '')} enlarged`,
+    up: '↑ shoot',
+    down: '↓ root',
+    nums: 'shoot / root, measured',
+    method:
+      'The seven close-ups were brought to one scale by the width of the sack, with the root crowns on one line. The photos were taken at an angle, so the shoot length in the image is only approximate: the exact value is the measured figure. We dug up one sample bunch per plot; bunch density was estimated by eye.',
+    shoot: 'shoot',
+    root: 'root',
+    ovAlt: 'Seven dug-up rye bunches on white sacks, plots I–VII from left to right, measuring tape in the middle',
+    ovDesc:
+      'The original photo: one image, one scale, measuring tape in the middle.\n\nGold line: soil level (root crown); dashed: shoot; white: root. The figures are measured lengths; the photo is taken at an angle, so the length of the lines only shows a direction.',
+  },
+}
 
 const { shoot, root } = lakitelekSoil2026.rye
 const maxShoot = Math.max(...shoot)
 /* May (2nd measurement) depth of the loose layer, from the main chart's data */
 const loose = lakitelekSeasons.seasons.find((x) => x.year === 2026)?.parcels.map((p) => p.values[1]) ?? []
-const cm = (v: number | undefined) => (v === undefined ? '–' : String(v).replace('.', ','))
+const cmIn = (locale: Locale) => (v: number | undefined) => (v === undefined ? '–' : locale === 'en' ? String(v) : String(v).replace('.', ','))
 
 const fits = (p: Parcel, f: Filter) => f === 'all' || (f === 'spade' ? p.role !== 'other' : p.role === 'other')
 const spadeish = (p: Parcel) => p.role !== 'other'
@@ -49,6 +125,11 @@ function Photo({ spinner = 'sm', ...props }: ImageProps & { spinner?: 'sm' | 'md
  * A filter dims the parcels that don't fit; the choice jumps to the first one that does.
  */
 export default function LakitelekRyeBoard() {
+  const locale = useLocale()
+  const t = TEXT[locale]
+  const ROLE = ROLES[locale]
+  const cm = cmIn(locale)
+  const rye = useResearchData(RYE)
   const [filter, setFilter] = useState<Filter>('all')
   const [sel, setSel] = useState(0)
   const [overview, setOverview] = useState(false)
@@ -80,10 +161,9 @@ export default function LakitelekRyeBoard() {
     <div className={s.board}>
       <div className={s.top}>
         <div className={s.titles}>
-          <h3 className={s.title}>Rozs a hét parcellában, májusban</h3>
+          <h3 className={s.title}>{t.title}</h3>
           <p className={s.lead}>
-            Parcellánként egy kiásott mintacsomó, a májusi talajmérés napján. A kalászolás mind a hét parcellán a végén jár
-            (BBCH 59 körül). A talajszint fölött a hajtás, alatta a gyökércsomó.
+            {t.leadA} {t.leadB}
           </p>
         </div>
         <button ref={trigger} type="button" className={s.thumb} onClick={() => setOverview(true)}>
@@ -91,16 +171,16 @@ export default function LakitelekRyeBoard() {
             <Image src={`${rye.dir}/${rye.overview.file}`} alt="" fill sizes="150px" />
           </span>
           <span className={s.thumbText}>
-            <span className={s.thumbTitle}>Mind a hét egy képen</span>
+            <span className={s.thumbTitle}>{t.allSeven}</span>
             <span className={s.thumbSub}>
-              eredeti fotó, mért értékekkel <Maximize2 size={12} aria-hidden="true" />
+              {t.original} <Maximize2 size={12} aria-hidden="true" />
             </span>
           </span>
         </button>
       </div>
 
       <div className={s.filterRow}>
-        <div role="group" aria-label="Szűrés kezelés szerint" className={s.filters}>
+        <div role="group" aria-label={t.filterBy} className={s.filters}>
           {FILTERS.map((f) => (
             <button
               key={f.id}
@@ -109,15 +189,15 @@ export default function LakitelekRyeBoard() {
               className={`${s.filter} ${filter === f.id ? s.filterOn : ''}`}
               onClick={() => pickFilter(f.id)}
             >
-              {f.label}
+              {f.label[locale]}
             </button>
           ))}
         </div>
-        <span className={s.count}>{filter === 'all' ? '7 parcella' : `${n} parcella választható`}</span>
+        <span className={s.count}>{t.count(n, filter === 'all')}</span>
       </div>
 
       <p className={s.legend} aria-hidden="true">
-        <span className={s.legendLine} /> talajszint · fölötte hajtás, alatta gyökér · húzd oldalra
+        <span className={s.legendLine} /> {t.legend}
       </p>
 
       <div className={s.frame} onKeyDown={(e) => zoom && e.key === 'Escape' && setZoom(false)}>
@@ -129,7 +209,7 @@ export default function LakitelekRyeBoard() {
                 key={p.file}
                 spinner="md"
                 src={`${rye.dir}/${p.file}`}
-                alt={`A ${p.num} parcella mintacsomója közelről, a kalásztól a gyökérig`}
+                alt={t.closeAlt(p.num)}
                 fill
                 loading="eager"
                 sizes="(max-width: 1024px) 45vw, 320px"
@@ -139,50 +219,50 @@ export default function LakitelekRyeBoard() {
             <div className={s.zoomHead}>
               <div className={s.cardHead}>
                 <span className={`${s.cardKicker} ${spadeish(p) ? s.gold : ''}`}>
-                  {p.num} parcella · {ROLE[p.role]}
+                  {t.plot(p.num)} · {ROLE[p.role]}
                 </span>
                 <span className={s.cardTitle}>{p.treatment}</span>
                 <span className={s.cardDetail}>{p.detail}</span>
               </div>
               <div className={s.zoomNav}>
-                <button type="button" className={s.navBtn} onClick={() => step(-1)} disabled={n < 2} aria-label="Előző parcella">
+                <button type="button" className={s.navBtn} onClick={() => step(-1)} disabled={n < 2} aria-label={t.prev}>
                   <ChevronLeft size={18} aria-hidden="true" />
                 </button>
                 <span className={s.navPos}>
                   {pos + 1} / {n}
                 </span>
-                <button type="button" className={s.navBtn} onClick={() => step(1)} disabled={n < 2} aria-label="Következő parcella">
+                <button type="button" className={s.navBtn} onClick={() => step(1)} disabled={n < 2} aria-label={t.next}>
                   <ChevronRight size={18} aria-hidden="true" />
                 </button>
                 <button ref={back} type="button" className={s.back} onClick={() => setZoom(false)}>
-                  <Minimize2 size={16} aria-hidden="true" /> Mind a hét
+                  <Minimize2 size={16} aria-hidden="true" /> {t.seven}
                 </button>
               </div>
             </div>
             <div className={s.zoomBody}>
               <div className={s.zAbove}>
                 <div className={s.zFigure}>
-                  <span className={s.zLabel}>Föld felett</span>
+                  <span className={s.zLabel}>{t.above}</span>
                   <span className={`${s.zNum} ${s.gold}`}>
                     {shoot[sel]}
                     <span className={s.zUnit}> cm</span>
                   </span>
-                  <span className={s.zSub}>hajtás, mért</span>
+                  <span className={s.zSub}>{t.shootM}</span>
                 </div>
                 <p className={s.zText}>{p.above}</p>
               </div>
               <div className={s.zSoil} aria-hidden="true">
-                <span className={s.zSoilTag}>TALAJSZINT</span>
+                <span className={s.zSoilTag}>{t.soil}</span>
               </div>
               <div className={s.zBelow}>
                 <div className={s.zFigure}>
-                  <span className={s.zLabel}>Föld alatt</span>
+                  <span className={s.zLabel}>{t.below}</span>
                   <span className={s.zNum}>
                     {root[sel]}
                     <span className={s.zUnit}> cm</span>
                   </span>
-                  <span className={s.zSub}>gyökér, mért</span>
-                  <span className={s.zSub}>laza réteg {cm(loose[sel])} cm</span>
+                  <span className={s.zSub}>{t.rootM}</span>
+                  <span className={s.zSub}>{t.loose} {cm(loose[sel])} cm</span>
                 </div>
                 <div className={s.zTexts}>
                   <p className={s.zText}>{p.below}</p>
@@ -203,7 +283,7 @@ export default function LakitelekRyeBoard() {
                     className={s.tileBtn}
                     disabled={!ok}
                     aria-pressed={i === sel}
-                    aria-label={`${q.num} parcella, ${q.treatment}: hajtás ${shoot[i]} cm, gyökér ${root[i]} cm`}
+                    aria-label={t.tileAria(q.num, q.treatment, shoot[i], root[i])}
                     onClick={() => setSel(i)}
                   >
                     <span className={s.photo}>
@@ -225,7 +305,7 @@ export default function LakitelekRyeBoard() {
                       }}
                       type="button"
                       className={s.zoomBtn}
-                      aria-label={`A ${q.num} parcella nagyítva`}
+                      aria-label={t.zoomAria(q.num)}
                       onClick={() => {
                         setSel(i)
                         setZoom(true)
@@ -240,10 +320,10 @@ export default function LakitelekRyeBoard() {
               )
             })}
             <div className={s.axis} aria-hidden="true">
-              <span className={s.axisUp}>↑ hajtás</span>
-              <span className={s.axisSoil}>TALAJSZINT</span>
-              <span className={s.axisDown}>↓ gyökér</span>
-              <span className={s.axisNums}>hajtás / gyökér, mért</span>
+              <span className={s.axisUp}>{t.up}</span>
+              <span className={s.axisSoil}>{t.soil}</span>
+              <span className={s.axisDown}>{t.down}</span>
+              <span className={s.axisNums}>{t.nums}</span>
             </div>
           </div>
         )}
@@ -256,9 +336,7 @@ export default function LakitelekRyeBoard() {
       )}
 
       <p className={s.foot}>
-        A hét közeli fotót a zsák szélessége alapján egy léptékre igazítottuk, a gyökérnyakak egy vonalba kerültek. A fotók
-        ferde szögből készültek, ezért a hajtás hossza a képen csak közelítő: a pontos érték a mért szám. Parcellánként egy
-        mintacsomót ástunk ki; a bokor sűrűségét szemrevételezéssel becsültük.
+        {t.method}
         <PhotoCredit plural>Lakitelek, {rye.photoDate}</PhotoCredit>
       </p>
 
@@ -269,7 +347,7 @@ export default function LakitelekRyeBoard() {
             setOverview(false)
             trigger.current?.focus()
           }}
-          currentImage={OVERVIEW_ITEM}
+          currentImage={overviewItem(locale)}
           currentIndex={0}
           totalItems={1}
           onNext={() => {}}
@@ -282,12 +360,16 @@ export default function LakitelekRyeBoard() {
 
 /** Name, treatment, characterisation and the measured values of one parcel (card and big view) */
 function Details({ i }: { i: number }) {
-  const p = rye.parcels[i]
+  const locale = useLocale()
+  const t = TEXT[locale]
+  const ROLE = ROLES[locale]
+  const cm = cmIn(locale)
+  const p = useResearchData(RYE).parcels[i]
   return (
     <>
       <div className={s.cardHead}>
         <span className={`${s.cardKicker} ${spadeish(p) ? s.gold : ''}`}>
-          {p.num} parcella · {ROLE[p.role]}
+          {t.plot(p.num)} · {ROLE[p.role]}
         </span>
         <span className={s.cardTitle}>{p.treatment}</span>
         <span className={s.cardDetail}>{p.detail}</span>
@@ -300,15 +382,15 @@ function Details({ i }: { i: number }) {
       </div>
       <dl className={s.values}>
         <div>
-          <dt>hajtás</dt>
+          <dt>{t.shoot}</dt>
           <dd className={s.gold}>{shoot[i]} cm</dd>
         </div>
         <div>
-          <dt>gyökér</dt>
+          <dt>{t.root}</dt>
           <dd>{root[i]} cm</dd>
         </div>
         <div>
-          <dt>laza réteg</dt>
+          <dt>{t.loose}</dt>
           <dd>{cm(loose[i])} cm</dd>
         </div>
       </dl>
@@ -317,18 +399,18 @@ function Details({ i }: { i: number }) {
 }
 
 /** The overview in the site's photo viewer (as the 2025 photos): title and legend in its side panel */
-const OVERVIEW_ITEM = {
+const overviewItem = (locale: Locale) => ({
   src: `${rye.dir}/${rye.overview.file}`,
-  alt: 'Hét kiásott rozs-mintacsomó fehér zsákokon, balról jobbra az I–VII. parcella, középen mérőszalag',
-  title: 'Mind a hét egy képen',
-  credit: `Lakitelek, ${rye.photoDate}`,
-  description:
-    'Az eredeti fotó: egy kép, egy lépték, középen mérőszalag.\n\nArany vonal: talajszint (gyökérnyak); szaggatott: hajtás; fehér: gyökér. A számok mért hosszak; a fotó ferde szögű, ezért a vonalak hossza csak irány.',
+  alt: TEXT[locale].ovAlt,
+  title: TEXT[locale].allSeven,
+  credit: `Lakitelek, ${locale === 'en' ? '19 May 2026' : rye.photoDate}`,
+  description: TEXT[locale].ovDesc,
   content: (onLoad: () => void) => <OverviewFigure onLoad={onLoad} />,
-}
+})
 
 /** The original overview photo with the soil line, shoot/root lines and the measured lengths drawn on it */
 function OverviewFigure({ onLoad }: { onLoad: () => void }) {
+  const locale = useLocale()
   const box = useRef<HTMLDivElement>(null)
   // labels never below 12 px: when the picture is drawn narrower, the labels grow in picture units
   const [k, setK] = useState(1)
@@ -354,7 +436,7 @@ function OverviewFigure({ onLoad }: { onLoad: () => void }) {
       <div ref={box} className={s.ovBox}>
         <Image
           src={`${rye.dir}/${rye.overview.file}`}
-          alt={OVERVIEW_ITEM.alt}
+          alt={TEXT[useLocale()].ovAlt}
           fill
           priority
           draggable={false}
@@ -365,7 +447,7 @@ function OverviewFigure({ onLoad }: { onLoad: () => void }) {
           viewBox={`0 0 ${w} ${h}`}
           className={s.ovSvg}
           role="img"
-          aria-label={`Jelölések: talajszint a gyökérnyakaknál, hajtás felfelé, gyökér lefelé, mért hosszal. ${rye.parcels
+          aria-label={`${locale === 'en' ? 'Markings: soil level at the root crowns, shoot upwards, root downwards, with measured lengths.' : 'Jelölések: talajszint a gyökérnyakaknál, hajtás felfelé, gyökér lefelé, mért hosszal.'} ${rye.parcels
             .map((q, i) => `${q.num} ${shoot[i]}/${root[i]} cm`)
             .join(', ')}`}
         >
@@ -401,7 +483,7 @@ function OverviewFigure({ onLoad }: { onLoad: () => void }) {
           })}
           <rect x={end[0] - 132 * k - 8} y={end[1] - 16 * k - 40} width={132 * k} height={32 * k} rx={8} className={`${s.ovTag} ${s.ovTagGold}`} />
           <text x={end[0] - 66 * k - 8} y={end[1] + 6 * k - 40} textAnchor="middle" fontSize={fs} className={`${s.ovText} ${s.ovGoldText} ${s.ovSmall}`}>
-            TALAJSZINT
+            {TEXT[locale].soil}
           </text>
         </svg>
       </div>

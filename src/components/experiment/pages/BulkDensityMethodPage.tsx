@@ -15,6 +15,8 @@ import styles from './SzentkirályTimelinePage.module.css'
 import own from './MethodologyBlocks.module.css'
 import bd from './BulkDensityMethodPage.module.css'
 import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { useResearchData } from '@/lib/i18n/useResearchData'
 
 const hu = (v: number, d = 2) => v.toFixed(d).replace('.', ',')
 const STEP_MS = 5000
@@ -33,10 +35,14 @@ const PHOTOS = STEPS.map((s) => {
   }).props
   return { wide, full: `${DIR}/${s.image}-wide.jpg` }
 })
-const LIGHTBOX = PHOTOS.flatMap((p, i) => (p ? [{ src: p.full, alt: STEPS[i].alt }] : []))
 
 /** Módszertan: how bulk density is sampled (cylinder core method), step by step on the Lakitelek photos */
 export default function BulkDensityMethodPage() {
+  const en = useLocale() === 'en'
+  const fmt = (v: number, d = 2) => (en ? v.toFixed(d) : hu(v, d))
+  const steps = useResearchData(STEPS)
+  const ex = useResearchData(EX)
+  const lightboxImages = PHOTOS.flatMap((p, i) => (p ? [{ src: p.full, alt: steps[i].alt }] : []))
   const ref = useRef<HTMLDivElement>(null)
   const tabs = useRef<(HTMLButtonElement | null)[]>([])
   const reduced = useReducedMotion()
@@ -93,7 +99,7 @@ export default function BulkDensityMethodPage() {
 
   const fade = reduced ? { duration: 0 } : { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const }
   const photoIndex = PHOTOS.slice(0, step + 1).filter(Boolean).length - 1
-  const current = STEPS[step]
+  const current = steps[step]
 
   return (
     <div ref={ref} className={`${styles.timelinePage} ${own.page}`}>
@@ -105,12 +111,13 @@ export default function BulkDensityMethodPage() {
       >
         <div className={styles.headerBadge}>
           <Cylinder size={12} />
-          <span>Módszertan</span>
+          <span>{en ? 'Methodology' : 'Módszertan'}</span>
         </div>
-        <h3 className={styles.headerTitle}>A térfogattömeg mérése</h3>
+        <h3 className={styles.headerTitle}>{en ? 'Measuring bulk density' : 'A térfogattömeg mérése'}</h3>
         <p className={own.lead}>
-          Megmutatja, mennyire tömör a talaj: hány gramm száraz föld van egy köbcentiméterben. Kisebb szám = lazább
-          talaj.
+          {en
+            ? 'It shows how compact the soil is: how many grams of dry soil there are in one cubic centimetre. Lower number = looser soil.'
+            : 'Megmutatja, mennyire tömör a talaj: hány gramm száraz föld van egy köbcentiméterben. Kisebb szám = lazább talaj.'}
         </p>
       </motion.div>
 
@@ -127,7 +134,7 @@ export default function BulkDensityMethodPage() {
                   aria-hidden={i !== step}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- getImageProps output; alt is in the props */}
-                  <img {...p.wide} className={bd.photo} draggable={false} />
+                  <img {...p.wide} alt={steps[i].alt} className={bd.photo} draggable={false} />
                 </motion.div>
               ) : null,
             )}
@@ -139,31 +146,31 @@ export default function BulkDensityMethodPage() {
               transition={fade}
               aria-hidden={step !== LAST}
             >
-              <ol className={bd.labFlow} aria-label="Laborlépések">
+              <ol className={bd.labFlow} aria-label={en ? 'Lab steps' : 'Laborlépések'}>
                 <li>
                   <Cylinder size={22} aria-hidden />
-                  <span>100 cm³ minta</span>
+                  <span>{en ? '100 cm³ sample' : '100 cm³ minta'}</span>
                 </li>
                 <li>
                   <Thermometer size={22} aria-hidden />
-                  <span>szárítás 105 °C-on</span>
+                  <span>{en ? 'drying at 105 °C' : 'szárítás 105 °C-on'}</span>
                 </li>
                 <li>
                   <Scale size={22} aria-hidden />
-                  <span>mérés</span>
+                  <span>{en ? 'weighing' : 'mérés'}</span>
                 </li>
               </ol>
               <p className={bd.formula}>
-                <span>{EX.grams} g</span>
+                <span>{ex.grams} g</span>
                 <span className={bd.op}>÷</span>
                 <span>100 cm³</span>
                 <span className={bd.op}>=</span>
                 <strong>
-                  {hu(EX.value)} <small>g/cm³</small>
+                  {fmt(ex.value)} <small>g/cm³</small>
                 </strong>
               </p>
               <p className={bd.labCaption}>
-                {EX.place}, {EX.when}, a {EX.parcels} parcella átlaga
+                {ex.place}, {ex.when}, {en ? `mean of the ${ex.parcels} plots` : `a ${ex.parcels} parcella átlaga`}
               </p>
             </motion.div>
 
@@ -177,15 +184,15 @@ export default function BulkDensityMethodPage() {
                   setAuto(false)
                   setLightbox(true)
                 }}
-                aria-label="Fotó nagyítása"
+                aria-label={en ? 'Enlarge photo' : 'Fotó nagyítása'}
               >
                 <Expand size={18} />
               </button>
             )}
         </motion.div>
 
-        <div className={bd.steps} role="tablist" aria-label="A mintavétel lépései" onKeyDown={onKey}>
-            {STEPS.map((s, i) => (
+        <div className={bd.steps} role="tablist" aria-label={en ? 'Sampling steps' : 'A mintavétel lépései'} onKeyDown={onKey}>
+            {steps.map((s, i) => (
               <button
                 key={s.title}
                 ref={(el) => {
@@ -224,10 +231,10 @@ export default function BulkDensityMethodPage() {
           )}
           {/* phones/tablets: prev/next next to the step text (desktop: hidden by CSS) */}
           <div className={bd.cardNav}>
-            <button type="button" className={bd.navBtn} onClick={() => go(step - 1)} disabled={step === 0} aria-label="Előző lépés">
+            <button type="button" className={bd.navBtn} onClick={() => go(step - 1)} disabled={step === 0} aria-label={en ? 'Previous step' : 'Előző lépés'}>
               <ChevronLeft size={20} aria-hidden />
             </button>
-            <button type="button" className={bd.navBtn} onClick={() => go(step + 1)} disabled={step === LAST} aria-label="Következő lépés">
+            <button type="button" className={bd.navBtn} onClick={() => go(step + 1)} disabled={step === LAST} aria-label={en ? 'Next step' : 'Következő lépés'}>
               <ChevronRight size={20} aria-hidden />
             </button>
           </div>
@@ -262,10 +269,11 @@ export default function BulkDensityMethodPage() {
         </div>
 
         <p className={bd.foot}>
-          Táblánként több ponton veszünk mintát, és ezek átlagát közöljük. A szezonban 2–3 mérésnapon ismételjük meg, így
-          látszik, hogyan tömörödik vissza a talaj a művelés után.
+          {en
+            ? 'We sample several points per field and report their mean. It is repeated on 2–3 measuring days in the season, which shows how the soil re-compacts after tillage.'
+            : 'Táblánként több ponton veszünk mintát, és ezek átlagát közöljük. A szezonban 2–3 mérésnapon ismételjük meg, így látszik, hogyan tömörödik vissza a talaj a művelés után.'}
           <PhotoCredit plural>
-            {EX.place}, {EX.photoDate}
+            {ex.place}, {ex.photoDate}
           </PhotoCredit>
         </p>
       </div>
@@ -273,9 +281,9 @@ export default function BulkDensityMethodPage() {
       <ImageLightbox
         isOpen={lightbox}
         onClose={() => setLightbox(false)}
-        src={LIGHTBOX[Math.max(0, photoIndex)].src}
-        alt={LIGHTBOX[Math.max(0, photoIndex)].alt}
-        images={LIGHTBOX}
+        src={lightboxImages[Math.max(0, photoIndex)].src}
+        alt={lightboxImages[Math.max(0, photoIndex)].alt}
+        images={lightboxImages}
         initialIndex={Math.max(0, photoIndex)}
       />
     </div>

@@ -5,6 +5,31 @@ import Link from 'next/link'
 import { motion, useInView, type Variants } from 'framer-motion'
 import { Shovel, Layers, Combine, Star, ChevronRight, ChevronsDown } from 'lucide-react'
 import styles from './ApplicationGuide.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual, localize, pagePath } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  {
+    when: 'Mikor ajánlott?',
+    soil: 'Milyen talajra?',
+    durability: 'Szerkezet tartossága',
+    seeTrial: 'Lásd a kísérletben',
+    badge: 'ALKALMAZÁSI ÚTMUTATÓ',
+    title: 'Melyik módszert válasszam?',
+    subtitleA: 'Az ásógép önállóan és más művelőeszközökkel kombinálva is használható —',
+    subtitleB: 'a talaj állapota határozza meg a legjobb stratégiát.',
+  },
+  {
+    when: 'When is it recommended?',
+    soil: 'Which soil?',
+    durability: 'Durability of structure',
+    seeTrial: 'See it in the trial',
+    badge: 'APPLICATION GUIDE',
+    title: 'Which method should I choose?',
+    subtitleA: 'The spading machine can be used on its own or combined with other implements;',
+    subtitleB: 'the condition of the soil determines the best strategy.',
+  },
+)
 
 interface ApplicationMode {
   id: string
@@ -16,6 +41,8 @@ interface ApplicationMode {
   rating: number
   isBest: boolean
   color: string
+  /** English copy (ticket 027) */
+  en: Pick<ApplicationMode, 'title' | 'subtitle' | 'when' | 'soilType'>
 }
 
 const applicationModes: ApplicationMode[] = [
@@ -26,6 +53,7 @@ const applicationModes: ApplicationMode[] = [
     icon: <Shovel size={32} />,
     when: 'Első alkalmazás, jó szerkezetű talaj',
     soilType: 'Laza szerkezetű talajok',
+    en: { title: 'Spading machine', subtitle: 'Spading machine only, no other implement', when: 'First application, well-structured soil', soilType: 'Light, loose soils' },
     rating: 4,
     isBest: false,
     color: '#8B7355'
@@ -37,6 +65,7 @@ const applicationModes: ApplicationMode[] = [
     icon: <Layers size={32} />,
     when: 'Tömör, eketalpas talaj',
     soilType: 'Középkötött, kötött talajok',
+    en: { title: 'Subsoiling + spading machine', subtitle: 'Spading machine after subsoiling', when: 'Compacted soil with a plough pan', soilType: 'Medium and heavy soils' },
     rating: 3,
     isBest: false,
     color: '#6B8B6B'
@@ -48,6 +77,7 @@ const applicationModes: ApplicationMode[] = [
     icon: <ChevronsDown size={32} />,
     when: 'Intenzíven öntözött, nagy gyökértömegű kultúrák',
     soilType: 'Középkötött, kötött talaj',
+    en: { title: 'Deep spading machine', subtitle: 'Deep spading machine only, no other implement', when: 'Intensively irrigated crops with a large root mass', soilType: 'Medium and heavy soils' },
     rating: 5,
     isBest: false,
     color: '#CD853F'
@@ -59,6 +89,7 @@ const applicationModes: ApplicationMode[] = [
     icon: <Combine size={32} />,
     when: 'Ősszel nagy tömegű szármaradvány vagy szervestrágya',
     soilType: 'Bármely talajtípus',
+    en: { title: 'Subsoiling + ploughing + spading machine', subtitle: 'Spring spading after subsoiling and autumn ploughing', when: 'Large amounts of crop residue or manure in autumn', soilType: 'Any soil type' },
     rating: 5,
     isBest: false,
     color: '#D4A84B' // gold (was blue-grey; no blue on the site)
@@ -76,6 +107,8 @@ function ModeCard({
   cardVariants: Variants
   isInView: boolean
 }) {
+  const locale = useLocale()
+  const t = TEXT[locale]
   return (
     <motion.article
       className={`${styles.card} ${mode.isBest ? styles.bestCard : ''}`}
@@ -108,8 +141,8 @@ function ModeCard({
 
       <div className={styles.infoGrid}>
         {[
-          { label: 'Mikor ajánlott?', value: mode.when },
-          { label: 'Milyen talajra?', value: mode.soilType }
+          { label: t.when, value: mode.when },
+          { label: t.soil, value: mode.soilType }
         ].map((info) => (
           <div key={info.label} className={styles.infoItem}>
             <span className={styles.infoLabel}>{info.label}</span>
@@ -119,7 +152,7 @@ function ModeCard({
       </div>
 
       <div className={styles.ratingRow}>
-        <span className={styles.ratingLabel}>Szerkezet tartossága</span>
+        <span className={styles.ratingLabel}>{t.durability}</span>
         <div className={styles.stars} role="img" aria-label={`${mode.rating} / 5`}>
           {[1, 2, 3, 4, 5].map((star) => (
             <Star
@@ -133,8 +166,8 @@ function ModeCard({
         </div>
       </div>
 
-      <Link href="/kutatas?section=lakitelek" className={styles.cta}>
-        <span>Lásd a kísérletben</span>
+      <Link href={pagePath('research', locale, 'lakitelek')} className={styles.cta}>
+        <span>{t.seeTrial}</span>
         <ChevronRight size={16} aria-hidden="true" />
       </Link>
     </motion.article>
@@ -142,6 +175,8 @@ function ModeCard({
 }
 
 export default function ApplicationGuide() {
+  const locale = useLocale()
+  const t = TEXT[locale]
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
 
@@ -171,11 +206,11 @@ export default function ApplicationGuide() {
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6 }}
       >
-        <span className={styles.badge}>ALKALMAZÁSI ÚTMUTATÓ</span>
-        <h2 className={styles.title}>Melyik módszert válasszam?</h2>
+        <span className={styles.badge}>{t.badge}</span>
+        <h2 className={styles.title}>{t.title}</h2>
         <p className={styles.subtitle}>
-          Az ásógép önállóan és más művelőeszközökkel kombinálva is használható —
-          a talaj állapota határozza meg a legjobb stratégiát.
+          {t.subtitleA}
+          {' '}{t.subtitleB}
         </p>
       </motion.div>
 
@@ -185,7 +220,7 @@ export default function ApplicationGuide() {
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
-        {applicationModes.map((mode) => (
+        {applicationModes.map((row) => localize(row, locale)).map((mode) => (
           <ModeCard key={mode.id} mode={mode} cardVariants={cardVariants} isInView={isInView} />
         ))}
       </motion.div>

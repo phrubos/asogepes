@@ -10,6 +10,31 @@ import ThermalOverlays from '../ThermalOverlays/ThermalOverlays'
 import SoilLoader from '@/components/ui/SoilLoader'
 import { FormattedText } from './FormattedText'
 import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+    {
+        fullscreen: 'Teljes képernyős nézet',
+        loading: 'Betöltés...',
+        prev: 'Előző kép',
+        next: 'Következő kép',
+        withValues: 'Teljes kép a mért értékekkel',
+        withText: 'Teljes kép és leírás',
+        photo: 'Fotó',
+        description: 'leírás',
+    },
+    {
+        fullscreen: 'Full-screen view',
+        loading: 'Loading...',
+        prev: 'Previous image',
+        next: 'Next image',
+        withValues: 'Full image with the measured values',
+        withText: 'Full image and description',
+        photo: 'Photo',
+        description: 'description',
+    },
+)
 
 interface ThermalOverlay {
     scale?: {
@@ -80,6 +105,7 @@ interface PhotoViewerProps {
 }
 
 export default function PhotoViewer({ items }: PhotoViewerProps) {
+    const t = TEXT[useLocale()]
     const { currentIndex, next, prev } = usePhotoNavigation({ totalItems: items.length })
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [sliderPos, setSliderPos] = useState(50)
@@ -121,7 +147,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                     }}
                 >
                     <Maximize2 size={16} aria-hidden="true" />
-                    Teljes képernyős nézet
+                    {t.fullscreen}
                 </button>
 
                 {/* Loading Indicator Overlay */}
@@ -152,7 +178,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                                 letterSpacing: '0.05em',
                                 fontWeight: 500,
                             }}>
-                                Betöltés...
+                                {t.loading}
                             </p>
                         </motion.div>
                     )}
@@ -241,7 +267,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                         <button
                             className={styles.navButton}
                             onClick={prev}
-                            aria-label="Előző kép"
+                            aria-label={t.prev}
                         >
                             <ChevronLeft size={20} />
                         </button>
@@ -258,7 +284,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                         <button
                             className={styles.navButton}
                             onClick={next}
-                            aria-label="Következő kép"
+                            aria-label={t.next}
                         >
                             <ChevronRight size={20} />
                         </button>
@@ -269,7 +295,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
             {/* Phones: the preview is a clean photo with its title; marks and text are in the fullscreen view */}
             <button type="button" className={styles.zoomHint} onClick={() => setIsModalOpen(true)}>
                 <Maximize2 size={16} aria-hidden="true" />
-                {hasMarks ? 'Teljes kép a mért értékekkel' : 'Teljes kép és leírás'}
+                {hasMarks ? t.withValues : t.withText}
             </button>
 
             {/* Description Area */}
@@ -278,7 +304,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                 className={styles.descriptionArea}
                 tabIndex={0}
                 role="region"
-                aria-label={`${currentItem.title || 'Fotó'} – leírás`}
+                aria-label={`${currentItem.title || t.photo} – ${t.description}`}
             >
                 <AnimatePresence mode="wait">
                     <motion.div
@@ -289,7 +315,7 @@ export default function PhotoViewer({ items }: PhotoViewerProps) {
                         exit={{ opacity: 0, y: -5 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <h3 className={styles.title}>{currentItem.title || 'Fotó'}</h3>
+                        <h3 className={styles.title}>{currentItem.title || t.photo}</h3>
                         <FormattedText className={styles.description} text={displayDescription} />
                         {currentItem.credit && <PhotoCredit>{currentItem.credit}</PhotoCredit>}
                     </motion.div>

@@ -7,16 +7,51 @@ import { useScrollNav } from '@/components/shared/ScrollLayout'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import HeroTopicList, { type HeroTopic } from '@/components/shared/HeroTopicList/HeroTopicList'
 import styles from '../pages/HeroPage.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+    {
+        topics: [
+            { title: 'Működési elv', desc: 'Hogyan működik az ásógép?' },
+            { title: 'Modellek', desc: '38SX, 38WX, 40SX' },
+            { title: 'Útmutató', desc: 'Melyik módszert válasszam?' },
+        ],
+        badge: 'A TECHNOLÓGIA',
+        titleA: 'Lazítás és forgatás,',
+        titleB: 'optimális arányban',
+        subA: 'Az Imants ásógép technológia',
+        subEm: 'megőrzi a talaj természetes rétegződését',
+        subB: ', miközben megszünteti a tömörödést. Ismerd meg a gép működését.',
+        topicsLabel: 'Témák',
+    },
+    {
+        topics: [
+            { title: 'Operating principle', desc: 'How does the spading machine work?' },
+            { title: 'Models', desc: '38SX, 38WX, 40SX' },
+            { title: 'Guide', desc: 'Which method should I choose?' },
+        ],
+        badge: 'THE TECHNOLOGY',
+        titleA: 'Loosening and inversion,',
+        titleB: 'in the right balance',
+        subA: 'Imants spading-machine technology',
+        subEm: 'preserves the natural layering of the soil',
+        subB: ' while breaking up compaction. See how the machine works.',
+        topicsLabel: 'Topics',
+    },
+)
 
 // Phones and tablets get a plain list of the same three destinations instead of the animated folder
-const TOPICS: HeroTopic[] = [
-    { id: 'operation', lead: '1', title: 'Működési elv', desc: 'Hogyan működik az ásógép?' },
-    { id: 'models', lead: '2', title: 'Modellek', desc: '38SX, 38WX, 40SX' },
-    { id: 'application', lead: '3', title: 'Útmutató', desc: 'Melyik módszert válasszam?' },
+const TOPICS: Omit<HeroTopic, 'title' | 'desc'>[] = [
+    { id: 'operation', lead: '1' },
+    { id: 'models', lead: '2' },
+    { id: 'application', lead: '3' },
 ]
 
 export default function TechHeroSection() {
     const { scrollToSection } = useScrollNav()
+    const t = TEXT[useLocale()]
+    const topics = TOPICS.map((topic, i) => ({ ...topic, ...t.topics[i] }))
     const isDesktop = useMediaQuery('(min-width: 1025px)')
 
     const navigateToSection = (sectionId: string) => {
@@ -29,14 +64,13 @@ export default function TechHeroSection() {
                 {/* Left Column - Text */}
                 <div className={styles.textColumn}>
                     <div className="hero-rise">
-                        <PageBadge label="A TECHNOLÓGIA" />
+                        <PageBadge label={t.badge} />
                         <h1 className={styles.title}>
-                            Lazítás és forgatás,<br />
-                            optimális arányban
+                            {t.titleA}<br />
+                            {t.titleB}
                         </h1>
                         <p className={styles.subTitle}>
-                            Az Imants ásógép technológia <em>megőrzi a talaj természetes rétegződését</em>,
-                            miközben megszünteti a tömörödést. Ismerd meg a gép működését.
+                            {t.subA} <em>{t.subEm}</em>{t.subB}
                         </p>
                     </div>
                 </div>
@@ -57,7 +91,7 @@ export default function TechHeroSection() {
                     </motion.div>
                 )}
 
-                <HeroTopicList topics={TOPICS} onSelect={navigateToSection} label="Témák" />
+                <HeroTopicList topics={topics} onSelect={navigateToSection} label={t.topicsLabel} />
             </div>
         </div>
     )

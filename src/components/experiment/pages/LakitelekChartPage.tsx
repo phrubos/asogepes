@@ -11,6 +11,44 @@ import { useSeason } from '../season/SeasonContext'
 import { SeasonLabel } from '../season/SeasonOnly'
 import { monthName } from '@/lib/months'
 import styles from './LakitelekChartPage.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+import { useResearchData } from '@/lib/i18n/useResearchData'
+
+const TEXT = bilingual(
+  {
+    summary: 'Eredmények összefoglalása',
+    table: 'táblázat',
+    stubble: 'tarló',
+    compare: '7 művelési kombináció összehasonlítása',
+    fullscreen: 'Teljes képernyő',
+    load: '3D modell betöltése',
+    loadTitle: '3D Modell Betöltése',
+    interactive: 'Interaktív vizualizáció',
+    detailed: 'Részletes elemzés és összehasonlítás',
+    loose: 'Laza réteg:',
+    best: 'Legnagyobb hatékonyság',
+    hide: 'Eredmények elrejtése',
+    show: 'Eredmények mutatása',
+    close: 'Bezárás',
+  },
+  {
+    summary: 'Summary of results',
+    table: 'table',
+    stubble: 'stubble',
+    compare: 'Comparison of 7 tillage combinations',
+    fullscreen: 'Full screen',
+    load: 'Load the 3D model',
+    loadTitle: 'Load the 3D model',
+    interactive: 'Interactive visualisation',
+    detailed: 'Detailed analysis and comparison',
+    loose: 'Loose layer:',
+    best: 'Most effective',
+    hide: 'Hide results',
+    show: 'Show results',
+    close: 'Close',
+  },
+)
 
 const FieldChart3DCanvas = dynamic(() => import('../FieldChart3DCanvas'), { ssr: false })
 
@@ -66,8 +104,11 @@ function ResultDesc({ id, text, isOpen, onOpen, onClose }: { id: string; text?: 
 }
 
 export default function LakitelekChartPage() {
+  const locale = useLocale()
+  const t = TEXT[locale]
   const { year } = useSeason()
-  const season = lakitelekSeasons.seasons.find((s) => s.year === year) ?? lakitelekSeasons.seasons[lakitelekSeasons.seasons.length - 1]
+  const lk = useResearchData(lakitelekSeasons)
+  const season = lk.seasons.find((s) => s.year === year) ?? lk.seasons[lk.seasons.length - 1]
   const parcels = season.parcels
   // memoised: a new object on every render (e.g. a tooltip opening) rebuilt the 3D scene and restarted its intro
   const conclusions = useMemo(() => ({ summary: season.summary, bestResults: season.bestResults }), [season])
@@ -113,7 +154,7 @@ export default function LakitelekChartPage() {
       <div className={styles.resultsPanelHeader}>
         <div className={styles.resultsTitleGroup}>
           <TrendingUp size={16} className={styles.resultsIcon} />
-          <h4>Eredmények összefoglalása</h4>
+          <h4>{t.summary}</h4>
         </div>
       </div>
 
@@ -122,14 +163,14 @@ export default function LakitelekChartPage() {
         className={styles.resultsTableWrapper}
         tabIndex={0}
         role="region"
-        aria-label="Eredmények összefoglalása – táblázat"
+        aria-label={`${t.summary} – ${t.table}, ${season.year}`}
       >
         {!rated && (
           <div className={styles.seasonNote}>
             <p>{season.summary}</p>
             {season.flagNote && (
               <p className={styles.seasonFlagNote}>
-                <span className={styles.flag}>tarló</span>
+                <span className={styles.flag}>{t.stubble}</span>{' '}
                 {season.flagNote}
               </p>
             )}
@@ -141,7 +182,7 @@ export default function LakitelekChartPage() {
             <div className={styles.resultValues}>
               {season.dates.map((d, i) => (
                 <span key={i} className={styles.valuesHeadCell}>
-                  {monthName(d)}
+                  {monthName(d, locale)}
                 </span>
               ))}
             </div>
@@ -184,11 +225,11 @@ export default function LakitelekChartPage() {
                 {!rated ? (
                   <div
                     className={styles.resultValues}
-                    aria-label={season.dates.map((_, i) => `${formatCm(parcel.values[i])} cm`).join(', ')}
+                    aria-label={season.dates.map((_, i) => `${formatCm(parcel.values[i], locale)} cm`).join(', ')}
                   >
                     {parcel.values.map((v, i) => (
                       <span key={i} className={`${styles.resultValue} ${season.dateFlags?.[i] ? styles.resultValueFlagged : ''}`}>
-                        {formatCm(v)}
+                        {formatCm(v, locale)}
                       </span>
                     ))}
                   </div>
@@ -238,7 +279,7 @@ export default function LakitelekChartPage() {
             </div>
             <div className={styles.titleGroup}>
               <h3 className={styles.headerTitle}>{season.title} · {season.info.crop.toLowerCase()}</h3>
-              <span className={styles.headerSubtitle}>7 művelési kombináció összehasonlítása</span>
+              <span className={styles.headerSubtitle}>{t.compare}</span>
             </div>
           </div>
 
@@ -246,10 +287,10 @@ export default function LakitelekChartPage() {
             className={styles.fullscreenButton}
             onClick={toggleFullscreen}
             whileTap={{ scale: 0.97 }}
-            title="Teljes képernyő"
+            title={t.fullscreen}
           >
             <Maximize2 size={18} />
-            <span>Teljes képernyő</span>
+            <span>{t.fullscreen}</span>
           </motion.button>
         </motion.div>
 
@@ -272,7 +313,7 @@ export default function LakitelekChartPage() {
                         <motion.button
                           className={styles.playButton}
                           onClick={() => setIsChartLoaded(true)}
-                          aria-label="3D modell betöltése"
+                          aria-label={t.load}
                           whileTap={{ scale: 0.97 }}
                         >
                           <Play size={40} className={styles.playIcon} fill="currentColor" />
@@ -283,8 +324,8 @@ export default function LakitelekChartPage() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.2 }}
                         >
-                          <span className={styles.playLabelTitle}>3D Modell Betöltése</span>
-                          <span className={styles.playLabelSubtitle}>Interaktív vizualizáció</span>
+                          <span className={styles.playLabelTitle}>{t.loadTitle}</span>
+                          <span className={styles.playLabelSubtitle}>{t.interactive}</span>
                         </motion.div>
                       </div>
                     </motion.div>
@@ -329,13 +370,13 @@ export default function LakitelekChartPage() {
               <div className={styles.fullscreenHeaderLeft}>
                 <div className={styles.fullscreenTitleGroup}>
                   <h3 className={styles.fullscreenTitle}>Lakitelek</h3>
-                  <span className={styles.fullscreenSubtitle}>Részletes elemzés és összehasonlítás</span>
+                  <span className={styles.fullscreenSubtitle}>{t.detailed}</span>
                 </div>
               </div>
 
               {/* Legend: centred on wide screens, its own row under the title when the window is narrower */}
               <div className={styles.fullscreenLegend}>
-                <span className={styles.fullscreenLegendLabel}>Laza réteg:</span>
+                <span className={styles.fullscreenLegendLabel}>{t.loose}</span>
                 {/* same colours as the cylinders in FieldChart3DCanvas */}
                 {([['#d0563f', '≤ 10 cm'], ['#e2b93b', '10–25 cm'], ['#74ad5c', '> 25 cm']] as const).map(([color, text]) => (
                   <span key={text} className={styles.fullscreenLegendItem}>
@@ -346,7 +387,7 @@ export default function LakitelekChartPage() {
                 {season.bestResults.length > 0 && (
                   <span className={`${styles.fullscreenLegendItem} ${styles.fullscreenLegendBest}`}>
                     <span className={styles.fullscreenLegendStar}>★</span>
-                    Legnagyobb hatékonyság
+                    {t.best}
                   </span>
                 )}
               </div>
@@ -357,9 +398,9 @@ export default function LakitelekChartPage() {
                   whileTap={{ scale: 0.97 }}
                 >
                   <Layers size={18} />
-                  <span>{showResults ? 'Eredmények elrejtése' : 'Eredmények mutatása'}</span>
+                  <span>{showResults ? t.hide : t.show}</span>
                 </motion.button>
-                <button className={styles.closeButton} onClick={toggleFullscreen} aria-label="Bezárás">
+                <button className={styles.closeButton} onClick={toggleFullscreen} aria-label={t.close}>
                   <X size={24} />
                 </button>
               </div>

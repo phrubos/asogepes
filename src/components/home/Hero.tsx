@@ -11,21 +11,49 @@ import { useLoopActive } from '@/hooks/useLoopActive'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import AnimatedNumber from '@/components/ui/AnimatedNumber'
 import { MagneticButton } from '@/components/ui/MagneticButton'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual, formatNumber, pagePath } from '@/lib/i18n/config'
 
-// Typed once in the hero title (see .typeChar in Hero.module.css)
-const HERO_ACCENT = 'végtelen erőforrás'
-
-// Figures true for every season (same source as the research page)
-const heroStats = [
-  { number: String(RESEARCH_SITES.length), label: 'Helyszín', sublabel: 'Szentkirály · Kecskemét · Lakitelek' },
-  { number: String(RESEARCH_YEARS.length), label: 'Tenyészidő', sublabel: RESEARCH_YEARS.join(' és ') },
-  { number: String(RESEARCH_FIELDS), label: 'Kísérleti tábla', sublabel: 'Szentkirályon kettő' },
-]
+// Hero copy (ticket 025). `accent` is typed once in the title (see .typeChar in Hero.module.css).
+// Figures are true for every season (same source as the research page).
+const TEXT = bilingual(
+  {
+    badge: 'Neumann János Egyetem × Agroskill Kft.',
+    lead: 'A talaj nem',
+    accent: 'végtelen erőforrás',
+    subtitle: `${RESEARCH_YEARS.length === 2 ? 'Két' : RESEARCH_YEARS.length} tenyészidő szántóföldi mérései az ásógép talajszerkezetre gyakorolt hatásáról, öntözött kertészeti kultúrákban`,
+    stats: [
+      { number: String(RESEARCH_SITES.length), label: 'Helyszín', sublabel: 'Szentkirály · Kecskemét · Lakitelek' },
+      { number: String(RESEARCH_YEARS.length), label: 'Tenyészidő', sublabel: RESEARCH_YEARS.join(' és ') },
+      { number: String(RESEARCH_FIELDS), label: 'Kísérleti tábla', sublabel: 'Szentkirályon kettő' },
+    ],
+    cta: 'Fedezd fel a kutatást',
+    cardHead: 'Szentkirály · laza réteg a tenyészidő végén',
+    control: 'kontroll',
+    spade: 'ásógép',
+    more: 'Részletek',
+  },
+  {
+    badge: 'John von Neumann University × Agroskill Kft.',
+    lead: 'Soil is not an',
+    accent: 'infinite resource',
+    subtitle: `${RESEARCH_YEARS.length === 2 ? 'Two' : RESEARCH_YEARS.length} growing seasons of field measurements on how the spading machine affects soil structure in irrigated horticultural crops`,
+    stats: [
+      { number: String(RESEARCH_SITES.length), label: 'Sites', sublabel: 'Szentkirály · Kecskemét · Lakitelek' },
+      { number: String(RESEARCH_YEARS.length), label: 'Growing seasons', sublabel: RESEARCH_YEARS.join(' and ') },
+      { number: String(RESEARCH_FIELDS), label: 'Trial fields', sublabel: 'two at Szentkirály' },
+    ],
+    cta: 'Explore the research',
+    cardHead: 'Szentkirály · loose layer, end of season',
+    control: 'control',
+    spade: 'spading machine',
+    more: 'Details',
+  },
+)
 
 // The one result measured in every season: Szentkirály onion, loose layer at the end of the season
 const seasonEnds = szentkiralySeasons.seasons.map((s) => ({ year: s.year, ...s.seasonEnd }))
 const endMax = Math.max(...seasonEnds.map((s) => s.spade))
-const cm = (v: number) => String(v).replace('.', ',')
 
 // Desktop and tablet: the landscape film. Phones (<768px): a portrait loop of the same real footage
 // (Imants 38SX, the brand on the rotor hood kept in frame). Neither with reduced motion or Save-Data;
@@ -79,6 +107,10 @@ const posterMobile = getImageProps({
 }).props
 
 export default function Hero() {
+  const locale = useLocale()
+  const t = TEXT[locale]
+  // loose-layer depth with the language's decimal mark (17,6 / 17.6); whole numbers stay whole
+  const cm = (v: number) => formatNumber(v, locale, Number.isInteger(v) ? 0 : 1)
   // No parallax on phones: the portrait video stands at the top, and moving its layer made the
   // footer's top line flicker where the hero clips it (fractional offsets, own compositing layer)
   const wide = useMediaQuery('(min-width: 768px)')
@@ -143,17 +175,17 @@ export default function Hero() {
       </div>
       <div className={styles.heroContent}>
         <div className={`${styles.heroBadge} ${styles.rise}`}>
-          Neumann János Egyetem × Agroskill Kft.
+          {t.badge}
         </div>
 
-        <h1 className={styles.heroTitle} aria-label={`A talaj nem ${HERO_ACCENT}`}>
+        <h1 className={styles.heroTitle} aria-label={`${t.lead} ${t.accent}`}>
           <span className={`${styles.titleLine} ${styles.rise}`} style={{ animationDelay: '100ms' }}>
-            A talaj nem{' '}
+            {t.lead}{' '}
             {/* Typed once, by CSS only: every letter is in the server HTML (search, link previews) and
                 appears in turn; the caret blinks a few times at the end, then goes. The heading is read
                 from aria-label, so screen readers never get it letter by letter. */}
             <span className={styles.titleAccent} aria-hidden="true">
-              {[...HERO_ACCENT].map((ch, i) => (
+              {[...t.accent].map((ch, i) => (
                 <span key={i} className={styles.typeChar} style={{ '--i': i } as CSSProperties}>
                   {ch}
                 </span>
@@ -163,11 +195,11 @@ export default function Hero() {
         </h1>
 
         <p className={`${styles.heroSubtitle} ${styles.rise}`} style={{ animationDelay: '400ms' }}>
-          {RESEARCH_YEARS.length === 2 ? 'Két' : RESEARCH_YEARS.length} tenyészidő szántóföldi mérései az ásógép talajszerkezetre gyakorolt hatásáról, öntözött kertészeti kultúrákban
+          {t.subtitle}
         </p>
 
         <div className={`${styles.heroStats} ${styles.rise}`} style={{ animationDelay: '500ms' }}>
-          {heroStats.map((stat, index) => (
+          {t.stats.map((stat, index) => (
             <div
               key={index}
               className={styles.stat}
@@ -190,20 +222,20 @@ export default function Hero() {
 
         <div className={`${styles.heroCta} ${styles.rise}`} style={{ animationDelay: '600ms' }}>
           <MagneticButton
-            href="/kutatas"
+            href={pagePath('research', locale)}
             variant="primary"
             size="lg"
             magneticStrength={0.25}
           >
-            Fedezd fel a kutatást
+            {t.cta}
             <ArrowRight size={20} />
           </MagneticButton>
         </div>
       </div>
 
       {/* Every season in one glance: the loose layer at the end of the season, control vs spader */}
-      <Link href="/kutatas?section=szentkiraly-timeline" className={`${styles.seasonCard} ${styles.rise}`} style={{ animationDelay: '700ms' }}>
-        <span className={styles.seasonCardHead}>Szentkirály · laza réteg a tenyészidő végén</span>
+      <Link href={pagePath('research', locale, 'szentkiraly-timeline')} className={`${styles.seasonCard} ${styles.rise}`} style={{ animationDelay: '700ms' }}>
+        <span className={styles.seasonCardHead}>{t.cardHead}</span>
         <span className={styles.seasonRows}>
           {seasonEnds.map((s) => (
             <span key={s.year} className={styles.seasonRow}>
@@ -219,9 +251,9 @@ export default function Hero() {
           ))}
         </span>
         <span className={styles.seasonFoot}>
-          <span><i className={styles.keyControl} />kontroll</span>
-          <span><i className={styles.keySpade} />ásógép</span>
-          <span className={styles.seasonMore}>Részletek <ArrowRight size={14} /></span>
+          <span><i className={styles.keyControl} />{t.control}</span>
+          <span><i className={styles.keySpade} />{t.spade}</span>
+          <span className={styles.seasonMore}>{t.more} <ArrowRight size={14} /></span>
         </span>
       </Link>
     </header>

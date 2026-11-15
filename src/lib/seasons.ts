@@ -204,8 +204,9 @@ export function findSeason(site: SiteSeasons, year: number): Season | undefined 
   return site.seasons.find((s) => s.year === year)
 }
 
-export function formatCm(v: number): string {
-  return String(v).replace('.', ',')
+/** 17.6 -> "17,6" (Hungarian decimal comma) or "17.6" in English */
+export function formatCm(v: number, locale: 'hu' | 'en' = 'hu'): string {
+  return locale === 'en' ? String(v) : String(v).replace('.', ',')
 }
 
 // ---------------------------------------------------------------------------

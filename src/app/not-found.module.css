@@ -122,3 +122,14 @@
     max-width: none;
   }
 }
+
+/* English way out under the Hungarian 404 (ticket 025) */
+.english {
+  margin-top: var(--space-xl);
+  font-size: var(--text-base);
+  color: rgba(245, 240, 232, 0.7);
+}
+
+.english a {
+  color: var(--color-gold-light);
+}

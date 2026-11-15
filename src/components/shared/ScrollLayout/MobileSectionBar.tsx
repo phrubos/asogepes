@@ -5,6 +5,8 @@ import { motion, AnimatePresence, useDragControls } from 'framer-motion'
 import { ChevronDown, X } from 'lucide-react'
 import { useScrollNav, YearChips } from './ScrollLayout'
 import styles from './MobileSectionBar.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { SCROLL_TEXT } from './strings'
 
 // "Kecskemét-\nBorbás" joins without a space after the hyphen; other line breaks become a space
 export const oneLine = (label: string) =>
@@ -21,6 +23,7 @@ const CLOSE_VELOCITY = 500
 export default function MobileSectionBar() {
   const { sections, activeSection, activeSubsection, activePart, scrollToSection } = useScrollNav()
   const [open, setOpen] = useState(false)
+  const t = SCROLL_TEXT[useLocale()]
   const triggerRef = useRef<HTMLButtonElement>(null)
   const sheetRef = useRef<HTMLDivElement>(null)
   const dragControls = useDragControls()
@@ -81,7 +84,7 @@ export default function MobileSectionBar() {
           onClick={() => setOpen(true)}
           aria-haspopup="dialog"
           aria-expanded={open}
-          aria-label={`Tartalom — most: ${oneLine(section.label)}${sub ? `, ${sub.label}` : ''}${part ? ` ${part.label}` : ''}`}
+          aria-label={`${t.contentsNow} ${oneLine(section.label)}${sub ? `, ${sub.label}` : ''}${part ? ` ${part.label}` : ''}`}
         >
           <span className={styles.where}>
             <span className={styles.section}>{oneLine(section.label)}</span>
@@ -112,7 +115,7 @@ export default function MobileSectionBar() {
               className={styles.sheet}
               role="dialog"
               aria-modal="true"
-              aria-label="Tartalom"
+              aria-label={t.contents}
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               // closing is quicker than opening and accelerates away (ticket 021)
@@ -130,8 +133,8 @@ export default function MobileSectionBar() {
             >
               <div className={styles.sheetHeader} onPointerDown={e => dragControls.start(e)}>
                 <span className={styles.grabber} aria-hidden="true" />
-                <span className={styles.sheetTitle}>Tartalom</span>
-                <button type="button" className={styles.close} onClick={() => setOpen(false)} aria-label="Bezárás">
+                <span className={styles.sheetTitle}>{t.contents}</span>
+                <button type="button" className={styles.close} onClick={() => setOpen(false)} aria-label={t.close}>
                   <X size={20} aria-hidden="true" />
                 </button>
               </div>
@@ -171,7 +174,7 @@ export default function MobileSectionBar() {
                               {ss.parts && ss.parts.length > 0 ? (
                                 <div className={styles.subRow}>
                                   {subItem}
-                                  <span className={styles.subParts} role="group" aria-label={`${ss.label}: évek`}>
+                                  <span className={styles.subParts} role="group" aria-label={`${ss.label}: ${t.years}`}>
                                     {ss.parts.map(p => (
                                       <button
                                         key={p.id}

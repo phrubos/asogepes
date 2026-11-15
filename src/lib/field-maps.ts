@@ -69,6 +69,8 @@ export interface MapField {
   id: string
   /** Label under an outlined field, e.g. "Vöröshagyma" */
   label?: string
+  /** English crop label (ticket 028) */
+  labelEn?: string
   /** Smaller second line, e.g. "2025–2026" */
   sub?: string
   outline?: LonLat[]
@@ -103,6 +105,7 @@ export function rectAlong(a: LonLat, b: LonLat, width: number): LonLat[] {
 export const szentkiralyOnionField: MapField = {
   id: 'onion',
   label: 'Vöröshagyma',
+  labelEn: 'Onion',
   sub: '2025–2026',
   outline: rectFromDiagonal(SITE_POINTS.szentkiralyOnion[0], SITE_POINTS.szentkiralyOnion[1], 58),
 }
@@ -115,6 +118,7 @@ export const szentkiralyOnionField: MapField = {
 export const szentkiralyTomatoField: MapField = {
   id: 'tomato',
   label: 'Ipari paradicsom',
+  labelEn: 'Tomato',
   sub: '2026',
   outline: rectAlong(SITE_POINTS.szentkiralyTomato[0], SITE_POINTS.szentkiralyTomato[1], 68),
 }
@@ -123,6 +127,7 @@ export const szentkiralyTomatoField: MapField = {
 export const kecskemetBorbasField: MapField = {
   id: 'borbas',
   label: 'Ipari paradicsom',
+  labelEn: 'Processing tomato',
   sub: '2025',
   outline: rectFromDiagonal(SITE_POINTS.kecskemetBorbas[1], SITE_POINTS.kecskemetBorbas[0], 19.6),
 }
@@ -157,6 +162,8 @@ export const lakitelekField: StripField = {
 export const lakitelekMapField: MapField = { id: 'lakitelek', strips: lakitelekField }
 
 /** "É 46,914° · K 20,006°" */
-export const coordLabel = ([lon, lat]: LonLat) =>
-  `É ${lat.toFixed(3).replace('.', ',')}° · K ${lon.toFixed(3).replace('.', ',')}°`
+export const coordLabel = ([lon, lat]: LonLat, locale: 'hu' | 'en' = 'hu') =>
+  locale === 'en'
+    ? `${lat.toFixed(3)}° N · ${lon.toFixed(3)}° E`
+    : `É ${lat.toFixed(3).replace('.', ',')}° · K ${lon.toFixed(3).replace('.', ',')}°`
 

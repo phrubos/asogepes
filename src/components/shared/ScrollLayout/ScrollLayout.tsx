@@ -7,6 +7,8 @@ import styles from './ScrollLayout.module.css'
 import NextSectionIndicator from './NextSectionIndicator'
 import MobileSectionBar from './MobileSectionBar'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { SCROLL_TEXT } from './strings'
 
 export interface ScrollSection {
   id: string
@@ -29,10 +31,11 @@ export interface ScrollSection {
 /** 25 / 26 chips of a site: one year, the other or both; a single-year site shows one locked chip */
 export function YearChips({ section, className, chipClass, onClass }: { section: ScrollSection; className: string; chipClass: string; onClass: string }) {
   const { years, chosenYears = [], onToggleYear } = section
+  const t = SCROLL_TEXT[useLocale()]
   if (!years?.length) return null
   const name = section.label.replace(/-\s*\n\s*/g, '-').replace(/\s*\n\s*/g, ' ')
   return (
-    <span className={className} role="group" aria-label={`${name}: évek`} onClick={(e) => e.stopPropagation()}>
+    <span className={className} role="group" aria-label={`${name}: ${t.years}`} onClick={(e) => e.stopPropagation()}>
       {years.map((y) => {
         const on = chosenYears.includes(y)
         const locked = years.length === 1 || (on && chosenYears.length === 1)
@@ -44,7 +47,7 @@ export function YearChips({ section, className, chipClass, onClass }: { section:
             aria-pressed={on}
             aria-disabled={locked || undefined}
             aria-label={`${y}`}
-            title={years.length === 1 ? `Csak ${y}-ben mértünk` : locked ? 'Legalább egy év mindig látszik' : undefined}
+            title={years.length === 1 ? t.onlyYear(y) : locked ? t.oneYearStays : undefined}
             onClick={() => !locked && onToggleYear?.(y)}
           >
             {String(y).slice(2)}
@@ -206,6 +209,7 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
   const containerRef = useRef<HTMLDivElement>(null)
   const isProgrammaticScroll = useRef(false)
   const router = useRouter()
+  const locale = useLocale()
   const didInitFromUrl = useRef(false)
   const isMobile = useMediaQuery('(max-width: 1024px)')
 
@@ -574,7 +578,7 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
                                 {sub.label}
                               </button>
                               {isSubActive && sub.parts && sub.parts.length > 0 && (
-                                <div className={styles.subParts} role="group" aria-label={`${sub.label}: évek`}>
+                                <div className={styles.subParts} role="group" aria-label={`${sub.label}: ${SCROLL_TEXT[locale].years}`}>
                                   <span className={styles.subPartsBend} aria-hidden="true">└</span>
                                   {sub.parts.map((p, i) => {
                                     const on = activePart === p.id

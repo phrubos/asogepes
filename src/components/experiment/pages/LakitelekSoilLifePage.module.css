@@ -270,12 +270,12 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Desktop: the lead runs under the title, full width */
+/* Desktop: the lead runs under the title on its own row, kept to a readable line length */
 @media (min-width: 1025px) {
   .lead {
     order: 3;
     flex-basis: 100%;
-    max-width: none;
+    max-width: 68ch;
     margin-top: var(--space-xs);
   }
 }

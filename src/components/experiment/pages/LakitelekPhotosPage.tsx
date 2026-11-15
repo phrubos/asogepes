@@ -8,12 +8,15 @@ import { useSeason } from '../season/SeasonContext'
 import styles from './LakitelekPhotosPage.module.css'
 import PhotoViewer from '@/components/shared/PhotoViewer/PhotoViewer'
 import LakitelekRyeBoard from './LakitelekRyeBoard'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { useResearchData } from '@/lib/i18n/useResearchData'
 
-const data = locations.lakitelek
 
 /** 2025: the photo viewer; 2026: the seven rye bundles of May (LakitelekRyeBoard) */
 export default function LakitelekPhotosPage() {
   const { year } = useSeason()
+  const data = useResearchData(locations).lakitelek
+  const en = useLocale() === 'en'
   return (
     <div className={styles.container}>
       {/* Header */}
@@ -28,7 +31,7 @@ export default function LakitelekPhotosPage() {
           <span>Lakitelek</span>
         </div>
         <SeasonLabel switchAt="lakitelek-info" />
-        <h3 className={styles.headerTitle}>Egyéb fotók</h3>
+        <h3 className={styles.headerTitle}>{en ? 'More photos' : 'Egyéb fotók'}</h3>
       </motion.div>
 
       {/* Content */}

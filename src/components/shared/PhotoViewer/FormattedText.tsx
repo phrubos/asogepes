@@ -93,7 +93,7 @@ const FormatInline = ({ text }: { text: string }) => {
     const encodedText = text.replace(/[""]/g, '"')
 
     // Updated regex to include \[\[(.*?)\]\] as the first capturing group
-    const regex = /(?:(\[\[.*?\]\])|(\d+(?:[.,]\d+)?%)|\b([IVXLCDM]+\.)|\b(\d+(?:[.,]\d+)?\s+(?:méter|m|cm|mm|km|sor|kezelés|db|alkalom|°C))\b)/g
+    const regex = /(?:(\[\[.*?\]\])|(\d+(?:[.,]\d+)?%)|\b([IVXLCDM]+\.)|\b(\d+(?:[.,]\d+)?\s+(?:méter|m|cm|mm|km|sor|kezelés|db|alkalom|°C|rows|treatments|rounds|minutes|days))\b)/g
 
     const parts = encodedText.split(regex)
 

@@ -9,11 +9,15 @@ import { szentkiralySeasons, findSeason } from '@/lib/seasons'
 import { useSeason } from '../season/SeasonContext'
 import { SeasonLabel } from '../season/SeasonOnly'
 import styles from './SzentkirályTempPage.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { useResearchData } from '@/lib/i18n/useResearchData'
 
 const data = locations.szentkiraly
-const site = szentkiralySeasons
+const SITE = szentkiralySeasons
 
 export default function SzentkirályTempPage() {
+    const site = useResearchData(SITE)
+    const en = useLocale() === 'en'
     const { year } = useSeason()
     const season = findSeason(site, year) ?? site.seasons[site.seasons.length - 1]
     // One measurement day per depth (2025): the original two-depth chart; several days: the series chart
@@ -35,7 +39,7 @@ export default function SzentkirályTempPage() {
                 <div className={styles.seasonRow}>
                     <SeasonLabel switchAt="szentkiraly-info" />
                 </div>
-                <h3 className={styles.headerTitle}>Talajhőmérséklet</h3>
+                <h3 className={styles.headerTitle}>{en ? 'Soil temperature' : 'Talajhőmérséklet'}</h3>
             </motion.div>
 
             {/* Content */}

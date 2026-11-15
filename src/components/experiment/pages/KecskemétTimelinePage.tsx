@@ -6,10 +6,13 @@ import Timeline from '../Timeline'
 import { locations } from '@/lib/data'
 import SeasonOnly from '../season/SeasonOnly'
 import styles from './KecskemétTimelinePage.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { useResearchData } from '@/lib/i18n/useResearchData'
 
-const data = locations.kecskemet
 
 export default function KecskemétTimelinePage() {
+  const data = useResearchData(locations).kecskemet
+  const en = useLocale() === 'en'
   return (
     <div className={styles.timelinePage}>
       {/* Compact Header */}
@@ -26,7 +29,7 @@ export default function KecskemétTimelinePage() {
         <div className={styles.seasonRow}>
           <SeasonOnly years={[2025]} />
         </div>
-        <h3 className={styles.headerTitle}>A talajszerkezet változása</h3>
+        <h3 className={styles.headerTitle}>{en ? 'Change in soil structure' : 'A talajszerkezet változása'}</h3>
       </motion.div>
 
       {/* Timeline Chart */}
@@ -39,7 +42,7 @@ export default function KecskemétTimelinePage() {
         {data.chartData && (
           <Timeline
             data={data.chartData}
-            title={`A laza talajréteg mélységének változása ${data.chartData.length} hónap alatt`}
+            title={en ? `Change in the depth of the loose soil layer over ${data.chartData.length} months` : `A laza talajréteg mélységének változása ${data.chartData.length} hónap alatt`}
             evaluations={data.evaluations}
           />
         )}

@@ -235,6 +235,15 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+/* Form controls don't inherit the font by default (the UA gives buttons Arial / system-ui);
+   only the family, so sizes and line heights set per component stay as they are */
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
 /* Custom Scrollbar (Global) */
 ::-webkit-scrollbar {
     width: 6px;

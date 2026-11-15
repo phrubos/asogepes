@@ -12,6 +12,53 @@ import { YearFilterProvider, useYearFilter, type SiteId } from './season/YearFil
 import SummarySection from './sections/SummarySection'
 import PageEnd from '@/components/shared/PageEnd/PageEnd'
 import { SEASON_YEARS } from '@/lib/seasons'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual, pagePath } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+    {
+        intro: 'Bevezető',
+        summary: 'Fő eredmények',
+        methodology: 'Módszertan',
+        penetrometer: 'Penetrométer',
+        measured: 'Mért jellemzők',
+        bulk: 'Térfogattömeg mérése',
+        lifeMethod: 'Talajélet mérése',
+        site: 'Helyszín adatok',
+        structure: 'A talajszerkezet változása',
+        temp: 'Talajhőmérséklet',
+        growth: 'Fejlődés (2026)',
+        tomato: 'Paradicsomtábla (2026)',
+        further: 'További mérések (2026)',
+        photos: 'Egyéb fotók',
+        seven: '7 művelési kombináció eredménye',
+        life: 'Talajélet (2025–2026)',
+        nextKicker: 'Tovább: Technológia',
+        nextTitle: 'Melyik módszert válasszam?',
+        nextText: 'Az alkalmazási útmutató a talaj állapota és a kultúra szerint ajánl gépet és művelési sort.',
+    },
+    {
+        intro: 'Introduction',
+        summary: 'Key results',
+        methodology: 'Methodology',
+        penetrometer: 'Penetrometer',
+        measured: 'Measured properties',
+        bulk: 'Measuring bulk density',
+        lifeMethod: 'Measuring soil life',
+        site: 'Site details',
+        structure: 'Change in soil structure',
+        temp: 'Soil temperature',
+        growth: 'Plant growth (2026)',
+        tomato: 'Tomato field (2026)',
+        further: 'Further measurements (2026)',
+        photos: 'More photos',
+        seven: 'Results of 7 tillage combinations',
+        life: 'Soil life (2025–2026)',
+        nextKicker: 'Next: Technology',
+        nextTitle: 'Which method should I choose?',
+        nextText: 'The application guide recommends a machine and a tillage sequence for the condition of the soil and the crop.',
+    },
+)
 
 /** The years measured at each site (ticket 015: the 25 / 26 chips beside the site in the rail) */
 const SITE_YEARS: Record<SiteId, number[]> = { szentkiraly: [2025, 2026], kecskemet: [2025], lakitelek: [2025, 2026] }
@@ -35,6 +82,8 @@ type Sub = {
 
 function ResearchSections() {
     const { selected, toggle } = useYearFilter()
+    const locale = useLocale()
+    const t = TEXT[locale]
     const sections: ScrollSection[] = useMemo(() => {
         const site = (id: SiteId, subs: Sub[]) => ({
             years: SITE_YEARS[id],
@@ -51,25 +100,25 @@ function ResearchSections() {
         return [
         {
             id: 'hero',
-            label: 'Bevezető',
+            label: t.intro,
             component: <ResearchHeroSection />,
         },
         // Main results right after the hero (mobile UX review 11-09, K1): on a phone the summary used to
         // start on screen 24. The id stays 'osszegzes' so old ?section= links still land here.
         {
             id: 'osszegzes',
-            label: 'Fő eredmények',
+            label: t.summary,
             component: <SummarySection />,
         },
         {
             id: 'methodology',
-            label: 'Módszertan',
+            label: t.methodology,
             component: <MethodologySection />,
             subsections: [
-                { id: 'methodology-penetrometer', label: 'Penetrométer' },
-                { id: 'methodology-meresek', label: 'Mért jellemzők' },
-                { id: 'methodology-terfogattomeg', label: 'Térfogattömeg mérése' },
-                { id: 'methodology-talajelet', label: 'Talajélet mérése' },
+                { id: 'methodology-penetrometer', label: t.penetrometer },
+                { id: 'methodology-meresek', label: t.measured },
+                { id: 'methodology-terfogattomeg', label: t.bulk },
+                { id: 'methodology-talajelet', label: t.lifeMethod },
             ],
         },
         {
@@ -77,13 +126,13 @@ function ResearchSections() {
             label: 'Szentkirály',
             component: <SzentkiralyCombinedPage />,
             ...site('szentkiraly', [
-                { id: 'szentkiraly-info', label: 'Helyszín adatok' },
-                { id: 'szentkiraly-timeline', label: 'A talajszerkezet változása', split: true },
-                { id: 'szentkiraly-temp', label: 'Talajhőmérséklet', split: true },
-                { id: 'szentkiraly-fejlodes', label: 'Fejlődés (2026)', years: [2026] },
-                { id: 'szentkiraly-paradicsom', label: 'Paradicsomtábla (2026)', years: [2026] },
-                { id: 'szentkiraly-meresek', label: 'További mérések (2026)', years: [2026] },
-                { id: 'szentkiraly-photos', label: 'Egyéb fotók', years: [2025] },
+                { id: 'szentkiraly-info', label: t.site },
+                { id: 'szentkiraly-timeline', label: t.structure, split: true },
+                { id: 'szentkiraly-temp', label: t.temp, split: true },
+                { id: 'szentkiraly-fejlodes', label: t.growth, years: [2026] },
+                { id: 'szentkiraly-paradicsom', label: t.tomato, years: [2026] },
+                { id: 'szentkiraly-meresek', label: t.further, years: [2026] },
+                { id: 'szentkiraly-photos', label: t.photos, years: [2025] },
             ]),
         },
         {
@@ -91,9 +140,9 @@ function ResearchSections() {
             label: 'Kecskemét-\nBorbás',
             component: <KecskemetCombinedPage />,
             ...site('kecskemet', [
-                { id: 'kecskemet-info', label: 'Helyszín adatok' },
-                { id: 'kecskemet-timeline', label: 'A talajszerkezet változása' },
-                { id: 'kecskemet-photos', label: 'Egyéb fotók' },
+                { id: 'kecskemet-info', label: t.site },
+                { id: 'kecskemet-timeline', label: t.structure },
+                { id: 'kecskemet-photos', label: t.photos },
             ]),
         },
         {
@@ -101,15 +150,15 @@ function ResearchSections() {
             label: 'Lakitelek',
             component: <LakitelekCombinedPage />,
             ...site('lakitelek', [
-                { id: 'lakitelek-info', label: 'Helyszín adatok' },
-                { id: 'lakitelek-chart', label: '7 művelési kombináció eredménye', split: true },
-                { id: 'lakitelek-talajelet', label: 'Talajélet (2025–2026)' },
-                { id: 'lakitelek-meresek', label: 'További mérések (2026)', years: [2026] },
-                { id: 'lakitelek-photos', label: 'Egyéb fotók', split: true },
+                { id: 'lakitelek-info', label: t.site },
+                { id: 'lakitelek-chart', label: t.seven, split: true },
+                { id: 'lakitelek-talajelet', label: t.life },
+                { id: 'lakitelek-meresek', label: t.further, years: [2026] },
+                { id: 'lakitelek-photos', label: t.photos, split: true },
             ]),
         },
         ]
-    }, [selected, toggle])
+    }, [selected, toggle, t])
 
     return (
         <SeasonProvider years={SEASON_YEARS}>
@@ -119,10 +168,10 @@ function ResearchSections() {
                 end={
                     <PageEnd
                         next={{
-                            href: '/technologia?section=application-guide',
-                            kicker: 'Tovább: Technológia',
-                            title: 'Melyik módszert válasszam?',
-                            text: 'Az alkalmazási útmutató a talaj állapota és a kultúra szerint ajánl gépet és művelési sort.',
+                            href: pagePath('technology', locale, 'application-guide'),
+                            kicker: t.nextKicker,
+                            title: t.nextTitle,
+                            text: t.nextText,
                         }}
                     />
                 }

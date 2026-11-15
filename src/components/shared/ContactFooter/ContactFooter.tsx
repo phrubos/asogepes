@@ -7,14 +7,42 @@ import { usePathname } from 'next/navigation'
 import { Link2, Mail, MapPin, Phone } from 'lucide-react'
 import { CONTACTS, type PartnerContact, type SocialKind } from '@/lib/contact'
 import { PARTNERS, type Partner } from '@/lib/partners'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { PAGE_PATHS, bilingual, pageFromPath, type Locale, type PageKey } from '@/lib/i18n/config'
 import styles from './ContactFooter.module.css'
 
-const PAGES = [
-  { href: '/', label: 'Főoldal' },
-  { href: '/problema', label: 'Probléma' },
-  { href: '/technologia', label: 'Technológia' },
-  { href: '/kutatas', label: 'Kutatás' },
-]
+const TEXT = bilingual(
+  {
+    pages: { home: 'Főoldal', problem: 'Probléma', technology: 'Technológia', research: 'Kutatás' } as Record<PageKey, string>,
+    pagesTitle: 'Oldalak',
+    contact: 'Kapcsolat',
+    behind: 'A kutatás mögött',
+    route: 'Útvonal',
+    mapNewTab: ' (térkép, új lapon)',
+    newTab: 'új lapon',
+    socials: 'a közösségi oldalakon',
+    legal: '© 2026 Neumann János Egyetem × Agroskill Kft.',
+    since: 'Ásógépes talajművelés, 2025-től',
+  },
+  {
+    pages: { home: 'Home', problem: 'Problem', technology: 'Technology', research: 'Research' },
+    pagesTitle: 'Pages',
+    contact: 'Contact',
+    behind: 'Behind the research',
+    route: 'Directions',
+    mapNewTab: ' (map, opens in a new tab)',
+    newTab: 'opens in a new tab',
+    socials: 'on social media',
+    legal: '© 2026 John von Neumann University × Agroskill Kft.',
+    since: 'Spading-machine tillage, since 2025',
+  },
+)
+
+const PAGE_ORDER: PageKey[] = ['home', 'problem', 'technology', 'research']
+
+const titleOf = (c: PartnerContact, locale: Locale) => (locale === 'en' ? c.titleEn : c.title)
+const addressOf = (c: PartnerContact, locale: Locale) =>
+  c.address ? (locale === 'en' ? c.address.labelEn : c.address.label) : undefined
 
 /** Filled social marks with the symbol cut out (an SVG mask), all in currentColor so they share the
    muted footer tone and turn gold on hover; lucide 0.400 has no TikTok icon, so all four are drawn here */
@@ -75,6 +103,8 @@ function Logo({ partner, className, alt = '' }: { partner: Partner; className: s
 }
 
 function ContactRows({ c }: { c: PartnerContact }) {
+  const locale = useLocale()
+  const t = TEXT[locale]
   return (
     <ul className={styles.rows}>
       {c.phone && (
@@ -99,10 +129,10 @@ function ContactRows({ c }: { c: PartnerContact }) {
             <a href={c.address.mapsHref} target="_blank" rel="noopener noreferrer" className={styles.row}>
               <MapPin size={16} aria-hidden="true" className={styles.icon} />
               <span className={styles.address}>
-                {c.address.label}
+                {addressOf(c, locale)}
                 <span className={styles.route}>
-                  Útvonal <span aria-hidden="true">↗</span>
-                  <span className="sr-only"> (térkép, új lapon)</span>
+                  {t.route} <span aria-hidden="true">↗</span>
+                  <span className="sr-only">{t.mapNewTab}</span>
                 </span>
               </span>
             </a>
@@ -110,7 +140,7 @@ function ContactRows({ c }: { c: PartnerContact }) {
         ) : (
           <li className={styles.row}>
             <MapPin size={16} aria-hidden="true" className={styles.icon} />
-            {c.address.label}
+            {addressOf(c, locale)}
           </li>
         ))}
       {c.web && (
@@ -123,7 +153,7 @@ function ContactRows({ c }: { c: PartnerContact }) {
       )}
       {c.socials && c.socials.length > 0 && (
         <li>
-          <ul className={styles.socials} aria-label={`${c.partner} a közösségi oldalakon`}>
+          <ul className={styles.socials} aria-label={`${c.partner} ${t.socials}`}>
             {c.socials.map((s) => (
               <li key={s.kind}>
                 <a href={s.href} target="_blank" rel="noopener noreferrer" className={styles.social}>
@@ -141,16 +171,18 @@ function ContactRows({ c }: { c: PartnerContact }) {
 
 /** Phone/tablet "soil profile" column of one partner (variant E): logo, role, then the links stacked */
 function SoilPartner({ c }: { c: PartnerContact }) {
+  const locale = useLocale()
+  const t = TEXT[locale]
   const p = partnerOf(c)
   const mapsHref = c.address?.mapsHref
   // the desktop column title minus the partner name ('Gép, bemutató · Agroskill' -> 'Gép, bemutató')
-  const role = c.title.split(' · ')[0]
+  const role = titleOf(c, locale).split(' · ')[0]
   return (
     <div className={styles.sPartner}>
       {p && (
         <Logo
           partner={p}
-          alt={p.name}
+          alt={locale === 'en' ? p.nameEn : p.name}
           className={p.name === 'Neumann János Egyetem' ? styles.sLogoNje : styles.sLogoAgro}
         />
       )}
@@ -166,11 +198,11 @@ function SoilPartner({ c }: { c: PartnerContact }) {
             E-mail
           </a>
         )}
-        {c.address && !mapsHref && <span className={styles.sLink}>{c.address.label}</span>}
+        {c.address && !mapsHref && <span className={styles.sLink}>{addressOf(c, locale)}</span>}
         {mapsHref && (
           <a href={mapsHref} target="_blank" rel="noopener noreferrer" className={styles.sLink}>
-            Útvonal&nbsp;<span aria-hidden="true">↗</span>
-            <span className="sr-only"> (térkép, új lapon)</span>
+            {t.route}&nbsp;<span aria-hidden="true">↗</span>
+            <span className="sr-only">{t.mapNewTab}</span>
           </a>
         )}
         {c.web && (
@@ -193,6 +225,9 @@ function SoilPartner({ c }: { c: PartnerContact }) {
  */
 export default function ContactFooter() {
   const pathname = usePathname()
+  const locale = useLocale()
+  const t = TEXT[locale]
+  const currentPage = pageFromPath(pathname)
   const soilId = useId()
   const nje = PARTNERS.find((p) => p.name === 'Neumann János Egyetem')
   const agro = PARTNERS.find((p) => p.name === 'Agroskill Kft.')
@@ -200,14 +235,14 @@ export default function ContactFooter() {
   return (
     <div className={styles.contact}>
       {CONTACTS.map((c) => (
-        <section key={c.partner} className={styles.partner} aria-label={c.partner}>
-          <h2 className={styles.label}>{c.title}</h2>
+        <section key={c.partner} className={styles.partner} aria-label={locale === 'en' ? partnerOf(c)?.nameEn ?? c.partner : c.partner}>
+          <h2 className={styles.label}>{titleOf(c, locale)}</h2>
           <ContactRows c={c} />
         </section>
       ))}
 
       <section className={styles.soil} aria-labelledby={soilId}>
-        <h2 id={soilId} className="sr-only">Kapcsolat</h2>
+        <h2 id={soilId} className="sr-only">{t.contact}</h2>
         <div className={styles.sCols}>
           {CONTACTS.map((c) => (
             <SoilPartner key={c.partner} c={c} />
@@ -216,11 +251,11 @@ export default function ContactFooter() {
         <div className={styles.sBottom}>
           <span className={styles.sLegal}>
             <span aria-hidden="true">© 2026 NJE × Agroskill</span>
-            <span className="sr-only">© 2026 Neumann János Egyetem × Agroskill Kft.</span>
+            <span className="sr-only">{t.legal}</span>
           </span>
           {CONTACTS.map((c) =>
             c.socials && c.socials.length > 0 ? (
-              <ul key={c.partner} className={styles.sSocials} aria-label={`${c.partner} a közösségi oldalakon`}>
+              <ul key={c.partner} className={styles.sSocials} aria-label={`${c.partner} ${t.socials}`}>
                 {c.socials.map((sc) => (
                   <li key={sc.kind}>
                     <a href={sc.href} target="_blank" rel="noopener noreferrer" className={styles.sSocial} aria-label={sc.label}>
@@ -234,15 +269,15 @@ export default function ContactFooter() {
         </div>
       </section>
 
-      <nav aria-label="Oldalak" className={styles.pages}>
-        <h2 className={styles.label}>Oldalak</h2>
+      <nav aria-label={t.pagesTitle} className={styles.pages}>
+        <h2 className={styles.label}>{t.pagesTitle}</h2>
         <ul className={styles.pageList}>
-          {PAGES.map((p) => {
-            const current = pathname === p.href
+          {PAGE_ORDER.map((page) => {
+            const current = currentPage === page
             return (
-              <li key={p.href}>
-                <Link href={p.href} aria-current={current ? 'page' : undefined} className={styles.pageLink}>
-                  {p.label}
+              <li key={page}>
+                <Link href={PAGE_PATHS[page][locale]} aria-current={current ? 'page' : undefined} className={styles.pageLink}>
+                  {t.pages[page]}
                 </Link>
               </li>
             )
@@ -251,7 +286,7 @@ export default function ContactFooter() {
       </nav>
 
       <div className={styles.brand}>
-        <h2 className={styles.label}>A kutatás mögött</h2>
+        <h2 className={styles.label}>{t.behind}</h2>
         <div className={styles.logos}>
           {[nje, agro].map((p) =>
             p ? (
@@ -260,7 +295,11 @@ export default function ContactFooter() {
                 href={p.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${p.name} – ${p.detail} (új lapon)`}
+                aria-label={
+                  locale === 'en'
+                    ? `${p.nameEn} – ${p.detailEn} (${t.newTab})`
+                    : `${p.name} – ${p.detail} (${t.newTab})`
+                }
                 className={styles.logoLink}
               >
                 <Logo partner={p} className={p === nje ? styles.logoNje : styles.logoAgro} />
@@ -271,8 +310,8 @@ export default function ContactFooter() {
       </div>
 
       <div className={styles.legal}>
-        <span>© 2026 Neumann János Egyetem × Agroskill Kft.</span>
-        <span>Ásógépes talajművelés, 2025-től</span>
+        <span>{t.legal}</span>
+        <span>{t.since}</span>
       </div>
     </div>
   )

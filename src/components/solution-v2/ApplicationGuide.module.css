@@ -159,6 +159,8 @@
 
 .infoItem {
   display: flex;
+  /* a value too long for the label's row (English, ~165px cards on a 1366px laptop) drops below it */
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
   font-size: var(--text-base);
@@ -174,6 +176,7 @@
   color: rgba(255, 255, 255, 0.85);
   font-weight: 500;
   text-align: right;
+  margin-left: auto;
 }
 
 .ratingRow {

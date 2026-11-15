@@ -5,6 +5,13 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import styles from './Story.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  { back: 'Vissza', again: 'Elölről', next: 'Tovább', swipe: 'Lapozni oldalra húzással is lehet' },
+  { back: 'Back', again: 'Start again', next: 'Next', swipe: 'You can also swipe sideways' },
+)
 
 /** Height of the sticky MobileSectionBar (shared/ScrollLayout) plus a little air */
 const STICKY_TOP = 56 + 12
@@ -37,6 +44,7 @@ interface StoryProps {
  * step the block scrolls back into view if the chapter text has gone above the sticky bar.
  */
 export default function Story({ label, chapters, step, onStep, stage, footer, className = '' }: StoryProps) {
+  const t = TEXT[useLocale()]
   const n = chapters.length
   const last = step === n
   const rootRef = useRef<HTMLDivElement>(null)
@@ -121,19 +129,19 @@ export default function Story({ label, chapters, step, onStep, stage, footer, cl
       <div className={styles.nav}>
         <button type="button" className={styles.prev} onClick={() => go(step - 1)} disabled={step === 1}>
           <ChevronLeft size={16} aria-hidden="true" />
-          Vissza
+          {t.back}
         </button>
         <span className={styles.count}>
           {step} / {n}
         </span>
         <button type="button" className={styles.next} onClick={() => go(last ? 1 : step + 1)}>
-          {last ? 'Elölről' : 'Tovább'}
+          {last ? t.again : t.next}
           <ChevronRight size={16} aria-hidden="true" />
         </button>
       </div>
 
       <p className={styles.swipeHint} aria-hidden="true">
-        Lapozni oldalra húzással is lehet
+        {t.swipe}
       </p>
     </div>
   )

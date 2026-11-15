@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, type CSSProperties } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Info, X, Rotate3d } from 'lucide-react'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
 
 interface ParcelData {
     num: string
@@ -46,13 +47,37 @@ const DEFAULT_MONTHS = ['Május', 'Június', 'Augusztus']
 type Zone = 'red' | 'yellow' | 'green'
 const ZONE_HEX: Record<Zone, number> = { red: 0xd0563f, yellow: 0xe2b93b, green: 0x74ad5c }
 const ZONE_CSS: Record<Zone, string> = { red: '#d0563f', yellow: '#e2b93b', green: '#74ad5c' }
-const ZONE_TEXT: Record<Zone, string> = {
-    red: '10 cm-en belül tömör',
-    yellow: '10–25 cm között tömörödik',
-    green: '25 cm alatt is laza',
+const ZONE_TEXTS: Record<'hu' | 'en', Record<Zone, string>> = {
+    hu: { red: '10 cm-en belül tömör', yellow: '10–25 cm között tömörödik', green: '25 cm alatt is laza' },
+    en: { red: 'compact within 10 cm', yellow: 'compacts between 10 and 25 cm', green: 'still loose below 25 cm' },
+}
+const UI = {
+    hu: {
+        surface: 'felszín',
+        plot: (n: string) => `${n} parcella`,
+        loose: 'Laza réteg',
+        hideKey: 'Jelmagyarázat elrejtése',
+        showKey: 'Jelmagyarázat mutatása',
+        cylinder: 'A henger a felszíntől a tömör rétegig ér: ott éri el a penetrométer a 20 bart.',
+        best: 'Legnagyobb hatékonyság',
+        controls: 'Bal klikk: forgatás · Jobb klikk: mozgatás · Görgő: zoom · Kattintás egy hengerre: érték',
+    },
+    en: {
+        surface: 'surface',
+        plot: (n: string) => `Plot ${n.replace('.', '')}`,
+        loose: 'Loose layer',
+        hideKey: 'Hide the key',
+        showKey: 'Show the key',
+        cylinder: 'Each cylinder runs from the surface down to the compact layer, where the penetrometer reaches 20 bar.',
+        best: 'Most effective',
+        controls: 'Left click: rotate · Right click: pan · Wheel: zoom · Click a cylinder: value',
+    },
 }
 const zoneOf = (cm: number): Zone => (cm <= 10 ? 'red' : cm <= 25 ? 'yellow' : 'green')
-const fmtCm = (v: number) => (Math.round(v * 10) / 10).toString().replace('.', ',')
+const fmtCmIn = (locale: 'hu' | 'en') => (v: number) => {
+    const s = (Math.round(v * 10) / 10).toString()
+    return locale === 'en' ? s : s.replace('.', ',')
+}
 
 const S = 0.1          // scene units per cm
 const BLOCK_CM = 56    // depth of the soil block
@@ -289,6 +314,10 @@ function makePenetrometer() {
 }
 
 export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen = false, monthLabels = DEFAULT_MONTHS, showMachines = true }: FieldChart3DCanvasProps) {
+    const locale = useLocale()
+    const fmtCm = fmtCmIn(locale)
+    const ZONE_TEXT = ZONE_TEXTS[locale]
+    const ui = UI[locale]
     const containerRef = useRef<HTMLDivElement>(null)
     const keysPressed = useRef<{ [key: string]: boolean }>({})
     const [showInfo, setShowInfo] = useState(false)
@@ -450,7 +479,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             scene.add(seg)
         })
         ;[0, 10, 25, 50].forEach((cm) => {
-            const l = makeLabel([cm === 0 ? 'felszín' : `${cm} cm`], { w: 200, h: 64, bg: null, size: 34, scale: 1.8 })
+            const l = makeLabel([cm === 0 ? ui.surface : `${cm} cm`], { w: 200, h: 64, bg: null, size: 34, scale: 1.8 })
             l.position.set(rx - 1.15, -cm * S, Z_FRONT)
             scene.add(l)
         })
@@ -468,7 +497,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
         })
 
         const machineOf = (num: string, treatment: string) => {
-            if (!showMachines || !treatment.toLowerCase().includes('ásógép')) return ''
+            if (!showMachines || !/ásógép|spading/i.test(treatment)) return ''
             if (num === 'I.') return ' (40SX)'
             if (['II.', 'III.', 'VI.', 'VII.'].includes(num)) return ' (38SX)'
             return ''
@@ -704,11 +733,11 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
                     style={{ ...panel, position: 'absolute', bottom: '16px', left: '16px', right: '16px', marginInline: 'auto', zIndex: 10, padding: '8px 14px', maxWidth: '460px', pointerEvents: 'none', display: 'grid', gap: '2px' }}
                 >
                     <span style={{ fontFamily: 'var(--font-fraunces), Georgia, serif', fontWeight: 600, fontSize: '15px', color: '#f3ece2' }}>
-                        {selParcel.num} parcella · {monthLabels[sel.m]} <span style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', fontWeight: 400, fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>· {selParcel.treatment}</span>
+                        {ui.plot(selParcel.num)} · {monthLabels[sel.m]} <span style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', fontWeight: 400, fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>· {selParcel.treatment}</span>
                     </span>
                     <span style={{ fontSize: '14px', color: '#f3ece2', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: ZONE_CSS[selZone], flex: 'none' }} />
-                        Laza réteg: {fmtCm(selValue)} cm · {ZONE_TEXT[selZone]}
+                        {ui.loose}: {fmtCm(selValue)} cm · {ZONE_TEXT[selZone]}
                     </span>
                 </div>
             )}
@@ -717,7 +746,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             {!isFullscreen && (
                 <button
                     onClick={() => setShowInfo(!showInfo)}
-                    aria-label={showInfo ? 'Jelmagyarázat elrejtése' : 'Jelmagyarázat mutatása'}
+                    aria-label={showInfo ? ui.hideKey : ui.showKey}
                     aria-expanded={showInfo}
                     style={{
                         position: 'absolute', top: '16px', left: '16px', zIndex: 20,
@@ -733,7 +762,7 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
             {/* Legend */}
             {(!isFullscreen && showInfo) && (
                 <div style={{ ...panel, position: 'absolute', bottom: '16px', left: '16px', right: '16px', maxWidth: '420px', pointerEvents: 'none', zIndex: 10, padding: '12px 16px', fontSize: '13px', color: 'rgba(255, 255, 255, 0.75)', display: 'grid', gap: '8px' }}>
-                    <span>A henger a felszíntől a tömör rétegig ér: ott éri el a penetrométer a 20 bart.</span>
+                    <span>{ui.cylinder}</span>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 14px' }}>
                         {(['red', 'yellow', 'green'] as Zone[]).map((z) => (
                             <span key={z} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -743,12 +772,12 @@ export default function FieldChart3DCanvas({ parcels, conclusions, isFullscreen 
                         ))}
                         {(conclusions?.bestResults.length ?? 0) > 0 && (
                             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                <span style={{ color: '#d4a84b' }}>★</span> Legnagyobb hatékonyság
+                                <span style={{ color: '#d4a84b' }}>★</span> {ui.best}
                             </span>
                         )}
                     </div>
                     <span style={{ paddingTop: '8px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', color: 'rgba(255, 255, 255, 0.5)', fontSize: '12px' }}>
-                        Bal klikk: forgatás · Jobb klikk: mozgatás · Görgő: zoom · Kattintás egy hengerre: érték
+                        {ui.controls}
                     </span>
                 </div>
             )}

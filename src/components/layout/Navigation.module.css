@@ -122,6 +122,19 @@
     pointer-events: none;
 }
 
+/* Hairline between the menu items and the language switch (ticket 025) */
+.divider {
+    width: 1px;
+    height: 18px;
+    margin: 0 var(--space-xs);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Language switch row at the foot of the phone menu */
+.mobileLang {
+    margin-top: var(--space-lg);
+}
+
 /* Mobile Toggle Button */
 .menuToggle {
     display: none;

@@ -10,6 +10,7 @@ import BulkDensityMethodPage from '../pages/BulkDensityMethodPage'
 import { SCROLL_TARGET_EVENT } from '@/components/shared/ScrollLayout/ScrollLayout'
 import combined from '../pages/CombinedPage.module.css'
 import styles from './sections.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
 
 /** Módszertan: the penetrometer, what else is measured, bulk-density sampling and the soil-life test */
 // phoneHeight: measured height at 390px (collapsed for the collapsible blocks), the content-visibility
@@ -24,6 +25,7 @@ const blocks: { id: string; component: JSX.Element; phoneHeight?: number; collap
 ]
 
 function Block({ id, component, phoneHeight, collapsible }: (typeof blocks)[number]) {
+    const en = useLocale() === 'en'
     const [open, setOpen] = useState(false)
     const ref = useRef<HTMLDivElement>(null)
 
@@ -67,7 +69,7 @@ function Block({ id, component, phoneHeight, collapsible }: (typeof blocks)[numb
                     aria-controls={`${id}-body`}
                     onClick={toggle}
                 >
-                    {open ? 'Kevesebb' : 'Részletek'}
+                    {open ? (en ? 'Less' : 'Kevesebb') : en ? 'Details' : 'Részletek'}
                     <ChevronDown size={18} aria-hidden="true" className={styles.collapseIcon} />
                 </button>
             )}

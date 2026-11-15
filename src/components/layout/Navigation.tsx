@@ -5,13 +5,28 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import styles from './Navigation.module.css'
+import LanguageSwitch from './LanguageSwitch'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { PAGE_PATHS, pageFromPath, bilingual, type PageKey } from '@/lib/i18n/config'
 
-const navItems = [
-  { href: '/', label: 'Főoldal' },
-  { href: '/problema', label: 'Probléma' },
-  { href: '/technologia', label: 'Technológia' },
-  { href: '/kutatas', label: 'Kutatás' },
+const navItems: { page: PageKey; label: { hu: string; en: string } }[] = [
+  { page: 'home', label: { hu: 'Főoldal', en: 'Home' } },
+  { page: 'problem', label: { hu: 'Probléma', en: 'Problem' } },
+  { page: 'technology', label: { hu: 'Technológia', en: 'Technology' } },
+  { page: 'research', label: { hu: 'Kutatás', en: 'Research' } },
 ]
+
+/** Clicking the menu item of the page you are on scrolls it back to the top */
+const RESET_EVENT: Partial<Record<PageKey, string>> = {
+  problem: 'reset-problem-scroll',
+  technology: 'reset-technology-scroll',
+  research: 'reset-research-scroll',
+}
+
+const TEXT = bilingual(
+  { main: 'Fő navigáció', mobile: 'Mobil navigáció', open: 'Menü megnyitása', close: 'Menü bezárása' },
+  { main: 'Main navigation', mobile: 'Mobile navigation', open: 'Open menu', close: 'Close menu' },
+)
 
 /** Layout width of the sliding underline; its visible width comes from scaleX */
 const INDICATOR_BASE = 100
@@ -25,6 +40,9 @@ export default function Navigation() {
   const [mounted, setMounted] = useState(false)
   const navRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+  const lang = useLocale()
+  const t = TEXT[lang]
+  const currentPage = pageFromPath(pathname)
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -33,7 +51,7 @@ export default function Navigation() {
 
   // Find active index based on pathname
   useEffect(() => {
-    const index = navItems.findIndex(item => item.href === pathname)
+    const index = navItems.findIndex(item => item.page === pageFromPath(pathname))
     setActiveIndex(index) // -1 off the menu (e.g. the 404 page): no item underlined
     setScrolled(false) // Reset scrolled state on route change
   }, [pathname])
@@ -70,7 +88,7 @@ export default function Navigation() {
       window.addEventListener('resize', updateIndicator)
     }
     return () => window.removeEventListener('resize', updateIndicator)
-  }, [activeIndex, hoverIndex, mounted])
+  }, [activeIndex, hoverIndex, mounted, lang])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -116,7 +134,7 @@ export default function Navigation() {
     <header className={`${styles.header} ${mounted && scrolled ? styles.scrolled : ''}`}>
       <div className={styles.headerInner}>
         {/* Desktop Navigation */}
-        <nav className={styles.nav} ref={navRef} aria-label="Fő navigáció">
+        <nav className={styles.nav} ref={navRef} aria-label={t.main}>
           {/* Sliding Indicator - only render after mount. A 100px line moved by x and stretched by
               scaleX (transform only), so hovering the menu never re-lays out the header */}
           {mounted && (
@@ -133,34 +151,30 @@ export default function Navigation() {
 
           {navItems.map((item, index) => (
             <Link
-              key={item.href}
-              href={item.href}
-              className={`${styles.navLink} ${pathname === item.href ? styles.active : ''}`}
+              key={item.page}
+              href={PAGE_PATHS[item.page][lang]}
+              className={`${styles.navLink} ${currentPage === item.page ? styles.active : ''}`}
               onMouseEnter={() => setHoverIndex(index)}
               onMouseLeave={() => setHoverIndex(null)}
               onClick={() => {
-                if (pathname !== item.href) return
-                if (item.href === '/problema') {
-                  // If clicking "Probléma" while already there, reset to top
-                  window.dispatchEvent(new CustomEvent('reset-problem-scroll'))
-                } else if (item.href === '/technologia') {
-                  window.dispatchEvent(new CustomEvent('reset-technology-scroll'))
-                } else if (item.href === '/kutatas') {
-                  window.dispatchEvent(new CustomEvent('reset-research-scroll'))
-                }
+                // clicking the page you are on scrolls it back to the top
+                const reset = RESET_EVENT[item.page]
+                if (currentPage === item.page && reset) window.dispatchEvent(new CustomEvent(reset))
               }}
-              aria-current={pathname === item.href ? 'page' : undefined}
+              aria-current={currentPage === item.page ? 'page' : undefined}
             >
-              {item.label}
+              {item.label[lang]}
             </Link>
           ))}
+          <span className={styles.divider} aria-hidden="true" />
+          <LanguageSwitch />
         </nav>
 
         {/* Mobile Toggle */}
         <button
           className={styles.menuToggle}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label={mobileMenuOpen ? 'Menü bezárása' : 'Menü megnyitása'}
+          aria-label={mobileMenuOpen ? t.close : t.open}
           aria-expanded={mobileMenuOpen}
         >
           <motion.div
@@ -208,30 +222,30 @@ export default function Navigation() {
                 animate={{ clipPath: 'inset(0 0 0% 0)' }}
                 exit={{ clipPath: 'inset(0 0 100% 0)', transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                aria-label="Mobil navigáció"
+                aria-label={t.mobile}
               >
                 <div className={styles.mobileNavInner}>
                   {navItems.map((item, index) => (
                     <motion.div
-                      key={item.href}
+                      key={item.page}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10, transition: { duration: 0.12 } }}
                       transition={{ delay: 0.1 + index * 0.05 }}
                     >
                       <Link
-                        href={item.href}
-                        className={`${styles.mobileLink} ${pathname === item.href ? styles.mobileActive : ''}`}
+                        href={PAGE_PATHS[item.page][lang]}
+                        className={`${styles.mobileLink} ${currentPage === item.page ? styles.mobileActive : ''}`}
                         onClick={() => {
                           setMobileMenuOpen(false)
                         }}
-                        aria-current={pathname === item.href ? 'page' : undefined}
+                        aria-current={currentPage === item.page ? 'page' : undefined}
                       >
                         <span className={styles.mobileLinkNumber}>
                           {String(index).padStart(2, '0')}
                         </span>
-                        <span className={styles.mobileLinkText}>{item.label}</span>
-                        {pathname === item.href && (
+                        <span className={styles.mobileLinkText}>{item.label[lang]}</span>
+                        {currentPage === item.page && (
                           <motion.span
                             className={styles.mobileActiveMark}
                             layoutId="mobileActive"
@@ -240,6 +254,15 @@ export default function Navigation() {
                       </Link>
                     </motion.div>
                   ))}
+                  <motion.div
+                    className={styles.mobileLang}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10, transition: { duration: 0.12 } }}
+                    transition={{ delay: 0.1 + navItems.length * 0.05 }}
+                  >
+                    <LanguageSwitch variant="row" />
+                  </motion.div>
                 </div>
               </motion.nav>
             </>

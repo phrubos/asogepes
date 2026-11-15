@@ -10,6 +10,10 @@ import { SCROLL_TARGET_EVENT } from '@/components/shared/ScrollLayout/ScrollLayo
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import styles from './ModelsCombinedPage.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual({ next: 'Következő modell:', model: 'Modell' }, { next: 'Next model:', model: 'Model' })
 
 const models = modelData.map(m => m.id)
 const BAR_HEIGHT = 56 // MobileSectionBar
@@ -19,6 +23,8 @@ const BAR_HEIGHT = 56 // MobileSectionBar
  * picked with a segmented switcher at the top of the model (CSS hides the others).
  */
 export default function ModelsCombinedPage() {
+    const locale = useLocale()
+    const t = TEXT[locale]
     const [selected, setSelected] = useState<ModelId>('38sx')
     const isCompact = useMediaQuery('(max-width: 1024px)') === true
     const reduced = useReducedMotion()
@@ -82,7 +88,7 @@ export default function ModelsCombinedPage() {
                         role={isCompact ? 'tabpanel' : undefined}
                         aria-labelledby={isCompact ? `model-tab-${modelId}` : undefined}
                     >
-                        <div className={styles.switcher} role="tablist" aria-label="Modell">
+                        <div className={styles.switcher} role="tablist" aria-label={t.model}>
                             {modelData.map(m => {
                                 const isSelected = m.id === selected
                                 return (
@@ -100,7 +106,7 @@ export default function ModelsCombinedPage() {
                                         onKeyDown={onTabKey}
                                     >
                                         <span className={styles.tabName}>{m.name}</span>
-                                        <span className={styles.tabType}>{m.type}</span>
+                                        <span className={styles.tabType}>{locale === 'en' ? m.en.type : m.type}</span>
                                     </button>
                                 )
                             })}
@@ -113,7 +119,7 @@ export default function ModelsCombinedPage() {
 
                         {nextModel && (
                             <button type="button" className={styles.nextModel} onClick={() => { focusAfterSwitch.current = true; select(nextModel.id) }}>
-                                Következő modell: {nextModel.name}
+                                {t.next} {nextModel.name}
                                 <ArrowRight size={18} aria-hidden="true" />
                             </button>
                         )}

@@ -2,6 +2,10 @@
 
 import { useSeason } from './SeasonContext'
 import styles from './SeasonSwitch.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual({ year: 'Év', earlierYear: 'Korábbi év', earlier: 'Korábbi' }, { year: 'Year', earlierYear: 'Earlier year', earlier: 'Earlier' })
 
 const MAX_BUTTONS = 4
 
@@ -11,6 +15,7 @@ const MAX_BUTTONS = 4
  */
 /** `small`: badge height on desktop, to sit next to a page badge. */
 export default function SeasonSwitch({ years: available, small }: { years?: number[]; small?: boolean }) {
+  const t = TEXT[useLocale()]
   const { year, years: all, setYear } = useSeason()
   const years = available ?? all
   if (years.length < 2) return null
@@ -20,16 +25,16 @@ export default function SeasonSwitch({ years: available, small }: { years?: numb
   const older = many ? years.slice(0, years.length - (MAX_BUTTONS - 1)) : []
 
   return (
-    <div className={`${styles.switch} ${small ? styles.small : ''}`} role="group" aria-label="Év">
-      <span className={styles.label} aria-hidden="true">Év</span>
+    <div className={`${styles.switch} ${small ? styles.small : ''}`} role="group" aria-label={t.year}>
+      <span className={styles.label} aria-hidden="true">{t.year}</span>
       {older.length > 0 && (
         <select
           className={`${styles.option} ${styles.select} ${older.includes(year) ? styles.active : ''}`}
           value={older.includes(year) ? year : ''}
           onChange={(e) => setYear(Number(e.target.value))}
-          aria-label="Korábbi év"
+          aria-label={t.earlierYear}
         >
-          <option value="" disabled>Korábbi</option>
+          <option value="" disabled>{t.earlier}</option>
           {older.map((y) => <option key={y} value={y}>{y}</option>)}
         </select>
       )}

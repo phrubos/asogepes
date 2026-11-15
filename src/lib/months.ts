@@ -12,11 +12,19 @@ const IN: Record<string, string> = {
   'JÚL.': 'júliusban', 'AUG.': 'augusztusban', 'SZEPT.': 'szeptemberben', 'OKT.': 'októberben', 'NOV.': 'novemberben', 'DEC.': 'decemberben',
 }
 
+const EN: Record<string, string> = {
+  'JAN.': 'January', 'FEBR.': 'February', 'MÁRC.': 'March', 'ÁPR.': 'April', 'MÁJ.': 'May', 'JÚN.': 'June',
+  'JÚL.': 'July', 'AUG.': 'August', 'SZEPT.': 'September', 'OKT.': 'October', 'NOV.': 'November', 'DEC.': 'December',
+}
+
+type Lang = 'hu' | 'en'
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
-/** "április" */
-export const monthLower = (d: MeasureDate) => NAMES[d.month] ?? d.month.toLowerCase()
+/** "április" (English: "April", month names are always capitalised) */
+export const monthLower = (d: MeasureDate, locale: Lang = 'hu') =>
+  locale === 'en' ? EN[d.month] ?? d.month : NAMES[d.month] ?? d.month.toLowerCase()
 /** "Április", as on axes and labels */
-export const monthName = (d: MeasureDate) => cap(monthLower(d))
-/** "áprilisban" */
-export const monthIn = (d: MeasureDate) => IN[d.month] ?? monthLower(d)
+export const monthName = (d: MeasureDate, locale: Lang = 'hu') => cap(monthLower(d, locale))
+/** "áprilisban" / "in April" */
+export const monthIn = (d: MeasureDate, locale: Lang = 'hu') =>
+  locale === 'en' ? `in ${monthLower(d, 'en')}` : IN[d.month] ?? monthLower(d)

@@ -2,6 +2,13 @@
 
 import { motion, useMotionValue, useTransform, MotionValue } from 'framer-motion'
 import { useEffect, useMemo, useRef } from 'react'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  { pan: 'Tömörödött Réteg', days: (n: number) => `${n} nap` },
+  { pan: 'Compacted layer', days: (n: number) => `${n} days` },
+)
 
 // Deterministic pseudo-random in [0, 1), rounded so server and browser agree
 const seededRandom = (seed: number) => {
@@ -19,6 +26,7 @@ interface InteractiveSoilProps {
 }
 
 export default function InteractiveSoil({ progress, onProgressChange, onInteractionStart, onInteractionEnd, paused = false }: InteractiveSoilProps) {
+  const t = TEXT[useLocale()]
   const svgRef = useRef<SVGSVGElement>(null)
 
   // CSS reduced-motion rules and Framer do not reach SMIL <animate>, so pause it explicitly
@@ -387,14 +395,14 @@ export default function InteractiveSoil({ progress, onProgressChange, onInteract
             fill="rgba(255,255,255,0.9)"
             style={{
               fontSize: '14px',
-              fontFamily: 'monospace',
+              fontFamily: 'var(--font-mono), monospace',
               fontWeight: 'bold',
               letterSpacing: '2px',
               textTransform: 'uppercase',
               textShadow: '0 2px 4px rgba(0,0,0,0.9)'
             }}
           >
-            Tömörödött Réteg
+            {t.pan}
           </motion.text>
 
           {/* Depth Ruler */}
@@ -404,7 +412,7 @@ export default function InteractiveSoil({ progress, onProgressChange, onInteract
             {[0, 10, 20, 30, 40, 50].map((cm, i) => (
               <g key={cm} transform={`translate(0, ${i * 70})`}>
                 <line x1="-5" y1="0" x2="5" y2="0" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
-                <text x="10" y="4" textAnchor="start" fill="rgba(255,255,255,0.6)" fontSize="10px" fontWeight="normal" style={{ fontFamily: 'monospace' }}>
+                <text x="10" y="4" textAnchor="start" fill="rgba(255,255,255,0.6)" fontSize="10px" fontWeight="normal" style={{ fontFamily: 'var(--font-mono), monospace' }}>
                   -{cm}cm
                 </text>
               </g>
@@ -436,7 +444,7 @@ export default function InteractiveSoil({ progress, onProgressChange, onInteract
             />
 
             {/* 4. Ticks & Labels (Internal - Pressure) */}
-            <g fontSize="7px" fontFamily="monospace" fill="#546E7A" textAnchor="middle" fontWeight="bold">
+            <g fontSize="7px" style={{ fontFamily: 'var(--font-mono), monospace' }} fill="#546E7A" textAnchor="middle" fontWeight="bold">
               {/* 0 Bar - approx 160 deg */}
               <text x="-28" y="10">0</text>
 
@@ -480,23 +488,23 @@ export default function InteractiveSoil({ progress, onProgressChange, onInteract
                 Angles: 160, 215, 270, 325, 20 deg.
             */}
             {/* 0 nap (160 deg) x=-67, y=24 */}
-            <text x="-67" y="27" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="end" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">0 nap</text>
+            <text x="-67" y="27" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="end" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">{t.days(0)}</text>
             <line x1="-48" y1="17" x2="-56" y2="20" stroke="#fff" strokeWidth="1" opacity="0.6" />
 
             {/* 30 nap (215 deg) x=-59, y=-41 */}
-            <text x="-59" y="-41" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="end" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">30 nap</text>
+            <text x="-59" y="-41" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="end" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">{t.days(30)}</text>
             <line x1="-42" y1="-29" x2="-49" y2="-34" stroke="#fff" strokeWidth="1" opacity="0.6" />
 
             {/* 60 nap (270 deg) x=0, y=-72 */}
-            <text x="0" y="-65" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="middle" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">60 nap</text>
+            <text x="0" y="-65" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="middle" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">{t.days(60)}</text>
             <line x1="0" y1="-52" x2="0" y2="-60" stroke="#fff" strokeWidth="1" opacity="0.6" />
 
             {/* 90 nap (325 deg) x=59, y=-41 */}
-            <text x="59" y="-41" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="start" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">90 nap</text>
+            <text x="59" y="-41" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="start" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">{t.days(90)}</text>
             <line x1="42" y1="-29" x2="49" y2="-34" stroke="#fff" strokeWidth="1" opacity="0.6" />
 
             {/* 120 nap (20 deg) x=67, y=24 */}
-            <text x="67" y="27" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="start" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">120 nap</text>
+            <text x="67" y="27" fontSize="10px" fill="#fff" fontWeight="bold" textAnchor="start" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.8))">{t.days(120)}</text>
             <line x1="48" y1="17" x2="56" y2="20" stroke="#fff" strokeWidth="1" opacity="0.6" />
 
             {/* === INTERACTIVE OVERLAY === */}

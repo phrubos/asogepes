@@ -6,9 +6,12 @@ import { ArrowDown } from 'lucide-react'
 import { useScrollNav, type ScrollSection } from './ScrollLayout'
 import { oneLine } from './MobileSectionBar'
 import styles from './ScrollLayout.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { SCROLL_TEXT } from './strings'
 
 export default function NextSectionIndicator() {
     const { activeSection, activeSubsection, activePart, sections, scrollToSection } = useScrollNav()
+    const t = SCROLL_TEXT[useLocale()]
 
     const nextInfo = useMemo(() => {
         const currentSectionIndex = sections.findIndex(s => s.id === activeSection)
@@ -77,10 +80,10 @@ export default function NextSectionIndicator() {
                     transition={{ duration: 0.3 }}
                     className={styles.scrollIndicator}
                     onClick={() => scrollToSection(nextInfo.id)}
-                    aria-label={`Görgess ehhez: ${displayTitle}`}
+                    aria-label={`${t.scrollTo} ${displayTitle}`}
                 >
                     <div className={styles.indicatorText} aria-hidden="true">
-                        <span className={styles.indicatorLabel}>Görgess lejjebb</span>
+                        <span className={styles.indicatorLabel}>{t.scrollDown}</span>
                         <div className={styles.indicatorTitleWrapper}>
                             <span className={styles.indicatorSection}>
                                 {nextInfo.sectionName}

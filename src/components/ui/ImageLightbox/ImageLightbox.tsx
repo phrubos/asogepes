@@ -6,6 +6,13 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { X, ZoomIn, ZoomOut, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import styles from './ImageLightbox.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  { out: 'Kicsinyítés', in: 'Nagyítás', reset: 'Visszaállítás', close: 'Bezárás', prev: 'Előző kép', next: 'Következő kép', esc: 'ESC bezárás', nav: '← → navigáció' },
+  { out: 'Zoom out', in: 'Zoom in', reset: 'Reset', close: 'Close', prev: 'Previous image', next: 'Next image', esc: 'ESC close', nav: '← → navigate' },
+)
 
 interface ImageLightboxProps {
   isOpen: boolean
@@ -47,6 +54,7 @@ export default function ImageLightbox({
   images,
   initialIndex = 0
 }: ImageLightboxProps) {
+  const t = TEXT[useLocale()]
   const [currentIndex, setCurrentIndex] = useState(initialIndex)
   const [zoom, setZoom] = useState(1)
   const [mounted, setMounted] = useState(false)
@@ -188,7 +196,7 @@ export default function ImageLightbox({
               className={styles.controlBtn}
               onClick={handleZoomOut}
               whileTap={{ scale: 0.97 }}
-              aria-label="Kicsinyítés"
+              aria-label={t.out}
               disabled={zoom <= 0.5}
             >
               <ZoomOut size={20} />
@@ -198,7 +206,7 @@ export default function ImageLightbox({
               className={styles.controlBtn}
               onClick={handleZoomIn}
               whileTap={{ scale: 0.97 }}
-              aria-label="Nagyítás"
+              aria-label={t.in}
               disabled={zoom >= 4}
             >
               <ZoomIn size={20} />
@@ -207,7 +215,7 @@ export default function ImageLightbox({
               className={styles.controlBtn}
               onClick={handleReset}
               whileTap={{ scale: 0.97 }}
-              aria-label="Visszaállítás"
+              aria-label={t.reset}
             >
               <RotateCcw size={20} />
             </motion.button>
@@ -217,7 +225,7 @@ export default function ImageLightbox({
           <button
             className={styles.closeBtn}
             onClick={onClose}
-            aria-label="Bezárás"
+            aria-label={t.close}
           >
             <X size={20} />
           </button>
@@ -228,14 +236,14 @@ export default function ImageLightbox({
               <button
                 className={`${styles.navBtn} ${styles.prevBtn}`}
                 onClick={navigatePrev}
-                aria-label="Előző kép"
+                aria-label={t.prev}
               >
                 <ChevronLeft size={24} />
               </button>
               <button
                 className={`${styles.navBtn} ${styles.nextBtn}`}
                 onClick={navigateNext}
-                aria-label="Következő kép"
+                aria-label={t.next}
               >
                 <ChevronRight size={24} />
               </button>
@@ -279,8 +287,8 @@ export default function ImageLightbox({
 
           {/* Keyboard hints */}
           <div className={styles.hints}>
-            <span>ESC bezárás</span>
-            {hasMultiple && <span>← → navigáció</span>}
+            <span>{t.esc}</span>
+            {hasMultiple && <span>{t.nav}</span>}
             <span>+/- zoom</span>
           </div>
         </motion.div>

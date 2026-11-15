@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { MapPin, Layers, Leaf, Droplets, Calendar, Gauge, type LucideIcon } from 'lucide-react'
 import { inYear } from '../season/SeasonOnly'
 import styles from './SiteInfoLayout.module.css'
+import type { Locale } from '@/lib/i18n/config'
 
 /*
  * "Helyszín adatok" for every site (ticket 006): header and a short ruled fact list on the left, the field
@@ -37,15 +38,26 @@ function splitWater(s: string): [string, string?] {
 }
 
 /** The five facts every site has. `prev` (last season) adds "2025-ben ipari paradicsom" when the crop changed. */
-export function siteFacts(info: SiteInfo, prev?: { year: number; crop: string }): Fact[] {
+export function siteFacts(info: SiteInfo, prev?: { year: number; crop: string }, locale: Locale = 'hu'): Fact[] {
+  const en = locale === 'en'
   const [measured, ...rest] = info.measurements.split(', ')
   const [water, waterSub] = splitWater(info.irrigation)
   return [
-    { icon: Layers, label: 'Talaj', value: info.soil, sub: <>K<sub>A</sub> {info.ka} (Arany-féle kötöttség)</> },
-    { icon: Leaf, label: 'Kultúra', value: info.crop, sub: prev && prev.crop !== info.crop ? `${inYear(prev.year)} ${prev.crop.toLowerCase()}` : undefined },
-    { icon: Droplets, label: info.irrigation.includes('csapadék') ? 'Víz' : 'Öntözés', value: water, sub: waterSub },
-    { icon: Calendar, label: 'Időszak', value: info.period },
-    { icon: Gauge, label: 'Mérések', value: measured, sub: ['penetrométerrel', ...rest].join(', ') },
+    { icon: Layers, label: en ? 'Soil' : 'Talaj', value: info.soil, sub: <>K<sub>A</sub> {info.ka} ({en ? 'Arany plasticity index' : 'Arany-féle kötöttség'})</> },
+    {
+      icon: Leaf,
+      label: en ? 'Crop' : 'Kultúra',
+      value: info.crop,
+      sub: prev && prev.crop !== info.crop ? (en ? `${prev.crop.toLowerCase()} in ${prev.year}` : `${inYear(prev.year)} ${prev.crop.toLowerCase()}`) : undefined,
+    },
+    {
+      icon: Droplets,
+      label: /csapadék|rainfall/.test(info.irrigation) ? (en ? 'Water' : 'Víz') : en ? 'Irrigation' : 'Öntözés',
+      value: water,
+      sub: waterSub,
+    },
+    { icon: Calendar, label: en ? 'Period' : 'Időszak', value: info.period },
+    { icon: Gauge, label: en ? 'Measurements' : 'Mérések', value: measured, sub: [en ? 'with a penetrometer' : 'penetrométerrel', ...rest].join(', ') },
   ]
 }
 

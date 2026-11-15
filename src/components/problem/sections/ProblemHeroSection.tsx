@@ -7,12 +7,36 @@ import PageBadge from '@/components/ui/PageBadge'
 import HeroTopicList, { type HeroTopic } from '@/components/shared/HeroTopicList/HeroTopicList'
 import { useScrollNav } from '@/components/shared/ScrollLayout'
 import styles from '../pages/ProblemHeroPage.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+    {
+        cards: ['Az öntözés okozta tömörödés', 'A szántóföldi nehézkultivátor korlátai', 'A szántás korlátai'],
+        topics: ['Az öntözés okozta tömörödés', 'A nehézkultivátor korlátai', 'A szántás korlátai'],
+        badge: 'A PROBLÉMA',
+        titleA: 'Miért veszítjük el',
+        titleB: 'a gyökértömeget?',
+        subtitle: 'Az intenzív öntözés és a nehéz gépek taposása láthatatlanul teszi tönkre a talajszerkezetet, homok és vályog talajon egyaránt.',
+        subtitle2: 'Három fő ellenséggel küzdünk.',
+        topicsLabel: 'A három probléma',
+    },
+    {
+        cards: ['Irrigation-induced compaction', 'The limits of the heavy field cultivator', 'The limits of ploughing'],
+        topics: ['Irrigation-induced compaction', 'The limits of the heavy cultivator', 'The limits of ploughing'],
+        badge: 'THE PROBLEM',
+        titleA: 'Why are we losing',
+        titleB: 'root mass?',
+        subtitle: 'Intensive irrigation and wheel traffic from heavy machinery quietly destroy soil structure, on sandy and loam soils alike.',
+        subtitle2: 'Three main culprits are at work.',
+        topicsLabel: 'The three problems',
+    },
+)
 
 const HERO_NAV_ITEMS = [
     {
         id: 'compaction',
         number: '01',
-        title: 'Az öntözés okozta tömörödés',
         icon: <Droplet size={24} />,
         color: '#A0846B',
         accent: '#D4A84B', // gold → ochre → terracotta: rising severity in the site palette
@@ -22,7 +46,6 @@ const HERO_NAV_ITEMS = [
     {
         id: 'cultivator',
         number: '02',
-        title: 'A szántóföldi nehézkultivátor korlátai',
         icon: <UnfoldHorizontal size={24} />,
         color: '#7D6B5A',
         accent: '#C8873A',
@@ -32,7 +55,6 @@ const HERO_NAV_ITEMS = [
     {
         id: 'ploughing',
         number: '03',
-        title: 'A szántás korlátai',
         icon: <Redo size={24} />,
         color: '#5C4D3D',
         accent: '#C45C3E',
@@ -42,14 +64,16 @@ const HERO_NAV_ITEMS = [
 ]
 
 // Phones and tablets: the same three problems as a tappable list, ordered by depth
-const HERO_TOPICS: HeroTopic[] = [
-    { id: 'compaction', lead: '1', title: 'Az öntözés okozta tömörödés' },
-    { id: 'cultivator', lead: '2', title: 'A nehézkultivátor korlátai' },
-    { id: 'ploughing', lead: '3', title: 'A szántás korlátai' },
+const HERO_TOPICS: Omit<HeroTopic, 'title'>[] = [
+    { id: 'compaction', lead: '1' },
+    { id: 'cultivator', lead: '2' },
+    { id: 'ploughing', lead: '3' },
 ]
 
 export default function ProblemHeroSection() {
     const { scrollToSection } = useScrollNav()
+    const t = TEXT[useLocale()]
+    const topics = HERO_TOPICS.map((topic, i) => ({ ...topic, title: t.topics[i] }))
     const [hoveredId, setHoveredId] = useState<string | null>(null)
 
     const handleNavigate = (sectionId: string) => {
@@ -62,21 +86,21 @@ export default function ProblemHeroSection() {
                 {/* Left Column: Heading & Intro */}
                 <div className={styles.heroLeft}>
                     <div className="hero-rise">
-                        <PageBadge label="A PROBLÉMA" />
+                        <PageBadge label={t.badge} />
                     </div>
 
                     <h1 className={`${styles.heroTitle} hero-rise`} style={{ animationDelay: '100ms' }}>
-                        Miért veszítjük el<br />
-                        <span className={styles.titleHighlight}>a gyökértömeget?</span>
+                        {t.titleA}<br />
+                        <span className={styles.titleHighlight}>{t.titleB}</span>
                     </h1>
 
                     <p className={`${styles.heroSubtitle} hero-rise`} style={{ animationDelay: '200ms' }}>
-                        Az intenzív öntözés és a nehéz gépek taposása láthatatlanul teszi tönkre a talajszerkezetet, homok és vályog talajon egyaránt.<br />
-                        Három fő ellenséggel küzdünk.
+                        {t.subtitle}<br />
+                        {t.subtitle2}
                     </p>
                 </div>
 
-                <HeroTopicList topics={HERO_TOPICS} onSelect={handleNavigate} label="A három probléma" />
+                <HeroTopicList topics={topics} onSelect={handleNavigate} label={t.topicsLabel} />
 
                 <div className={styles.heroRight}>
                     {/* Imants / Soil Blades Container */}
@@ -124,7 +148,7 @@ export default function ProblemHeroSection() {
                                     >
                                         <span className={styles.spadeNumber}>{item.number}</span>
                                         <div className={styles.spadeIcon}>{item.icon}</div>
-                                        <h2 className={styles.spadeTitle}>{item.title}</h2>
+                                        <h2 className={styles.spadeTitle}>{t.cards[index]}</h2>
                                     </div>
                                 </motion.div>
                             )

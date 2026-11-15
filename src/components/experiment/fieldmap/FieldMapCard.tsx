@@ -7,6 +7,45 @@ import {
 } from '@/lib/field-maps'
 import { SCROLL_TARGET_EVENT } from '@/components/shared/ScrollLayout/ScrollLayout'
 import styles from './FieldMapCard.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  {
+    interfluve: 'Duna–Tisza köze',
+    around: 'Kecskemét környéke',
+    fields: 'Táblák',
+    field: 'Tábla',
+    danube: 'Duna',
+    replay: 'Térkép-animáció újrajátszása',
+    replayTitle: 'Újrajátszás',
+    what: (strips: number | undefined, n: number) =>
+      strips ? `a ${strips} parcellás kísérleti táblára` : n > 1 ? `a ${n} kísérleti táblára` : 'a kísérleti táblára',
+    mapLabel: (site: string, what: string) => `Térkép: a Duna–Tisza közéről ráközelít ${site} környékére, majd ${what}.`,
+    north: 'Észak felfelé',
+    northLetter: 'É',
+    key: 'Jelmagyarázat',
+    spade: 'ásógéppel művelt',
+    plain: 'ásógép nélkül',
+  },
+  {
+    interfluve: 'Danube–Tisza Interfluve',
+    around: 'Around Kecskemét',
+    fields: 'Fields',
+    field: 'Field',
+    danube: 'Danube',
+    replay: 'Replay the map animation',
+    replayTitle: 'Replay',
+    what: (strips: number | undefined, n: number) =>
+      strips ? `the trial field with ${strips} plots` : n > 1 ? `the ${n} trial fields` : 'the trial field',
+    mapLabel: (site: string, what: string) => `Map: zooms in from the Danube–Tisza Interfluve to the ${site} area, then to ${what}.`,
+    north: 'North up',
+    northLetter: 'N',
+    key: 'Key',
+    spade: 'tilled with a spading machine',
+    plain: 'without a spading machine',
+  },
+)
 
 /*
  * "Helyszín adatok" field map (ticket 006): a squared paper scrap with a map that zooms in three steps,
@@ -58,6 +97,8 @@ interface Props {
 }
 
 export default function FieldMapCard({ site, title, fields, inactive = [], showKey = false }: Props) {
+  const locale = useLocale()
+  const t = TEXT[locale]
   const mapRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const tagRef = useRef<HTMLSpanElement>(null)
@@ -72,7 +113,7 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
   const pinLL = SITE_DOTS[site]
   const multi = fields.length > 1
   const stripCount = fields.find((f) => f.strips)?.strips?.strips.length
-  const fieldTag = multi ? 'Táblák' : 'Tábla'
+  const fieldTag = multi ? t.fields : t.field
 
   useEffect(() => {
     if (!mapRef.current || !svgRef.current) return
@@ -116,8 +157,8 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
       fw = Math.max(x1 - x0r, (y1 - y0) * aspect) * pad
       const x0c = x0r
       STAGES = [
-        { c: gridToMap(262, 174), w: 176 * GRID, tag: 'Duna–Tisza köze' },
-        { c: gridToMap(265.5, 168), w: 44 * GRID, tag: 'Kecskemét környéke' },
+        { c: gridToMap(262, 174), w: 176 * GRID, tag: t.interfluve },
+        { c: gridToMap(265.5, 168), w: 44 * GRID, tag: t.around },
         { c: [(x0c + x1) / 2, (y0 + y1) / 2], w: fw, tag: fieldTag },
       ]
     }
@@ -176,7 +217,7 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
         el('text', { x: x + (anc === 'start' ? 8 : -8) * u0, y: y + 4 * u0, 'font-size': (cap ? 13 : 12) * u0, 'text-anchor': anc, class: cap ? styles.lbl : styles.townLbl }, L0, n)
       }
       const dl = project([18.92, 46.75]), tl = project([20.21, 46.45])
-      el('text', { x: dl[0] - 8 * u0, y: dl[1], 'font-size': 13 * u0, 'text-anchor': 'end', class: styles.riverLbl }, L0, 'Duna')
+      el('text', { x: dl[0] - 8 * u0, y: dl[1], 'font-size': 13 * u0, 'text-anchor': 'end', class: styles.riverLbl }, L0, t.danube)
       el('text', { x: tl[0] + 8 * u0, y: tl[1], 'font-size': 13 * u0, class: styles.riverLbl }, L0, 'Tisza')
       const z = boxOf(STAGES[1])
       el('rect', { x: z[0], y: z[1], width: z[2], height: z[3], class: styles.zoomFrame, 'stroke-dasharray': `${4 * u0} ${3 * u0}`, 'vector-effect': 'non-scaling-stroke' }, L0)
@@ -211,7 +252,7 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
         const a = r[0] * 0.8 + 8 * u2, b = d - r[1] * 0.8 - 8 * u2
         const lx1 = c1[0] + ux * a, ly1 = c1[1] + uy * a
         const line = el('line', { x1: lx1, y1: ly1, x2: lx1, y2: ly1, class: styles.link, 'stroke-dasharray': `${5 * u2} ${4 * u2}`, 'vector-effect': 'non-scaling-stroke' }, linkG)
-        const km = (d / M / 1000).toFixed(1).replace('.', ',')
+        const km = locale === 'en' ? (d / M / 1000).toFixed(1) : (d / M / 1000).toFixed(1).replace('.', ',')
         const lbl = el('text', { x: (c1[0] + c2[0]) / 2 + 8 * u2, y: (c1[1] + c2[1]) / 2 + 4 * u2, 'font-size': 12 * u2, class: styles.linkLbl, 'stroke-width': 4 * u2 }, linkG, `${km} km`)
         link = { line, lbl, x1: lx1, y1: ly1, x2: c1[0] + ux * b, y2: c1[1] + uy * b }
       }
@@ -237,7 +278,7 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
         if (g.f.label) {
           const cx = g.pts.reduce((a, p) => a + p[0], 0) / g.pts.length, by = Math.max(...g.pts.map((p) => p[1]))
           const lg = el('g', { 'data-field': g.f.id, class: off ? styles.fieldOff : '' }, L2)
-          el('text', { x: cx, y: by + 18 * u2, 'font-size': 13 * u2, 'text-anchor': 'middle', class: styles.fieldLbl }, lg, g.f.label)
+          el('text', { x: cx, y: by + 18 * u2, 'font-size': 13 * u2, 'text-anchor': 'middle', class: styles.fieldLbl }, lg, (locale === 'en' && g.f.labelEn) || g.f.label)
           if (g.f.sub) el('text', { x: cx, y: by + 36 * u2, 'font-size': 12 * u2, 'text-anchor': 'middle', class: styles.townLbl }, lg, g.f.sub)
         }
       }
@@ -446,7 +487,7 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
       replayBtn?.removeEventListener('click', onReplay)
       window.removeEventListener(SCROLL_TARGET_EVENT, onJump)
     }
-  }, [site, fields, siteName, pinLL, fieldTag])
+  }, [site, fields, siteName, pinLL, fieldTag, t, locale])
 
   // season switch: dim the fields not in use that year, without replaying the animation
   const inactiveKey = inactive.join(',')
@@ -456,7 +497,7 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
     })
   }, [inactiveKey])
 
-  const what = stripCount ? `a ${stripCount} parcellás kísérleti táblára` : multi ? `a ${fields.length} kísérleti táblára` : 'a kísérleti táblára'
+  const what = t.what(stripCount, fields.length)
 
   return (
     <div className={styles.card}>
@@ -465,28 +506,28 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
         <div className={styles.paper} style={{ clipPath: TORN }}>
           <div className={styles.head}>
             <span className={styles.title}>{title}</span>
-            <button ref={replayRef} className={styles.replay} type="button" aria-label="Térkép-animáció újrajátszása" title="Újrajátszás">
+            <button ref={replayRef} className={styles.replay} type="button" aria-label={t.replay} title={t.replayTitle}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" />
               </svg>
             </button>
           </div>
           <div className={styles.meta}>
-            <span className={styles.stageTag} ref={tagRef}>Duna–Tisza köze</span>
-            <span className={styles.coord}>{coordLabel(pinLL)}</span>
+            <span className={styles.stageTag} ref={tagRef}>{t.interfluve}</span>
+            <span className={styles.coord}>{coordLabel(pinLL, locale)}</span>
           </div>
           <div className={styles.map} ref={mapRef}>
             <svg
               ref={svgRef}
               className={styles.svg}
               role="img"
-              aria-label={`Térkép: a Duna–Tisza közéről ráközelít ${siteName} környékére, majd ${what}.`}
+              aria-label={t.mapLabel(siteName, what)}
             />
           </div>
           <div className={styles.foot}>
             <div className={styles.furniture}>
-              <svg className={styles.north} viewBox="0 0 14 30" role="img" aria-label="Észak felfelé">
-                <text x="7" y="8" textAnchor="middle" fontSize="8.5" fontWeight="600" fill="currentColor">É</text>
+              <svg className={styles.north} viewBox="0 0 14 30" role="img" aria-label={t.north}>
+                <text x="7" y="8" textAnchor="middle" fontSize="8.5" fontWeight="600" fill="currentColor">{t.northLetter}</text>
                 <path d="M7 11 L12 29 L7 25 Z" fill="currentColor" />
                 <path d="M7 11 L2 29 L7 25 Z" fill="none" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
               </svg>
@@ -496,9 +537,9 @@ export default function FieldMapCard({ site, title, fields, inactive = [], showK
               </span>
             </div>
             {showKey && (
-              <ul className={styles.key} ref={keyRef} aria-label="Jelmagyarázat">
-                <li><i className={styles.keySpade} aria-hidden="true" />ásógéppel művelt</li>
-                <li><i className={styles.keyPlain} aria-hidden="true" />ásógép nélkül</li>
+              <ul className={styles.key} ref={keyRef} aria-label={t.key}>
+                <li><i className={styles.keySpade} aria-hidden="true" />{t.spade}</li>
+                <li><i className={styles.keyPlain} aria-hidden="true" />{t.plain}</li>
               </ul>
             )}
           </div>

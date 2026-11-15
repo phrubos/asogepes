@@ -8,11 +8,15 @@ import { useSeason } from '../season/SeasonContext'
 import { SeasonLabel } from '../season/SeasonOnly'
 import YearBridge from '../season/YearBridge'
 import styles from './SzentkirályTimelinePage.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { useResearchData } from '@/lib/i18n/useResearchData'
 
-const site = szentkiralySeasons
+const SITE = szentkiralySeasons
 
 export default function SzentkirályTimelinePage() {
   const { year } = useSeason()
+  const site = useResearchData(SITE)
+  const en = useLocale() === 'en'
   const season = findSeason(site, year) ?? site.seasons[site.seasons.length - 1]
   const ll = season.looseLayer
 
@@ -32,7 +36,7 @@ export default function SzentkirályTimelinePage() {
         <div className={styles.seasonRow}>
           <SeasonLabel switchAt="szentkiraly-info" />
         </div>
-        <h3 className={styles.headerTitle}>A talajszerkezet változása</h3>
+        <h3 className={styles.headerTitle}>{en ? 'Change in soil structure' : 'A talajszerkezet változása'}</h3>
       </motion.div>
 
       {/* Timeline Chart: remounted per season so the bars grow again */}

@@ -60,6 +60,12 @@
       "skillPath": "skills/systematic-debugging/SKILL.md",
       "computedHash": "276fb0aadb002ab930cc2a56de89e16995a2e3e70b33587652bf0a5fb123148d"
     },
+    "ui-design-review": {
+      "source": "mastepanoski/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ui-design-review/SKILL.md",
+      "computedHash": "66f9d1fb205bb74b3d6742268f3ace5509ee00432e659cb87870caad4128e685"
+    },
     "ui-fix-from-screenshot": {
       "source": "./local",
       "sourceType": "local",

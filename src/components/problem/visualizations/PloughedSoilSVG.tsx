@@ -3,6 +3,7 @@
 import { useMemo, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useLoopActive } from '@/hooks/useLoopActive'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
 
 const seededRandom = (seed: number) => {
     const x = Math.sin(seed) * 10000
@@ -36,6 +37,7 @@ interface ClodProps {
 }
 
 const PloughedSoilSVG = () => {
+    const panLabel = useLocale() === 'en' ? 'PLOUGH PAN' : 'EKETALP'
     const svgRef = useRef<SVGSVGElement>(null)
     const loopActive = useLoopActive(svgRef)
     // Palette
@@ -185,7 +187,7 @@ const PloughedSoilSVG = () => {
                 {/* Label */}
                 <rect x="100" y="125" width="100" height="16" rx="4" fill="#C62828" />
                 <text x="150" y="136" fill="white" fontSize="9" fontWeight="800" textAnchor="middle" letterSpacing="0.5">
-                    EKETALP
+                    {panLabel}
                 </text>
             </motion.g>
 

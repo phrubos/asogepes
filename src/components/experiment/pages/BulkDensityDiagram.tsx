@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
 
 /*
  * Side view of the soil for the bulk-density steps. 8 px = 1 cm; the surface is at y = 60,
@@ -20,6 +21,12 @@ const CYL_POS = [
   { x: 120, y: SURFACE - 8 - y(10) - CYL.h },
 ]
 
+const LABEL_EN = [
+  'the cylinder stands on the floor of the pit',
+  'the cylinder 10–15 cm deep in the soil',
+  'soil dug out around the cylinder',
+  'the lifted, capped cylinder on the surface',
+]
 const LABEL = [
   'a henger a gödör alján áll',
   'a henger 10–15 cm mélyen a talajban',
@@ -29,6 +36,7 @@ const LABEL = [
 ]
 
 export default function BulkDensityDiagram({ step, reduced }: { step: number; reduced: boolean }) {
+  const en = useLocale() === 'en'
   const t = reduced ? { duration: 0 } : { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }
   const fade = reduced ? { duration: 0 } : { duration: 0.35, ease: 'easeOut' as const }
   const pos = CYL_POS[step]
@@ -39,7 +47,7 @@ export default function BulkDensityDiagram({ step, reduced }: { step: number; re
     <svg
       viewBox="0 0 360 228"
       role="img"
-      aria-label={`Metszet: ${LABEL[step]}`}
+      aria-label={en ? `Cross-section: ${LABEL_EN[step] ?? ''}` : `Metszet: ${LABEL[step]}`}
       style={{ display: 'block', width: '100%', height: 'auto', overflow: 'visible' }}
     >
       <defs>

@@ -7,8 +7,10 @@ import Image from 'next/image'
 import ImageLightbox from '@/components/ui/ImageLightbox/ImageLightbox'
 import styles from './MethodologyPage.module.css'
 import PenetrometerExplainer from '../PenetrometerExplainer'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
 
 export default function MethodologyPage() {
+  const en = useLocale() === 'en'
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
 
   return (
@@ -26,26 +28,36 @@ export default function MethodologyPage() {
               <Gauge size={28} />
             </div>
             <div>
-              <h2 className={styles.title}>A penetrométeres mérés</h2>
-              <span className={styles.badge}>Módszertan</span>
+              <h2 className={styles.title}>{en ? 'Penetrometer measurement' : 'A penetrométeres mérés'}</h2>
+              <span className={styles.badge}>{en ? 'Methodology' : 'Módszertan'}</span>
             </div>
           </div>
 
           <p className={styles.description}>
-            A készülék acél szondatüskéjét kézi erővel, függőlegesen a talajba szúrjuk, egyenletesen haladva.
-            A fogantyú közepén elhelyezett manométer mutatja a talaj ellenállását a szonda csúcsánál.
-            A talaj szerkezete <strong>20 bar nyomásig</strong> tekinthető optimálisnak, tömörödésmentesnek.
+            {en ? (
+              <>
+                The steel probe of the instrument is pushed vertically into the soil by hand, at a steady pace. The pressure
+                gauge in the middle of the handle shows the soil resistance at the tip of the probe. Up to{' '}
+                <strong>20 bar</strong> the soil structure is considered optimal, free of compaction.
+              </>
+            ) : (
+              <>
+                A készülék acél szondatüskéjét kézi erővel, függőlegesen a talajba szúrjuk, egyenletesen haladva.
+                A fogantyú közepén elhelyezett manométer mutatja a talaj ellenállását a szonda csúcsánál.
+                A talaj szerkezete <strong>20 bar nyomásig</strong> tekinthető optimálisnak, tömörödésmentesnek.
+              </>
+            )}
           </p>
 
           <div className={styles.dashboardContainer}>
             <div className={styles.measurementDashboard}>
               <div className={styles.scaleBar}>
                 <div className={styles.scaleOptimal}>
-                  <span className={styles.scaleLabel}>Optimális</span>
+                  <span className={styles.scaleLabel}>{en ? 'Optimal' : 'Optimális'}</span>
                   <span className={styles.scaleValue}>0-20 bar</span>
                 </div>
                 <div className={styles.scaleCompacted}>
-                  <span className={styles.scaleLabel}>Tömörödött</span>
+                  <span className={styles.scaleLabel}>{en ? 'Compacted' : 'Tömörödött'}</span>
                   <span className={styles.scaleValue}>&gt;20 bar</span>
                 </div>
               </div>
@@ -57,7 +69,7 @@ export default function MethodologyPage() {
               >
                 <Image
                   src="/images/manometer_200_v2.jpg"
-                  alt="Manométer"
+                  alt={en ? 'Pressure gauge' : 'Manométer'}
                   fill
                   className={styles.manometerImage}
                   sizes="140px"
@@ -83,7 +95,7 @@ export default function MethodologyPage() {
           >
             <Image
               src="/images/penetrometer_rotated_view.jpg"
-              alt="Penetrométer"
+              alt={en ? 'Penetrometer' : 'Penetrométer'}
               fill
               className={styles.image}
               sizes="(max-width: 768px) 100vw, 450px"
@@ -96,7 +108,7 @@ export default function MethodologyPage() {
           isOpen={!!lightboxImage}
           onClose={() => setLightboxImage(null)}
           src={lightboxImage || ''}
-          alt="Nagyított kép"
+          alt={en ? 'Enlarged image' : 'Nagyított kép'}
         />
       </div>
 

@@ -7,6 +7,41 @@ import Image from 'next/image'
 import { modelData, ModelId } from '@/lib/technology-data'
 import styles from './HubFolder.module.css'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual, localize } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  {
+    principleTab: 'Elv',
+    operation: 'Működési elv',
+    watch: 'Animáció megtekintése',
+    guide: 'Útmutató',
+    selector: 'Módszer választó',
+    whichBest: 'Melyik a legjobb?',
+    navigation: 'Navigáció',
+    technology: 'Technológia',
+    choose: 'Válassz témát',
+    how: 'Hogyan működik?',
+    models: 'Modellek',
+    types: 'Imants típusok',
+    whichMethod: 'Melyik módszert?',
+  },
+  {
+    principleTab: 'Principle',
+    operation: 'Operating principle',
+    watch: 'Watch the animation',
+    guide: 'Guide',
+    selector: 'Method selector',
+    whichBest: 'Which is best?',
+    navigation: 'Navigation',
+    technology: 'Technology',
+    choose: 'Choose a topic',
+    how: 'How does it work?',
+    models: 'Models',
+    types: 'Imants models',
+    whichMethod: 'Which method?',
+  },
+)
 
 type HoveredOption = 'operation' | 'models' | 'guide' | null
 // ModelId imported from shared data
@@ -33,6 +68,8 @@ const DEMO_SEQUENCE: { state: DemoState; duration: number }[] = [
 ]
 
 export default function HubFolder({ onScrollToOperation, onScrollToModel, onScrollToGuide }: HubFolderProps) {
+  const locale = useLocale()
+  const t = TEXT[locale]
   const [hoveredOption, setHoveredOption] = useState<HoveredOption>(null)
   const [isHubHovered, setIsHubHovered] = useState(false)
   const [hoveredMiniFolder, setHoveredMiniFolder] = useState<string | null>(null)
@@ -327,7 +364,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               whileHover={{ y: -4 }}
             >
               <div className={`${styles.miniFolderTab} ${styles.miniFolderTabGreen}`}>
-                Elv
+                {t.principleTab}
               </div>
               <div className={styles.miniFolderBack} />
               <div className={styles.miniFolderSheets}>
@@ -337,8 +374,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
                 <div className={styles.miniFolderIcon}>
                   <Play size={24} />
                 </div>
-                <span className={styles.miniFolderLabel}>Működési elv</span>
-                <span className={styles.miniFolderDesc}>Animáció megtekintése</span>
+                <span className={styles.miniFolderLabel}>{t.operation}</span>
+                <span className={styles.miniFolderDesc}>{t.watch}</span>
               </div>
               <div className={styles.miniFolderGlowGreen} />
             </motion.button>
@@ -354,7 +391,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
             data-interactive="true"
           // Removed onMouseLeave
           >
-            {modelData.map((model, index) => (
+            {modelData.map((row) => localize(row, locale)).map((model, index) => (
               <motion.button
                 key={model.id}
                 className={`${styles.miniFolder} ${styles[`miniFolder${model.color.charAt(0).toUpperCase() + model.color.slice(1)}`]}`} // Removed dimmed conditional
@@ -416,7 +453,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
               whileHover={{ y: -4 }}
             >
               <div className={`${styles.miniFolderTab} ${styles.miniFolderTabGuide}`}>
-                Útmutató
+                {t.guide}
               </div>
               <div className={styles.miniFolderBack} />
               <div className={styles.miniFolderSheets}>
@@ -426,8 +463,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
                 <div className={styles.miniFolderIcon}>
                   <Sparkles size={24} />
                 </div>
-                <span className={styles.miniFolderLabel}>Módszer választó</span>
-                <span className={styles.miniFolderDesc}>Melyik a legjobb?</span>
+                <span className={styles.miniFolderLabel}>{t.selector}</span>
+                <span className={styles.miniFolderDesc}>{t.whichBest}</span>
               </div>
               <div className={styles.miniFolderGlowGuide} />
               {/* Floating sparkles */}
@@ -466,7 +503,7 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
           variants={tabVariants}
           animate={effectiveHubHovered ? "hover" : "initial"}
         >
-          Navigáció
+          {t.navigation}
         </motion.div>
 
         {/* Back */}
@@ -497,8 +534,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
           <div className={styles.hubContent}>
             {/* Header */}
             <div className={styles.hubHeader}>
-              <h2 className={styles.hubTitle}>Technológia</h2>
-              <span className={styles.hubSubtitle}>Válassz témát</span>
+              <h2 className={styles.hubTitle}>{t.technology}</h2>
+              <span className={styles.hubSubtitle}>{t.choose}</span>
             </div>
 
             {/* Options */}
@@ -515,8 +552,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
                   <Settings size={18} />
                 </div>
                 <div className={styles.optionText}>
-                  <span className={styles.optionTitle}>Működési elv</span>
-                  <span className={styles.optionDesc}>Hogyan működik?</span>
+                  <span className={styles.optionTitle}>{t.operation}</span>
+                  <span className={styles.optionDesc}>{t.how}</span>
                 </div>
                 <span className={styles.optionCount}>1</span>
               </div>
@@ -533,8 +570,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
                   <Folder size={18} />
                 </div>
                 <div className={styles.optionText}>
-                  <span className={styles.optionTitle}>Modellek</span>
-                  <span className={styles.optionDesc}>Imants típusok</span>
+                  <span className={styles.optionTitle}>{t.models}</span>
+                  <span className={styles.optionDesc}>{t.types}</span>
                 </div>
                 <span className={styles.optionCount}>3</span>
               </div>
@@ -551,8 +588,8 @@ export default function HubFolder({ onScrollToOperation, onScrollToModel, onScro
                   <HelpCircle size={18} />
                 </div>
                 <div className={styles.optionText}>
-                  <span className={styles.optionTitle}>Útmutató</span>
-                  <span className={styles.optionDesc}>Melyik módszert?</span>
+                  <span className={styles.optionTitle}>{t.guide}</span>
+                  <span className={styles.optionDesc}>{t.whichMethod}</span>
                 </div>
                 <span className={styles.optionCount}>1</span>
               </div>

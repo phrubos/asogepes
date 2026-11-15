@@ -78,6 +78,7 @@ Use `@/` for imports from `src/` directory (configured in tsconfig.json).
 
 ## Analysis / audit
 - UI/UX, mobile and performance analysis: `docs/2026-10-31-ui-ux-performance-analysis.md`
+- Latest scoring (UX 9/10, visual design 78/100): `docs/2026-11-15-ux-design-audit.md`
 
 ## Tickets and verification
 - Bigger tasks (new feature, new data, animation, multi-page change) get a ticket in `docs/jegyek/` (template `_sablon.md`, workflow in its README); the board `docs/jegyek/tabla.md` lists every open item with status and touched files. Screenshot fixes need no ticket. Keep the board up to date when an item starts or finishes.
@@ -87,7 +88,7 @@ Use `@/` for imports from `src/` directory (configured in tsconfig.json).
 - The checker also gives an advisory 1–10 visual score with reasons. When the user says something feels off but can't name it, first describe the block back (layout, sizes, fonts, colours, spacing) so they can point at the exact part.
 
 ## Skills
-Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `skills-lock.json`): ux-heuristics, performance-optimization, information-architecture, design-motion-principles, review-animations, find-animation-opportunities, animation-vocabulary, emil-design-eng, apple-design, systematic-debugging, verification-before-completion, writing-plans, executing-plans, and the local **ui-fix-from-screenshot** (the workflow for "this looks wrong" screenshots: trace, fix at the right breakpoint, prove with numbers) and **asogepes-brand** (palette, fonts, partner logos and Hungarian voice for share images, films, slides and other off-site outputs).
+Project skills live in `.agents/skills/` (mirrored in `.claude/skills/`, lock: `skills-lock.json`): ux-heuristics, ui-design-review (visual design score: 10 dimensions incl. typography, spacing, hierarchy, 0–10 each), performance-optimization, information-architecture, design-motion-principles, review-animations, find-animation-opportunities, animation-vocabulary, emil-design-eng, apple-design, systematic-debugging, verification-before-completion, writing-plans, executing-plans, and the local **ui-fix-from-screenshot** (the workflow for "this looks wrong" screenshots: trace, fix at the right breakpoint, prove with numbers) and **asogepes-brand** (palette, fonts, partner logos and Hungarian voice for share images, films, slides and other off-site outputs).
 
 Mods (`.claude/mods/`, see its README): `asogepes-qa` (status line, `/ellenoriz`, `/mehet`, layout-check reminder) and `asogepes-elotte-utana` (`/elotte-utana` before/after pane; `scripts/qa/snap.js`).
 

@@ -5,27 +5,49 @@ import { motion } from 'framer-motion'
 import { ArrowDown, Sprout } from 'lucide-react'
 import styles from './OperationPrinciple.module.css'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  {
+    features: [
+      { title: 'Függőleges lazítás', description: 'Az ásókanalak mélyen belemerülnek a talajba, fellazítják és sekélyen átkeverik a talajfelszínt' },
+      { title: 'Optimális magágy', description: 'Az elmunkáló henger egyenletes, vetésre vagy ültetésre kész felületet hagy' },
+    ],
+    badge: 'MŰKÖDÉSI ELV',
+    title: 'Hogyan működik a duplarotoros ásógép?',
+    subtitle: 'Az ásórotor lazít és átkever, a meghajtott elmunkáló henger aprómorzsás magágyat készít.',
+    rotor: 'Ásórotor',
+    roller: 'Elmunkáló henger',
+  },
+  {
+    features: [
+      { title: 'Vertical loosening', description: 'The spades dig deep into the soil, loosen it and mix the topsoil to a shallow depth' },
+      { title: 'An ideal seedbed', description: 'The finishing roller leaves an even surface, ready for sowing or planting' },
+    ],
+    badge: 'OPERATING PRINCIPLE',
+    title: 'How does the twin-rotor spading machine work?',
+    subtitle: 'The spading rotor loosens and mixes the soil; the driven finishing roller prepares a fine, crumbly seedbed.',
+    rotor: 'Spading rotor',
+    roller: 'Finishing roller',
+  },
+)
 
 interface FeatureItem {
   icon: React.ReactNode
-  title: string
-  description: string
 }
 
 const features: FeatureItem[] = [
   {
-    icon: <ArrowDown size={24} />,
-    title: 'Függőleges lazítás',
-    description: 'Az ásókanalak mélyen belemerülnek a talajba, fellazítják és sekélyen átkeverik a talajfelszínt'
+    icon: <ArrowDown size={24} />
   },
   {
-    icon: <Sprout size={24} />,
-    title: 'Optimális magágy',
-    description: 'Az elmunkáló henger egyenletes, vetésre vagy ültetésre kész felületet hagy'
+    icon: <Sprout size={24} />
   }
 ]
 
 export default function OperationPrinciple() {
+  const t = TEXT[useLocale()]
   const sectionRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const reduced = useReducedMotion()
@@ -63,10 +85,10 @@ export default function OperationPrinciple() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
-        <span className={styles.badge}>MŰKÖDÉSI ELV</span>
-        <h2 className={styles.title}>Hogyan működik a duplarotoros ásógép?</h2>
+        <span className={styles.badge}>{t.badge}</span>
+        <h2 className={styles.title}>{t.title}</h2>
         <p className={styles.subtitle}>
-          Az ásórotor lazít és átkever, a meghajtott elmunkáló henger aprómorzsás magágyat készít.
+          {t.subtitle}
         </p>
       </motion.div>
 
@@ -82,7 +104,7 @@ export default function OperationPrinciple() {
         >
           {features.map((feature, index) => (
             <motion.div
-              key={feature.title}
+              key={index}
               className={styles.featureCard}
               variants={itemVariants}
             >
@@ -90,8 +112,8 @@ export default function OperationPrinciple() {
                 {feature.icon}
               </div>
               <div className={styles.featureContent}>
-                <h3 className={styles.featureTitle}>{feature.title}</h3>
-                <p className={styles.featureDescription}>{feature.description}</p>
+                <h3 className={styles.featureTitle}>{t.features[index].title}</h3>
+                <p className={styles.featureDescription}>{t.features[index].description}</p>
               </div>
             </motion.div>
           ))}
@@ -99,7 +121,7 @@ export default function OperationPrinciple() {
 
         {/* Right Column: Animation */}
         <motion.div
-          className={styles.animationWrapper}
+          className={`${styles.animationWrapper} ${reduced ? styles.withControls : ''}`}
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
@@ -108,6 +130,9 @@ export default function OperationPrinciple() {
           <video
             ref={videoRef}
             src="/videos/Andornak.mp4"
+            poster="/images/andornak-poster.webp"
+            width={1920}
+            height={1080}
             loop
             muted
             playsInline
@@ -119,12 +144,12 @@ export default function OperationPrinciple() {
           {/* Overlay Labels */}
           <div className={`${styles.overlayLabel} ${styles.labelLeft}`}>
             <div className={styles.labelDot} />
-            <span>Ásórotor</span>
+            <span>{t.rotor}</span>
           </div>
 
           <div className={`${styles.overlayLabel} ${styles.labelRight}`}>
             <div className={styles.labelDot} />
-            <span>Elmunkáló henger</span>
+            <span>{t.roller}</span>
           </div>
         </motion.div>
       </div>

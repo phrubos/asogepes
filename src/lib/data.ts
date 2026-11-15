@@ -373,6 +373,11 @@ export const ploughingProblems = [
     icon: 'arrow-down-to-line',
     dataBadge: '20+ bar nyomás',
     source: 'Szakdolgozat 7. oldal',
+    en: {
+      title: 'Plough pan formation',
+      description: 'Ploughing kneads a compacted layer (plough pan) at a depth of 25–30 cm, which stops roots and water from penetrating deeper.',
+      dataBadge: '20+ bar pressure',
+    },
   },
   {
     title: 'Rétegek felcserélése',
@@ -380,6 +385,11 @@ export const ploughingProblems = [
     icon: 'shuffle',
     dataBadge: 'Talajélet károsodás',
     source: 'Szakdolgozat 7. oldal',
+    en: {
+      title: 'Inversion of soil layers',
+      description: 'Inversion swaps the aerobic (oxygen-rich) and anaerobic (oxygen-poor) layers, which harms soil life.',
+      dataBadge: 'Harm to soil life',
+    },
   },
   {
     title: 'Széntartalom oxidálódása',
@@ -387,6 +397,11 @@ export const ploughingProblems = [
     icon: 'trending-up',
     dataBadge: 'Humusz veszteség',
     source: 'Szakdolgozat 7. oldal',
+    en: {
+      title: 'Oxidation of soil carbon',
+      description: 'Inversion brings deeper layers to the surface; organic matter oxidises faster and the humus content falls.',
+      dataBadge: 'Humus loss',
+    },
   },
   {
     title: 'Rögösebb talajfelszín és lassabb felmelegedés',
@@ -394,6 +409,11 @@ export const ploughingProblems = [
     icon: 'thermometer',
     dataBadge: '2-4°C különbség',
     source: '14., 16. ábra',
+    en: {
+      title: 'Cloddier surface, slower warming',
+      description: 'A cloddier surface that is harder to work makes precise sowing and transplanting difficult. In spring such a surface also warms up more slowly and unevenly, which slows the germination and early vegetative growth of the sown or planted crop.',
+      dataBadge: '2–4 °C difference',
+    },
   },
 ]
 
@@ -466,12 +486,17 @@ export const modelDetails = {
     id: '38sx',
     name: '38SX',
     type: 'Nagy szériás',
-    typeEn: 'Standard Spader',
+    typeEn: 'Standard spading machine',
     image: '/images/38SX_new.jpeg',
     specs: {
       depth: '15-35 cm',
       power: '90-150 LE',
       features: ['Önállóan és szántás után is használható', 'Lakitelken 2025-ben ipari paradicsom alatt vizsgálva (III. és VII. parcella)']
+    },
+    specsEn: {
+      depth: '15–35 cm',
+      power: '90–150 hp',
+      features: ['Can be used on its own or after ploughing', 'Tested at Lakitelek in 2025 under processing tomato (plots III and VII)']
     },
     fieldApplication: {
       location: 'Lakitelek',
@@ -485,6 +510,7 @@ export const modelDetails = {
         {
           parcel: 'III.',
           description: 'Ásógép (30 cm) önállóan',
+          descriptionEn: 'Spading machine (30 cm) alone',
           initial: 22,
           final: 20,
           change: -2,
@@ -494,6 +520,7 @@ export const modelDetails = {
         {
           parcel: 'VII.',
           description: 'Szántás + Ásógép (25 cm)',
+          descriptionEn: 'Ploughing + spading machine (25 cm)',
           initial: 32,
           final: 31,
           change: -1,
@@ -511,12 +538,17 @@ export const modelDetails = {
     id: '38wx',
     name: '38WX',
     type: 'Lazítókéses',
-    typeEn: 'Spader with Subsoiler',
+    typeEn: 'Spading machine with subsoiler tines',
     image: '/images/38WX_new.jpeg',
     specs: {
       depth: '15-35 cm + 55 cm mélylazítás',
       power: '90-150 LE',
       features: ['Altalaj lazítás és ásógépezés egy menetben', 'Duplarotoros kivitelben is elérhető', 'Hidraulikus akkumulátor a precízebb talajkövetés érdekében']
+    },
+    specsEn: {
+      depth: '15–35 cm + 55 cm subsoiling',
+      power: '90–150 hp',
+      features: ['Subsoiling and spading in one pass', 'Also available as a twin-rotor version', 'Hydraulic accumulator for more precise ground following']
     },
     fieldApplication: {
       location: 'Szentkirály',
@@ -552,12 +584,17 @@ export const modelDetails = {
     id: '40sx',
     name: '40SX',
     type: 'Mélyásógép',
-    typeEn: 'Heavy Duty Spader',
+    typeEn: 'Deep spading machine',
     image: '/images/40SX_new.jpeg',
     specs: {
       depth: '20-50 cm',
       power: '110-160 LE',
       features: ['Egyenletes lazítás 50 cm mélységig', 'Duplarotoros kivitelben is elérhető', 'Kifejezetten kertészeti kultúrák számára fejlesztve (mély magágy)']
+    },
+    specsEn: {
+      depth: '20–50 cm',
+      power: '110–160 hp',
+      features: ['Even loosening down to 50 cm', 'Also available as a twin-rotor version', 'Developed specifically for horticultural crops (deep seedbed)']
     },
     fieldApplication: {
       locations: [
@@ -585,12 +622,14 @@ export const modelDetails = {
         },
         {
           name: 'Lakitelek I. parcella',
+          nameEn: 'Lakitelek, plot I',
           crop: 'Ipari paradicsom',
           soil: 'Humuszos homok',
           ka: '27',
           irrigation: '450 mm',
           period: 'Május – Augusztus',
           treatment: 'Mélyásógép (45 cm) önállóan',
+          treatmentEn: 'Deep spading machine (45 cm) alone',
           initial: 33,
           final: 31,
           change: -2,

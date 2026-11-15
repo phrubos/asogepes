@@ -8,6 +8,65 @@ import { useLoopActive } from '@/hooks/useLoopActive'
 import { cap, namedIn } from '../story/dates'
 import s from './AboveBelowGround.module.css'
 import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  {
+    loupe: 'Sematikus nagyítás: a hajszálgyökerek a talajszemcsék közti pórusokból veszik fel a vizet',
+    title: 'Föld felett, föld alatt',
+    comb: 'KOMBINÁTOR',
+    spade: 'ÁSÓGÉP',
+    altComb: 'Kutató a kombinátoros parcellán: a paradicsom lombja a térdéig ér',
+    knee: 'térdig',
+    above: 'FÖLD FELETT',
+    spine: 'Ugyanaz a kutató, ugyanakkora távolságból és kameramagasságból, egy léptékben. A lomb teteje a testén olvasható le.',
+    altSpade: 'Ugyanaz a kutató az ásógépes parcellán: a lomb a combjáig ér, a mérőléc eltűnik benne',
+    thigh: 'combig',
+    pct: (n: number) => `+${n} %`,
+    shoot: 'hajtás',
+    soil: 'TALAJSZINT',
+    cause: 'OK:',
+    looser: 'lazább talaj ↑',
+    altRootComb: 'A kombinátoros tő ritka, durva gyökérzete; a jobb szélén 0–30 cm-es mérőszalag',
+    scale: 'mérce: 0–30 cm →',
+    sparse: 'ritka, durva gyökerek',
+    so: 'EZÉRT: DÚSABB GYÖKÉR',
+    loupeText: 'Az arany kör nagyítva, sematikusan: a hajszálgyökér a pórusokból veszi fel a vizet. Több finom gyökér, több elért pórus.',
+    altRootSpade: 'Az ásógépes tő sűrű hajszálgyökér-hálója',
+    dense: 'sűrű hajszálgyökér-háló',
+    note: (when: string) => `Sematikus rajz. Hajtáshossz: mért adat, ${when}. Gyökér: szemrevételezéssel, egy kiásott növénypáron; gyökértömeget nem mértünk.`,
+    credit: 'Szentkirály, 2026. július 2.',
+    sr: (when: string, s: number, c: number) => `${when} az ásógépes parcellán ${s} cm, a kombinátoroson ${c} cm volt a paradicsom hajtása.`,
+  },
+  {
+    loupe: 'Schematic close-up: the root hairs take up water from the pores between the soil particles',
+    title: 'Above ground, below ground',
+    comb: 'COMB. CULTIVATOR',
+    spade: 'SPADING MACHINE',
+    altComb: 'A researcher on the combination-cultivated plot: the tomato foliage reaches the knee',
+    knee: 'knee-high',
+    above: 'ABOVE GROUND',
+    spine: 'The same researcher, from the same distance and camera height, at one scale. The top of the foliage can be read off the body.',
+    altSpade: 'The same researcher on the spaded plot: the foliage reaches the thigh and the measuring rod disappears in it',
+    thigh: 'thigh-high',
+    pct: (n: number) => `+${n}%`,
+    shoot: 'shoot',
+    soil: 'SOIL LEVEL',
+    cause: 'CAUSE:',
+    looser: 'looser soil ↑',
+    altRootComb: 'The sparse, coarse root system of the combination-cultivated plant; a 0–30 cm measuring tape on the right',
+    scale: 'scale: 0–30 cm →',
+    sparse: 'sparse, coarse roots',
+    so: 'SO: A FULLER ROOT SYSTEM',
+    loupeText: 'The gold circle magnified, schematically: the root hair takes up water from the pores. More fine roots reach more pores.',
+    altRootSpade: 'The dense root-hair network of the spaded plant',
+    dense: 'dense root-hair network',
+    note: (when: string) => `Schematic drawing. Shoot length: measured, ${when}. Roots: by visual inspection, on one dug-up pair of plants; root mass was not measured.`,
+    credit: 'Szentkirály, 2 July 2026',
+    sr: (when: string, s: number, c: number) => `${when} the tomato shoots were ${s} cm on the spaded plot and ${c} cm on the combination-cultivated plot.`,
+  },
+)
 
 const DIR = '/images/kutatás_pics/Szentkirály/paradicsom'
 const shootPct = Math.round((tom.shoot.spade / tom.shoot.control - 1) * 100)
@@ -74,11 +133,12 @@ function Mark({ x, y, label, gold = false }: { x: string; y: string; label: stri
 
 /** Schematic loupe: a root with root hairs between soil grains, water drops moving in */
 function Loupe() {
+  const t = TEXT[useLocale()]
   const ref = useRef<HTMLDivElement>(null)
   const live = useLoopActive(ref)
   return (
     <div ref={ref} data-loupe="" className={`${s.loupe} ${live ? s.live : ''}`}>
-      <svg viewBox="0 0 240 240" role="img" aria-label="Sematikus nagyítás: a hajszálgyökerek a talajszemcsék közti pórusokból veszik fel a vizet">
+      <svg viewBox="0 0 240 240" role="img" aria-label={t.loupe}>
         <rect width="240" height="240" fill="#3D2914" />
         <g fill="#5C4F40" stroke="#6E5D49" strokeWidth="1.5">
           {GRAINS.map(([cx, cy, rx, ry], i) => <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={ry} />)}
@@ -111,6 +171,8 @@ function Loupe() {
  * the measured shoot length between them, and below the soil line the dug-up root pair of the same day.
  */
 export default function AboveBelowGround() {
+  const locale = useLocale()
+  const t = TEXT[locale]
   const ref = useRef<HTMLDivElement>(null)
   const seen = useInView(ref, { once: true, margin: '0px 0px -15% 0px' })
   const rootRow = useRef<HTMLDivElement>(null)
@@ -119,61 +181,61 @@ export default function AboveBelowGround() {
   return (
     <section ref={ref} className={`${s.card} ${seen ? s.seen : ''}`} aria-labelledby="fold-felett-cim">
       <div className={s.head}>
-        <h4 id="fold-felett-cim" className={s.title}>Föld felett, föld alatt</h4>
+        <h4 id="fold-felett-cim" className={s.title}>{t.title}</h4>
       </div>
 
       <div className={s.colHeads} aria-hidden="true">
-        <span>KOMBINÁTOR</span>
+        <span>{t.comb}</span>
         <span />
-        <span className={s.gold}>ÁSÓGÉP</span>
+        <span className={s.gold}>{t.spade}</span>
       </div>
 
       {/* Above ground */}
       <div className={s.photoRow}>
         <figure className={`${s.photo} ${s.left}`}>
-          <Image src={`${DIR}/kutato-kombinator.webp`} alt="Kutató a kombinátoros parcellán: a paradicsom lombja a térdéig ér" fill sizes="(max-width: 1024px) 50vw, 400px" />
-          <span className={`${s.pill} ${s.pillKnee}`}>térdig</span>
+          <Image src={`${DIR}/kutato-kombinator.webp`} alt={t.altComb} fill sizes="(max-width: 1024px) 50vw, 400px" />
+          <span className={`${s.pill} ${s.pillKnee}`}>{t.knee}</span>
         </figure>
         <div className={s.spine}>
-          <span className={s.kicker}>FÖLD FELETT</span>
-          <p className={s.spineText}>Ugyanaz a kutató, ugyanakkora távolságból és kameramagasságból, egy léptékben. A lomb teteje a testén olvasható le.</p>
+          <span className={s.kicker}>{t.above}</span>
+          <p className={s.spineText}>{t.spine}</p>
         </div>
         <figure className={`${s.photo} ${s.right}`}>
-          <Image src={`${DIR}/kutato-asogep.webp`} alt="Ugyanaz a kutató az ásógépes parcellán: a lomb a combjáig ér, a mérőléc eltűnik benne" fill sizes="(max-width: 1024px) 50vw, 400px" />
-          <span className={`${s.pill} ${s.pillThigh}`}>combig</span>
+          <Image src={`${DIR}/kutato-asogep.webp`} alt={t.altSpade} fill sizes="(max-width: 1024px) 50vw, 400px" />
+          <span className={`${s.pill} ${s.pillThigh}`}>{t.thigh}</span>
         </figure>
         <div className={`${s.line} ${s.lineSpade}`} aria-hidden="true" />
         <div className={`${s.line} ${s.lineControl}`} aria-hidden="true" />
         <div className={s.result}>
-          <span className={s.resultNum}>+{shootPct} %</span>
-          <span className={s.resultSub}>hajtás: {tom.shoot.control} → {tom.shoot.spade} cm</span>
+          <span className={s.resultNum}>{t.pct(shootPct)}</span>
+          <span className={s.resultSub}>{t.shoot}: {tom.shoot.control} → {tom.shoot.spade} cm</span>
         </div>
       </div>
 
       <div className={s.soilLine}>
-        <span className={s.kicker}>TALAJSZINT</span>
-        <span className={s.cause}><span className={s.kicker}>OK:</span> lazább talaj ↑</span>
+        <span className={s.kicker}>{t.soil}</span>
+        <span className={s.cause}><span className={s.kicker}>{t.cause}</span> {t.looser}</span>
       </div>
 
       {/* Below ground */}
       <div ref={rootRow} className={s.rootRow}>
         <figure className={`${s.root} ${s.left}`}>
           <div className={s.dig}>
-            <Image src={`${DIR}/gyoker-kombinator.webp`} alt="A kombinátoros tő ritka, durva gyökérzete; a jobb szélén 0–30 cm-es mérőszalag" fill sizes="(max-width: 1024px) 50vw, 400px" />
+            <Image src={`${DIR}/gyoker-kombinator.webp`} alt={t.altRootComb} fill sizes="(max-width: 1024px) 50vw, 400px" />
           </div>
-          <span className={s.scale}>mérce: 0–30 cm →</span>
-          <Mark x="50%" y="58%" label="ritka, durva gyökerek" />
+          <span className={s.scale}>{t.scale}</span>
+          <Mark x="50%" y="58%" label={t.sparse} />
         </figure>
         <div className={`${s.spine} ${s.spineRoots}`}>
-          <span className={s.kicker}>EZÉRT: DÚSABB GYÖKÉR</span>
+          <span className={s.kicker}>{t.so}</span>
           <Loupe />
-          <p className={s.loupeText}>Az arany kör nagyítva, sematikusan: a hajszálgyökér a pórusokból veszi fel a vizet. Több finom gyökér, több elért pórus.</p>
+          <p className={s.loupeText}>{t.loupeText}</p>
         </div>
         <figure className={`${s.root} ${s.right}`}>
           <div className={s.dig}>
-            <Image src={`${DIR}/gyoker-asogep.webp`} alt="Az ásógépes tő sűrű hajszálgyökér-hálója" fill sizes="(max-width: 1024px) 50vw, 400px" />
+            <Image src={`${DIR}/gyoker-asogep.webp`} alt={t.altRootSpade} fill sizes="(max-width: 1024px) 50vw, 400px" />
           </div>
-          <Mark x="63%" y="63%" label="sűrű hajszálgyökér-háló" gold />
+          <Mark x="63%" y="63%" label={t.dense} gold />
         </figure>
         {leader && (
           // Each dash drawn like the rings: gold core with a thin dark edge
@@ -185,10 +247,10 @@ export default function AboveBelowGround() {
       </div>
 
       <p className={s.note}>
-        Sematikus rajz. Hajtáshossz: mért adat, {namedIn(tom.shoot.date)}. Gyökér: szemrevételezéssel, egy kiásott növénypáron; gyökértömeget nem mértünk.
-        <PhotoCredit plural>Szentkirály, 2026. július 2.</PhotoCredit>
+        {t.note(namedIn(tom.shoot.date, locale))}
+        <PhotoCredit plural>{t.credit}</PhotoCredit>
       </p>
-      <span className="sr-only">{cap(namedIn(tom.shoot.date))} az ásógépes parcellán {tom.shoot.spade} cm, a kombinátoroson {tom.shoot.control} cm volt a paradicsom hajtása.</span>
+      <span className="sr-only">{t.sr(cap(namedIn(tom.shoot.date, locale)), tom.shoot.spade, tom.shoot.control)}</span>
     </section>
   )
 }

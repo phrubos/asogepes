@@ -11,6 +11,25 @@ import styles from './PloughingEffectsPage.module.css'
 import StaticChallenge from '@/components/problem/StaticChallenge'
 import staticStyles from '@/components/problem/StaticChallenge.module.css'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual, localize } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+    {
+        badge: 'Szántás hatásai',
+        alt: 'American mouldboard eke',
+        quoteA: 'A hagyományos szántás rövid távon megoldásnak tűnik, de valójában egy',
+        quoteHighlight: 'ördögi kört',
+        quoteB: 'tart fenn. A rendszeres forgatás ma már közismerten inkább károsnak tekintett. Fent optimálisan forgat, viszont a művelt réteg alatt túl erősen tömörít.',
+    },
+    {
+        badge: 'Effects of ploughing',
+        alt: 'American mouldboard plough',
+        quoteA: 'Conventional ploughing looks like a solution in the short term, but in fact it keeps a',
+        quoteHighlight: 'vicious circle',
+        quoteB: 'going. Regular inversion is now widely regarded as more harmful than helpful: it turns the topsoil well, but compacts the soil too strongly below the tilled layer.',
+    },
+)
 
 interface CollapsiblePloughingCardProps {
     icon: React.ReactNode;
@@ -160,6 +179,8 @@ function CollapsiblePloughingCard({
 }
 
 export default function PloughingEffectsPage() {
+    const locale = useLocale()
+    const t = TEXT[locale]
     const [expandedCardId, setExpandedCardId] = useState<number | null>(null)
     const [isLightboxOpen, setIsLightboxOpen] = useState(false)
     const isCompact = useMediaQuery('(max-width: 1024px)') === true
@@ -199,7 +220,7 @@ export default function PloughingEffectsPage() {
                 {/* Left Column: Image */}
                 <motion.div className={styles.imageColumn} variants={itemVariants}>
                     {/* stacked layout: the section title sits over the picture it introduces */}
-                    <span className={`${styles.pillBadge} ${styles.imageHeading}`}>Szántás hatásai</span>
+                    <span className={`${styles.pillBadge} ${styles.imageHeading}`}>{t.badge}</span>
                     <div
                         className={styles.imageWrapper}
                         onClick={() => setIsLightboxOpen(true)}
@@ -207,7 +228,7 @@ export default function PloughingEffectsPage() {
                     >
                         <Image
                             src="/images/premium_plough_head.jpg"
-                            alt="American mouldboard eke"
+                            alt={t.alt}
                             fill
                             className={styles.mainImage}
                             sizes="(max-width: 1024px) 100vw, 40vw"
@@ -219,7 +240,7 @@ export default function PloughingEffectsPage() {
                         isOpen={isLightboxOpen}
                         onClose={() => setIsLightboxOpen(false)}
                         src="/images/premium_plough_head.jpg"
-                        alt="American mouldboard eke"
+                        alt={t.alt}
                     />
                 </motion.div>
 
@@ -228,9 +249,9 @@ export default function PloughingEffectsPage() {
                     <div className={styles.quoteWrapper}>
                         <Quote size={40} className={styles.quoteIcon} />
                         <blockquote className={styles.quoteText}>
-                            A hagyományos szántás rövid távon megoldásnak tűnik, de valójában egy{' '}
-                            <span className={styles.quoteHighlight}>ördögi kört</span>
-                            {' '}tart fenn. A rendszeres forgatás ma már közismerten inkább károsnak tekintett. Fent optimálisan forgat, viszont a művelt réteg alatt túl erősen tömörít.
+                            {t.quoteA}{' '}
+                            <span className={styles.quoteHighlight}>{t.quoteHighlight}</span>
+                            {' '}{t.quoteB}
                         </blockquote>
                         <div className={styles.quoteDecoration} />
                     </div>
@@ -239,10 +260,10 @@ export default function PloughingEffectsPage() {
                 {/* Right Column: Title + Interactive Cards */}
                 <motion.div className={styles.cardsColumn} variants={containerVariants}>
                     <motion.div className={`${styles.header} ${styles.cardsHeading}`} variants={itemVariants} style={{ textAlign: 'left', marginBottom: '1rem' }}>
-                        <span className={styles.pillBadge}>Szántás hatásai</span>
+                        <span className={styles.pillBadge}>{t.badge}</span>
                     </motion.div>
 
-                    {ploughingProblems.map((problem, index) => (
+                    {ploughingProblems.map((row) => localize(row, locale)).map((problem, index) => (
                         <CollapsiblePloughingCard
                             key={index}
                             icon={iconMap[problem.icon] || <AlertTriangle size={20} />}

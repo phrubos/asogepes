@@ -6,29 +6,51 @@ import HeavyCultivatorSVG from '../visualizations/HeavyCultivatorSVG'
 import SpadingMachineSVG from '../visualizations/SpadingMachineSVG'
 import styles from '../ProblemNew.module.css'
 import hl from '../visualizations/SoilHighlight.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
 
-
-
-const comparisonData = {
-    cultivator: {
-        title: 'Nehézkultivátor talaj',
-        items: [
+const TEXT = bilingual(
+    {
+        cultivatorItems: [
             'A szármaradványok elégtelen beforgatása',
             'A lazítás egyenletlen, főként a kapák nyomában történik',
             'Ültetésre közvetlenül nem alkalmas',
         ],
-    },
-    spade: {
-        title: 'Ásógépezett talaj',
-        items: [
+        spadeItems: [
             'A szármaradványok a felszín alá kerülnek',
             'Egyenletesen laza szelvény alakul ki',
             'A vetés és ültetés rögtön kezdődhet',
         ],
+        badge: 'Talajszelvény összehasonlítás',
+        cultivator: 'Nehézkultivátorozott talaj',
+        spade: 'Ásógépezett talaj',
+        cultivatorNote: 'A sárga vonalon belül, a kapák nyomában laza a talaj; körülötte tömör marad.',
+        spadeNote: 'A sárga vonal fölött a teljes szélességben laza a talaj.',
     },
-}
+    {
+        cultivatorItems: [
+            'Crop residues are poorly incorporated',
+            'Loosening is uneven, mainly in the tracks of the tines',
+            'Not ready for planting straight away',
+        ],
+        spadeItems: [
+            'Crop residues end up below the surface',
+            'An evenly loose profile forms',
+            'Sowing and planting can start right away',
+        ],
+        badge: 'Soil profile comparison',
+        cultivator: 'Soil after a heavy cultivator',
+        spade: 'Soil after a spading machine',
+        cultivatorNote: 'Inside the yellow line, in the tracks of the tines, the soil is loose; around it, it stays compacted.',
+        spadeNote: 'Above the yellow line, the soil is loose across the full width.',
+    },
+)
+
+
+
 
 export default function CultivatorComparisonPage() {
+    const t = TEXT[useLocale()]
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -50,7 +72,7 @@ export default function CultivatorComparisonPage() {
             className={`${styles.contentWrapper} ${styles.comparisonPageWrapper}`}
         >
             <motion.div variants={itemVariants} className={styles.comparisonHeading}>
-                <span className={styles.pillBadge}>Talajszelvény összehasonlítás</span>
+                <span className={styles.pillBadge}>{t.badge}</span>
             </motion.div>
 
             <div className={styles.soilProfilesContainer} style={{ alignItems: 'start', marginBottom: '0' }}>
@@ -61,17 +83,17 @@ export default function CultivatorComparisonPage() {
                 >
                     <div className={`${styles.soilProfileHeader} ${styles.negativeHeader}`}>
                         <X size={16} strokeWidth={2.5} />
-                        <span>Nehézkultivátorozott talaj</span>
+                        <span>{t.cultivator}</span>
                     </div>
 
                     <div className={styles.soilProfileVisual} style={{ cursor: 'default', display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem' }}>
                         <HeavyCultivatorSVG />
                         <p className={hl.caption}>
                             <span className={hl.swatch} aria-hidden="true" />
-                            A sárga vonalon belül, a kapák nyomában laza a talaj; körülötte tömör marad.
+                            {t.cultivatorNote}
                         </p>
                         <ul className={styles.comparisonList} style={{ padding: '0 0.5rem', marginTop: '0.25rem' }}>
-                            {comparisonData.cultivator.items.map((item, i) => (
+                            {t.cultivatorItems.map((item, i) => (
                                 <li key={i}><X size={14} className={styles.iconNegative} strokeWidth={3} /> {item}</li>
                             ))}
                         </ul>
@@ -85,17 +107,17 @@ export default function CultivatorComparisonPage() {
                 >
                     <div className={`${styles.soilProfileHeader} ${styles.positiveHeader}`}>
                         <Check size={16} strokeWidth={2.5} />
-                        <span>Ásógépezett talaj</span>
+                        <span>{t.spade}</span>
                     </div>
 
                     <div className={styles.soilProfileVisual} style={{ cursor: 'default', display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem' }}>
                         <SpadingMachineSVG />
                         <p className={hl.caption}>
                             <span className={hl.swatch} aria-hidden="true" />
-                            A sárga vonal fölött a teljes szélességben laza a talaj.
+                            {t.spadeNote}
                         </p>
                         <ul className={styles.comparisonList} style={{ padding: '0 0.5rem', marginTop: '0.25rem' }}>
-                            {comparisonData.spade.items.map((item, i) => (
+                            {t.spadeItems.map((item, i) => (
                                 <li key={i}><Check size={14} className={styles.iconPositive} strokeWidth={3} /> {item}</li>
                             ))}
                         </ul>

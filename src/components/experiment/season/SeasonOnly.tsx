@@ -4,6 +4,13 @@ import { useSeason } from './SeasonContext'
 import { ArrowUp } from 'lucide-react'
 import { useScrollNav } from '@/components/shared/ScrollLayout'
 import styles from './SeasonOnly.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  { year: 'Év: ', notHere: (y: number) => `${inYear(y)} itt nem mértünk`, other: 'másik év' },
+  { year: 'Year: ', notHere: (y: number) => `not measured here in ${y}`, other: 'other year' },
+)
 
 /** Hungarian inessive suffix for a year: 2026-ban, 2027-ben, 2030-ban. */
 export function inYear(y: number): string {
@@ -32,14 +39,15 @@ export function yearAdj(y: number): string {
  */
 export default function SeasonOnly({ years, missingNote }: { years: number[]; missingNote?: (year: number) => string }) {
   const { year, divided } = useSeason()
+  const t = TEXT[useLocale()]
   const missing = !years.includes(year)
   // one copy of a block shown per year: this copy's year only
   const shown = divided && !missing ? [year] : years
   return (
     <p className={styles.only}>
-      <span className={styles.label}>Év: </span>
+      <span className={styles.label}>{t.year}</span>
       <span className={styles.year}>{shown.join(', ')}</span>
-      {missing && <span className={styles.note}> · {missingNote ? missingNote(year) : `${inYear(year)} itt nem mértünk`}</span>}
+      {missing && <span className={styles.note}> · {missingNote ? missingNote(year) : t.notHere(year)}</span>}
     </p>
   )
 }
@@ -50,18 +58,19 @@ export default function SeasonOnly({ years, missingNote }: { years: number[]; mi
  */
 export function SeasonLabel({ switchAt }: { switchAt: string }) {
   const { year, years, divided, siteYears = years } = useSeason()
+  const t = TEXT[useLocale()]
   const { scrollToSection } = useScrollNav()
   // the year always sits here, also when both years are shown (one copy per year, ticket 015);
   // "másik év" only when the other year is hidden
   return (
     <p className={styles.only}>
-      <span className={styles.label}>Év: </span>
+      <span className={styles.label}>{t.year}</span>
       <span className={styles.year}>{year}</span>
       {!divided && siteYears.length > 1 && (
         <>
           {' · '}
           <button type="button" className={styles.switchLink} onClick={() => scrollToSection(switchAt)}>
-            másik év
+            {t.other}
             <ArrowUp size={14} aria-hidden="true" />
           </button>
         </>

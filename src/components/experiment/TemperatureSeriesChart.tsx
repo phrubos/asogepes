@@ -7,6 +7,29 @@ import type { Season } from '@/lib/seasons'
 import { formatCm } from '@/lib/seasons'
 import DateLabel, { dateText } from './season/DateLabel'
 import styles from './TemperatureSeriesChart.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  {
+    depth: 'Mélység',
+    deep: (d: string) => `${d} mélyen`,
+    control: 'Kontroll',
+    spaded: 'Ásógépezett',
+    warmer: 'ásógépes talaj melegebb',
+    cooler: 'hűvösebb (°C)',
+    aria: (d: string, when: string, c: string, s: string) => `${d}, ${when}: kontroll ${c} °C, ásógépezett ${s} °C`,
+  },
+  {
+    depth: 'Depth',
+    deep: (d: string) => `${d} deep`,
+    control: 'Control',
+    spaded: 'Spaded',
+    warmer: 'spaded soil warmer',
+    cooler: 'cooler (°C)',
+    aria: (d: string, when: string, c: string, s: string) => `${d}, ${when}: control ${c} °C, spaded ${s} °C`,
+  },
+)
 
 type Temperature = Season['temperature']
 
@@ -28,6 +51,8 @@ function Emphasis({ text }: { text: string }) {
  * Warmer is orange, cooler is sage (never blue).
  */
 export default function TemperatureSeriesChart({ data }: { data: Temperature }) {
+  const locale = useLocale()
+  const t = TEXT[locale]
   const containerRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(containerRef, { once: true, margin: '-50px' })
   // one scale for both depths
@@ -46,8 +71,8 @@ export default function TemperatureSeriesChart({ data }: { data: Temperature }) 
         </div>
 
         {multi && (
-          <div className={styles.depthPicker} role="group" aria-label="Mélység">
-            <span className={styles.depthPickerLabel} aria-hidden="true">Mélység</span>
+          <div className={styles.depthPicker} role="group" aria-label={t.depth}>
+            <span className={styles.depthPickerLabel} aria-hidden="true">{t.depth}</span>
             {data.depths.map((depth, di) => (
               <button
                 key={depth.label}
@@ -66,10 +91,10 @@ export default function TemperatureSeriesChart({ data }: { data: Temperature }) 
           <section
             key={depth.label}
             className={styles.band}
-            aria-label={`${depth.label} mélyen`}
+            aria-label={t.deep(depth.label)}
             data-off={multi && di !== shown ? '' : undefined}
           >
-            <span className={styles.depthLabel}>{depth.label} mélyen</span>
+            <span className={styles.depthLabel}>{t.deep(depth.label)}</span>
             <div className={styles.days}>
               {depth.points.map((p, pi) => {
                 const d = Math.round((p.spade - p.control) * 10) / 10
@@ -81,7 +106,7 @@ export default function TemperatureSeriesChart({ data }: { data: Temperature }) 
                     key={pi}
                     className={styles.day}
                     role="group"
-                    aria-label={`${depth.label}, ${dateText(p.when)}: kontroll ${formatCm(p.control)} °C, ásógépezett ${formatCm(p.spade)} °C`}
+                    aria-label={t.aria(depth.label, dateText(p.when, locale), formatCm(p.control, locale), formatCm(p.spade, locale))}
                   >
                     <div className={styles.plot} aria-hidden="true">
                       {(['control', 'spade'] as const).map((k, ki) => (
@@ -93,7 +118,7 @@ export default function TemperatureSeriesChart({ data }: { data: Temperature }) 
                             animate={isInView ? { scaleY: 1 } : {}}
                             transition={{ duration: 0.8, delay: delay + ki * 0.05, ease: [0.22, 1, 0.36, 1] }}
                           >
-                            <span className={styles.barValue}>{formatCm(p[k])}</span>
+                            <span className={styles.barValue}>{formatCm(p[k], locale)}</span>
                           </motion.div>
                         </div>
                       ))}
@@ -105,7 +130,7 @@ export default function TemperatureSeriesChart({ data }: { data: Temperature }) 
                           animate={isInView ? { opacity: 1 } : {}}
                           transition={{ duration: 0.4, delay: delay + 0.5 }}
                         >
-                          {sign}{formatCm(Math.abs(d))}
+                          {sign}{formatCm(Math.abs(d), locale)}
                         </motion.span>
                       </span>
                     </div>
@@ -118,10 +143,10 @@ export default function TemperatureSeriesChart({ data }: { data: Temperature }) 
         ))}
 
         <ul className={styles.legend}>
-          <li><span className={`${styles.swatch} ${styles.barControl}`} />Kontroll</li>
-          <li><span className={`${styles.swatch} ${styles.barSpade}`} />Ásógépezett</li>
-          <li><span className={`${styles.deltaKey} ${styles.warm}`}>+</span>ásógépes talaj melegebb</li>
-          <li><span className={`${styles.deltaKey} ${styles.cool}`}>−</span>hűvösebb (°C)</li>
+          <li><span className={`${styles.swatch} ${styles.barControl}`} />{t.control}</li>
+          <li><span className={`${styles.swatch} ${styles.barSpade}`} />{t.spaded}</li>
+          <li><span className={`${styles.deltaKey} ${styles.warm}`}>+</span>{t.warmer}</li>
+          <li><span className={`${styles.deltaKey} ${styles.cool}`}>−</span>{t.cooler}</li>
         </ul>
       </div>
 

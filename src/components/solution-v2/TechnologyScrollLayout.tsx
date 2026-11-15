@@ -8,22 +8,49 @@ import TechHeroSection from './sections/TechHeroSection'
 import OperationSection from './sections/OperationSection'
 import ModelsSection from './sections/ModelsSection'
 import ApplicationSection from './sections/ApplicationSection'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual, pagePath } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+    {
+        intro: 'Bevezető',
+        operation: 'Működési elv',
+        models: 'Modellek',
+        application: 'Alkalmazás',
+        guide: 'Útmutató',
+        nextKicker: 'Tovább: Kutatás',
+        nextTitle: 'Mit mértünk a táblákon?',
+        nextText: `${RESEARCH_SITES.length} helyszín, ${RESEARCH_YEARS.length} tenyészidő: a talaj szerkezete, hőmérséklete és a növények fejlődése ásógépes és hagyományos művelés után.`,
+    },
+    {
+        intro: 'Introduction',
+        operation: 'Operating principle',
+        models: 'Models',
+        application: 'Application',
+        guide: 'Guide',
+        nextKicker: 'Next: Research',
+        nextTitle: 'What did we measure in the fields?',
+        nextText: `${RESEARCH_SITES.length} sites, ${RESEARCH_YEARS.length} growing seasons: soil structure, soil temperature and crop growth after spading-machine and conventional tillage.`,
+    },
+)
 
 export default function TechnologyScrollLayout() {
+    const locale = useLocale()
+    const t = TEXT[locale]
     const sections: ScrollSection[] = useMemo(() => [
         {
             id: 'hero',
-            label: 'Bevezető',
+            label: t.intro,
             component: <TechHeroSection />,
         },
         {
             id: 'operation',
-            label: 'Működési elv',
+            label: t.operation,
             component: <OperationSection />,
         },
         {
             id: 'models',
-            label: 'Modellek',
+            label: t.models,
             component: <ModelsSection />,
             subsections: [
                 { id: 'model-38sx', label: '38SX' },
@@ -33,13 +60,13 @@ export default function TechnologyScrollLayout() {
         },
         {
             id: 'application',
-            label: 'Alkalmazás',
+            label: t.application,
             component: <ApplicationSection />,
             subsections: [
-                { id: 'application-guide', label: 'Útmutató' },
+                { id: 'application-guide', label: t.guide },
             ],
         },
-    ], [])
+    ], [t])
 
     return (
         <ScrollLayout
@@ -48,10 +75,10 @@ export default function TechnologyScrollLayout() {
             end={
                 <PageEnd
                     next={{
-                        href: '/kutatas',
-                        kicker: 'Tovább: Kutatás',
-                        title: 'Mit mértünk a táblákon?',
-                        text: `${RESEARCH_SITES.length} helyszín, ${RESEARCH_YEARS.length} tenyészidő: a talaj szerkezete, hőmérséklete és a növények fejlődése ásógépes és hagyományos művelés után.`,
+                        href: pagePath('research', locale),
+                        kicker: t.nextKicker,
+                        title: t.nextTitle,
+                        text: t.nextText,
                     }}
                 />
             }

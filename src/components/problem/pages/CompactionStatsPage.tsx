@@ -9,6 +9,63 @@ import { useLoopActive } from '@/hooks/useLoopActive'
 import { useDisclosureTrigger } from '@/hooks/useDisclosureTrigger'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import styles from '../ProblemNew.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+    {
+        simulated: 'Szimulált állapot',
+        resistance: 'Talajellenállás',
+        resistanceCaps: 'TALAJELLENÁLLÁS',
+        rootZone: 'Gyökérzóna',
+        shallow: 'Sekély',
+        deep: 'Mély',
+        permeability: 'Vízáteresztés',
+        poor: 'Gyenge',
+        good: 'Jó',
+        rootShallow: 'Sekély, korlátozott',
+        rootDeep: 'Mély, kiterjedt',
+        water: 'Vízgazdálkodás',
+        waterPoor: 'Gyenge vízáteresztés',
+        waterOk: 'Kiegyensúlyozott',
+        badge: 'Talajállapot és kockázatok',
+        captionA: 'Rendszeres öntözés, folyamatos tömörödés,',
+        captionB: 'amit a penetrométer jól mutat.',
+        irrigationTitle: 'Gyakori öntözés hatása',
+        irrigationText: 'Intenzíven öntözött kertészeti kultúrákban 4-7 naponként 20-40 mm víz kijuttatása történik, ami fokozatosan tömöríti a talajt.',
+        declineTitle: 'Szerkezetromlás üteme',
+        declineText: 'Tárcsázott vagy kombinátorozott talajon már 30 nap alatt 20-50%-os szerkezetromlás mérhető intenzív öntözés mellett.',
+        declineNote: '30 nap után kritikus',
+        oxygenTitle: 'Oxigénhiány',
+        oxygenText: 'A tömörödés kiszorítja a pórusokból a levegőt, ami gyökérfulladáshoz, gyökértömeg veszteséghez vezet és romlik a talajélet.',
+    },
+    {
+        simulated: 'Simulated state',
+        resistance: 'Penetration resistance',
+        resistanceCaps: 'PENETRATION RESISTANCE',
+        rootZone: 'Root zone',
+        shallow: 'Shallow',
+        deep: 'Deep',
+        permeability: 'Infiltration',
+        poor: 'Poor',
+        good: 'Good',
+        rootShallow: 'Shallow, restricted',
+        rootDeep: 'Deep, extensive',
+        water: 'Water regime',
+        waterPoor: 'Poor infiltration',
+        waterOk: 'Balanced',
+        badge: 'Soil condition and risks',
+        captionA: 'Regular irrigation, continuous compaction,',
+        captionB: 'as the penetrometer clearly shows.',
+        irrigationTitle: 'Effect of frequent irrigation',
+        irrigationText: 'In intensively irrigated horticultural crops, 20–40 mm of water is applied every 4–7 days, which gradually compacts the soil.',
+        declineTitle: 'Rate of structural decline',
+        declineText: 'On disc-harrowed or combination-cultivated soil, a 20–50% decline in soil structure can be measured within 30 days under intensive irrigation.',
+        declineNote: 'Critical after 30 days',
+        oxygenTitle: 'Oxygen deficiency',
+        oxygenText: 'Compaction drives the air out of the pores, which leads to root asphyxiation and loss of root mass, and soil life declines.',
+    },
+)
 
 interface CollapsibleChallengeCardProps {
     icon: React.ReactNode;
@@ -204,6 +261,7 @@ const timelineData = [
 
 /** Phones and tablets: the simulated state as one strip under the soil picture, so it reads with it */
 function CompactionReadout({ progress }: { progress: any }) {
+    const t = TEXT[useLocale()]
     const [currentProgress, setCurrentProgress] = useState(0)
 
     useEffect(() => progress.on('change', (latest: number) => setCurrentProgress(latest)), [progress])
@@ -212,24 +270,25 @@ function CompactionReadout({ progress }: { progress: any }) {
     const compacted = currentProgress > 2
 
     return (
-        <dl className={styles.soilReadout} aria-label="Szimulált állapot">
+        <dl className={styles.soilReadout} aria-label={t.simulated}>
             <div>
-                <dt>Talajellenállás</dt>
+                <dt>{t.resistance}</dt>
                 <dd style={{ color: currentData.color }}>{Math.round(currentProgress * 5)} bar</dd>
             </div>
             <div>
-                <dt>Gyökérzóna</dt>
-                <dd>{compacted ? 'Sekély' : 'Mély'}</dd>
+                <dt>{t.rootZone}</dt>
+                <dd>{compacted ? t.shallow : t.deep}</dd>
             </div>
             <div>
-                <dt>Vízáteresztés</dt>
-                <dd>{compacted ? 'Gyenge' : 'Jó'}</dd>
+                <dt>{t.permeability}</dt>
+                <dd>{compacted ? t.poor : t.good}</dd>
             </div>
         </dl>
     )
 }
 
 function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, expandedCardId: number | null }) {
+    const t = TEXT[useLocale()]
     const [currentProgress, setCurrentProgress] = useState(0)
 
     useEffect(() => {
@@ -298,7 +357,7 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                         display: 'inline-block',
                         transition: 'all 0.3s'
                     }}>
-                        Szimulált állapot
+                        {t.simulated}
                     </span>
                 </div>
             </div>
@@ -337,7 +396,7 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                         <Info size={18} />
                     </div>
                     <div>
-                        <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '4px' }}>TALAJELLENÁLLÁS</div>
+                        <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '4px' }}>{t.resistanceCaps}</div>
                         <div style={{ fontSize: '1.5rem', fontWeight: 800, color: currentData.color, transition: 'color 0.3s', fontFamily: 'var(--font-display)' }}>
                             {Math.round(currentProgress * 5)} bar
                         </div>
@@ -365,9 +424,9 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                         <Sprout size={18} />
                     </div>
                     <div>
-                        <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 4px 0', fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>Gyökérzóna</h4>
+                        <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 4px 0', fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>{t.rootZone}</h4>
                         <p style={{ margin: 0, fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}>
-                            {currentProgress > 2 ? 'Sekély, korlátozott' : 'Mély, kiterjedt'}
+                            {currentProgress > 2 ? t.rootShallow : t.rootDeep}
                         </p>
                     </div>
                 </motion.div>
@@ -393,9 +452,9 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                         <Droplets size={18} />
                     </div>
                     <div>
-                        <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 4px 0', fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>Vízgazdálkodás</h4>
+                        <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 4px 0', fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>{t.water}</h4>
                         <p style={{ margin: 0, fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}>
-                            {currentProgress > 2 ? 'Gyenge vízáteresztés' : 'Kiegyensúlyozott'}
+                            {currentProgress > 2 ? t.waterPoor : t.waterOk}
                         </p>
                     </div>
                 </motion.div>
@@ -405,6 +464,7 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
 }
 
 export default function CompactionStatsPage() {
+    const t = TEXT[useLocale()]
     const [expandedCardId, setExpandedCardId] = useState<number | null>(null) // Track single open card
 
     // Interactive Soil Logic
@@ -501,7 +561,7 @@ export default function CompactionStatsPage() {
                     }}
                 >
                     {/* phones and tablets: the section title sits over the picture it introduces */}
-                    <span className={`${styles.pillBadge} ${styles.soilHeading}`}>Talajállapot és kockázatok</span>
+                    <span className={`${styles.pillBadge} ${styles.soilHeading}`}>{t.badge}</span>
 
                     {/* Container to fill the column while keeping aspect ratio */}
                     <div ref={soilRef} style={{
@@ -541,14 +601,14 @@ export default function CompactionStatsPage() {
                             padding: '10px 16px',
                             boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
                         }}>
-                            Rendszeres öntözés, folyamatos tömörödés,<br />
-                            amit a penetrométer jól mutat.
+                            {t.captionA}<br />
+                            {t.captionB}
                         </div>
                     </div>
                     <CompactionReadout progress={progress} />
                     {/* phones and tablets: the caption sits under the picture instead of over it */}
                     <p className={styles.soilCaptionBelow}>
-                        Rendszeres öntözés, folyamatos tömörödés, amit a penetrométer jól mutat.
+                        {t.captionA} {t.captionB}
                     </p>
                 </motion.div >
 
@@ -556,7 +616,7 @@ export default function CompactionStatsPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0, justifyContent: 'space-between' }}>
                     <div className={styles.challengesList} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                         <div className={styles.challengesHeading} style={{ textAlign: 'left', marginBottom: 'var(--space-xs)' }}>
-                            <span className={styles.pillBadge}>Talajállapot és kockázatok</span>
+                            <span className={styles.pillBadge}>{t.badge}</span>
                         </div>
 
                         {/* Challenge 1 */}
@@ -571,7 +631,7 @@ export default function CompactionStatsPage() {
                         >
                             <CollapsibleChallengeCard
                                 icon={<Droplet size={24} />}
-                                title="Gyakori öntözés hatása"
+                                title={t.irrigationTitle}
                                 isOpen={expandedCardId === 1}
                                 onOpen={() => setExpandedCardId(1)}
                                 onClose={() => setExpandedCardId(null)}
@@ -579,7 +639,7 @@ export default function CompactionStatsPage() {
                                 staticOpen={isCompact}
                             >
                                 <div className={styles.itemContent}>
-                                    <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>Intenzíven öntözött kertészeti kultúrákban 4-7 naponként 20-40 mm víz kijuttatása történik, ami fokozatosan tömöríti a talajt.</p>
+                                    <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>{t.irrigationText}</p>
                                     <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-gold)', marginTop: '0.75rem' }}>350-450 mm/szezon</p>
                                 </div>
                             </CollapsibleChallengeCard>
@@ -597,7 +657,7 @@ export default function CompactionStatsPage() {
                         >
                             <CollapsibleChallengeCard
                                 icon={<Layers size={24} />}
-                                title="Szerkezetromlás üteme"
+                                title={t.declineTitle}
                                 isOpen={expandedCardId === 2}
                                 onOpen={() => setExpandedCardId(2)}
                                 onClose={() => setExpandedCardId(null)}
@@ -605,8 +665,8 @@ export default function CompactionStatsPage() {
                                 staticOpen={isCompact}
                             >
                                 <div className={styles.itemContent}>
-                                    <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>Tárcsázott vagy kombinátorozott talajon már 30 nap alatt 20-50%-os szerkezetromlás mérhető intenzív öntözés mellett.</p>
-                                    <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-gold)', marginTop: '0.75rem' }}>30 nap után kritikus</p>
+                                    <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>{t.declineText}</p>
+                                    <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-gold)', marginTop: '0.75rem' }}>{t.declineNote}</p>
                                 </div>
                             </CollapsibleChallengeCard>
                         </motion.div>
@@ -622,8 +682,8 @@ export default function CompactionStatsPage() {
                             }}
                         >
                             <CollapsibleChallengeCard
-                                icon={<span style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'monospace' }}>O₂</span>}
-                                title="Oxigénhiány"
+                                icon={<span style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'var(--font-mono), monospace' }}>O₂</span>}
+                                title={t.oxygenTitle}
                                 isOpen={expandedCardId === 3}
                                 onOpen={() => setExpandedCardId(3)}
                                 onClose={() => setExpandedCardId(null)}
@@ -631,7 +691,7 @@ export default function CompactionStatsPage() {
                                 staticOpen={isCompact}
                             >
                                 <div className={styles.itemContent}>
-                                    <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>A tömörödés kiszorítja a pórusokból a levegőt, ami gyökérfulladáshoz, gyökértömeg veszteséghez vezet és romlik a talajélet.</p>
+                                    <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: 4 }}>{t.oxygenText}</p>
                                 </div>
                             </CollapsibleChallengeCard>
                         </motion.div>

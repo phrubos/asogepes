@@ -4,6 +4,29 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Thermometer } from 'lucide-react'
 import styles from './TemperatureChart.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  {
+    title: 'A talajhőmérséklet a vöröshagyma csírázásakor',
+    deep: (d: string) => `${d} mélyen`,
+    control: 'Kontroll',
+    spaded: 'Ásógépezett',
+    pA: 'A vetés után, a csírázás időszakában a talajhőmérsékletnek nagy jelentősége van. Márciusban, a kora tavaszi felmelegedés idején, dél körüli időben mértük a csírázó hagyma talajának felszínközeli hőmérsékletét. A lazább szerkezetű, ásógépezett talaj',
+    pStrong: '+3-5°C-kal magasabb',
+    pB: 'hőmérsékletű. Ez jelentősen felgyorsítja a növények kezdeti növekedését.',
+  },
+  {
+    title: 'Soil temperature while the onion germinates',
+    deep: (d: string) => `${d} deep`,
+    control: 'Control',
+    spaded: 'Spaded',
+    pA: 'Soil temperature matters a great deal after sowing, while the seeds are germinating. In March, during the early spring warming, we measured the near-surface temperature of the soil under the germinating onion around midday. The looser, spaded soil was',
+    pStrong: '3–5 °C warmer.',
+    pB: 'This markedly speeds up the early growth of the plants.',
+  },
+)
 
 interface TemperatureData {
   depth1cm: { spade: number; control: number }
@@ -15,6 +38,7 @@ interface TemperatureChartProps {
 }
 
 export default function TemperatureChart({ data }: TemperatureChartProps) {
+  const t = TEXT[useLocale()]
   const containerRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(containerRef, { once: true, margin: '-50px' })
 
@@ -50,7 +74,7 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
       >
         <div className={styles.titleWrapper}>
           <Thermometer className={styles.titleIcon} size={20} />
-          <h4 className={styles.title}>A talajhőmérséklet a vöröshagyma csírázásakor</h4>
+          <h4 className={styles.title}>{t.title}</h4>
         </div>
         <motion.div
           className={styles.titleLine}
@@ -63,7 +87,7 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
       <div className={styles.chartArea}>
         {/* 1 cm mélység */}
         <div className={styles.depthSection}>
-          <div className={styles.depthLabel}>1 cm mélyen</div>
+          <div className={styles.depthLabel}>{t.deep('1 cm')}</div>
           <div className={styles.barsRow}>
             {/* Kontroll */}
             <div className={styles.barGroup}>
@@ -79,7 +103,7 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
                   <span className={styles.barValue}>{data.depth1cm.control}°C</span>
                 </motion.div>
               </div>
-              <span className={styles.barLabel}>Kontroll</span>
+              <span className={styles.barLabel}>{t.control}</span>
             </div>
 
             {/* Ásógépezett */}
@@ -96,7 +120,7 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
                   <span className={styles.barValue}>{data.depth1cm.spade}°C</span>
                 </motion.div>
               </div>
-              <span className={styles.barLabel}>Ásógépezett</span>
+              <span className={styles.barLabel}>{t.spaded}</span>
             </div>
 
             {/* Különbség */}
@@ -113,7 +137,7 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
 
         {/* 5 cm mélység */}
         <div className={styles.depthSection}>
-          <div className={styles.depthLabel}>5 cm mélyen</div>
+          <div className={styles.depthLabel}>{t.deep('5 cm')}</div>
           <div className={styles.barsRow}>
             {/* Kontroll */}
             <div className={styles.barGroup}>
@@ -129,7 +153,7 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
                   <span className={styles.barValue}>{data.depth5cm.control}°C</span>
                 </motion.div>
               </div>
-              <span className={styles.barLabel}>Kontroll</span>
+              <span className={styles.barLabel}>{t.control}</span>
             </div>
 
             {/* Ásógépezett */}
@@ -146,7 +170,7 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
                   <span className={styles.barValue}>{data.depth5cm.spade}°C</span>
                 </motion.div>
               </div>
-              <span className={styles.barLabel}>Ásógépezett</span>
+              <span className={styles.barLabel}>{t.spaded}</span>
             </div>
 
             {/* Különbség */}
@@ -170,11 +194,8 @@ export default function TemperatureChart({ data }: TemperatureChartProps) {
         transition={{ delay: 0.7 }}
       >
         <p>
-          A vetés után, a csírázás időszakában a talajhőmérsékletnek nagy jelentősége van.
-          Márciusban, a kora tavaszi felmelegedés idején, dél körüli időben mértük a csírázó hagyma
-          talajának felszínközeli hőmérsékletét. A lazább szerkezetű, ásógépezett talaj{' '}
-          <strong>+3-5°C-kal magasabb</strong> hőmérsékletű.
-          Ez jelentősen felgyorsítja a növények kezdeti növekedését.
+          {t.pA}{' '}
+          <strong>{t.pStrong}</strong> {t.pB}
         </p>
       </motion.div>
     </div>

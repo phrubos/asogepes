@@ -1,10 +1,40 @@
 'use client'
 
 import { useEffect, useRef, useState, type CSSProperties, type FocusEvent, type KeyboardEvent, type PointerEvent } from 'react'
-import { RESEARCH_SITES as HERO_SITES, RESEARCH_YEARS as HERO_YEARS } from '@/lib/seasons'
+import { RESEARCH_SITES as BASE_SITES, RESEARCH_YEARS as HERO_YEARS } from '@/lib/seasons'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import styles from './HungaryMap.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+import { researchData } from '@/lib/i18n/useResearchData'
+
+const TEXT = bilingual(
+  {
+    years: `${HERO_YEARS.join(' és ')}, ${HERO_YEARS.length === 2 ? 'két' : HERO_YEARS.length} tenyészidő`,
+    mapLabel: 'Magyarország: a három kísérleti helyszín Kecskemét környékén, a Duna–Tisza közén',
+    sites: 'helyszín',
+    around: 'Kecskemét környékén',
+    jump: 'Ugrás a szakaszhoz',
+    tap: 'Koppints a helyszínekért',
+    hover: 'Vidd fölé az egeret a helyszínekért',
+    measured: 'mért évad',
+    notMeasured: 'nem mért',
+    country: 'Magyarország',
+  },
+  {
+    years: `${HERO_YEARS.join(' and ')}, ${HERO_YEARS.length === 2 ? 'two' : HERO_YEARS.length} growing seasons`,
+    mapLabel: 'Hungary: the three trial sites around Kecskemét, between the Danube and the Tisza',
+    sites: 'sites',
+    around: 'around Kecskemét',
+    jump: 'Go to the section',
+    tap: 'Tap for the sites',
+    hover: 'Hover over the sites',
+    measured: 'measured season',
+    notMeasured: 'not measured',
+    country: 'Hungary',
+  },
+)
 
 // Outline in a 100 x 70 box: lon 16.2–22.71 → x, lat 48.62–45.76 → y
 const HUNGARY_PATH =
@@ -86,6 +116,9 @@ interface HungaryMapProps {
  * and their seasons grows out of the lens; it goes back when the mouse leaves.
  */
 export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
+  const locale = useLocale()
+  const t = TEXT[locale]
+  const HERO_SITES = researchData(BASE_SITES, locale)
   const phoneQuery = useMediaQuery('(max-width: 1024px)')
   const phone = phoneQuery === true
   const reducedMotion = useReducedMotion()
@@ -158,7 +191,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
     }
   }
 
-  const yearsText = `${HERO_YEARS.join(' és ')}, ${HERO_YEARS.length === 2 ? 'két' : HERO_YEARS.length} tenyészidő`
+  const yearsText = t.years
 
   return (
     <div
@@ -175,7 +208,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
         viewBox={`0 0 ${g.W} ${g.H}`}
         className={styles.svg}
         role="group"
-        aria-label="Magyarország: a három kísérleti helyszín Kecskemét környékén, a Duna–Tisza közén"
+        aria-label={t.mapLabel}
       >
         <defs>
           <pattern id="heroMapDots" width="3.4" height="3.4" patternUnits="userSpaceOnUse">
@@ -203,7 +236,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
               ))}
             </g>
             <g className={`${styles.riverNames} ${phone ? styles.closedOnly : ''}`} fontSize={g.city * 0.9}>
-              <text x={37.6} y={45} textAnchor="end">Duna</text>
+              <text x={37.6} y={45} textAnchor="end">{locale === 'en' ? 'Danube' : 'Duna'}</text>
               <text x={67.5} y={29.5}>Tisza</text>
             </g>
             <text
@@ -214,7 +247,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
               letterSpacing={g.city * 0.1}
               className={`${styles.region} ${styles.closedOnly}`}
             >
-              DUNA–TISZA KÖZE
+              {locale === 'en' ? 'DANUBE–TISZA INTERFLUVE' : 'DUNA–TISZA KÖZE'}
             </text>
           </g>
           <rect x={LENS.x} y={LENS.y} width={LENS.w} height={LENS.h} rx={1.2} className={styles.lens} />
@@ -239,7 +272,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
           <g className={styles.callout}>
             <line x1={g.callout.x} y1={endY} x2={g.callout.x + g.callout.w} y2={endY} className={styles.calloutRule} />
             <text x={g.callout.x} y={endY + g.callout.title + 12} fontSize={g.callout.title} className={styles.calloutTitle}>
-              {HERO_SITES.length} helyszín <tspan className={styles.calloutDot}>·</tspan> Kecskemét környékén
+              {HERO_SITES.length} {t.sites} <tspan className={styles.calloutDot}>·</tspan> {t.around}
             </text>
             <text x={g.callout.x} y={endY + g.callout.title + 12 + g.callout.sub + 10} fontSize={g.callout.sub} className={styles.calloutSub}>
               {yearsText}
@@ -255,7 +288,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
         <g className={styles.zoom}>
           <rect x={g.inset.x} y={g.inset.y} width={g.inset.w} height={g.inset.h} rx={16} className={styles.inset} />
           <circle cx={g.inset.x + g.inset.w / 2} cy={g.inset.y + g.inset.h / 2} r={g.inset.h} fill="url(#heroMapGlow)" />
-          <text x={g.inset.x + 18} y={g.caption} className={styles.caption}>KECSKEMÉT KÖRNYÉKE</text>
+          <text x={g.inset.x + 18} y={g.caption} className={styles.caption}>{locale === 'en' ? 'AROUND KECSKEMÉT' : 'KECSKEMÉT KÖRNYÉKE'}</text>
 
           {HERO_SITES.map((s) => {
             const [x, y] = g.pins[s.id]
@@ -270,7 +303,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
                 key={s.id}
                 role="button"
                 tabIndex={0}
-                aria-label={`${s.name}: ${s.tip}. Ugrás a szakaszhoz`}
+                aria-label={`${s.name}: ${s.tip}. ${t.jump}`}
                 className={`${styles.pin} ${hl && !on ? styles.pinDim : ''}`}
                 onMouseEnter={() => setActive(s.id)}
                 onMouseLeave={() => setActive(null)}
@@ -313,7 +346,7 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
         {!open ? (
           <span className={styles.hint}>
             <span className={styles.hintIcon} aria-hidden="true">+</span>
-            {phone ? 'Koppints a helyszínekért' : 'Vidd fölé az egeret a helyszínekért'}
+            {phone ? t.tap : t.hover}
           </span>
         ) : site ? (
           <span key={site.id} className={styles.tip}>
@@ -321,11 +354,11 @@ export default function HungaryMap({ onLocationClick }: HungaryMapProps) {
           </span>
         ) : (
           <span className={`${styles.legend} ${styles.tip}`}>
-            <span><i className={styles.keyOn} />mért évad</span>
-            <span><i className={styles.keyOff} />nem mért</span>
+            <span><i className={styles.keyOn} />{t.measured}</span>
+            <span><i className={styles.keyOff} />{t.notMeasured}</span>
           </span>
         )}
-        {!phone && <span className={styles.country}>Magyarország</span>}
+        {!phone && <span className={styles.country}>{t.country}</span>}
       </div>
     </div>
   )

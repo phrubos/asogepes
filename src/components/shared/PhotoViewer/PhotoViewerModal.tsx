@@ -9,6 +9,13 @@ import ThermalOverlays from '../ThermalOverlays/ThermalOverlays'
 import SoilLoader from '@/components/ui/SoilLoader'
 import { FormattedText } from './FormattedText'
 import PhotoCredit from '@/components/ui/PhotoCredit/PhotoCredit'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+    { loading: 'Betöltés...', close: 'Bezárás', image: 'KÉP', details: 'Fotó részletei' },
+    { loading: 'Loading...', close: 'Close', image: 'IMAGE', details: 'Photo details' },
+)
 
 interface ThermalOverlay {
     scale?: {
@@ -84,6 +91,7 @@ export function PhotoViewerModal({
     onNext,
     onPrev
 }: PhotoViewerModalProps) {
+    const t = TEXT[useLocale()]
     const [mounted, setMounted] = useState(false)
     const [zoom, setZoom] = useState(1)
     const [sliderPos, setSliderPos] = useState(50)
@@ -296,7 +304,7 @@ export function PhotoViewerModal({
                                                     letterSpacing: '0.05em',
                                                     fontWeight: 500,
                                                 }}>
-                                                    Betöltés...
+                                                    {t.loading}
                                                 </p>
                                             </motion.div>
                                         )}
@@ -397,17 +405,17 @@ export function PhotoViewerModal({
 
                         {/* Info Panel (Right) */}
                         <div className={styles.modalInfoPanel}>
-                            <button ref={closeRef} className={styles.closeButton} onClick={onClose} aria-label="Bezárás">
+                            <button ref={closeRef} className={styles.closeButton} onClick={onClose} aria-label={t.close}>
                                 <X size={24} />
                             </button>
 
                             <div className={styles.modalHeader}>
                                 {totalItems > 1 && (
                                     <div className={styles.modalMeta}>
-                                        KÉP {currentIndex + 1} / {totalItems}
+                                        {t.image} {currentIndex + 1} / {totalItems}
                                     </div>
                                 )}
-                                <h2 className={styles.modalTitle}>{currentImage.title || 'Fotó részletei'}</h2>
+                                <h2 className={styles.modalTitle}>{currentImage.title || t.details}</h2>
                             </div>
                             <div className={styles.modalDescription}>
                                 <FormattedText

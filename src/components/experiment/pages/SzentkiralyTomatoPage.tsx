@@ -9,12 +9,16 @@ import AboveBelowGround from './AboveBelowGround'
 // Same page frame as the onion field's loose-layer block
 import styles from './SzentkirályTimelinePage.module.css'
 import own from './SzentkiralyTomatoPage.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { useResearchData } from '@/lib/i18n/useResearchData'
 
-const site = szentkiralyTomato
-const season = site.seasons[site.seasons.length - 1]
+const SITE = szentkiralyTomato
 
 /** Szentkirály, the industrial tomato field measured from 2026 */
 export default function SzentkiralyTomatoPage() {
+  const site = useResearchData(SITE)
+  const season = site.seasons[site.seasons.length - 1]
+  const en = useLocale() === 'en'
   return (
     <div className={styles.timelinePage}>
       <motion.div
@@ -30,7 +34,7 @@ export default function SzentkiralyTomatoPage() {
         <div className={styles.seasonRow}>
           <SeasonOnly years={site.seasons.map((s) => s.year)} />
         </div>
-        <h3 className={styles.headerTitle}>Új tábla: ipari paradicsom</h3>
+        <h3 className={styles.headerTitle}>{en ? 'New field: processing tomato' : 'Új tábla: ipari paradicsom'}</h3>
         <p className={own.about}>{season.about}</p>
       </motion.div>
 
@@ -41,7 +45,7 @@ export default function SzentkiralyTomatoPage() {
         transition={{ duration: 0.6, delay: 0.15 }}
       >
         <Timeline
-          title="A laza talajréteg mélysége, 3 mérés"
+          title={en ? 'Depth of the loose soil layer, 3 measurements' : 'A laza talajréteg mélysége, 3 mérés'}
           dates={season.dates}
           scaleMax={site.looseLayerMax}
           series={season.treatments.map((t) => ({

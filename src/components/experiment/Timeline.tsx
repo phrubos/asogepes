@@ -7,6 +7,29 @@ import type { MeasureDate, TreatmentRole } from '@/lib/seasons'
 import { formatCm } from '@/lib/seasons'
 import DateLabel from './season/DateLabel'
 import styles from './Timeline.module.css'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { bilingual } from '@/lib/i18n/config'
+
+const TEXT = bilingual(
+  {
+    title: 'A talaj tömörödése a termesztési ciklus alatt',
+    control: 'Kontroll',
+    spade: 'Ásógép',
+    controlTillage: 'Kontroll művelés',
+    spadeTillage: 'Ásógépes művelés',
+    deepToo: 'Mélyásógépes parcellák is',
+    timeline: 'Idővonal',
+  },
+  {
+    title: 'Soil compaction over the growing cycle',
+    control: 'Control',
+    spade: 'Spading machine',
+    controlTillage: 'Control tillage',
+    spadeTillage: 'Spading-machine tillage',
+    deepToo: 'Deep-spaded plots too',
+    timeline: 'Timeline',
+  },
+)
 
 interface TimelineData {
   month: string
@@ -57,25 +80,28 @@ export default function Timeline({
   series: seriesProp,
   dates,
   scaleMax,
-  title = "A talaj tömörödése a termesztési ciklus alatt",
+  title: titleProp,
   evaluations,
   cards: cardsProp,
   summary: summaryProp,
   aside,
 }: TimelineProps) {
+  const locale = useLocale()
+  const t = TEXT[locale]
+  const title = titleProp ?? t.title
   const containerRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(containerRef, { once: true, margin: '-50px' })
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [hoveredBar, setHoveredBar] = useState<string | null>(null)
 
   const series: TimelineSeries[] = seriesProp ?? [
-    { key: 'control', label: 'Kontroll', short: 'Kontroll', role: 'control', values: data.map(d => d.control) },
-    { key: 'spade', label: 'Ásógép', short: 'Ásógép', role: 'spade', values: data.map(d => d.spade) },
+    { key: 'control', label: t.control, short: t.control, role: 'control', values: data.map(d => d.control) },
+    { key: 'spade', label: t.spade, short: t.spade, role: 'spade', values: data.map(d => d.spade) },
   ]
   const points: MeasureDate[] = dates ?? data.map(d => ({ month: d.month }))
   const cards: TimelineCard[] = cardsProp ?? (evaluations ? [
-    { key: 'control', title: 'Kontroll művelés', text: evaluations.control },
-    { key: 'spade', title: 'Ásógépes művelés', text: evaluations.spade },
+    { key: 'control', title: t.controlTillage, text: evaluations.control },
+    { key: 'spade', title: t.spadeTillage, text: evaluations.spade },
   ] : [])
   const summary = summaryProp ?? evaluations?.summary
   const compact = series.length > 2
@@ -166,7 +192,7 @@ export default function Timeline({
             onClick={() => setShowDeep(v => !v)}
           >
             <span className={styles.deepBox} aria-hidden="true" />
-            Mélyásógépes parcellák is ({deepCount})
+            {t.deepToo} ({deepCount})
           </button>
         )}
       </motion.div>
@@ -191,7 +217,7 @@ export default function Timeline({
           className={styles.timeline}
           tabIndex={0}
           role="region"
-          aria-label={`Idővonal: ${title}`}
+          aria-label={`${t.timeline}: ${title}`}
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -246,7 +272,7 @@ export default function Timeline({
                             filter: 'brightness(1.2)',
                             boxShadow: s.role === 'spade' ? '0 0 25px rgba(212, 168, 75, 0.5)' : '0 0 20px rgba(255, 255, 255, 0.2)'
                           }}
-                          aria-label={`${s.label}: ${formatCm(value)} cm`}
+                          aria-label={`${s.label}: ${formatCm(value, locale)} cm`}
                         >
                           <motion.span
                             className={styles.barValueInside}
@@ -254,7 +280,7 @@ export default function Timeline({
                             animate={isInView ? { opacity: 1 } : {}}
                             transition={{ delay: 0.5 + index * 0.1 + si * 0.05 }}
                           >
-                            {compact ? Math.round(value) : formatCm(value)}
+                            {compact ? Math.round(value) : formatCm(value, locale)}
                           </motion.span>
 
                           <motion.div
@@ -268,7 +294,7 @@ export default function Timeline({
                         className={styles.barValue}
                         animate={hoveredIndex === index ? { color: s.role === 'spade' ? 'var(--color-gold)' : 'rgba(255,255,255,0.9)' } : {}}
                       >
-                        {formatCm(value)}{compact ? '' : ' cm'}
+                        {formatCm(value, locale)}{compact ? '' : ' cm'}
                       </motion.div>
                       {s.flag && <span className={styles.flag}>{s.flag}</span>}
                     </motion.div>

@@ -355,7 +355,7 @@
 
 .foot {
   grid-area: foot;
-  max-width: 80ch;
+  max-width: 68ch;
   margin: var(--space-sm) 0 0;
   padding-top: var(--space-md);
   border-top: 1px solid rgba(255, 255, 255, 0.08);

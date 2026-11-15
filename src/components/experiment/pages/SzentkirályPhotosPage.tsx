@@ -6,10 +6,13 @@ import { locations } from '@/lib/data'
 import SeasonOnly, { yearAdj } from '../season/SeasonOnly'
 import styles from './SzentkirályPhotosPage.module.css'
 import PhotoViewer from '@/components/shared/PhotoViewer/PhotoViewer'
+import { useLocale } from '@/lib/i18n/LocaleProvider'
+import { useResearchData } from '@/lib/i18n/useResearchData'
 
-const data = locations.szentkiraly
 
 export default function SzentkirályPhotosPage() {
+    const data = useResearchData(locations).szentkiraly
+    const en = useLocale() === 'en'
     return (
         <div className={styles.container}>
             {/* Header */}
@@ -23,8 +26,8 @@ export default function SzentkirályPhotosPage() {
                     <MapPin size={12} />
                     <span>Szentkirály</span>
                 </div>
-                <SeasonOnly years={[2025]} missingNote={(y) => `a ${yearAdj(y)} fotók még nincsenek fent`} />
-                <h3 className={styles.headerTitle}>Egyéb fotók</h3>
+                <SeasonOnly years={[2025]} missingNote={(y) => (en ? `the ${y} photos are not up yet` : `a ${yearAdj(y)} fotók még nincsenek fent`)} />
+                <h3 className={styles.headerTitle}>{en ? 'More photos' : 'Egyéb fotók'}</h3>
             </motion.div>
 
             {/* Content */}
