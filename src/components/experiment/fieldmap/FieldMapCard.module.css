@@ -30,7 +30,7 @@
     repeating-linear-gradient(90deg, rgba(232, 200, 122, 0.075) 0 1px, transparent 1px 22px),
     var(--paper);
   color: var(--paper-ink);
-  padding: 30px 28px 22px;
+  padding: var(--space-xl) 28px var(--space-lg);
 }
 
 .tape {
@@ -68,7 +68,7 @@
   justify-content: space-between;
   align-items: baseline;
   gap: var(--space-xs) 12px;
-  margin-top: 10px;
+  margin-top: var(--space-sm);
 }
 
 .stageTag {
@@ -109,14 +109,14 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-sm) var(--space-lg);
-  margin-top: 10px;
+  margin-top: var(--space-sm);
   min-height: 44px;
 }
 
 .furniture {
   display: flex;
   align-items: flex-end;
-  gap: 14px;
+  gap: var(--space-md);
   min-width: 150px;
   color: var(--paper-muted);
 }
@@ -130,7 +130,7 @@
 
 .scale {
   display: grid;
-  gap: 3px;
+  gap: var(--space-xs);
   font-size: var(--text-xs);
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -148,7 +148,7 @@
   display: flex;
   flex: 1 1 auto;
   flex-wrap: wrap;
-  gap: 6px 20px;
+  gap: var(--space-sm) 20px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -448,6 +448,6 @@ g.fieldOff {
   }
 
   .paper {
-    padding: 26px var(--space-md) var(--space-md);
+    padding: var(--space-lg) var(--space-md) var(--space-md);
   }
 }

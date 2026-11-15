@@ -1,6 +1,6 @@
 # Tábla
 
-Utoljára frissítve: 2026-11-14. Folyamat és státuszok: [README](README.md).
+Utoljára frissítve: 2026-11-15. Folyamat és státuszok: [README](README.md).
 
 | # | Feladat | Státusz | Fájlok | Párhuzamosan? | Forrás / megjegyzés |
 |---|---|---|---|---|---|
@@ -30,6 +30,9 @@ Utoljára frissítve: 2026-11-14. Folyamat és státuszok: [README](README.md).
 
 | Feladat | Mikor | Hol |
 |---|---|---|
+| Saját lejátszás/szünet gomb a működési videón (natív vezérlő helyett, mindig látható); „Szimulált állapot” jelvény arany stílusban; helyszín-adatlapok tényadat-címkéi normál írásmóddal 13 px-en (audit 9. fejezet) | 2026-11-15 | `solution-v2/OperationPrinciple.*`, `problem/pages/CompactionStatsPage.tsx`, `problem/ProblemNew.module.css`, `experiment/fieldmap/SiteInfoLayout.module.css` |
+| [030](030-kutatas-tipografia.md) /kutatas tipográfia: adatfeliratok 12 → 13 px (12 px-es szövegek 36 % → kb. 21 %), display-skála `--text-4xl…8xl`, font-size plafon 39 → 36 | 2026-11-15 | `globals.css`, `experiment/{Timeline,TemperatureSeriesChart,TemperatureChart}.module.css`, `experiment/pages/*`, `experiment/season/YearBridge.module.css`, `shared/ScrollLayout/ScrollLayout.module.css`, `home/Hero`, `layout/Navigation`, `problem/pages/ProblemHeroPage`, `solution-v2/ModelSection` (.module.css), `scripts/qa/token-check.js` |
+| [029](029-kutatas-terkoz-tokenek.md) /kutatas térközök a 4 px-es rácsra és a `--space-*` tokenekre (rácson 66 % → 87–90 %); a /problema „Szimulált állapot” kártyái egységes fejléccel, árva cella nélkül (audit D5, D6) | 2026-11-15 | `experiment/**/*.module.css` (29), `problem/pages/CompactionStatsPage.tsx`, `problem/ProblemNew.module.css` |
 | Új böngészőikon: ásó arany alapon (D változat, betű nélkül, magyarul és angolul is érthető); kis rajz az `icon.svg`-ben, részletes az `apple-icon`-ban; mockup: https://claude.ai/artifact/7Ej9YtVFVkQdBQDd6AccmK | 2026-11-15 | `app/icon.svg`, `app/apple-icon.tsx` |
 | Partner-aláírás egységesen középen minden szélességen (a tartalmi oldalak végén asztalin is, címke a logók fölött), alatta „© 2026” halk mono sorban hajszálvonal után, a főoldal láblécében is | 2026-11-13 | `shared/PageEnd/*`, `layout/Footer.*` |
 | [017](017-kutatas-ritmus.md) /kutatas fejezetritmus (szünet + arany hajszálvonal a helyszínek előtt), egyszeri belépő a /kutatas blokkjain és a /technologia modellkártyáin (`shared/RevealBlock`); checker: minden pont rendben | 2026-11-11 | `experiment/pages/CombinedPage.module.css`, `shared/RevealBlock.tsx`, `experiment/season/SiteBlocks.tsx`, `experiment/sections/MethodologySection.tsx`, `*CombinedPage.tsx`, `solution-v2/pages/ModelsCombinedPage.tsx` |

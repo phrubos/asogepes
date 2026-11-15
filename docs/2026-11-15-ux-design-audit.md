@@ -103,3 +103,77 @@ Mind a 9 elem a Lakitelek-blokkok végén van (`#lakitelek-talajelet`, `#lakitel
 | — | `OperationPrinciple`: reduced motion mellett (natív vezérlők) a címkék `top: 64%`-on; telefonon a jelmagyarázat belépője csak átlátszóságot animál | 1440 px: címkék alja 590 px, vezérlősáv 612 px-től. 390 px: a jelmagyarázat 8 px-rel a videó alatt (korábban 8 px-rel rálógott, mozgáscsökkentéstől függetlenül) |
 
 Maradt: a fotók vízjele (`BeforeAfterSlider`) `system-ui`, ez a kamera-felirat jellege miatt maradhat.
+
+## 6. Újramérés a javítások után (2026-11-15 délután)
+
+Ugyanaz a módszer és szkriptkészlet (dev szerver, 1440 + 390 px).
+
+| Mérés | Délelőtt | **Délután** |
+|---|---|---|
+| axe valódi hiba | 1 (`landmark-unique`) | **0** (a 9 `color-contrast` álriasztás maradt, 2.2) |
+| Tartalék betűtípus (Arial / általános monospace) | 17 + 21 + 14 elem | **0** (csak a fotóvízjel `system-ui`-ja, szándékosan) |
+| Leghosszabb bekezdés, 1440 px | 140 kar./sor | **≤ 68ch** (a szkript becslése 86, a 0,5 em/karakter közelítés miatt) |
+| Működési videó indulás előtt | üres szürke doboz | **poszter**, a címkék nem takarják a vezérlőt; telefonon a jelmagyarázat a videó alatt |
+| QA-szkriptek | 5 zöld, 3 álriasztás | változatlan (clip 16 térképfelirat, nav Suspense, type-check főoldal n = 3) |
+| Térköz 4 px-es rácson / betűméretek | 66–87 % / 7–15 | változatlan |
+
+| Pontszám | Délelőtt | **Délután** |
+|---|---|---|
+| Akadálymentesség | 9 | **10** (0 valódi axe-hiba) |
+| Képek, grafikák (design) | 7 | **8** |
+| Komponensek (design) | 8 | 8 (a natív videóvezérlő stílusa még idegen) |
+| Tipográfia (design) | 8 | 8 (a tartalék betűk megszűntek; a `/kutatas` 12 px-es mono címke-sűrűsége és a 39 beírt betűméret maradt) |
+| **Design-összpontszám** | 78 | **79/100 (B)** |
+| **UX-összkép** | 9 | **9/10** (a területek átlaga 8,7 → 8,8) |
+
+A 80 fölé jutáshoz a D5 (egységes kártyafejléc, árva cella a `/problema`-n) és a D6 (térköztokenek a `/kutatas`-on) kell: mindkettő a következetesség és a térközök 7-es pontját emelné.
+
+## 7. D5 és D6 javítva (este)
+
+- **D5:** a /problema „Szimulált állapot” három kártyája egy közös fejlécet kapott (ikon, cím, érték az állapot színében; a csupa nagybetűs „TALAJELLENÁLLÁS” címke megszűnt). Ha nem fér ki három egy sorba (1280–1440 px), a harmadik a teljes második sort kapja, nincs üres cella (konténer-lekérdezés, `ProblemNew.module.css` `.sim*`).
+- **D6:** jegy [029](jegyek/029-kutatas-terkoz-tokenek.md): 163 térköz a 4 px-es rácsra és a `--space-*` tokenekre. A /kutatas-on a rácson lévő térközök aránya 66 % → 87 % (1440 px) és 90 % (390 px).
+- Mellékesen: a talajábra mélységvonalzójának feliratai („0 cm” … „50 cm”) nem vágódnak le a kártya szélén, és a /technologia mobil jelmagyarázata balra igazodik.
+
+| Dimenzió | Délután | Most |
+|---|---|---|
+| Térközök | 7 | **8** |
+| Következetesség | 7 | **8** |
+| **Összesen** | 79 | **81 / 100 (A)** |
+
+A többi nyolc dimenzió változatlan. A következő lépcső (85+) a tipográfia: a `/kutatas` sok 12 px-es kisbetűs címkéje és a 39 kézzel beírt betűméret.
+
+
+### 7.1 Újramérés a D5/D6 után
+
+- QA-szkriptek: 6 zöld (mobile, layout, motion, touch, hero, token). Piros a három ismert álriasztás: `clip-check` (csak a térkép helynevei, 18; a darabszám a zoom pillanatától függ), `nav-check` (Suspense-szabály ×4), `type-check` (főoldal, n = 3 címke). A `nav-check` egyszer 1100 ms-ot mért a Kutatás menüpontra, amíg az audit párhuzamosan terhelte a dev szervert; terhelés nélkül 910 ms (≤ 1000).
+- axe: valódi hiba 0; a /kutatas 9 kontraszt-jelzése a krém `body` miatti álriasztás.
+- Térközök a 4 px-es rácson: /kutatas 87 % (1440) és 90 % (390); a többi oldal 72–87 %, változatlan.
+- Pontszám: **design 81/100 (A)**, **UX 9/10**, akadálymentesség 10.
+
+## 8. Tipográfia (jegy 030)
+
+- A /kutatas adatfeliratai (idővonal-értékek, hónapok, hőmérséklet-dátumok és -eltérések, Lakitelek eredményszámok és táblafej, évhíd) 12 → 13 px. A csupa nagybetűs jelvények, sorcímkék és évchipek 12 px-en maradtak.
+- Display-skála (`--text-4xl…8xl`, 28–56 px); 17 kézzel beírt méret erre került; `token-check` font-size 39 → 36.
+- Mérés /kutatas: 12 px-es szövegek 36 % → kb. 21 % (1440) és 30 % → 20 % (390); különböző betűméretek 13 → 11 és 10 → 9.
+
+| Dimenzió | Este (7.) | Most |
+|---|---|---|
+| Tipográfia | 8 | **9** |
+| **Összesen** | 81 | **82 / 100 (A)** |
+
+A 85-höz a tipográfián túl más dimenziókban is lépni kell: a videó böngészős lejátszósávja (komponensek), a jelvények egységes színe (következetesség), és a /kutatas sűrű, kis méretű feliratrétege (hierarchia).
+
+## 9. Komponensek, jelvény, tényadat-címkék
+
+- **Videó:** a böngésző natív lejátszósávja helyett saját 44 px-es arany lejátszás/szünet gomb a videó jobb felső sarkában (`OperationPrinciple`), mozgáscsökkentés nélkül is, így a folyamatosan ismétlődő videó megállítható (WCAG 2.2.2). A néző szünete visszagörgetés után is megmarad; mozgáscsökkentésnél csak a néző indítja, de a képből kigörgetve megáll. A `.withControls` címke-eltolás megszűnt.
+- **Jelvény:** a „Szimulált állapot” jelvény a palettán kívüli zöld–narancs állapotszín helyett a szokásos arany jelvénystílus (Inter 600, 0.1em, nagybetű). Az állapotszín a kártyák értékein marad.
+- **Tényadat-címkék** (helyszín-adatlapok, „Talaj / Kultúra / Öntözés…”): 12 px csupa nagybetű helyett 13 px normál írásmód, halványan; az érték vezet. A felhasználó választotta a három irány közül (az arany nem változott).
+- Ellenőrzés: `layout-`, `motion-`, `touch-`, `mobile-`, `token-check` zöld; tsc 0 hiba; a lejátszógomb kattintással és tappal is vált (címke: „Videó lejátszása” / „Videó megállítása”).
+
+| Dimenzió | 8. fejezet | Most |
+|---|---|---|
+| Komponensek | 8 | **9** |
+| Következetesség | 8 | **9** |
+| Vizuális hierarchia | 8 | 8 (a tényadat-címkék segítenek, de az asztali 100vh-s blokkok üres sávja szándékosan marad, 018) |
+| **Összesen** | 82 | **84 / 100 (A)** |
+

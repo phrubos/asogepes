@@ -329,14 +329,14 @@
 .legend {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-md);
   color: rgba(255, 255, 255, 0.6);
 }
 
 .legend > span {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-sm);
 }
 
 .keyOn,

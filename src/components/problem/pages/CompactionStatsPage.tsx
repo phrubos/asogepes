@@ -16,7 +16,6 @@ const TEXT = bilingual(
     {
         simulated: 'Szimulált állapot',
         resistance: 'Talajellenállás',
-        resistanceCaps: 'TALAJELLENÁLLÁS',
         rootZone: 'Gyökérzóna',
         shallow: 'Sekély',
         deep: 'Mély',
@@ -42,7 +41,6 @@ const TEXT = bilingual(
     {
         simulated: 'Simulated state',
         resistance: 'Penetration resistance',
-        resistanceCaps: 'PENETRATION RESISTANCE',
         rootZone: 'Root zone',
         shallow: 'Shallow',
         deep: 'Deep',
@@ -344,120 +342,41 @@ function CompactionStatsDisplay({ progress, expandedCardId }: { progress: any, e
                     textAlign: 'center',
                     marginBottom: '0.75rem'
                 }}>
-                    <span style={{
-                        fontSize: '0.75rem',
-                        color: currentData.color,
-                        textTransform: 'uppercase',
-                        fontWeight: 700,
-                        letterSpacing: '1.5px',
-                        padding: '4px 12px',
-                        background: `${currentData.color}15`,
-                        border: `1px solid ${currentData.color}40`,
-                        borderRadius: '20px',
-                        display: 'inline-block',
-                        transition: 'all 0.3s'
-                    }}>
+                    {/* the site's one badge style (gold, Inter 600, 0.1em); the state colour stays on the values */}
+                    <span className={styles.simBadge}>
                         {t.simulated}
                     </span>
                 </div>
             </div>
 
-            {/* Additional Info Cards (Soil Resistance, Roots, Water) - Below Challenges */}
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'var(--sim-cols, repeat(auto-fit, minmax(min(100%, 9rem), 1fr)))',
-                gap: '0.75rem',
-                // Apply blur to this entire block if ANY challenge card is open
-                transition: 'all 0.4s',
-                filter: expandedCardId ? 'blur(4px) grayscale(60%)' : 'none',
-                opacity: expandedCardId ? 0.4 : 1,
-                pointerEvents: expandedCardId ? 'none' : 'auto'
-            }}>
-
-                {/* Soil Resistance Card */}
-                <motion.div
-                    variants={itemVariants}
-                    style={{
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '16px',
-                        padding: '1rem',
-                        display: 'flex', flexDirection: 'column', gap: '0.5rem'
-                    }}
-                >
-                    <div style={{
-                        width: '36px', height: '36px', borderRadius: '8px',
-                        background: `${currentData.color}1a`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: currentData.color,
-                        border: `1px solid ${currentData.color}33`,
-                        transition: 'all 0.3s'
-                    }}>
-                        <Info size={18} />
-                    </div>
-                    <div>
-                        <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '4px' }}>{t.resistanceCaps}</div>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 800, color: currentData.color, transition: 'color 0.3s', fontFamily: 'var(--font-display)' }}>
-                            {Math.round(currentProgress * 5)} bar
+            {/* Simulated state: three cards with one header style (icon, title, value in the state colour);
+                three in a row when they fit, otherwise the last one spans the row (no orphan cell) */}
+            <div className={styles.simWrap}>
+            <div
+                className={styles.simGrid}
+                style={{
+                    // Apply blur to this entire block if ANY challenge card is open
+                    filter: expandedCardId ? 'blur(4px) grayscale(60%) opacity(0.4)' : 'blur(0) grayscale(0) opacity(1)',
+                    pointerEvents: expandedCardId ? 'none' : 'auto'
+                }}
+            >
+                {[
+                    { icon: <Info size={18} />, title: t.resistance, value: `${Math.round(currentProgress * 5)} bar` },
+                    { icon: <Sprout size={18} />, title: t.rootZone, value: currentProgress > 2 ? t.rootShallow : t.rootDeep },
+                    { icon: <Droplets size={18} />, title: t.water, value: currentProgress > 2 ? t.waterPoor : t.waterOk },
+                ].map(card => (
+                    <motion.div key={card.title} variants={itemVariants} className={styles.simCard}>
+                        <div
+                            className={styles.simIcon}
+                            style={{ color: currentData.color, background: `${currentData.color}1a`, borderColor: `${currentData.color}33` }}
+                        >
+                            {card.icon}
                         </div>
-                    </div>
-                </motion.div>
-
-                {/* Root Zone Card */}
-                <motion.div
-                    variants={itemVariants}
-                    style={{
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '16px',
-                        padding: '1rem',
-                        display: 'flex', flexDirection: 'column', gap: '0.5rem'
-                    }}
-                >
-                    <div style={{
-                        width: '36px', height: '36px', borderRadius: '8px',
-                        background: `${currentData.color}1a`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: currentData.color,
-                        transition: 'all 0.3s'
-                    }}>
-                        <Sprout size={18} />
-                    </div>
-                    <div>
-                        <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 4px 0', fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>{t.rootZone}</h4>
-                        <p style={{ margin: 0, fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}>
-                            {currentProgress > 2 ? t.rootShallow : t.rootDeep}
-                        </p>
-                    </div>
-                </motion.div>
-
-                {/* Water Management Card */}
-                <motion.div
-                    variants={itemVariants}
-                    style={{
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '16px',
-                        padding: '1rem',
-                        display: 'flex', flexDirection: 'column', gap: '0.5rem'
-                    }}
-                >
-                    <div style={{
-                        width: '36px', height: '36px', borderRadius: '8px',
-                        background: `${currentData.color}1a`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: currentData.color,
-                        transition: 'all 0.3s'
-                    }}>
-                        <Droplets size={18} />
-                    </div>
-                    <div>
-                        <h4 style={{ color: 'white', fontWeight: 700, margin: '0 0 4px 0', fontSize: '0.9rem', fontFamily: 'var(--font-display)' }}>{t.water}</h4>
-                        <p style={{ margin: 0, fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}>
-                            {currentProgress > 2 ? t.waterPoor : t.waterOk}
-                        </p>
-                    </div>
-                </motion.div>
+                        <h4 className={styles.simTitle}>{card.title}</h4>
+                        <p className={styles.simValue} style={{ color: currentData.color }}>{card.value}</p>
+                    </motion.div>
+                ))}
+            </div>
             </div>
         </>
     )

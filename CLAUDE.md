@@ -78,7 +78,7 @@ Use `@/` for imports from `src/` directory (configured in tsconfig.json).
 
 ## Analysis / audit
 - UI/UX, mobile and performance analysis: `docs/2026-10-31-ui-ux-performance-analysis.md`
-- Latest scoring (UX 9/10, visual design 78/100): `docs/2026-11-15-ux-design-audit.md`
+- Latest scoring (UX 9/10, visual design 84/100): `docs/2026-11-15-ux-design-audit.md`
 
 ## Tickets and verification
 - Bigger tasks (new feature, new data, animation, multi-page change) get a ticket in `docs/jegyek/` (template `_sablon.md`, workflow in its README); the board `docs/jegyek/tabla.md` lists every open item with status and touched files. Screenshot fixes need no ticket. Keep the board up to date when an item starts or finishes.
@@ -107,4 +107,4 @@ Hook: `.claude/hooks/css-guard.js` runs after every Edit/Write of a `*.module.cs
 - Photo overlays (`ThermalOverlays`, `BeforeAfterSlider`) use `%` coordinates for the desktop crop: in mobile previews (`[data-preview]`) they are hidden, the fullscreen `PhotoViewer` shows them
 - In a `flex-direction: column` container vertical centring comes from `justify-content`; a laptop rule that centres content in the leftover height leaves a big band under the title
 - Fonts come from `next/font` in `app/layout.tsx` (`--font-inter`, `--font-fraunces`, `--font-mono`); don't add CSS `@import` font URLs
-- Use the tokens in `globals.css` instead of new literals: `--text-xs…3xl` (12–24px), `--radius-sm/md/lg/xl/pill/round`, `--space-*`, `--color-*`, motion `--dur-fast/base/slow` + `--ease-out`. `--space-4xl/5xl` shrink below 1600px, so a fixed 96/128px stays a literal. `token-check.js` fails when a new one-off value appears
+- Use the tokens in `globals.css` instead of new literals: `--text-xs…3xl` (12–24px), display `--text-4xl…8xl` (28–56px), `--radius-sm/md/lg/xl/pill/round`, `--space-*`, `--color-*`, motion `--dur-fast/base/slow` + `--ease-out`. `--space-4xl/5xl` shrink below 1600px, so a fixed 96/128px stays a literal. `token-check.js` fails when a new one-off value appears

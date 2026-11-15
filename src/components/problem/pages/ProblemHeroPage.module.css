@@ -309,7 +309,7 @@
 
 .spadeNumber {
   font-family: var(--font-display);
-  font-size: 2rem;
+  font-size: var(--text-5xl);
   font-weight: 800;
   color: rgba(255, 255, 255, 0.15);
   margin-bottom: var(--space-sm);

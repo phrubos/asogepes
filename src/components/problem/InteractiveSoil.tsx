@@ -412,8 +412,9 @@ export default function InteractiveSoil({ progress, onProgressChange, onInteract
             {[0, 10, 20, 30, 40, 50].map((cm, i) => (
               <g key={cm} transform={`translate(0, ${i * 70})`}>
                 <line x1="-5" y1="0" x2="5" y2="0" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
-                <text x="10" y="4" textAnchor="start" fill="rgba(255,255,255,0.6)" fontSize="10px" fontWeight="normal" style={{ fontFamily: 'var(--font-mono), monospace' }}>
-                  -{cm}cm
+                {/* right-aligned inside the 40-wide ruler: start-aligned "-10cm" ran to x=600, the card's clip edge */}
+                <text x="36" y="4" textAnchor="end" fill="rgba(255,255,255,0.6)" fontSize="10px" fontWeight="normal" style={{ fontFamily: 'var(--font-mono), monospace' }}>
+                  {cm} cm
                 </text>
               </g>
             ))}

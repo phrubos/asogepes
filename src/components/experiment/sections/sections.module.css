@@ -46,7 +46,7 @@
     display: inline-flex;
     align-self: flex-start;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-sm);
     min-height: 44px;
     margin-top: 12px;
     padding: 0 var(--space-md);

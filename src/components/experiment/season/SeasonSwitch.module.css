@@ -9,7 +9,7 @@
 }
 
 .label {
-  padding: 0 10px 0 12px;
+  padding: 0 var(--space-sm) 0 12px;
   font-family: var(--font-mono, monospace);
   font-size: var(--text-xs);
   letter-spacing: 0.12em;
@@ -48,7 +48,7 @@
 
 .select {
   appearance: none;
-  padding: 0 14px;
+  padding: 0 var(--space-md);
 }
 
 .select option {
@@ -79,7 +79,7 @@
   }
 
   .small .label {
-    padding: 0 var(--space-sm) 0 10px;
+    padding: 0 var(--space-sm) 0 var(--space-sm);
   }
 
   .small .option {

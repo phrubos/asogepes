@@ -416,7 +416,7 @@
   }
 
   .modelName {
-    font-size: 2rem;
+    font-size: var(--text-5xl);
   }
 
   .topRow {

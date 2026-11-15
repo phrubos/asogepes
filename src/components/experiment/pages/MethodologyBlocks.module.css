@@ -136,7 +136,7 @@
 .legend {
   margin-left: auto;
   display: inline-flex;
-  gap: 14px;
+  gap: var(--space-md);
   color: rgba(255, 255, 255, 0.6);
   font-size: var(--text-sm);
 }
@@ -144,7 +144,7 @@
 .legend > span {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-sm);
 }
 
 .keyOn,
@@ -188,7 +188,7 @@
 .rounds {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-sm);
   margin-top: var(--space-sm);
 }
 
@@ -207,7 +207,7 @@
   display: grid;
   grid-template-columns: 190px minmax(0, 1fr);
   gap: 12px;
-  padding: 6px 0 6px 18px;
+  padding: var(--space-sm) 0 var(--space-sm) var(--space-md);
   font-size: var(--text-base);
   color: rgba(245, 240, 232, 0.85);
 }
@@ -234,7 +234,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-sm);
   padding: 28px;
   border: 1px solid rgba(212, 168, 75, 0.3);
   border-radius: 20px;
@@ -243,7 +243,7 @@
 
 .exampleTag {
   align-self: flex-start;
-  padding: 3px 10px;
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-pill);
   background: rgba(212, 168, 75, 0.15);
   font-family: var(--font-mono, monospace);
@@ -256,7 +256,7 @@
 
 .exampleValue {
   font-family: var(--font-display);
-  font-size: 3.5rem;
+  font-size: var(--text-8xl);
   font-weight: 800;
   line-height: 1;
   color: var(--color-white);
@@ -322,7 +322,7 @@
 }
 
 .note {
-  margin: 6px 0 0;
+  margin: var(--space-sm) 0 0;
   padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-size: var(--text-sm);
@@ -333,8 +333,8 @@
 /* Laptops: tighter cards so the grid fits one screen */
 @media (max-height: 900px) and (min-width: 1025px) {
   .card {
-    padding: 12px 14px;
-    gap: 6px;
+    padding: 12px var(--space-md);
+    gap: var(--space-sm);
   }
 
   .cardWhat {
@@ -342,7 +342,7 @@
   }
 
   .exampleValue {
-    font-size: 3rem;
+    font-size: var(--text-7xl);
   }
 }
 
@@ -392,7 +392,7 @@
   }
 
   .card {
-    padding: 12px 14px;
+    padding: 12px var(--space-md);
     gap: var(--space-xs);
   }
 

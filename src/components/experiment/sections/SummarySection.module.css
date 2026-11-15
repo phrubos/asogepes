@@ -71,7 +71,7 @@ section > .page {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-sm);
 }
 
 .row {
@@ -79,7 +79,7 @@ section > .page {
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  padding: 6px 0;
+  padding: var(--space-sm) 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -109,7 +109,7 @@ section > .page {
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-sm);
   min-height: 44px;
   padding: 0 var(--space-md);
   border-radius: var(--radius-pill);

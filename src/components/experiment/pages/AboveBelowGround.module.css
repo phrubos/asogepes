@@ -133,7 +133,7 @@
 
 .pill {
   position: absolute;
-  padding: 5px 10px;
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-pill);
   background: rgba(28, 22, 19, 0.88);
   font-size: var(--text-sm);
@@ -176,7 +176,7 @@
 
 .resultNum {
   font-family: var(--font-display);
-  font-size: 1.625rem;
+  font-size: var(--text-4xl);
   font-weight: 700;
   color: var(--color-gold-light);
 }
@@ -225,7 +225,7 @@
   position: absolute;
   left: 10px;
   top: 10px;
-  padding: var(--space-xs) 9px;
+  padding: var(--space-xs) var(--space-sm);
   border-radius: 6px;
   background: rgba(28, 22, 19, 0.8);
   font-size: var(--text-xs);
@@ -239,8 +239,8 @@
 
 .spineRoots {
   align-items: center;
-  gap: 10px;
-  padding: var(--space-md) 14px;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-md);
 }
 
 .spineRoots > .kicker {
@@ -370,8 +370,8 @@
     flex-direction: row;
     align-items: baseline;
     justify-content: flex-start;
-    gap: 10px;
-    padding: 10px 12px;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 12px;
     border-radius: 0;
   }
 
@@ -397,9 +397,9 @@
     display: grid;
     grid-template-columns: 112px minmax(0, 1fr);
     align-items: center;
-    column-gap: 14px;
-    row-gap: 10px;
-    padding: 14px 12px;
+    column-gap: var(--space-md);
+    row-gap: var(--space-sm);
+    padding: var(--space-md) 12px;
   }
 
   .spineRoots > .kicker {
@@ -443,7 +443,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-sm);
   transform: translate(-50%, -19px);
 }
 
@@ -462,7 +462,7 @@
 }
 
 .tag {
-  padding: 5px 10px;
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-pill);
   background: rgba(28, 22, 19, 0.9);
   border: 1px solid rgba(245, 240, 232, 0.25);

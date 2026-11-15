@@ -294,7 +294,7 @@
 .statNumber {
     display: block;
     font-family: var(--font-display);
-    font-size: 3rem;
+    font-size: var(--text-7xl);
     font-weight: 700;
     color: var(--color-white);
     line-height: 1;
@@ -330,7 +330,7 @@
     }
 
     .titleLine {
-        font-size: 3.5rem;
+        font-size: var(--text-8xl);
     }
 
     .heroStats {
@@ -338,7 +338,7 @@
     }
 
     .statNumber {
-        font-size: 2.5rem;
+        font-size: var(--text-6xl);
     }
 }
 
@@ -384,7 +384,7 @@
     }
 
     .statNumber {
-        font-size: 2rem;
+        font-size: var(--text-5xl);
     }
 
     .statSublabel {

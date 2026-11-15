@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowDown, Sprout } from 'lucide-react'
+import { ArrowDown, Pause, Play, Sprout } from 'lucide-react'
 import styles from './OperationPrinciple.module.css'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { useLocale } from '@/lib/i18n/LocaleProvider'
@@ -19,6 +19,8 @@ const TEXT = bilingual(
     subtitle: 'Az ásórotor lazít és átkever, a meghajtott elmunkáló henger aprómorzsás magágyat készít.',
     rotor: 'Ásórotor',
     roller: 'Elmunkáló henger',
+    play: 'Videó lejátszása',
+    pause: 'Videó megállítása',
   },
   {
     features: [
@@ -30,6 +32,8 @@ const TEXT = bilingual(
     subtitle: 'The spading rotor loosens and mixes the soil; the driven finishing roller prepares a fine, crumbly seedbed.',
     rotor: 'Spading rotor',
     roller: 'Finishing roller',
+    play: 'Play video',
+    pause: 'Pause video',
   },
 )
 
@@ -52,13 +56,18 @@ export default function OperationPrinciple() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const reduced = useReducedMotion()
 
-  // Load and play the loop only while it is on screen; with reduced motion the viewer starts it
+  const [playing, setPlaying] = useState(false)
+  // set once the viewer pauses: scrolling back must not restart the loop against their choice
+  const userPaused = useRef(false)
+
+  // Load and play the loop only while it is on screen; with reduced motion only the viewer starts it,
+  // but it still stops off screen
   useEffect(() => {
     const video = videoRef.current
-    if (!video || reduced) return
+    if (!video) return
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) video.play().catch(() => {})
-      else video.pause()
+      if (!entry.isIntersecting) video.pause()
+      else if (!reduced && !userPaused.current) video.play().catch(() => {})
     }, { threshold: 0.25 })
     observer.observe(video)
     return () => {
@@ -66,6 +75,18 @@ export default function OperationPrinciple() {
       video.pause()
     }
   }, [reduced])
+
+  const togglePlay = () => {
+    const video = videoRef.current
+    if (!video) return
+    if (video.paused) {
+      userPaused.current = false
+      video.play().catch(() => {})
+    } else {
+      userPaused.current = true
+      video.pause()
+    }
+  }
 
   // Reuse existing animation variants...
   const containerVariants = {
@@ -121,7 +142,7 @@ export default function OperationPrinciple() {
 
         {/* Right Column: Animation */}
         <motion.div
-          className={`${styles.animationWrapper} ${reduced ? styles.withControls : ''}`}
+          className={styles.animationWrapper}
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
@@ -137,9 +158,20 @@ export default function OperationPrinciple() {
             muted
             playsInline
             preload="none"
-            controls={reduced}
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
             className={styles.video}
           />
+
+          {/* own play/pause instead of the browser bar: always there, so the loop can be stopped */}
+          <button
+            type="button"
+            className={styles.playToggle}
+            onClick={togglePlay}
+            aria-label={playing ? t.pause : t.play}
+          >
+            {playing ? <Pause size={16} aria-hidden="true" /> : <Play size={16} aria-hidden="true" />}
+          </button>
 
           {/* Overlay Labels */}
           <div className={`${styles.overlayLabel} ${styles.labelLeft}`}>

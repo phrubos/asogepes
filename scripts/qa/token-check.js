@@ -8,7 +8,7 @@ const fs = require('fs')
 const path = require('path')
 
 const CEILINGS = {
-  'font-size': 39,
+  'font-size': 36,
   'border-radius': 37,
   'box-shadow': 56,
   'color-literal': 310,

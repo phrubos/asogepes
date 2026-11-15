@@ -90,6 +90,12 @@
     --text-xl: 1.125rem;    /* 18px: lead text, card titles */
     --text-2xl: 1.25rem;    /* 20px: small headings */
     --text-3xl: 1.5rem;     /* 24px: sub-headings */
+    /* Display steps (ticket 030): big numbers and fixed-size titles */
+    --text-4xl: 1.75rem;    /* 28px */
+    --text-5xl: 2rem;       /* 32px */
+    --text-6xl: 2.5rem;     /* 40px */
+    --text-7xl: 3rem;       /* 48px */
+    --text-8xl: 3.5rem;     /* 56px */
     --text-h3: clamp(1.25rem, 2.5vw, 1.75rem); /* 20-28px: block and card headers */
     --text-h2: clamp(1.75rem, 3.5vw, 2.5rem);  /* 28-40px: section titles (hero titles and big numbers keep their own) */
 

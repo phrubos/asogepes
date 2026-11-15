@@ -107,7 +107,7 @@
 .plot {
   position: absolute;
   top: 14px;
-  padding: 6px 12px;
+  padding: var(--space-sm) 12px;
   border-radius: var(--radius-pill);
   background: rgba(26, 22, 18, 0.8);
   font-size: var(--text-xs);
@@ -138,7 +138,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-sm);
   transform: translate(-50%, -100%) translateY(10px);
   pointer-events: none;
 }
@@ -157,7 +157,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: var(--space-sm) 14px;
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(245, 240, 232, 0.25);
   background: rgba(26, 22, 18, 0.9);
@@ -278,7 +278,7 @@
 .month {
   position: absolute;
   bottom: 12px;
-  padding: 5px 10px;
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-pill);
   background: rgba(26, 22, 18, 0.85);
   font-family: var(--font-mono, monospace);
@@ -388,7 +388,7 @@
 
 .halfTag {
   top: 14px;
-  padding: 10px 14px;
+  padding: var(--space-sm) var(--space-md);
 }
 
 .halfTag span,
@@ -423,7 +423,7 @@
 .badge {
   position: absolute;
   left: 50%;
-  padding: 10px 18px;
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-pill);
   background: var(--color-gold);
   color: var(--color-earth-900);
@@ -548,7 +548,7 @@
 
 .sumBadge {
   position: absolute;
-  padding: 6px 14px;
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-pill);
   background: var(--color-gold);
   color: var(--color-earth-900);
@@ -598,7 +598,7 @@
   left: 8px;
   top: 8px;
   gap: 0;
-  padding: 5px 9px;
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-md);
   line-height: 1.25;
   background: rgba(26, 22, 18, 0.8);
@@ -619,7 +619,7 @@
 
 .badgePhone {
   top: 50%;
-  padding: var(--space-sm) 14px;
+  padding: var(--space-sm) var(--space-md);
   font-size: var(--text-md);
   transform: translate(-50%, -50%) scale(0.9);
 }
