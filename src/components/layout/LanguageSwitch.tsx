@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleProvider'
 import { counterpartPath, type Locale } from '@/lib/i18n/config'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { savePosition } from '@/lib/i18n/switchPosition'
 import styles from './LanguageSwitch.module.css'
 
 /** Hungarian tricolour, 3:2 */
@@ -95,6 +96,7 @@ export default function LanguageSwitch({ variant = 'inline' }: { variant?: 'inli
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return
     e.preventDefault()
     setLeaving(true)
+    savePosition(new URL(full, window.location.href).pathname)
     window.setTimeout(() => window.location.assign(full), reduced ? 0 : ROLL_MS)
   }
 

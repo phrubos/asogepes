@@ -9,6 +9,7 @@ import MobileSectionBar from './MobileSectionBar'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useLocale } from '@/lib/i18n/LocaleProvider'
 import { SCROLL_TEXT } from './strings'
+import { isRestoringSwitch } from '@/lib/i18n/switchPosition'
 
 export interface ScrollSection {
   id: string
@@ -309,7 +310,8 @@ export default function ScrollLayout({ sections, resetEventName, end }: ScrollLa
     if (didInitFromUrl.current) return
     didInitFromUrl.current = true
     const sectionId = new URLSearchParams(window.location.search).get('section')
-    if (sectionId) {
+    // a language switch puts back the exact reading position itself (switchPosition.ts)
+    if (sectionId && !isRestoringSwitch()) {
       // resolved after the delay, from the latest sections: a year filter from the URL is applied after the first render
       setTimeout(() => {
         const { sections: current, scrollToSection: scrollTo } = latest.current

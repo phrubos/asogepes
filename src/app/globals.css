@@ -464,6 +464,37 @@ em {
     top: var(--space-lg);
 }
 
+/* HU / EN switch (src/lib/i18n/switchPosition.ts). Full page loads between the two languages
+   crossfade where cross-document view transitions exist; elsewhere the browser holds the old frame. */
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+        navigation: auto;
+    }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: var(--dur-base);
+}
+
+/* lay out every section for real while the page is placed: the content-visibility estimates (100vh a
+   section) put the anchor thousands of px off. Once rendered, `contain-intrinsic-size: auto` remembers
+   the real heights, so the sections can skip again afterwards without moving anything. */
+html[data-lang-switch] * {
+    content-visibility: visible !important;
+}
+
+/* fallback where rendering can't be held until the page is placed: show nothing rather than the top */
+html[data-lang-switch="pending"] body {
+    visibility: hidden;
+}
+
+/* the header takes its scrolled look from the start (Navigation.module.css), without its 400ms morph */
+html[data-lang-switch] header *,
+html[data-lang-switch] header::before {
+    transition: none !important;
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
 

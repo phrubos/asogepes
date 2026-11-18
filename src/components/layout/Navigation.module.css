@@ -36,8 +36,10 @@
     /* Changed from 0.98 to 0 to keep transparent */
 }
 
-/* Solid nav pill background when scrolled */
-.header.scrolled .nav {
+/* Solid nav pill background when scrolled. The :global(html[data-lang-switch-scrolled]) twins give a page
+   reached by the language switch further down its scrolled look before React adds the class (switchPosition.ts) */
+.header.scrolled .nav,
+:global(html[data-lang-switch-scrolled]) .header .nav {
     background: rgba(26, 22, 18, 0.95);
     backdrop-filter: blur(20px);
     border-radius: var(--radius-pill);
@@ -66,12 +68,15 @@
 }
 
 /* Scrolled state - ensure good contrast */
-.header.scrolled .navLink {
+.header.scrolled .navLink,
+:global(html[data-lang-switch-scrolled]) .header .navLink {
     color: rgba(255, 255, 255, 0.85);
 }
 
 .header.scrolled .navLink:hover,
-.header.scrolled .navLink.active {
+.header.scrolled .navLink.active,
+:global(html[data-lang-switch-scrolled]) .header .navLink:hover,
+:global(html[data-lang-switch-scrolled]) .header .navLink.active {
     color: var(--color-white);
 }
 
@@ -89,7 +94,8 @@
     position: relative;
 }
 
-.header.scrolled .headerInner {
+.header.scrolled .headerInner,
+:global(html[data-lang-switch-scrolled]) .header .headerInner {
     transform: translateY(calc(var(--space-md) - var(--space-lg)));
 }
 
@@ -274,7 +280,8 @@
     }
 
     .headerInner,
-    .header.scrolled .headerInner {
+    .header.scrolled .headerInner,
+    :global(html[data-lang-switch-scrolled]) .header .headerInner {
         min-height: 56px;
         padding: 0;
         transform: none;
