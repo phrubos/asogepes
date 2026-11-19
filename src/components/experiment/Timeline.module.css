@@ -252,28 +252,18 @@
   min-width: 0;
 }
 
-/* room for the out-of-flow caveat marker */
-.compact .timeline {
-  padding-bottom: var(--space-xl);
+/* Caveat star after a value / legend label, explained in .footnote */
+.star {
+  color: var(--color-gold-light);
+  font-weight: 700;
 }
 
-/* Small caveat marker (e.g. 1 mérés) under a value; out of flow so the bar stays level with its
-   neighbours */
-.flag {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: var(--space-xs);
-  padding: 1px var(--space-xs);
-  border: 1px dashed rgba(232, 200, 122, 0.6);
-  border-radius: 5px;
-  font-family: var(--font-mono, monospace);
+.footnote {
+  margin: 0;
+  padding: 0 var(--space-xs);
   font-size: var(--text-sm);
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--color-gold-light);
-  white-space: nowrap;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Value inside bar */

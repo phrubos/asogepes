@@ -194,10 +194,10 @@ const SZENTKIRALY_EN: Overlay<typeof szentkiralySeasons> = {
       },
       treatments: [
         { label: 'Control', short: 'Control', steps: LOCATIONS_EN.szentkiraly?.control?.treatments },
-        { label: 'Spaded', short: 'Spading m.', steps: LOCATIONS_EN.szentkiraly?.spade?.treatments },
+        { label: 'Spading machine', short: 'Spading m.', steps: LOCATIONS_EN.szentkiraly?.spade?.treatments },
       ],
       looseLayer: {
-        title: `Change in the depth of the loose soil layer over ${szentkiralySeasons.seasons[0].looseLayer.dates.length} months`,
+        title: `Change in the depth of the loose soil layer over ${szentkiralySeasons.seasons[0].looseLayer.dates.length} months (cm)`,
         cards: [
           { title: 'Control tillage', text: LOCATIONS_EN.szentkiraly?.evaluations?.control },
           { title: 'Spading-machine tillage', text: LOCATIONS_EN.szentkiraly?.evaluations?.spade },
@@ -223,15 +223,15 @@ const SZENTKIRALY_EN: Overlay<typeof szentkiralySeasons> = {
       treatments: [
         { label: 'Control', short: 'Control', steps: ['Cultivator'] },
         { label: 'Spading machine', short: 'Spading m.', steps: ['Spading machine'] },
-        { label: 'Control + deep spading machine', short: 'C + deep', flag: '1 measurement', steps: ['Cultivator', 'Deep spading machine'] },
+        { label: 'Control + deep spading machine', short: 'C + deep', flag: 'only one measuring point', steps: ['Cultivator', 'Deep spading machine'] },
         { label: 'Spading machine + deep spading machine', short: 'S + deep', steps: ['Spading machine', 'Deep spading machine'] },
       ],
       looseLayer: {
-        title: 'Depth of the loose soil layer, 4 measurements, 4 treatments',
+        title: 'Depth of the loose soil layer (cm), 4 measurements, 4 treatments',
         cards: [
           { title: 'Control (February cultivator)', text: 'Loose to 28–37 cm in spring; by June compacted from 7 cm down.' },
-          { title: 'Spading machine (February)', text: 'Still loose to 17.6 cm in June: two and a half times deeper than the control.' },
-          { title: '+ Deep spading machine', text: 'The deep spading machine lasted longest: 26–32 cm in June. Control + deep spading machine has only one measuring point.' },
+          { title: 'Spading machine (February)', text: 'Still loose to 18 cm in June: two and a half times deeper than the control.' },
+          { title: '+ Deep spading machine', text: 'The deep spading machine lasted longest: 26–32 cm in June.' },
         ],
         summary: 'In both years the spaded plot stayed loose to a greater depth at the end of the growing season.',
       },

@@ -63,6 +63,7 @@ export default function SzentkirályTimelinePage() {
           cards={ll.cards.map((c) => ({ key: c.treatmentId, title: c.title, text: c.text }))}
           summary={ll.summary}
           aside={<YearBridge site={site} />}
+          uniform
         />
       </motion.div>
     </div>

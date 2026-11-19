@@ -101,10 +101,10 @@ export const szentkiralySeasons: SiteSeasons = {
       },
       treatments: [
         { id: 'K', label: 'Kontroll', short: 'Kontroll', role: 'control', steps: szk.control.treatments },
-        { id: 'A', label: 'Ásógépezett', short: 'Ásógép', role: 'spade', steps: szk.spade.treatments },
+        { id: 'A', label: 'Ásógép', short: 'Ásógép', role: 'spade', steps: szk.spade.treatments },
       ],
       looseLayer: {
-        title: `A laza talajréteg mélységének változása ${szk.chartData.length} hónap alatt`,
+        title: `A laza talajréteg mélységének változása ${szk.chartData.length} hónap alatt (cm)`,
         dates: [{ month: 'MÁRC.' }, { month: 'ÁPR.' }, { month: 'MÁJ.' }, { month: 'JÚN.' }],
         values: {
           K: szk.chartData.map((d) => d.control),
@@ -142,11 +142,11 @@ export const szentkiralySeasons: SiteSeasons = {
       treatments: [
         { id: 'K', label: 'Kontroll', short: 'Kontroll', role: 'control', steps: ['Kultivátor'] },
         { id: 'A', label: 'Ásógép', short: 'Ásógép', role: 'spade', steps: ['Ásógép'] },
-        { id: 'Km', label: 'Kontroll + mélyásógép', short: 'K + mély', role: 'control', deep: true, flag: '1 mérés', steps: ['Kultivátor', 'Mélyásógép'] },
+        { id: 'Km', label: 'Kontroll + mélyásógép', short: 'K + mély', role: 'control', deep: true, flag: 'egyetlen mérési pont', steps: ['Kultivátor', 'Mélyásógép'] },
         { id: 'Am', label: 'Ásógép + mélyásógép', short: 'Á + mély', role: 'spade', deep: true, steps: ['Ásógép', 'Mélyásógép'] },
       ],
       looseLayer: {
-        title: 'A laza talajréteg mélysége, 4 mérés, 4 kezelés',
+        title: 'A laza talajréteg mélysége (cm), 4 mérés, 4 kezelés',
         dates: [
           { month: 'MÁRC.', third: 'eleje' },
           { month: 'ÁPR.', third: 'közepe' },
@@ -161,8 +161,8 @@ export const szentkiralySeasons: SiteSeasons = {
         },
         cards: [
           { treatmentId: 'K', title: 'Kontroll (februári kultivátor)', text: 'Tavasszal 28–37 cm-ig laza, júniusra már 7 cm-től tömör.' },
-          { treatmentId: 'A', title: 'Ásógép (február)', text: 'Júniusban is 17,6 cm-ig laza: két és félszer mélyebben, mint a kontroll.' },
-          { treatmentId: 'Am', title: '+ Mélyásógép', text: 'A mélyásógép tartott a legtovább: júniusban 26–32 cm. A kontroll + mélyásógép egyetlen mérési pont.' },
+          { treatmentId: 'A', title: 'Ásógép (február)', text: 'Júniusban is 18 cm-ig laza: két és félszer mélyebben, mint a kontroll.' },
+          { treatmentId: 'Am', title: '+ Mélyásógép', text: 'A mélyásógép tartott a legtovább: júniusban 26–32 cm.' },
         ],
         summary: 'Mindkét évben az ásógépes parcella maradt mélyebben laza a tenyészidő végén.',
       },

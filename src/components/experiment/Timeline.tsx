@@ -43,7 +43,7 @@ export interface TimelineSeries {
   short: string
   role: TreatmentRole
   deep?: boolean
-  /** Marker under the value, e.g. '1 mérés' */
+  /** Caveat: the values get a '*', explained under the side cards (e.g. 'egyetlen mérési pont') */
   flag?: string
   values: number[]
 }
@@ -73,6 +73,8 @@ interface TimelineProps {
   summary?: string
   /** Extra block under the bars (e.g. the Évek strip) */
   aside?: ReactNode
+  /** One look for every season of a site (Szentkirály): colour legend instead of per-bar labels, whole numbers, no unit under the bars (the title carries "(cm)") */
+  uniform?: boolean
 }
 
 export default function Timeline({
@@ -85,8 +87,10 @@ export default function Timeline({
   cards: cardsProp,
   summary: summaryProp,
   aside,
+  uniform = false,
 }: TimelineProps) {
   const locale = useLocale()
+  const cm = (v: number) => formatCm(uniform ? Math.round(v) : v, locale)
   const t = TEXT[locale]
   const title = titleProp ?? t.title
   const containerRef = useRef<HTMLDivElement>(null)
@@ -174,12 +178,15 @@ export default function Timeline({
           animate={isInView ? { scaleX: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         />
-        {compact && (
+        {(compact || uniform) && (
           <ul className={styles.legend}>
             {series.map(s => (
               <li key={s.key} data-deep={s.deep ? '' : undefined}>
                 <span className={`${styles.legendSwatch} ${fillClass(s)}`} />
-                {s.label}
+                <span>
+                  {s.label}
+                  {s.flag && <span className={styles.star} aria-hidden="true">*</span>}
+                </span>
               </li>
             ))}
           </ul>
@@ -254,7 +261,7 @@ export default function Timeline({
                       onHoverStart={() => setHoveredBar(s.key)}
                       onHoverEnd={() => setHoveredBar(null)}
                     >
-                      {!compact && <div className={styles.barLabel}>{s.short}</div>}
+                      {!compact && !uniform && <div className={styles.barLabel}>{s.short}</div>}
                       <div className={styles.barContainer}>
                         <motion.div
                           className={styles.barGlow}
@@ -272,7 +279,7 @@ export default function Timeline({
                             filter: 'brightness(1.2)',
                             boxShadow: s.role === 'spade' ? '0 0 25px rgba(212, 168, 75, 0.5)' : '0 0 20px rgba(255, 255, 255, 0.2)'
                           }}
-                          aria-label={`${s.label}: ${formatCm(value, locale)} cm`}
+                          aria-label={`${s.label}: ${cm(value)} cm`}
                         >
                           <motion.span
                             className={styles.barValueInside}
@@ -280,7 +287,7 @@ export default function Timeline({
                             animate={isInView ? { opacity: 1 } : {}}
                             transition={{ delay: 0.5 + index * 0.1 + si * 0.05 }}
                           >
-                            {compact ? Math.round(value) : formatCm(value, locale)}
+                            {compact ? Math.round(value) : cm(value)}
                           </motion.span>
 
                           <motion.div
@@ -294,9 +301,9 @@ export default function Timeline({
                         className={styles.barValue}
                         animate={hoveredIndex === index ? { color: s.role === 'spade' ? 'var(--color-gold)' : 'rgba(255,255,255,0.9)' } : {}}
                       >
-                        {formatCm(value, locale)}{compact ? '' : ' cm'}
+                        {cm(value)}{compact || uniform ? '' : ' cm'}
+                        {s.flag && <span className={styles.star} aria-hidden="true">*</span>}
                       </motion.div>
-                      {s.flag && <span className={styles.flag}>{s.flag}</span>}
                     </motion.div>
                   )
                 })}
@@ -346,6 +353,12 @@ export default function Timeline({
             )
           })}
         </div>
+
+        {series.filter(s => s.flag).map(s => (
+          <p key={s.key} className={styles.footnote} data-deep={s.deep ? '' : undefined}>
+            <span className={styles.star} aria-hidden="true">*</span> {s.label}: {s.flag}.
+          </p>
+        ))}
 
         {summary && !aside && (
           <motion.div

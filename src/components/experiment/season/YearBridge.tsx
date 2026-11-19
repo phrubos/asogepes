@@ -15,7 +15,8 @@ export default function YearBridge({ site }: { site: SiteSeasons }) {
   const { year } = useSeason()
   const locale = useLocale()
   const en = locale === 'en'
-  const cm = (v: number) => formatCm(v, locale)
+  // whole centimetres, like the bars of the chart it sits under
+  const cm = (v: number) => formatCm(Math.round(v), locale)
   const max = site.looseLayerMax
   const pct = (v: number) => `${(v / max) * 100}%`
 
